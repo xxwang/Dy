@@ -1,0 +1,70 @@
+# 版本要求: SwiftFormat 0.52.4+ (支持Swift 6.0)
+
+# ========================
+# 基础配置
+# ========================
+
+--swiftversion 6.0  # 指定目标Swift版本为6.0，启用版本特定规则
+
+# 排除不需要格式化的目录
+--exclude Pods,Carthage,DerivedData,Generated,.build
+
+# ========================
+# 禁用规则 (Disable)
+# ========================
+
+--disable blankLinesAroundMark     # 禁止在MARK注释周围添加空行
+--disable redundantInit           # 允许冗余的.init()调用
+--disable unusedArguments         # 不检查未使用的函数参数
+--disable enumnamespaces          # 禁用枚举自动添加命名空间
+--disable redundantReturn         # 允许冗余的return关键字
+--disable redundantSelf           # 允许冗余的self引用
+--disable redundantStaticSelf     # 允许静态成员中的冗余Self
+--disable strongifiedSelf         # 禁用自动strong-self转换
+
+--disable blankLineAfterSwitchCase # switch case后不强制空行
+--disable redundantType           # 允许显式类型声明（不自动推断）
+--disable sortDeclarations        # 不自动排序声明（类型/函数等）
+--disable sortImports             # 不自动排序import语句
+
+# ========================
+# 启用规则 (Enable)
+# ========================
+
+--enable noExplicitOwnership       # 自动添加weak/unowned修饰符
+--enable redundantProperty         # 检查冗余属性声明
+--enable sortSwitchCases           # 自动排序switch case顺序
+--enable unusedPrivateDeclarations # 检查未使用的私有声明
+--enable wrapEnumCases             # 多case枚举自动换行
+--enable wrapLoopBodies            # 循环体自动换行格式化
+
+# ========================
+# 文档与注释
+# ========================
+
+--doccomments before-declarations  # 文档注释放在声明前一行
+#--header \n {file}\n\n Copyright © {created} Created by {author.name}.\n  # 自定义文件头格式
+#--dateformat yyyy/MM/dd           # 日期格式化为年/月/日
+
+# ========================
+# 代码结构
+# ========================
+
+--modifierorder                  # 强制修饰符顺序(如public static)
+--indent 4                       # 4空格缩进
+--tabwidth 4                     # Tab等于4空格宽度
+--funcattributes preserve        # 函数属性保持同行(@objc func)
+--typeattributes preserve        # 类型属性单独一行(@objc class)
+--propertytypes inferred  # 自动推断属性类型 (当右侧表达式能明确推断类型时，省略显式类型声明)
+--inferredtypes always   # 强制优先使用类型推断 (当可能时自动移除冗余的类型声明)
+
+# ========================
+# 语法风格
+# ========================
+
+--asynccapturing                 # 异步闭包自动捕获处理
+--decimalgrouping "none"         # 十进制数字不加分隔符(1000000)
+--binarygrouping "none"          # 二进制数字不加分隔符(0b101010)
+--octalgrouping "none"           # 八进制数字不加分隔符(0o123456)
+--hexgrouping "none"             # 十六进制数字不加分隔符(0xFFEE)
+--stripunusedargs "closure-only" # 仅移除闭包中未使用的参数
