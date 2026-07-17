@@ -18,37 +18,36 @@ let package = Package(
         .target(
             name: "DyCommon",
             dependencies: [
-                
             ],
             path: "Sources/Common",
             swiftSettings: [
-                .define("SPM_MODE")
+                .define("SPM_MODE"),
             ]
         ),
         .target(
             name: "DyExtension",
             dependencies: [
-                .target(name: "DyCommon")
+                .target(name: "DyCommon"),
             ],
             path: "Sources/Extension",
             resources: [
-                .process("Resources")
+                .process("Resources"),
             ],
             swiftSettings: [
-                .define("SPM_MODE")
+                .define("SPM_MODE"),
             ]
         ),
         .target(
             name: "DyComponent",
             dependencies: [
-                .target(name: "DyExtension")
+                .target(name: "DyExtension"),
             ],
             path: "Sources/Component",
             resources: [
-                .process("Resources")
+                .process("Resources"),
             ],
             swiftSettings: [
-                .define("SPM_MODE")
+                .define("SPM_MODE"),
             ]
         ),
         .target(
@@ -58,10 +57,10 @@ let package = Package(
             ],
             path: "Sources/Template",
             resources: [
-                .process("Resources")
+                .process("Resources"),
             ],
             swiftSettings: [
-                .define("SPM_MODE")
+                .define("SPM_MODE"),
             ]
         ),
     ]
