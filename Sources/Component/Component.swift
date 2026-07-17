@@ -1,9 +1,5 @@
-//
-//  Component.swift
-//  Dy
-//
-//  Created by xxwang on 2026/7/17.
-//
+@_exported import DyUtils
+@_exported import DyExtension
 
 public class Component {
     func test_component() {

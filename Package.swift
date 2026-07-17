@@ -8,39 +8,37 @@ let package = Package(
         .iOS(.v13),
     ],
     products: [
-        .library(name: "Dy",targets: ["Utils", "Extension", "Component", "Template"]),
-        .library(name: "Dy.Utils",targets: ["Utils"]),
-        .library(name: "Dy.Extension",targets: ["Extension"]),
-        .library(name: "Dy.Component",targets: ["Component"]),
-        .library(name: "Dy.Template",targets: ["Template"]),
+        .library(name: "DyUtils",targets: ["DyUtils"]),
+        .library(name: "DyExtension",targets: ["DyExtension"]),
+        .library(name: "DyComponent",targets: ["DyComponent"]),
+        .library(name: "DyTemplate",targets: ["DyTemplate"]),
+        .library(name: "Dy",targets: ["DyUtils", "DyExtension", "DyComponent", "DyTemplate"]),
     ],
     targets: [
         .target(
-            name: "Utils",
+            name: "DyUtils",
             dependencies: [],
             path: "Sources/Utils",
             swiftSettings: [.define("SPM_MODE"),]
         ),
         .target(
-            name: "Extension",
-            dependencies: [.target(name: "Utils"),],
+            name: "DyExtension",
+            dependencies: [.target(name: "DyUtils"),],
             path: "Sources/Extension",
             resources: [.process("Resources"),],
             swiftSettings: [.define("SPM_MODE"),]
         ),
         .target(
-            name: "Component",
-            dependencies: [
-                .target(name: "Extension"),
-            ],
+            name: "DyComponent",
+            dependencies: [.target(name: "DyExtension"),],
             path: "Sources/Component",
             resources: [.process("Resources"),],
             swiftSettings: [.define("SPM_MODE"),]
         ),
         .target(
-            name: "Template",
+            name: "DyTemplate",
             dependencies: [
-                .target(name: "Component"),
+                .target(name: "DyComponent"),
             ],
             path: "Sources/Template",
             resources: [.process("Resources"),],
