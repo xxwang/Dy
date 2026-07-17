@@ -205,7 +205,9 @@ public extension DyPath {
     /// - Returns: 是否删除成功
     @discardableResult
     func remove(at path: String) -> Bool {
-        if !exists(at: path) { return true }
+        if !exists(at: path) {
+            return true
+        }
         do {
             try FileManager.default.removeItem(atPath: path)
             return true
