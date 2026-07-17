@@ -1,5 +1,4 @@
-// swift-tools-version: 5.0
-// The swift-tools-version declares the minimum version of Swift required to build this package.
+// swift-tools-version: 5.10
 
 import PackageDescription
 
@@ -9,25 +8,43 @@ let package = Package(
         .iOS(.v13),
     ],
     products: [
-        // Products define the executables and libraries a package produces, making them visible to other packages.
-        .library(
-            name: "Dy",
-            targets: ["Dy"]
-        ),
+        .library(name: "Dy",targets: ["Utils", "Extension", "Component", "Template"]),
+        .library(name: "Dy.Utils",targets: ["Utils"]),
+        .library(name: "Dy.Extension",targets: ["Extension"]),
+        .library(name: "Dy.Component",targets: ["Component"]),
+        .library(name: "Dy.Template",targets: ["Template"]),
     ],
     targets: [
-        // Targets are the basic building blocks of a package, defining a module or a test suite.
-        // Targets can depend on other targets in this package and products from dependencies.
         .target(
-            name: "Dy",
+            name: "Utils",
+            dependencies: [],
+            path: "Sources/Utils",
+            swiftSettings: [.define("SPM_MODE"),]
+        ),
+        .target(
+            name: "Extension",
+            dependencies: [.target(name: "Utils"),],
+            path: "Sources/Extension",
+            resources: [.process("Resources"),],
+            swiftSettings: [.define("SPM_MODE"),]
+        ),
+        .target(
+            name: "Component",
             dependencies: [
+                .target(name: "Extension"),
             ],
-            path: "Sources/Dy",
-            swiftSettings: [
-                .define("SPM_MODE"),
-                // .enableExperimentalFeature("StrictConcurrency")
-            ]
+            path: "Sources/Component",
+            resources: [.process("Resources"),],
+            swiftSettings: [.define("SPM_MODE"),]
+        ),
+        .target(
+            name: "Template",
+            dependencies: [
+                .target(name: "Component"),
+            ],
+            path: "Sources/Template",
+            resources: [.process("Resources"),],
+            swiftSettings: [.define("SPM_MODE")]
         ),
     ],
-    swiftLanguageModes: [.v5]
 )
