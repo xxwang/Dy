@@ -12,13 +12,11 @@ let package = Package(
         .library(name: "DyExtension", targets: ["DyExtension"]),
         .library(name: "DyComponent", targets: ["DyComponent"]),
         .library(name: "DyTemplate", targets: ["DyTemplate"]),
-        .library(name: "Dy", targets: ["DyCommon", "DyExtension", "DyComponent", "DyTemplate"]),
+        .library(name: "Dy", targets: ["Dy"]),
     ],
     targets: [
         .target(
             name: "DyCommon",
-            dependencies: [
-            ],
             path: "Sources/Common",
             swiftSettings: [
                 .define("SPM_MODE"),
@@ -30,9 +28,6 @@ let package = Package(
                 .target(name: "DyCommon"),
             ],
             path: "Sources/Extension",
-            resources: [
-                .process("Resources"),
-            ],
             swiftSettings: [
                 .define("SPM_MODE"),
             ]
@@ -62,6 +57,19 @@ let package = Package(
             resources: [
                 .process("Resources"),
             ],
+            swiftSettings: [
+                .define("SPM_MODE"),
+            ]
+        ),
+        .target(
+            name: "Dy",
+            dependencies: [
+                .target(name: "DyCommon"),
+                .target(name: "DyExtension"),
+                .target(name: "DyComponent"),
+                .target(name: "DyTemplate"),
+            ],
+            path: "Sources/Dy",
             swiftSettings: [
                 .define("SPM_MODE"),
             ]
