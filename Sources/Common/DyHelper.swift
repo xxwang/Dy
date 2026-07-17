@@ -3,13 +3,13 @@ import AdSupport
 import AppTrackingTransparency
 
 /// 提供常用辅助信息
-public final class DyCommon {
-    public static let shared = DyCommon()
+public final class DyHelper {
+    public static let shared = DyHelper()
     private init() {}
 }
 
 // MARK: - 设备环境
-public extension DyCommon {
+public extension DyHelper {
     /// 当前是否运行在模拟器中
     var isSimulator: Bool {
         #if targetEnvironment(simulator)
@@ -50,7 +50,7 @@ public extension DyCommon {
 }
 
 // MARK: - 标识符(Identifiers)
-public extension DyCommon {
+public extension DyHelper {
     /// 设备厂商标识符(IDFV)：同一开发商下所有 App 共享,卸载重装会变化
     var identifierForVendor: String? {
         return UIDevice.current.identifierForVendor?.uuidString
@@ -68,7 +68,7 @@ public extension DyCommon {
 }
 
 // MARK: - 系统与设备基本信息
-public extension DyCommon {
+public extension DyHelper {
     /// iOS 系统版本号(如 "17.2")
     var systemVersion: String {
         return UIDevice.current.systemVersion
@@ -116,11 +116,11 @@ public extension DyCommon {
 }
 
 // MARK: - 设备安全与能力检测
-public extension DyCommon {
+public extension DyHelper {
     /// 检测设备是否可能已越狱(仅检查常见路径,不写文件)
     /// ⚠️ 仅供调试/日志使用,App Store 审核可能因“探测系统完整性”被拒
     var isJailbroken: Bool {
-        if DyCommon.shared.isSimulator {
+        if DyHelper.shared.isSimulator {
             return false
         }
 
@@ -142,7 +142,7 @@ public extension DyCommon {
 }
 
 // MARK: - 屏幕方向
-public extension DyCommon {
+public extension DyHelper {
     /// 获取当前界面方向
     var interfaceOrientation: UIInterfaceOrientation {
         let activeScene = UIApplication.shared.connectedScenes
@@ -174,7 +174,7 @@ public extension DyCommon {
     }
 }
 
-public extension DyCommon {
+public extension DyHelper {
     /// 获取当前应用中最合适的主窗口
     var keyWindow: UIWindow? {
         return UIApplication.shared.connectedScenes
