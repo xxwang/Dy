@@ -8,22 +8,22 @@ let package = Package(
         .iOS(.v13),
     ],
     products: [
-        .library(name: "DyUtils", targets: ["DyUtils"]),
+        .library(name: "DyCommon", targets: ["DyCommon"]),
         .library(name: "DyExtension", targets: ["DyExtension"]),
         .library(name: "DyComponent", targets: ["DyComponent"]),
         .library(name: "DyTemplate", targets: ["DyTemplate"]),
-        .library(name: "Dy", targets: ["DyUtils", "DyExtension", "DyComponent", "DyTemplate"]),
+        .library(name: "Dy", targets: ["DyCommon", "DyExtension", "DyComponent", "DyTemplate"]),
     ],
     targets: [
         .target(
-            name: "DyUtils",
+            name: "DyCommon",
             dependencies: [],
-            path: "Sources/Utils",
+            path: "Sources/Common",
             swiftSettings: [.define("SPM_MODE")]
         ),
         .target(
             name: "DyExtension",
-            dependencies: [.target(name: "DyUtils")],
+            dependencies: [.target(name: "DyCommon")],
             path: "Sources/Extension",
             resources: [.process("Resources")],
             swiftSettings: [.define("SPM_MODE")]

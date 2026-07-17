@@ -33,10 +33,10 @@ public final class DySkinManager {
 }
 
 // MARK: - DySkinProvider 协议实现
-extension DySkinManager {
+public extension DySkinManager {
     /// 注册一个皮肤观察者
     /// - Parameter observer: 遵循 `DySkinable` 的对象
-    public func register(observer: DySkinable) {
+    func register(observer: DySkinable) {
         queue.sync(flags: .barrier) {
             observers.add(observer)
         }
@@ -44,17 +44,17 @@ extension DySkinManager {
 
     /// 移除一个皮肤观察者
     /// - Parameter observer: 要移除的对象
-    public func remove(observer: DySkinable) {
+    func remove(observer: DySkinable) {
         queue.sync(flags: .barrier) {
             self.observers.remove(observer)
         }
     }
-    
+
     /// 刷新所有已注册观察者的皮肤样式
     ///
     /// - 第一步：在后台同步读取当前有效的观察者列表(不阻塞主线程)
     /// - 第二步：将 `updateUI()` 调用派发到主线程,确保 UI 更新安全
-    public func updateSkin() {
+    func updateSkin() {
         var activeObservers: [DySkinable] = []
         queue.sync {
             activeObservers = observers.allObjects.compactMap { $0 as? DySkinable }
