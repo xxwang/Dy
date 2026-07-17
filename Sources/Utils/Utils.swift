@@ -5,3 +5,4 @@ public class Utils {
         print(String(describing: self))
     }
 }
+
