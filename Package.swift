@@ -40,6 +40,7 @@ let package = Package(
         .target(
             name: "DyComponent",
             dependencies: [
+                .target(name: "DyCommon"),
                 .target(name: "DyExtension"),
             ],
             path: "Sources/Component",
@@ -53,6 +54,8 @@ let package = Package(
         .target(
             name: "DyTemplate",
             dependencies: [
+                .target(name: "DyCommon"),
+                .target(name: "DyExtension"),
                 .target(name: "DyComponent"),
             ],
             path: "Sources/Template",
