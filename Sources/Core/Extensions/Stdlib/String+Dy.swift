@@ -198,7 +198,7 @@ public extension String {
 
     /// 尝试转换为 `URLRequest`
     func dy_toURLRequest() -> URLRequest? {
-        guard let url = self.toURL() else { return nil }
+        guard let url = self.dy_toURL() else { return nil }
         return URLRequest(url: url)
     }
 
@@ -237,32 +237,32 @@ public extension String {
 public extension String {
     /// 判断字符串是否为单个视觉单元的 Emoji
     var dy_isSingleEmoji: Bool {
-        return self.count == 1 && self.first?.isEmoji == true
+        return self.count == 1 && self.first?.dy_isEmoji == true
     }
 
     /// 判断字符串是否包含至少一个 Emoji 字符
     var dy_containsEmoji: Bool {
-        return self.contains { $0.isEmoji }
+        return self.contains { $0.dy_isEmoji }
     }
 
     /// 判断字符串是否仅由`Emoji`字符组成（不含空格、标点等）
     var dy_containsOnlyEmoji: Bool {
-        return !self.isEmpty && self.allSatisfy(\.isEmoji)
+        return !self.isEmpty && self.allSatisfy(\.dy_isEmoji)
     }
 
     /// 提取所有`Emoji`字符并拼接成新字符串
     var dy_emojiString: String {
-        return self.emojis.map(String.init).joined()
+        return self.dy_emojis.map(String.init).joined()
     }
 
     /// 提取所有`Emoji`字符数组
     var dy_emojis: [Character] {
-        return self.filter(\.isEmoji)
+        return self.filter(\.dy_isEmoji)
     }
 
     /// 提取所有 `Emoji` 的底层 `Unicode` 标量
     var dy_emojiScalars: [UnicodeScalar] {
-        return self.emojis.flatMap(\.unicodeScalars)
+        return self.dy_emojis.flatMap(\.unicodeScalars)
     }
 }
 
@@ -279,7 +279,7 @@ public extension String {
     ///
     /// - Returns: 对应的 `NSRange`（基于 UTF-16 单元）
     var dy_fullNSRange: NSRange {
-        NSRange(self.fullRange, in: self)
+        NSRange(self.dy_fullRange, in: self)
     }
 
     /// 将 `NSRange` 安全转换为 `Range<String.Index>`
@@ -347,7 +347,7 @@ public extension String {
     ///   - options: 字符串比较选项（如 `.caseInsensitive`）,默认为空
     /// - Returns: 所有匹配位置的 `NSRange` 数组（按出现顺序）
     func dy_nsRanges(of substring: String, options: String.CompareOptions = []) -> [NSRange] {
-        self.ranges(of: substring, options: options).map { self.nsRange(from: $0) }
+        self.dy_ranges(of: substring, options: options).map { self.dy_nsRange(from: $0) }
     }
 }
 
@@ -887,12 +887,12 @@ public extension String {
     ///   "hello".dy_hash(.uppercase32, .sha512) // 大写 SHA-512 摘要
     ///   ```
     func dy_hash(
-        _ format: HashFormat = .lowercase32,
-        algorithm: HashAlgorithm = .sha256
+        _ format: DyHashFormat = .lowercase32,
+        algorithm: DyHashAlgorithm = .sha256
     ) -> String? {
         guard !isEmpty else { return nil }
 
-        let digest = algorithm.hash(Data(utf8))
+        let digest = algorithm.dy_hash(Data(utf8))
         let hex = digest.map { String(format: "%02x", $0) }.joined()
         let upperHex = digest.map { String(format: "%02X", $0) }.joined()
 
@@ -921,8 +921,8 @@ public extension String {
     /// - Migration: 请改用 `hash(algorithm: .sha256)`
     /// - Returns: MD5 哈希字符串（按指定格式）,空输入返回 `nil`
     @available(*, deprecated, message: "MD5 is cryptographically broken. Use hash(algorithm: .sha256) instead.")
-    func dy_md5(_ format: HashFormat = .lowercase32) -> String? {
-        return self.hash(format, algorithm: .md5)
+    func dy_md5(_ format: DyHashFormat = .lowercase32) -> String? {
+        return self.dy_hash(format, algorithm: .md5)
     }
 }
 
@@ -1056,7 +1056,7 @@ public extension String {
     ///     `"some variable name".dy_camelCase` → `"someVariableName"`
     ///
     var dy_camelCase: String {
-        let words = self.words
+        let words = self.dy_words
         guard !words.isEmpty else { return "" }
         let first = words[0].lowercased()
         let rest = words.dropFirst().map(\.capitalized).joined()
@@ -1089,7 +1089,7 @@ public extension String {
     ///     `"爱国".dy_pinyinInitials()` → `"AG"`
     ///
     func dy_pinyinInitials(uppercase: Bool = true) -> String {
-        let pinyin = self.pinyin(withTone: false)
+        let pinyin = self.dy_pinyin(withTone: false)
         let initials = pinyin
             .components(separatedBy: .whitespaces)
             .compactMap { word in
@@ -1586,7 +1586,7 @@ public extension String {
 
     /// 是否同时包含字母和数字
     var dy_hasAlphanumeric: Bool {
-        hasLetters && hasDigits
+        self.dy_hasLetters && self.dy_hasDigits
     }
 
     /// 是否只包含字母或数字(即：字母数字混合,无符号)
@@ -1672,12 +1672,12 @@ public extension String {
 public extension String {
     /// 是否为有效中国手机号(11 位,1[3-9] 开头)
     var dy_isValidPhoneNumber: Bool {
-        isMatch(pattern: "^1[3-9]\\d{9}$")
+        dy_isMatch(pattern: "^1[3-9]\\d{9}$")
     }
 
     /// 是否为有效邮箱(宽松版)
     var dy_isValidEmail: Bool {
-        isMatch(pattern: #"^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$"#)
+        dy_isMatch(pattern: #"^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$"#)
     }
 
     /// 是否为有效 URL(任意协议)
@@ -1717,7 +1717,7 @@ public extension String {
 
     /// 是否为有效昵称(中英文、数字、下划线)
     var dy_isValidNickname: Bool {
-        isMatch(pattern: #"^[\u{4e00}-\u{9fff}a-zA-Z0-9_]+$"#)
+        dy_isMatch(pattern: #"^[\u{4e00}-\u{9fff}a-zA-Z0-9_]+$"#)
     }
 
     /// 是否为有效用户名(中英文,1-20 字符)
@@ -1730,9 +1730,9 @@ public extension String {
     /// - `complex = true`: 必须包含大小写字母+数字+特殊符号,≥8 位
     func dy_isValidPassword(complex: Bool = false) -> Bool {
         if complex {
-            return isMatch(pattern: #"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{}|;:'",.<>/?]).{8,}$"#)
+            return dy_isMatch(pattern: #"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{}|;:'",.<>/?]).{8,}$"#)
         } else {
-            return count >= 6 && hasLetters && hasDigits
+            return count >= 6 && dy_hasLetters && dy_hasDigits
         }
     }
 }
@@ -1756,19 +1756,19 @@ public extension String {
 public extension String {
     /// 是否符合身份证基本格式(15/18 位)
     var dy_isBasicIDNumber: Bool {
-        isMatch(pattern: #"^(\d{15}|\d{17}[\dXx])$"#)
+        dy_isMatch(pattern: #"^(\d{15}|\d{17}[\dXx])$"#)
     }
 
     /// 是否为严格有效的 18 位身份证(含校验码)
     var dy_isStrictIDNumber: Bool {
-        guard count == 18, isBasicIDNumber else { return false }
+        guard count == 18, dy_isBasicIDNumber else { return false }
 
         let weights = [7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2]
         let checkCodes = "10X98765432"
 
         var sum = 0
         for i in 0 ..< 17 {
-            guard let digit = Int(self.character(at: i)) else { return false }
+            guard let digit = Int(self.dy_character(at: i)) else { return false }
             sum += digit * weights[i]
         }
 
@@ -1828,7 +1828,7 @@ public extension String {
     ///   "abc" =～ "^\\d+$"   // false
     ///   ```
     static func =~ (lhs: String, rhs: String) -> Bool {
-        lhs.isMatch(pattern: rhs)
+        lhs.dy_isMatch(pattern: rhs)
     }
 }
 
@@ -2080,7 +2080,7 @@ public extension String {
     ///   let viewController = "MyViewController".dy_instanceFromClass() as? UIViewController
     ///   ```
     func dy_instanceFromClass() -> NSObject? {
-        guard let cls = self.classFromName(),
+        guard let cls = self.dy_classFromName(),
               let nsObjectCls = cls as? NSObject.Type
         else {
             return nil
@@ -2378,7 +2378,7 @@ public extension String {
     ///   print(firstParams["name"] ?? "") // "Alice"
     ///   ```
     var dy_firstQueryParameters: [String: String] {
-        let multiParams = queryParameters
+        let multiParams = dy_queryParameters
         var singleParams: [String: String] = [:]
         for (key, values) in multiParams {
             singleParams[key] = values.first ?? ""
@@ -2784,7 +2784,7 @@ public extension String {
     /// - Note: 同时将 JSON 中的转义斜杠 `\/` 替换为 `/`
     /// - Returns: `成功`:格式化后的JSON字符串 `失败`:返回原字符串
     func dy_format() -> String {
-        guard let data = self.toData() else { return self }
+        guard let data = self.dy_toData() else { return self }
 
         do {
             let jsonObject = try JSONSerialization.jsonObject(with: data)

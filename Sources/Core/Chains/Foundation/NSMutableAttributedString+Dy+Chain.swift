@@ -65,7 +65,7 @@ public extension DyWrapper where Base: NSMutableAttributedString {
     @discardableResult
     func font(_ font: UIFont?, for range: NSRange? = nil) -> Self {
         guard let font else { return self }
-        let range = range ?? base.fullNSRange
+        let range = range ?? base.dy_fullNSRange
         self.addAttribute(.font, value: font, range: range)
         return self
     }
@@ -81,7 +81,7 @@ public extension DyWrapper where Base: NSMutableAttributedString {
     ///         它对应 Core Text 的 `.kern` 属性
     @discardableResult
     func characterSpacing(_ spacing: CGFloat, for range: NSRange? = nil) -> Self {
-        let range = range ?? base.fullNSRange
+        let range = range ?? base.dy_fullNSRange
         self.addAttribute(.kern, value: spacing, range: range)
         return self
     }
@@ -95,7 +95,7 @@ public extension DyWrapper where Base: NSMutableAttributedString {
     /// - Returns: `Self`
     @discardableResult
     func lineSpacing(_ lineSpacing: CGFloat, alignment: NSTextAlignment = .left, for range: NSRange? = nil) -> Self {
-        let range = range ?? base.fullNSRange
+        let range = range ?? base.dy_fullNSRange
         let style = NSMutableParagraphStyle()
         style.lineSpacing = lineSpacing
         style.alignment = alignment
@@ -115,7 +115,7 @@ public extension DyWrapper where Base: NSMutableAttributedString {
     ///         若需精确控制,请确保 `lineHeight` 大于等于字体高度
     @discardableResult
     func fixedLineHeight(_ lineHeight: CGFloat, alignment: NSTextAlignment = .left, for range: NSRange? = nil) -> Self {
-        let range = range ?? base.fullNSRange
+        let range = range ?? base.dy_fullNSRange
         let style = NSMutableParagraphStyle()
         style.minimumLineHeight = lineHeight
         style.maximumLineHeight = lineHeight
@@ -132,7 +132,7 @@ public extension DyWrapper where Base: NSMutableAttributedString {
     /// - Returns: `Self`
     @discardableResult
     func paragraphSpacing(_ spacing: CGFloat, for range: NSRange? = nil) -> Self {
-        let range = range ?? base.fullNSRange
+        let range = range ?? base.dy_fullNSRange
         let style = NSMutableParagraphStyle()
         style.paragraphSpacing = spacing
         self.addAttribute(.paragraphStyle, value: style, range: range)
@@ -147,7 +147,7 @@ public extension DyWrapper where Base: NSMutableAttributedString {
     func firstLineHeadIndent(_ indent: CGFloat) -> Self {
         let style = NSMutableParagraphStyle()
         style.firstLineHeadIndent = indent
-        self.addAttribute(.paragraphStyle, value: style, range: base.fullNSRange)
+        self.addAttribute(.paragraphStyle, value: style, range: base.dy_fullNSRange)
         return self
     }
 
@@ -159,7 +159,7 @@ public extension DyWrapper where Base: NSMutableAttributedString {
     /// - Returns: `Self`
     @discardableResult
     func foregroundColor(_ color: UIColor, for range: NSRange? = nil) -> Self {
-        let range = range ?? base.fullNSRange
+        let range = range ?? base.dy_fullNSRange
         self.addAttribute(.foregroundColor, value: color, range: range)
         return self
     }
@@ -172,7 +172,7 @@ public extension DyWrapper where Base: NSMutableAttributedString {
     /// - Returns: `Self`
     @discardableResult
     func backgroundColor(_ color: UIColor, for range: NSRange? = nil) -> Self {
-        let range = range ?? base.fullNSRange
+        let range = range ?? base.dy_fullNSRange
         self.addAttribute(.backgroundColor, value: color, range: range)
         return self
     }
@@ -186,7 +186,7 @@ public extension DyWrapper where Base: NSMutableAttributedString {
     /// - Returns: `Self`
     @discardableResult
     func underline(color: UIColor, style: NSUnderlineStyle = .single, for range: NSRange? = nil) -> Self {
-        let range = range ?? base.fullNSRange
+        let range = range ?? base.dy_fullNSRange
         self.addAttribute(.underlineStyle, value: style.rawValue, range: range)
         self.addAttribute(.underlineColor, value: color, range: range)
         return self
@@ -201,7 +201,7 @@ public extension DyWrapper where Base: NSMutableAttributedString {
     /// - Returns: `Self`
     @discardableResult
     func strikethrough(color: UIColor, style: NSUnderlineStyle = .single, for range: NSRange? = nil) -> Self {
-        let range = range ?? base.fullNSRange
+        let range = range ?? base.dy_fullNSRange
         self.addAttribute(.strikethroughStyle, value: style.rawValue, range: range)
         self.addAttribute(.strikethroughColor, value: color, range: range)
         return self
@@ -215,7 +215,7 @@ public extension DyWrapper where Base: NSMutableAttributedString {
     /// - Returns: `Self`
     @discardableResult
     func obliqueness(_ factor: Float = 0, for range: NSRange? = nil) -> Self {
-        let range = range ?? base.fullNSRange
+        let range = range ?? base.dy_fullNSRange
         self.addAttribute(.obliqueness, value: factor, range: range)
         return self
     }
@@ -228,7 +228,7 @@ public extension DyWrapper where Base: NSMutableAttributedString {
     /// - Returns: `Self`
     @discardableResult
     func expansion(_ factor: Float = 1.0, for range: NSRange? = nil) -> Self {
-        let range = range ?? base.fullNSRange
+        let range = range ?? base.dy_fullNSRange
         self.addAttribute(.expansion, value: factor, range: range)
         return self
     }
@@ -248,7 +248,7 @@ public extension DyWrapper where Base: NSMutableAttributedString {
     ///   ```
     @discardableResult
     func textShadow(color: UIColor, offset: CGSize, radius: CGFloat, for range: NSRange? = nil) -> Self {
-        let range = range ?? base.fullNSRange
+        let range = range ?? base.dy_fullNSRange
         let shadow = NSShadow()
         shadow.shadowColor = color
         shadow.shadowOffset = offset
@@ -300,7 +300,7 @@ public extension DyWrapper where Base: NSMutableAttributedString {
               let regex = try? NSRegularExpression(pattern: pattern, options: options),
               base.length > 0 else { return self }
 
-        let matches = regex.matches(in: base.string, options: [], range: base.fullNSRange)
+        let matches = regex.matches(in: base.string, options: [], range: base.dy_fullNSRange)
         for match in matches {
             self.addAttributes(attributes, for: match.range)
         }

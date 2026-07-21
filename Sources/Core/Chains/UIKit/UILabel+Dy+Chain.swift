@@ -144,7 +144,7 @@ public extension DyWrapper where Base: UILabel {
     ///
     @discardableResult
     func attributedColor(_ color: UIColor, for range: NSRange) -> Self {
-        let attributedString = base.attributedText?.toNSMutableAttributedString()
+        let attributedString = base.attributedText?.dy_toNSMutableAttributedString()
             .dy
             .foregroundColor(color, for: range)
         base.attributedText = attributedString?.build()
@@ -161,9 +161,9 @@ public extension DyWrapper where Base: UILabel {
     ///
     @discardableResult
     func lineSpacing(_ spacing: CGFloat) -> Self {
-        let attributedString = base.attributedText?.toNSMutableAttributedString()
+        let attributedString = base.attributedText?.dy_toNSMutableAttributedString()
             .dy
-            .lineSpacing(spacing, for: (base.text ?? "").fullNSRange)
+            .lineSpacing(spacing, for: (base.text ?? "").dy_fullNSRange)
         base.attributedText = attributedString?.build()
         return self
     }
@@ -178,9 +178,9 @@ public extension DyWrapper where Base: UILabel {
     ///
     @discardableResult
     func wordSpacing(_ spacing: CGFloat) -> Self {
-        let attributedString = base.attributedText?.toNSMutableAttributedString()
+        let attributedString = base.attributedText?.dy_toNSMutableAttributedString()
             .dy
-            .characterSpacing(spacing, for: base.text?.fullNSRange)
+            .characterSpacing(spacing, for: base.text?.dy_fullNSRange)
         base.attributedText = attributedString?.build()
         return self
     }
@@ -202,7 +202,7 @@ public extension DyWrapper where Base: UILabel {
         style: NSUnderlineStyle = .single,
         for range: NSRange
     ) -> Self {
-        let attributedString = base.attributedText?.toNSMutableAttributedString()
+        let attributedString = base.attributedText?.dy_toNSMutableAttributedString()
             .dy
             .underline(color: color, style: style, for: range)
         base.attributedText = attributedString?.build()
@@ -221,7 +221,7 @@ public extension DyWrapper where Base: UILabel {
     ///
     @discardableResult
     func attributedDeleteLine(_ color: UIColor, for range: NSRange) -> Self {
-        let attributedString = base.attributedText?.toNSMutableAttributedString()
+        let attributedString = base.attributedText?.dy_toNSMutableAttributedString()
             .dy
             .strikethrough(color: color, for: range)
         base.attributedText = attributedString?.build()
@@ -238,7 +238,7 @@ public extension DyWrapper where Base: UILabel {
     ///
     @discardableResult
     func attributedFirstLineHeadIndent(_ indent: CGFloat) -> Self {
-        let attributedString = base.attributedText?.toNSMutableAttributedString()
+        let attributedString = base.attributedText?.dy_toNSMutableAttributedString()
             .dy
             .firstLineHeadIndent(indent)
         base.attributedText = attributedString?.build()
@@ -257,7 +257,7 @@ public extension DyWrapper where Base: UILabel {
     ///
     @discardableResult
     func attributedBliqueness(_ inclination: Float = 0, for range: NSRange) -> Self {
-        let attributedString = base.attributedText?.toNSMutableAttributedString()
+        let attributedString = base.attributedText?.dy_toNSMutableAttributedString()
             .dy
             .obliqueness(inclination, for: range)
         base.attributedText = attributedString?.build()
@@ -281,7 +281,7 @@ public extension DyWrapper where Base: UILabel {
         bounds: CGRect = .zero,
         at index: Int = 0
     ) -> Self {
-        let mAttributedString = base.attributedText?.toNSMutableAttributedString()
+        let mAttributedString = base.attributedText?.dy_toNSMutableAttributedString()
             .dy
             .attachment(image, bounds: bounds, at: index)
         base.attributedText = mAttributedString?.build()
