@@ -8,12 +8,10 @@ let package = Package(
         .iOS(.v13),
     ],
     products: [
+        .library(name: "Dy", targets: ["Dy"]),
         .library(name: "DyLogger", targets: ["DyLogger"]),
-        .library(name: "DyCommon", targets: ["DyCommon"]),
-        .library(name: "DyExtension", targets: ["DyExtension"]),
         .library(name: "DyComponent", targets: ["DyComponent"]),
         .library(name: "DyTemplate", targets: ["DyTemplate"]),
-        .library(name: "Dy", targets: ["Dy"]),
     ],
     targets: [
         .target(
@@ -24,27 +22,9 @@ let package = Package(
             ]
         ),
         .target(
-            name: "DyCommon",
-            path: "Sources/Common",
-            swiftSettings: [
-                .define("SPM_MODE"),
-            ]
-        ),
-        .target(
-            name: "DyExtension",
-            dependencies: [
-                .target(name: "DyCommon"),
-            ],
-            path: "Sources/Extension",
-            swiftSettings: [
-                .define("SPM_MODE"),
-            ]
-        ),
-        .target(
             name: "DyComponent",
             dependencies: [
-                .target(name: "DyCommon"),
-                .target(name: "DyExtension"),
+                .target(name: "Dy"),
             ],
             path: "Sources/Component",
             resources: [
@@ -57,28 +37,14 @@ let package = Package(
         .target(
             name: "DyTemplate",
             dependencies: [
-                .target(name: "DyCommon"),
-                .target(name: "DyExtension"),
+                .target(name: "Dy"),
                 .target(name: "DyComponent"),
+                .target(name: "DyLogger"),
             ],
             path: "Sources/Template",
             resources: [
                 .process("Resources"),
             ],
-            swiftSettings: [
-                .define("SPM_MODE"),
-            ]
-        ),
-        .target(
-            name: "Dy",
-            dependencies: [
-                .target(name: "DyLogger"),
-                .target(name: "DyCommon"),
-                .target(name: "DyExtension"),
-                .target(name: "DyComponent"),
-                .target(name: "DyTemplate"),
-            ],
-            path: "Sources/Dy",
             swiftSettings: [
                 .define("SPM_MODE"),
             ]
