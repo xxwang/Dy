@@ -8,12 +8,19 @@ let package = Package(
         .iOS(.v13),
     ],
     products: [
-        .library(name: "Dy", targets: ["Dy"]),
+        .library(name: "DyCore", targets: ["DyCore"]),
         .library(name: "DyLogger", targets: ["DyLogger"]),
         .library(name: "DyComponent", targets: ["DyComponent"]),
         .library(name: "DyTemplate", targets: ["DyTemplate"]),
     ],
     targets: [
+        .target(
+            name: "DyCore",
+            path: "Sources/Core",
+            swiftSettings: [
+                .define("SPM_MODE"),
+            ]
+        ),
         .target(
             name: "DyLogger",
             path: "Sources/Logger",
@@ -24,7 +31,7 @@ let package = Package(
         .target(
             name: "DyComponent",
             dependencies: [
-                .target(name: "Dy"),
+                .target(name: "DyCore"),
             ],
             path: "Sources/Component",
             resources: [
@@ -37,7 +44,7 @@ let package = Package(
         .target(
             name: "DyTemplate",
             dependencies: [
-                .target(name: "Dy"),
+                .target(name: "DyCore"),
                 .target(name: "DyComponent"),
                 .target(name: "DyLogger"),
             ],
