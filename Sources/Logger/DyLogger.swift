@@ -45,7 +45,7 @@ public class DyLogger {
     // MARK: - 属性
 
     /// 最低日志级别，低于此级别的日志将被忽略
-    public var minimumLevel: DyLogLevel = .verbose
+    public var minimumLevel: DyLogLevel = .debug
 
     /// 所有输出目标
     private var destinations: [DyLogDestination] = []
@@ -89,10 +89,6 @@ public class DyLogger {
     }
 
     // MARK: - 便捷方法
-    public func verbose(_ message: @autoclosure () -> String, file: String = #file, function: String = #function, line: Int = #line) {
-        log(.verbose, message(), file: file, function: function, line: line)
-    }
-
     public func debug(_ message: @autoclosure () -> String, file: String = #file, function: String = #function, line: Int = #line) {
         log(.debug, message(), file: file, function: function, line: line)
     }
@@ -115,10 +111,6 @@ public class DyLogger {
 }
 
 // MARK: - 全局便捷函数
-public func dy_logVerbose(_ message: @autoclosure () -> String, file: String = #file, function: String = #function, line: Int = #line) {
-    DyLogger.shared.verbose(message(), file: file, function: function, line: line)
-}
-
 public func dy_logDebug(_ message: @autoclosure () -> String, file: String = #file, function: String = #function, line: Int = #line) {
     DyLogger.shared.debug(message(), file: file, function: function, line: line)
 }
