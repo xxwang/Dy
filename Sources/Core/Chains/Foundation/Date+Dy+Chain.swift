@@ -8,7 +8,7 @@ public extension DyWrapper where Base == Date {
     /// - Note: 使用日历的 `date(bySetting:value:of:)` 方法进行安全设置,不会因跨月/跨年导致日期偏移
     @discardableResult
     func year(_ year: Int) -> Self {
-        if let newDate = base.calendar.date(bySetting: .year, value: year, of: self.base) {
+        if let newDate = base.dy_calendar.date(bySetting: .year, value: year, of: self.base) {
             self.base = newDate
         }
         return self
@@ -21,7 +21,7 @@ public extension DyWrapper where Base == Date {
     /// - Note: 自动处理不同月份的天数差异(例如将 1 月 31 日设为 2 月,会调整为 2 月最后一天)
     @discardableResult
     func month(_ month: Int) -> Self {
-        if let newDate = base.calendar.date(bySetting: .month, value: month, of: self.base) {
+        if let newDate = base.dy_calendar.date(bySetting: .month, value: month, of: self.base) {
             self.base = newDate
         }
         return self
@@ -34,7 +34,7 @@ public extension DyWrapper where Base == Date {
     /// - Note: 支持闰年等日历规则,由系统日历自动校验有效性
     @discardableResult
     func day(_ day: Int) -> Self {
-        if let newDate = base.calendar.date(bySetting: .day, value: day, of: self.base) {
+        if let newDate = base.dy_calendar.date(bySetting: .day, value: day, of: self.base) {
             self.base = newDate
         }
         return self
@@ -46,7 +46,7 @@ public extension DyWrapper where Base == Date {
     /// - Returns: 更新后的 `Date` 实例若 `hour` 不在 `[0, 23]` 范围内,则返回原日期
     @discardableResult
     func hour(_ hour: Int) -> Self {
-        if let newDate = base.calendar.date(bySetting: .hour, value: hour, of: self.base) {
+        if let newDate = base.dy_calendar.date(bySetting: .hour, value: hour, of: self.base) {
             self.base = newDate
         }
         return self
@@ -58,7 +58,7 @@ public extension DyWrapper where Base == Date {
     /// - Returns: 更新后的 `Date` 实例若 `minute` 不在有效范围内,则返回原日期
     @discardableResult
     func minute(_ minute: Int) -> Self {
-        if let newDate = base.calendar.date(bySetting: .minute, value: minute, of: self.base) {
+        if let newDate = base.dy_calendar.date(bySetting: .minute, value: minute, of: self.base) {
             self.base = newDate
         }
         return self
@@ -70,7 +70,7 @@ public extension DyWrapper where Base == Date {
     /// - Returns: 更新后的 `Date` 实例若 `second` 不在有效范围内,则返回原日期
     @discardableResult
     func second(_ second: Int) -> Self {
-        if let newDate = base.calendar.date(bySetting: .second, value: second, of: self.base) {
+        if let newDate = base.dy_calendar.date(bySetting: .second, value: second, of: self.base) {
             self.base = newDate
         }
         return self
@@ -85,7 +85,7 @@ public extension DyWrapper where Base == Date {
     func millisecond(_ millisecond: Int) -> Self {
         guard millisecond >= 0, millisecond <= 999 else { return self }
         let nanoseconds = millisecond * 1000000
-        if let newDate = base.calendar.date(bySetting: .nanosecond, value: nanoseconds, of: self.base) {
+        if let newDate = base.dy_calendar.date(bySetting: .nanosecond, value: nanoseconds, of: self.base) {
             self.base = newDate
         }
         return self
@@ -99,7 +99,7 @@ public extension DyWrapper where Base == Date {
     @discardableResult
     func nanosecond(_ nanosecond: Int) -> Self {
         guard nanosecond >= 0, nanosecond < 1000000000 else { return self }
-        if let newDate = base.calendar.date(bySetting: .nanosecond, value: nanosecond, of: self.base) {
+        if let newDate = base.dy_calendar.date(bySetting: .nanosecond, value: nanosecond, of: self.base) {
             self.base = newDate
         }
         return self

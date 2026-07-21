@@ -138,8 +138,8 @@ public extension DyWrapper where Base: CAAnimation {
         stop: ((CAAnimation, Bool) -> Void)? = nil
     ) -> Self {
         let delegate = Base.DyBlockAnimationDelegate()
-        delegate.onStart = start
-        delegate.onStop = stop
+        delegate.dy_onStart = start
+        delegate.dy_onStop = stop
         base.delegate = delegate
         return self
     }
