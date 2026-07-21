@@ -1,3 +1,4 @@
+@_exported import DyLogger
 @_exported import DyCommon
 @_exported import DyExtension
 @_exported import DyComponent

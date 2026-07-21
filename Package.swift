@@ -72,6 +72,7 @@ let package = Package(
         .target(
             name: "Dy",
             dependencies: [
+                .target(name: "DyLogger"),
                 .target(name: "DyCommon"),
                 .target(name: "DyExtension"),
                 .target(name: "DyComponent"),
