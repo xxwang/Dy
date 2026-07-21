@@ -1,6 +1,5 @@
 import Foundation
 
-@MainActor
 public extension DyWrapper where Base == DateComponents {
     /// 设置日历
     /// - Parameter calendar: 要设置的日历对象

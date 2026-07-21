@@ -2,7 +2,6 @@ import QuartzCore
 import UIKit
 
 // MARK: - 属性
-@MainActor
 public extension DyWrapper where Base: CAShapeLayer {
     /// 设置绘制路径
     /// - Parameter path: 要绘制的 `CGPath`(可由 `UIBezierPath` 转换而来)

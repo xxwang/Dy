@@ -1,7 +1,6 @@
 import QuartzCore
 
 // MARK: - 属性
-@MainActor
 public extension DyWrapper where Base: CABasicAnimation {
     /// 设置动画的起始值
     /// - Parameter value: 动画开始时的值(如 `CGFloat`, `CGColor`, `CGPoint`, `CGSize` 等)

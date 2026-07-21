@@ -2,7 +2,6 @@ import QuartzCore
 import UIKit
 
 // MARK: - 属性
-@MainActor
 public extension DyWrapper where Base: CATextLayer {
     /// 设置显示的文本内容
     /// - Parameter string: 要显示的字符串(支持 `NSAttributedString`,但此处仅设为 `String`)

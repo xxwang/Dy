@@ -2,7 +2,6 @@ import QuartzCore
 import UIKit
 
 // MARK: - 属性
-@MainActor
 public extension DyWrapper where Base: CAGradientLayer {
     /// 设置渐变类型
     /// - Parameter type: 渐变类型

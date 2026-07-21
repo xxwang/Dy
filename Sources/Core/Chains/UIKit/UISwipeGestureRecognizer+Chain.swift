@@ -1,7 +1,6 @@
 import UIKit
 
 // MARK: - 属性
-@MainActor
 public extension DyWrapper where Base: UISwipeGestureRecognizer {
     /// 设置滑动手势的方向
     /// - Parameter direction: 滑动方向

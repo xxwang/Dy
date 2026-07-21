@@ -86,7 +86,6 @@ open class DyTextView: UITextView {
 }
 
 // MARK: - 链式语法
-@MainActor
 public extension DyWrapper where Base: DyTextView {
     /// 设置占位文字内容
     /// - Parameter text: 要设置的文字
@@ -116,4 +115,3 @@ public extension DyWrapper where Base: DyTextView {
         return self
     }
 }
-

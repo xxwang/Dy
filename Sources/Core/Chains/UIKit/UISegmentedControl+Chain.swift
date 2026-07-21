@@ -1,7 +1,6 @@
 import UIKit
 
 // MARK: - 属性
-@MainActor
 public extension DyWrapper where Base: UISegmentedControl {
     /// 设置选中的分段索引
     /// - Parameter index: 分段索引(设为 `UISegmentedControl.noSegment` 可取消选中)

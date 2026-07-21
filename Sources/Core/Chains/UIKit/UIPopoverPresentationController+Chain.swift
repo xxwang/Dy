@@ -1,7 +1,6 @@
 import UIKit
 
 // MARK: - 链式配置(Popover)
-@MainActor
 public extension DyWrapper where Base: UIPopoverPresentationController {
     /// 设置代理
     /// - Parameter delegate: 代理对象

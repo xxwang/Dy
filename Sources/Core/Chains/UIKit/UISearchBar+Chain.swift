@@ -1,7 +1,6 @@
 import UIKit
 
 // MARK: - 属性
-@MainActor
 public extension DyWrapper where Base: UISearchBar {
     /// 设置占位符文本
     /// - Parameter placeholder: 占位文本
@@ -61,7 +60,6 @@ public extension DyWrapper where Base: UISearchBar {
 }
 
 // MARK: - 方法(自定义)
-@MainActor
 public extension DyWrapper where Base: UISearchBar {
     /// 清空搜索文本
     /// - Returns: `Self`

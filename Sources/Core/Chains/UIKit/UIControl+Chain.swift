@@ -1,7 +1,6 @@
 import UIKit
 
 // MARK: - 属性
-@MainActor
 public extension DyWrapper where Base: UIControl {
     /// 设置控件启用状态
     /// - Parameter isEnabled: 是否启用
@@ -50,7 +49,6 @@ public extension DyWrapper where Base: UIControl {
 }
 
 // MARK: - 方法
-@MainActor
 public extension DyWrapper where Base: UIControl {
     /// 链式添加 `target-action`
     /// - Parameters:

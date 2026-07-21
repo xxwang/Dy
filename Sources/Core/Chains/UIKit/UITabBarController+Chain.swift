@@ -1,7 +1,6 @@
 import UIKit
 
 // MARK: - 属性
-@MainActor
 public extension DyWrapper where Base: UITabBarController {
     /// 设置代理
     /// - Parameter delegate: 代理对象

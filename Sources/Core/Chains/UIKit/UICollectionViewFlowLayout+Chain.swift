@@ -1,7 +1,6 @@
 import UIKit
 
 // MARK: - 属性
-@MainActor
 public extension DyWrapper where Base: UICollectionViewFlowLayout {
     /// 设置`滚动方向上`相邻行(或列)之间的最小间距
     /// - Parameter spacing: 间距

@@ -1,7 +1,6 @@
 import UIKit
 
 // MARK: - 属性
-@MainActor
 public extension DyWrapper where Base: UITableView {
     /// 设置 `delegate`
     /// - Parameter delegate: 代理对象
@@ -165,7 +164,6 @@ public extension DyWrapper where Base: UITableView {
 }
 
 // MARK: - 方法
-@MainActor
 public extension DyWrapper where Base: UITableView {
     /// 滚动到最近选中的行
     /// - Parameters:
@@ -191,7 +189,6 @@ public extension DyWrapper where Base: UITableView {
 }
 
 // MARK: - 方法(自定义)
-@MainActor
 public extension DyWrapper where Base: UITableView {
     /// 滚动到顶部
     /// - Parameter animated: 是否动画

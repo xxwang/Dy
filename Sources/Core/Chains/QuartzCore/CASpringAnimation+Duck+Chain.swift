@@ -1,7 +1,6 @@
 import QuartzCore
 
 // MARK: - 属性
-@MainActor
 public extension DyWrapper where Base: CASpringAnimation {
     /// 设置弹簧系统的质量(Mass)
     /// - Parameter mass: 质量(单位：任意)值越大,惯性越大,动画越“迟钝”

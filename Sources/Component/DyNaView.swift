@@ -167,7 +167,6 @@ public extension DyNaView {
 }
 
 // MARK: - 链式设置
-@MainActor
 public extension DyWrapper where Base: DyNaView {
     /// 设置标题文本
     @discardableResult

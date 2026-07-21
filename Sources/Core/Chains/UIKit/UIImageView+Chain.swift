@@ -1,7 +1,6 @@
 import UIKit
 
 // MARK: - 属性
-@MainActor
 public extension DyWrapper where Base: UIImageView {
     /// 设置图像的`tintColor`(自动将图像转为模板模式)
     /// - Parameter color: 主色调
@@ -35,7 +34,6 @@ public extension DyWrapper where Base: UIImageView {
 }
 
 // MARK: - 方法(自定义)
-@MainActor
 public extension DyWrapper where Base: UIImageView {
     /// 添加模糊背景
     /// - Parameter style: 模糊样式

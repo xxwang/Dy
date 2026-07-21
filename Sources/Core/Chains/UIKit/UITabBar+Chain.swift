@@ -1,7 +1,6 @@
 import UIKit
 
 // MARK: - 属性
-@MainActor
 public extension DyWrapper where Base: UITabBar {
     /// 设置代理
     /// - Parameter tabBarDelegate: 代理对象
@@ -147,7 +146,6 @@ public extension DyWrapper where Base: UITabBar {
 }
 
 // MARK: - 方法
-@MainActor
 public extension DyWrapper where Base: UITabBar {
     /// 设置圆角
     /// - Parameters:

@@ -1,7 +1,6 @@
 import UIKit
 
 // MARK: - 属性
-@MainActor
 public extension DyWrapper where Base: UITableViewCell {
     /// 设置单元格的选中样式
     ///

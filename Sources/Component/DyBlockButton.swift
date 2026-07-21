@@ -3,7 +3,7 @@ import DyCore
 
 open class DyBlockButton: UIButton {
     /// 按钮点击处理回调
-    var clickBlock: (DyAction1<DyBlockButton>)?
+    var clickBlock: DyAction1<DyBlockButton>?
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -29,7 +29,6 @@ extension DyBlockButton {
     }
 }
 
-
 // MARK: - 链式配置(自定义)
 public extension DyWrapper where Base: DyBlockButton {
     /// 绑定点击处理回调
@@ -42,4 +41,3 @@ public extension DyWrapper where Base: DyBlockButton {
         return self
     }
 }
-

@@ -1,7 +1,6 @@
 import UIKit
 
 // MARK: - 属性
-@MainActor
 public extension DyWrapper where Base: UIPickerView {
     /// 设置代理
     /// - Parameter delegate: 实现 `UIPickerViewDelegate` 协议的对象

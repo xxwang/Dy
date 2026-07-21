@@ -1,7 +1,6 @@
 import UIKit
 
 // MARK: - 属性
-@MainActor
 public extension DyWrapper where Base: UIRefreshControl {
     /// 设置富文本标题
     /// - Parameters:
@@ -36,7 +35,6 @@ public extension DyWrapper where Base: UIRefreshControl {
 }
 
 // MARK: - 方法(自定义)
-@MainActor
 public extension DyWrapper where Base: UIRefreshControl {
     /// 开始刷新
     /// - Parameters:

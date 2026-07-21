@@ -1,7 +1,6 @@
 import UIKit
 
 // MARK: - 属性
-@MainActor
 public extension DyWrapper where Base: UINavigationBar {
     /// 设置导航栏是否半透明
     /// - Parameter isTranslucent: 是否半透明

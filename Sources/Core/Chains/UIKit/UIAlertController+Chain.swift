@@ -1,7 +1,6 @@
 import UIKit
 
 // MARK: - 属性
-@MainActor
 public extension DyWrapper where Base: UIAlertController {
     /// 设置标题
     /// - Parameter title: 标题文本
@@ -58,7 +57,6 @@ public extension DyWrapper where Base: UIAlertController {
 }
 
 // MARK: - 方法(自定义)
-@MainActor
 public extension DyWrapper where Base: UIAlertController {
     /// 从指定的`viewController` 弹出`UIAlertController`
     /// - Parameters:

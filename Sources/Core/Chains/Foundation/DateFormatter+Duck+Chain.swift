@@ -1,6 +1,5 @@
 import Foundation
 
-@MainActor
 public extension DyWrapper where Base: DateFormatter {
     /// 设置日期格式字符串
     /// - Parameter dateFormat: 日期格式（如 `"yyyy-MM-dd HH:mm"`）

@@ -1,7 +1,6 @@
 import QuartzCore
 
 // MARK: - 属性
-@MainActor
 public extension DyWrapper where Base: CAAnimation {
     /// 设置动画的代理对象
     /// - Parameter delegate: 遵循 `CAAnimationDelegate` 协议的代理实例
@@ -126,7 +125,6 @@ public extension DyWrapper where Base: CAAnimation {
 }
 
 // MARK: - 属性(自定义)
-@MainActor
 public extension DyWrapper where Base: CAAnimation {
     /// 使用闭包方式设置动画的开始与结束回调
     /// 推荐的 completion 处理方式,避免 `CATransaction` 的全局副作用

@@ -1,7 +1,6 @@
 import WebKit
 
 // MARK: - 属性
-@MainActor
 public extension DyWrapper where Base: WKWebView {
     /// 设置网页导航代理
     /// - Parameter delegate: 导航代理对象
@@ -23,7 +22,6 @@ public extension DyWrapper where Base: WKWebView {
 }
 
 // MARK: - 方法
-@MainActor
 public extension DyWrapper where Base: WKWebView {
     /// 手动刷新当前网页
     /// - Returns: `Self`
@@ -46,7 +44,9 @@ public extension DyWrapper where Base: WKWebView {
     /// - Returns: `Self`
     @discardableResult
     func goBack() -> Self {
-        if base.canGoBack { base.goBack() }
+        if base.canGoBack {
+            base.goBack()
+        }
         return self
     }
 
@@ -54,13 +54,14 @@ public extension DyWrapper where Base: WKWebView {
     /// - Returns: `Self`
     @discardableResult
     func goForward() -> Self {
-        if base.canGoForward { base.goForward() }
+        if base.canGoForward {
+            base.goForward()
+        }
         return self
     }
 }
 
 // MARK: - 方法(自定义)
-@MainActor
 public extension DyWrapper where Base: WKWebView {
     /// 使用`URL`字符串加载网页
     /// - Parameter string: 网页`URL`字符串
@@ -121,7 +122,6 @@ public extension DyWrapper where Base: WKWebView {
 }
 
 // MARK: - 脚本
-@MainActor
 public extension DyWrapper where Base: WKWebView {
     /// 向 `WKWebView` 注入 `JavaScript` 脚本
     /// - Parameters:

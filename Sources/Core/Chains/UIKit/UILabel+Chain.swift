@@ -1,7 +1,6 @@
 import UIKit
 
 // MARK: - 属性
-@MainActor
 public extension DyWrapper where Base: UILabel {
     /// 设置文字内容
     /// - Parameter text: 文字内容
@@ -112,7 +111,6 @@ public extension DyWrapper where Base: UILabel {
 }
 
 // MARK: - 属性(自定义)
-@MainActor
 public extension DyWrapper where Base: UILabel {
     /// 设置特定范围的字体
     /// - Parameters:
@@ -126,7 +124,7 @@ public extension DyWrapper where Base: UILabel {
     ///
     @discardableResult
     func attributedFont(_ font: UIFont, for range: NSRange) -> Self {
-        let attributedString = base.attributedText?.toNSMutableAttributedString()
+        let attributedString = base.attributedText?.dy_toNSMutableAttributedString()
             .dy
             .font(font, for: range)
             .build()

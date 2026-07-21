@@ -1,7 +1,6 @@
 import UIKit
 
 // MARK: - 属性
-@MainActor
 public extension DyWrapper where Base: UITextView {
     /// 设置是否可编辑
     /// - Parameter isEditable: 是否可以编辑
@@ -122,7 +121,6 @@ public extension DyWrapper where Base: UITextView {
 }
 
 // MARK: - 方法(自定义)
-@MainActor
 public extension DyWrapper where Base: UITextView {
     /// 滚动到顶部
     /// - Returns: `Self`

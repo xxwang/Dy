@@ -1,7 +1,6 @@
 import UIKit
 
 // MARK: - 属性(UIButton.Configuration)
-@MainActor
 public extension DyWrapper where Base: UIButton {
     /// 设置按钮的 `UIButton.Configuration`
     /// - Parameter configuration: 按钮的新配置对象
@@ -201,7 +200,6 @@ public extension DyWrapper where Base: UIButton {
 }
 
 // MARK: - 方法
-@MainActor
 public extension DyWrapper where Base: UIButton {
     /// 设置按钮在指定状态下的普通文本标题
     /// - Parameters:
@@ -281,7 +279,6 @@ public extension DyWrapper where Base: UIButton {
 }
 
 // MARK: - 方法(自定义)
-@MainActor
 public extension DyWrapper where Base: UIButton {
     /// 扩大按钮的点击区域
     /// - Parameter size: 向四周扩展的像素大小

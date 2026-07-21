@@ -1,7 +1,6 @@
 import UIKit
 
 // MARK: - 属性
-@MainActor
 public extension DyWrapper where Base: UILongPressGestureRecognizer {
     /// 设置触发长按所需的手指点击次数（轻点后长按）
     /// - Parameter count: 点击次数，默认为 0（即无需点击，直接长按）

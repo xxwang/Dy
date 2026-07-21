@@ -1,7 +1,6 @@
 import UIKit
 
 // MARK: - 属性
-@MainActor
 public extension DyWrapper where Base: UIBarButtonItem {
     /// 设置按钮的显示样式(如 `.plain`、`.done` 等)
     ///
@@ -119,7 +118,6 @@ public extension DyWrapper where Base: UIBarButtonItem {
 }
 
 // MARK: - 方法
-@MainActor
 public extension DyWrapper where Base: UIBarButtonItem {
     /// 设置按钮图标的渲染模式(例如保持原始颜色或使用模板色)
     ///

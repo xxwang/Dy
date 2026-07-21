@@ -1,7 +1,6 @@
 import UIKit
 
 // MARK: - 属性
-@MainActor
 public extension DyWrapper where Base: UITabBarItem {
     /// 设置标题
     /// - Parameter title: 标题文本
@@ -87,7 +86,6 @@ public extension DyWrapper where Base: UITabBarItem {
 }
 
 // MARK: - 方法
-@MainActor
 public extension DyWrapper where Base: UITabBarItem {
     /// 设置`Badge`文本属性
     /// - Parameters:

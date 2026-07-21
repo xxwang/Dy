@@ -1,7 +1,6 @@
 import UIKit
 
 // MARK: - 属性
-@MainActor
 public extension DyWrapper where Base: UISwitch {
     /// 设置开关的开启/关闭状态
     ///
@@ -46,7 +45,6 @@ public extension DyWrapper where Base: UISwitch {
 }
 
 // MARK: - 方法(自定义)
-@MainActor
 public extension DyWrapper where Base: UISwitch {
     /// 切换当前开关状态(开 ↔ 关),可选带动画
     ///

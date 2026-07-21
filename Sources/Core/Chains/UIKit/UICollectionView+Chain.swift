@@ -1,7 +1,6 @@
 import UIKit
 
 // MARK: - 属性
-@MainActor
 public extension DyWrapper where Base: UICollectionView {
     /// 设置 `delegate`
     /// - Parameter delegate: 代理对象
@@ -32,7 +31,6 @@ public extension DyWrapper where Base: UICollectionView {
 }
 
 // MARK: - 方法
-@MainActor
 public extension DyWrapper where Base: UICollectionView {
     /// 注册 `Cell` 类(纯代码方式),支持链式调用
     /// - Parameter cell: `UICollectionViewCell` 的子类类型
@@ -83,7 +81,6 @@ public extension DyWrapper where Base: UICollectionView {
 }
 
 // MARK: - 方法(自定义)
-@MainActor
 public extension DyWrapper where Base: UICollectionView {
     /// 滚动到指定 `Item`
     /// - Parameters:

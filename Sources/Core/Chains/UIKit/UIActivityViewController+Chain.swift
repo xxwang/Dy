@@ -1,7 +1,6 @@
 import UIKit
 
 // MARK: - 属性
-@MainActor
 public extension DyWrapper where Base: UIActivityViewController {
     /// 设置完整的排除类型列表(覆盖原有值)
     ///

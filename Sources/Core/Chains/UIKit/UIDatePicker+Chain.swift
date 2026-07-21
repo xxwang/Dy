@@ -1,7 +1,6 @@
 import UIKit
 
 // MARK: - 属性
-@MainActor
 public extension DyWrapper where Base: UIDatePicker {
     /// 设置时区
     /// - Parameter timeZone: 时间

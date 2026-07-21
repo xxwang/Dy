@@ -1,7 +1,6 @@
 import UIKit
 
 // MARK: - 页面跳转
-@MainActor
 public extension DyWrapper where Base: UIViewController {
     /// 以`Modal`形式显示控制器
     /// - Parameters:
@@ -34,7 +33,6 @@ public extension DyWrapper where Base: UIViewController {
 }
 
 // MARK: - 导航栈操作
-@MainActor
 public extension DyWrapper where Base: UIViewController {
     /// 返回到导航栈的根控制器
     func popToRoot(animated: Bool = true) {

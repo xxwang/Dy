@@ -1,7 +1,6 @@
 import QuartzCore
 
 // MARK: - 属性
-@MainActor
 public extension DyWrapper where Base: CAAnimationGroup {
     /// 设置动画组中包含的动画数组
     /// - Note: 若传入空数组 `[]`,动画组将执行但不包含任何子动画;

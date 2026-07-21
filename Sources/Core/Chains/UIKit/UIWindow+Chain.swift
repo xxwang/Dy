@@ -1,7 +1,6 @@
 import UIKit
 
 // MARK: - 属性
-@MainActor
 public extension DyWrapper where Base: UIWindow {
     /// 设置窗口的根视图控制器(root view controller)
     ///
@@ -43,7 +42,6 @@ public extension DyWrapper where Base: UIWindow {
 }
 
 // MARK: - 方法
-@MainActor
 public extension DyWrapper where Base: UIWindow {
     /// 将当前窗口设为应用的主窗口并显示出来
     /// - Returns: `Self`

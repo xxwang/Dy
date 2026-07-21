@@ -1,7 +1,6 @@
 import UIKit
 
 // MARK: - 属性
-@MainActor
 public extension DyWrapper where Base: UIViewController {
     /// 强制覆盖用户界面样式(亮色/暗色模式)
     /// - Parameter style: 样式
@@ -41,7 +40,6 @@ public extension DyWrapper where Base: UIViewController {
 }
 
 // MARK: - 自定义
-@MainActor
 public extension DyWrapper where Base: UIViewController {
     /// 安全地将子控制器添加到指定容器视图
     ///

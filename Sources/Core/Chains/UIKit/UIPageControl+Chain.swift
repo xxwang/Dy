@@ -1,7 +1,6 @@
 import UIKit
 
 // MARK: - 属性
-@MainActor
 public extension DyWrapper where Base: UIPageControl {
     /// 设置当前选中指示器的颜色
     ///
@@ -107,7 +106,6 @@ public extension DyWrapper where Base: UIPageControl {
 }
 
 // MARK: - 方法
-@MainActor
 public extension DyWrapper where Base: UIPageControl {
     /// 设置某一页的自定义指示器图像
     ///

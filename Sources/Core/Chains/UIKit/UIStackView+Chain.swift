@@ -1,7 +1,6 @@
 import UIKit
 
 // MARK: - 属性
-@MainActor
 public extension DyWrapper where Base: UIStackView {
     /// 设置子视图的排列轴向(水平或垂直)
     /// - Parameter axis: 布局轴向
@@ -89,7 +88,6 @@ public extension DyWrapper where Base: UIStackView {
 }
 
 // MARK: - 方法
-@MainActor
 public extension DyWrapper where Base: UIStackView {
     /// 批量添加多个排列子视图
     /// - Parameter views: 要添加的视图数组

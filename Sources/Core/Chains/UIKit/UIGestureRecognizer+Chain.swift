@@ -1,7 +1,6 @@
 import UIKit
 
 // MARK: - 属性
-@MainActor
 public extension DyWrapper where Base: UIGestureRecognizer {
     /// 启用或禁用手势识别器
     /// - Parameter enabled: 是否启用
@@ -86,7 +85,6 @@ public extension DyWrapper where Base: UIGestureRecognizer {
 }
 
 // MARK: - 方法
-@MainActor
 public extension DyWrapper where Base: UIGestureRecognizer {
     /// 添加`target-action`
     /// - Parameters:
@@ -121,7 +119,6 @@ public extension DyWrapper where Base: UIGestureRecognizer {
 }
 
 // MARK: - 自定义
-@MainActor
 public extension DyWrapper where Base: UIGestureRecognizer {
     /// 将手势识别器添加到指定视图
     /// - Parameter view: 目标视图

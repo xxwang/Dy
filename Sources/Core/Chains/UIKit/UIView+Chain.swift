@@ -1,7 +1,6 @@
 import UIKit
 
 // MARK: - 属性(布局)
-@MainActor
 public extension DyWrapper where Base: UIView {
     /// 设置控件的`frame`
     /// - Parameter frame: 要设置的值
@@ -120,7 +119,6 @@ public extension DyWrapper where Base: UIView {
 }
 
 // MARK: - 属性
-@MainActor
 public extension DyWrapper where Base: UIView {
     /// 是否启用 `autoresizing mask`(即`Autoresizing`)
     /// - Parameter enable: 是否开启
@@ -449,7 +447,6 @@ public extension DyWrapper where Base: UIView {
 }
 
 // MARK: - 图层属性
-@MainActor
 public extension DyWrapper where Base: UIView {
     /// 设置`layer.borderColor`
     /// - Parameter color: 边框颜色
@@ -561,7 +558,6 @@ public extension DyWrapper where Base: UIView {
 }
 
 // MARK: - 方法
-@MainActor
 public extension DyWrapper where Base: UIView {
     /// 添加子控件到当前视图上
     /// - Parameter subviews: 要添加的子控件数组
@@ -787,7 +783,6 @@ public extension DyWrapper where Base: UIView {
 }
 
 // MARK: - 自定义
-@MainActor
 public extension DyWrapper where Base: UIView {
     /// 把`self`添加到父视图
     /// - Parameter superview: 父视图,`self`将被添加为该视图的子视图
@@ -839,7 +834,6 @@ public extension DyWrapper where Base: UIView {
 }
 
 // MARK: - 手势
-@MainActor
 public extension DyWrapper where Base: UIView {
     /// 添加手势识别器
     /// - Parameter gestureRecognizer: 要添加的手势识别器
@@ -894,7 +888,6 @@ public extension DyWrapper where Base: UIView {
 }
 
 // MARK: - 手势(自定义)
-@MainActor
 public extension DyWrapper where Base: UIView {
     /// 添加单击手势
     /// - Parameter block: 手势触发时的回调

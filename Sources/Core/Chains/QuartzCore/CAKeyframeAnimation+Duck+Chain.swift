@@ -1,7 +1,6 @@
 import QuartzCore
 
 // MARK: - 属性
-@MainActor
 public extension DyWrapper where Base: CAKeyframeAnimation {
     /// 设置动画的关键帧值数组
     /// - Parameter values: 动画在各关键帧的值(如 `[0.0, 1.0]`、`[red, green, blue]`、`[point1, point2]`)

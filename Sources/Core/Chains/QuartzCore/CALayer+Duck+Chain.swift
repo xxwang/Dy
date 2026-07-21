@@ -2,7 +2,6 @@ import QuartzCore
 import UIKit
 
 // MARK: - 属性
-@MainActor
 public extension DyWrapper where Base: CALayer {
     /// 设置图层的 frame(位置与尺寸)
     /// - Parameter frame: 新的 frame

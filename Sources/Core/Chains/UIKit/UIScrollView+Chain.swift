@@ -1,7 +1,6 @@
 import UIKit
 
 // MARK: - 属性
-@MainActor
 public extension DyWrapper where Base: UIScrollView {
     /// 设置滚动视图的代理
     ///
@@ -183,7 +182,6 @@ public extension DyWrapper where Base: UIScrollView {
 }
 
 // MARK: - 方法(自定义)
-@MainActor
 public extension DyWrapper where Base: UIScrollView {
     /// 滚动到内容顶部(考虑 `contentInset.top`)
     ///
@@ -229,7 +227,6 @@ public extension DyWrapper where Base: UIScrollView {
 }
 
 // MARK: - 分页滚动(上下左右一页)
-@MainActor
 public extension DyWrapper where Base: UIScrollView {
     /// 向上滚动一页(若启用分页,则对齐页面;否则滚动一屏高度)
     ///

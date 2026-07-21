@@ -1,7 +1,6 @@
 import UIKit
 
 // MARK: - 属性
-@MainActor
 public extension DyWrapper where Base: UITextField {
     /// 设置普通文本内容
     /// - Parameter text: 要显示的文本
@@ -176,7 +175,6 @@ public extension DyWrapper where Base: UITextField {
 }
 
 // MARK: - 方法(自定义)
-@MainActor
 public extension DyWrapper where Base: UITextField {
     /// 清空文本和富文本内容
     /// - Returns: `Self`

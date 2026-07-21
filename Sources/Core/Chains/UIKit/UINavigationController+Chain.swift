@@ -1,7 +1,6 @@
 import UIKit
 
 // MARK: - 属性
-@MainActor
 public extension DyWrapper where Base: UINavigationController {
     /// 设置导航控制器的代理
     ///
@@ -24,7 +23,6 @@ public extension DyWrapper where Base: UINavigationController {
 }
 
 // MARK: - 方法
-@MainActor
 public extension DyWrapper where Base: UINavigationController {
     /// 设置导航栏是否隐藏
     ///

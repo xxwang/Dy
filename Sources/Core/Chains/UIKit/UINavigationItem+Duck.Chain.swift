@@ -1,7 +1,6 @@
 import UIKit
 
 // MARK: - 属性
-@MainActor
 public extension DyWrapper where Base: UINavigationItem {
     /// 设置大标题的显示模式
     /// - Note: 需配合 `UINavigationBar.prefersLargeTitles = true` 使用
