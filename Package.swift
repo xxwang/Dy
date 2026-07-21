@@ -8,6 +8,7 @@ let package = Package(
         .iOS(.v13),
     ],
     products: [
+        .library(name: "DyLogger", targets: ["DyLogger"]),
         .library(name: "DyCommon", targets: ["DyCommon"]),
         .library(name: "DyExtension", targets: ["DyExtension"]),
         .library(name: "DyComponent", targets: ["DyComponent"]),
@@ -15,6 +16,13 @@ let package = Package(
         .library(name: "Dy", targets: ["Dy"]),
     ],
     targets: [
+        .target(
+            name: "DyLogger",
+            path: "Sources/Logger",
+            swiftSettings: [
+                .define("SPM_MODE"),
+            ]
+        ),
         .target(
             name: "DyCommon",
             path: "Sources/Common",
