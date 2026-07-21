@@ -37,7 +37,7 @@ public extension DyWrapper where Base: UICollectionView {
     /// - Returns: `Self`
     @discardableResult
     func register(_ cell: (some UICollectionViewCell).Type) -> Self {
-        base.register(cellWithClass: cell)
+        base.dy_register(cellWithClass: cell)
         return self
     }
 

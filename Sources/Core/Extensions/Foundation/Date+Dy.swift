@@ -98,7 +98,7 @@ public extension Date {
     ///   date.dy_minute = 30  // 设置为 30 分
     ///   ```
     var dy_minute: Int {
-        get { calendar.component(.minute, from: self) }
+        get { dy_calendar.component(.minute, from: self) }
         set {
             guard (0 ... 59).contains(newValue) else { return }
             if let newDate = dy_calendar.date(bySetting: .minute, value: newValue, of: self) {
@@ -189,9 +189,9 @@ public extension Date {
     /// - Returns: 若字符串能被成功解析,则返回 `Date`;否则返回 `nil`
     init?(string: String, dateFormat: String? = nil) {
         let formatter: DateFormatter = if let format = dateFormat {
-            .formatter(format: format)
+            .dy_formatter(format: format)
         } else {
-            .iso8601
+            .dy_iso8601
         }
         guard let date = formatter.date(from: string) else { return nil }
         self = date
@@ -221,7 +221,7 @@ public extension Date {
                      locale: Locale = .current,
                      timeZone: TimeZone = .autoupdatingCurrent) -> String
     {
-        let formatter = DateFormatter.formatter(format: format, locale: locale, timeZone: timeZone)
+        let formatter = DateFormatter.dy_formatter(format: format, locale: locale, timeZone: timeZone)
         return formatter.string(from: self)
     }
 
@@ -229,7 +229,7 @@ public extension Date {
     ///
     /// - Returns: 形如 `"2024-01-01T12:00:00.000Z"` 的字符串
     func dy_toISO8601String() -> String {
-        DateFormatter.iso8601.string(from: self)
+        DateFormatter.dy_iso8601.string(from: self)
     }
 }
 
@@ -291,51 +291,51 @@ public extension Date {
     /// 是否是今天
     /// - Returns: 若落在当前日历日,返回 `true`
     func dy_isToday() -> Bool {
-        calendar.isDateInToday(self)
+        dy_calendar.isDateInToday(self)
     }
 
     /// 是否是昨天
     /// - Returns: 若落在昨天,返回 `true`
     func dy_isYesterday() -> Bool {
-        calendar.isDateInYesterday(self)
+        dy_calendar.isDateInYesterday(self)
     }
 
     /// 是否是明天
     /// - Returns: 若落在明天,返回 `true`
     func dy_isTomorrow() -> Bool {
-        calendar.isDateInTomorrow(self)
+        dy_calendar.isDateInTomorrow(self)
     }
 
     /// 是否是周末
     /// - Returns: 若被系统日历视为周末(如周六/周日),返回 `true`
     /// - Note: 周末定义因地区而异
     func dy_isWeekend() -> Bool {
-        calendar.isDateInWeekend(self)
+        dy_calendar.isDateInWeekend(self)
     }
 
     /// 是否是工作日(非周末)
     /// - Returns: 若不是周末,返回 `true`
     /// - Note: 不考虑法定节假日
     func dy_isWorkday() -> Bool {
-        !calendar.isDateInWeekend(self)
+        !dy_calendar.isDateInWeekend(self)
     }
 
     /// 是否在本周
     /// - Returns: 若与当前日期属于同一周(按 `.weekOfYear` 粒度),返回 `true`
     func dy_isThisWeek() -> Bool {
-        calendar.isDate(self, equalTo: Date(), toGranularity: .weekOfYear)
+        dy_calendar.isDate(self, equalTo: Date(), toGranularity: .weekOfYear)
     }
 
     /// 是否在本月
     /// - Returns: 若与当前日期属于同一月,返回 `true`
     func dy_isThisMonth() -> Bool {
-        calendar.isDate(self, equalTo: Date(), toGranularity: .month)
+        dy_calendar.isDate(self, equalTo: Date(), toGranularity: .month)
     }
 
     /// 是否在本年
     /// - Returns: 若与当前日期属于同年,返回 `true`
     func dy_isThisYear() -> Bool {
-        calendar.isDate(self, equalTo: Date(), toGranularity: .year)
+        dy_calendar.isDate(self, equalTo: Date(), toGranularity: .year)
     }
 
     /// 所在年份是否为闰年
@@ -347,7 +347,7 @@ public extension Date {
 
     /// 判断是否与另一日期处于同一天
     func dy_isSameDay(as date: Date) -> Bool {
-        calendar.isDate(self, inSameDayAs: date)
+        dy_calendar.isDate(self, inSameDayAs: date)
     }
 
     /// 判断是否在 `[startDate, endDate]` 区间内
@@ -366,8 +366,8 @@ public extension Date {
 
     /// 判断年、月、日是否完全相同
     func dy_isSameYearMonthDay(as date: Date) -> Bool {
-        let comps1 = calendar.dateComponents([.year, .month, .day], from: self)
-        let comps2 = calendar.dateComponents([.year, .month, .day], from: date)
+        let comps1 = dy_calendar.dateComponents([.year, .month, .day], from: self)
+        let comps2 = dy_calendar.dateComponents([.year, .month, .day], from: date)
         return comps1 == comps2
     }
 
@@ -378,7 +378,7 @@ public extension Date {
 
     /// 判断与另一日期在指定组件上的绝对差值是否 ≤ 给定值
     func dy_isWithin(_ value: Int, of component: Calendar.Component, comparedTo date: Date) -> Bool {
-        guard let diff = componentDifference(to: date, in: component) else { return false }
+        guard let diff = dy_componentDifference(to: date, in: component) else { return false }
         return abs(diff) <= value
     }
 }
@@ -414,7 +414,7 @@ public extension Date {
     /// - Warning: 此值`不是标准 Unix 时间戳`,不可用于网络传输
     func dy_localSec() -> TimeInterval {
         let offset = TimeZone.current.secondsFromGMT(for: self)
-        return timeIntervalSince1970 - offset.toDouble()
+        return timeIntervalSince1970 - offset.dy_toDouble()
     }
 
     /// 从时间戳字符串创建 `Date`
@@ -439,9 +439,9 @@ public extension Date {
     ///   - format: 日期格式,默认 `"yyyy-MM-dd HH:mm:ss"`
     /// - Returns: 格式化后的字符串;若时间戳无效,返回空字符串
     static func dy_toString(from timestamp: String, format: String = "yyyy-MM-dd HH:mm:ss") -> String {
-        guard let date = self.toDate(from: timestamp) else { return "" }
+        guard let date = self.dy_toDate(from: timestamp) else { return "" }
 
-        let formatter = DateFormatter.iso8601
+        let formatter = DateFormatter.dy_iso8601
         formatter.dateFormat = format
         return formatter.string(from: date)
     }
@@ -455,7 +455,7 @@ public extension Date {
     ///   适用于将 API 返回的 UTC 字符串按本地时间展示(如 `"2024-01-01T08:00:00Z"` 显示为本地 16:00)
     /// - Returns: 本地时区下对应的日期对象(时间点不变)
     func dy_asLocal() -> Date {
-        let offset = timeZone.secondsFromGMT(for: self)
+        let offset = dy_timeZone.secondsFromGMT(for: self)
         return addingTimeInterval(TimeInterval(offset))
     }
 
@@ -465,7 +465,7 @@ public extension Date {
     ///   适用于将用户选择的本地日历时间(如“今天 10:00”)转换为 UTC 存储
     /// - Returns: UTC 时区下对应的日期对象(时间点不变)
     func dy_asUTC() -> Date {
-        let offset = timeZone.secondsFromGMT(for: self)
+        let offset = dy_timeZone.secondsFromGMT(for: self)
         return addingTimeInterval(-TimeInterval(offset))
     }
 
@@ -492,13 +492,13 @@ public extension Date {
         }
 
         // 精确判断“昨天/今天/明天”
-        if isToday() {
+        if dy_isToday() {
             return "今天"
         }
-        if isYesterday() {
+        if dy_isYesterday() {
             return "昨天"
         }
-        if isTomorrow() {
+        if dy_isTomorrow() {
             return "明天"
         }
 
@@ -523,12 +523,12 @@ public extension Date {
     /// 获取中文星期名称(如“星期一”)
     var dy_weekdayString: String {
         let weekdays = ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"]
-        return weekdays[weekday - 1]
+        return weekdays[dy_weekday - 1]
     }
 
     /// 获取英文月份全称(如 "January")
     var dy_monthString: String {
-        self.toString("MMMM")
+        self.dy_toString("MMMM")
     }
 
     /// 获取本年第几周(ISO 周数,取决于日历配置)
@@ -543,7 +543,7 @@ public extension Date {
 
     /// 获取当前日期所属的季度(1–4)
     var dy_quarter: Int {
-        (month - 1) / 3 + 1
+        (dy_month - 1) / 3 + 1
     }
 
     /// 获取当前日期所属哪个年代
@@ -575,7 +575,7 @@ public extension Date {
     /// - Returns: 对齐后的日期(秒和纳秒归零)
     func dy_nearest(minutes: Int) -> Date? {
         guard minutes > 0 else { return nil }
-        var comps = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: self)
+        var comps = dy_calendar.dateComponents([.year, .month, .day, .hour, .minute], from: self)
         guard let min = comps.minute else { return nil }
         let remainder = min % minutes
         let newMinute = remainder < minutes / 2 ? min - remainder : min + (minutes - remainder)
@@ -602,12 +602,12 @@ public extension Date {
 
     /// 最近的 30 分钟整点
     func nearest30Minutes() -> Date? {
-        nearest(minutes: 30)
+        dy_nearest(minutes: 30)
     }
 
     /// 最近的整点小时(以 30 分钟为界：≤30 分 → 当前小时,>30 分 → 下一小时)
     func dy_nearestHour() -> Date? {
-        let min = minute
+        let min = dy_minute
         let base = dy_calendar.startOfDay(for: self)
         return min < 30 ? base : dy_calendar.date(byAdding: .hour, value: 1, to: base)
     }
@@ -655,7 +655,7 @@ public extension Date {
     /// 获取当前月份的天数
     static var dy_currentMonthDays: Int {
         let now = Date()
-        return dy_daysInMonth(year: now.year, month: now.month)
+        return dy_daysInMonth(year: now.dy_year, month: now.dy_month)
     }
 
     /// 返回与另一日期相差的秒数(可正可负)
@@ -685,7 +685,7 @@ public extension Date {
     ///   - unit: 日历单位(如 `.day`, `.month`)
     /// - Returns: 差值(可能为 `nil`,如跨时区异常)
     func dy_componentDifference(to date: Date, in unit: Calendar.Component) -> Int? {
-        let components = calendar.dateComponents([unit], from: date, to: self)
+        let components = dy_calendar.dateComponents([unit], from: date, to: self)
         return components.value(for: unit)
     }
 }
@@ -713,11 +713,11 @@ public extension Date {
     func dy_monthName(style: DyDateNameStyle = .wide) -> String {
         let formatter = DateFormatter()
         formatter.locale = Locale.current
-        formatter.calendar = calendar
-        formatter.timeZone = timeZone
+        formatter.calendar = dy_calendar
+        formatter.timeZone = dy_timeZone
 
         // 提取当前月份(1 = January, ..., 12 = December)
-        let month = calendar.component(.month, from: self)
+        let month = dy_calendar.component(.month, from: self)
         guard month >= 1, month <= 12 else { return "???" }
         let index = month - 1
 
@@ -757,11 +757,11 @@ public extension Date {
     func dy_dayName(style: DyDateNameStyle = .wide) -> String {
         let formatter = DateFormatter()
         formatter.locale = Locale.current
-        formatter.calendar = calendar
-        formatter.timeZone = timeZone
+        formatter.calendar = dy_calendar
+        formatter.timeZone = dy_timeZone
 
         // weekday 组件：1=Sunday, 2=Monday, ..., 7=Saturday(由 calendar 决定)
-        let weekday = calendar.component(.weekday, from: self)
+        let weekday = dy_calendar.component(.weekday, from: self)
         let index = weekday - 1
 
         // 根据样式选择对应的星期符号数组
@@ -787,7 +787,7 @@ public extension Date {
     ///
     /// - Returns: 新日期,若无法计算则返回 `nil`
     func dy_adding(_ component: Calendar.Component, value: Int) -> Date? {
-        calendar.date(byAdding: component, value: value, to: self)
+        dy_calendar.date(byAdding: component, value: value, to: self)
     }
 
     /// 将当前日期的指定组件设置为给定值(如将分钟设为 30)
@@ -808,20 +808,20 @@ public extension Date {
 
         // 如果有父单位,校验范围
         if let parent,
-           let range = calendar.range(of: component, in: parent, for: self),
+           let range = dy_calendar.range(of: component, in: parent, for: self),
            !range.contains(value)
         {
             return nil // 提前失败
         }
 
         // 否则直接尝试设置(让系统判断)
-        return calendar.date(bySetting: component, value: value, of: self)
+        return dy_calendar.date(bySetting: component, value: value, of: self)
     }
 
     /// 获取指定日历组件的起始时刻(如 `.day` → 00:00:00)
     func dy_beginning(of component: Calendar.Component) -> Date? {
         if component == .day {
-            return calendar.startOfDay(for: self)
+            return dy_calendar.startOfDay(for: self)
         }
 
         var neededComponents: Set<Calendar.Component> = []
@@ -835,14 +835,14 @@ public extension Date {
         default: return nil
         }
 
-        let comps = calendar.dateComponents(neededComponents, from: self)
-        return calendar.date(from: comps)
+        let comps = dy_calendar.dateComponents(neededComponents, from: self)
+        return dy_calendar.date(from: comps)
     }
 
     /// 获取指定日历组件的结束时刻(如 `.day` → 23:59:59)
     func dy_end(of component: Calendar.Component) -> Date? {
-        guard let next = adding(component, value: 1) else { return nil }
-        guard let beginningOfNext = next.beginning(of: component) else { return nil }
-        return beginningOfNext.adding(.second, value: -1)
+        guard let next = dy_adding(component, value: 1) else { return nil }
+        guard let beginningOfNext = next.dy_beginning(of: component) else { return nil }
+        return beginningOfNext.dy_adding(.second, value: -1)
     }
 }

@@ -48,11 +48,15 @@ public extension UIImage.SymbolConfiguration {
         }
 
         if let hierarchicalColor {
-            configuration = configuration.applying(UIImage.SymbolConfiguration(hierarchicalColor: hierarchicalColor))
+            if #available(iOS 15.0, *) {
+                configuration = configuration.applying(UIImage.SymbolConfiguration(hierarchicalColor: hierarchicalColor))
+            }
         }
 
         if let paletteColors, paletteColors.count > 0 {
-            configuration = configuration.applying(UIImage.SymbolConfiguration(paletteColors: paletteColors))
+            if #available(iOS 15.0, *) {
+                configuration = configuration.applying(UIImage.SymbolConfiguration(paletteColors: paletteColors))
+            }
         }
 
         return configuration

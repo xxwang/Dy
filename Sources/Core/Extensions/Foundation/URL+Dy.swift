@@ -45,7 +45,7 @@ public extension URL {
 
     /// 返回一个将路径中 `～` 展开后的 `URL`
     var dy_expandingTildeInUrl: URL {
-        URL(fileURLWithPath: self.path.expandingTildeInPath)
+        URL(fileURLWithPath: self.path.dy_expandingTildeInPath)
     }
 
     /// 获取 MIME 类型(支持 iOS 14+ 和降级方案)
@@ -111,7 +111,7 @@ public extension URL {
 public extension URL {
     /// 合并查询参数(等同于 appendParameters)
     func dy_mergeParameters(with parameters: [String: String]) -> URL {
-        appendParameters(parameters)
+        dy_appendParameters(parameters)
     }
 
     /// 删除指定查询参数
@@ -135,7 +135,7 @@ public extension URL {
 
     /// 追加查询参数(mutating 版本)
     mutating func dy_appendParameters(_ parameters: [String: String]) {
-        self = appendParameters(parameters)
+        self = dy_appendParameters(parameters)
     }
 
     /// 获取指定查询参数的值
@@ -159,7 +159,7 @@ public extension URL {
 
     /// 删除所有路径组件(mutating)
     mutating func dy_deleteAllPathComponents() {
-        self = deleteAllPathComponents()
+        self = dy_deleteAllPathComponents()
     }
 
     /// 移除 scheme(返回 "example.com/path?..." 形式)

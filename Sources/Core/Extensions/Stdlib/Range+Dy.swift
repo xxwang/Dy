@@ -94,7 +94,7 @@ public extension Range where Bound: Comparable {
     ///   print(r1.dy_difference(with: r2)) // [1..<4, 6..<10]
     ///   ```
     func dy_difference(with other: Range<Bound>) -> [Range<Bound>] {
-        guard let intersection = intersection(with: other) else {
+        guard let intersection = dy_intersection(with: other) else {
             return [self] // 无交集,整个区间保留
         }
 

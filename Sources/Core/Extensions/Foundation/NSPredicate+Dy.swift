@@ -33,7 +33,7 @@ public extension NSPredicate {
     /// - Parameter other: 要排除的谓词
     /// - Returns: 一个表示 `self AND NOT other` 的复合谓词
     func dy_excluding(_ other: NSPredicate) -> NSPredicate {
-        return self.and(other.not())
+        return self.dy_and(other.dy_not())
     }
 }
 
@@ -41,17 +41,17 @@ public extension NSPredicate {
 public extension NSPredicate {
     /// 逻辑非：`!predicate`
     static prefix func ! (rhs: NSPredicate) -> NSPredicate {
-        rhs.not()
+        rhs.dy_not()
     }
 
     /// 逻辑与：`p1 + p2`(约定俗成,但注意不是数学加法)
     /// - ⚠️ 语义上 `&&` 更合适,但 Swift 不允许重载 `&&` 用于非 Bool 类型
     static func + (lhs: NSPredicate, rhs: NSPredicate) -> NSPredicate {
-        lhs.and(rhs)
+        lhs.dy_and(rhs)
     }
 
     /// 逻辑或：`p1 | p2`
     static func | (lhs: NSPredicate, rhs: NSPredicate) -> NSPredicate {
-        lhs.or(rhs)
+        lhs.dy_or(rhs)
     }
 }

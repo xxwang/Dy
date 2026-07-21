@@ -65,13 +65,13 @@ public extension BinaryFloatingPoint {
 
     /// 将当前值转换为 `CGPoint`,`x` 和 `y` 坐标均使用该值
     func dy_toCGPoint() -> CGPoint {
-        let v = self.toCGFloat()
+        let v = self.dy_toCGFloat()
         return CGPoint(x: v, y: v)
     }
 
     /// 将当前值转换为 `CGSize`,`width` 和 `height` 均使用该值
     func dy_toCGSize() -> CGSize {
-        let v = self.toCGFloat()
+        let v = self.dy_toCGFloat()
         return CGSize(width: v, height: v)
     }
 }

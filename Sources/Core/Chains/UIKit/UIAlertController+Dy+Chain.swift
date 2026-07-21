@@ -75,7 +75,7 @@ public extension DyWrapper where Base: UIAlertController {
             }
         } else {
             DispatchQueue.main.async {
-                guard let topVC = UIWindow.topViewController else {
+                guard let topVC = UIWindow.dy_topViewController else {
                     print("⚠️ [UIAlertController.show] 无法找到顶层 ViewController,弹窗未显示")
                     return
                 }

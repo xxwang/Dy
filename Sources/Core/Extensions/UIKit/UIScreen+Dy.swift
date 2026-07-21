@@ -18,7 +18,7 @@ public extension UIScreen {
         onScreenRecordingStart: DyAction? = nil,
         onScreenRecordingStop: DyAction? = nil
     ) {
-        ScreenCaptureMonitor.shared.start(
+        DyScreenCaptureMonitor.shared.dy_start(
             onScreenshot: onScreenshot,
             onRecordingStart: onScreenRecordingStart,
             onRecordingStop: onScreenRecordingStop
@@ -27,13 +27,13 @@ public extension UIScreen {
 
     /// 停止监听截屏和录屏事件
     static func dy_stopMonitoring() {
-        ScreenCaptureMonitor.shared.stop()
+        DyScreenCaptureMonitor.shared.dy_stop()
     }
 }
 
 // MARK: - 屏幕捕获监控器(主线程隔离)
-private final class ScreenCaptureMonitor {
-    static let shared = ScreenCaptureMonitor()
+private final class DyScreenCaptureMonitor {
+    static let shared = DyScreenCaptureMonitor()
 
     private var isMonitoring = false
     private var screenshotObserver: NSObjectProtocol?

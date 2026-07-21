@@ -44,7 +44,7 @@ public extension Bundle {
     /// - 如果未设置,则回退到 `name`
     /// - Returns: 用户在设备上看到的应用名称
     static var dy_displayName: String {
-        (Bundle.main.infoDictionary?["CFBundleDisplayName"] as? String) ?? name
+        (Bundle.main.infoDictionary?["CFBundleDisplayName"] as? String) ?? dy_name
     }
 
     // MARK: 本地化与设备环境信息
@@ -61,10 +61,10 @@ public extension Bundle {
     ///   MyApp/2.1.0 (com.example.MyApp; Build/123; iPhone; iOS/17.5)
     /// - Returns: 符合常规格式的 User-Agent 字符串
     static var dy_userAgent: String {
-        let appName = displayName.replacingOccurrences(of: " ", with: "_")
-        let bundleID = identifier
-        let appVersion = appVersion
-        let build = buildVersion
+        let appName = dy_displayName.replacingOccurrences(of: " ", with: "_")
+        let bundleID = dy_identifier
+        let appVersion = dy_appVersion
+        let build = dy_buildVersion
 
         // 获取设备类型描述(如 "iPhone", "iPad")
         let deviceModel = UIDevice.current.model.replacingOccurrences(of: " ", with: "_")

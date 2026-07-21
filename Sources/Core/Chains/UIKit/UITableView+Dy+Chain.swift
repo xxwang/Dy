@@ -25,7 +25,7 @@ public extension DyWrapper where Base: UITableView {
     /// - Returns: `Self`
     @discardableResult
     func register(_ cellType: (some UITableViewCell).Type) -> Self {
-        base.register(withCellClass: cellType)
+        base.dy_register(withCellClass: cellType)
         return self
     }
 
@@ -156,6 +156,7 @@ public extension DyWrapper where Base: UITableView {
     /// 设置段头顶部额外间距
     /// - Parameter padding: 间距
     /// - Returns: `Self`
+    @available(iOS 15.0, *)
     @discardableResult
     func sectionHeaderTopPadding(_ padding: CGFloat) -> Self {
         base.sectionHeaderTopPadding = padding

@@ -193,7 +193,7 @@ public enum DyCompressionMode {
         case .medium: return Self.dataSizeRule.default
         case .high: return Self.dataSizeRule.high
         case let .custom(_, fileSize):
-            return fileSize.clamped(to: Self.dataSizeRule.min ... Self.dataSizeRule.max)
+            return fileSize.dy_clamped(to: Self.dataSizeRule.min ... Self.dataSizeRule.max)
         }
     }
 
@@ -204,7 +204,7 @@ public enum DyCompressionMode {
         case .medium: return Self.resolutionRule.default
         case .high: return Self.resolutionRule.high
         case let .custom(resolution, _):
-            return resolution.clamped(to: Self.resolutionRule.min ... Self.resolutionRule.max)
+            return resolution.dy_clamped(to: Self.resolutionRule.min ... Self.resolutionRule.max)
         }
     }
 
@@ -222,7 +222,7 @@ public enum DyCompressionMode {
         guard longestEdge > maxResolution else { return originalSize }
 
         let scale = maxResolution / longestEdge
-        return CGSize(width: originalSize.width * scale, height: originalSize.height * scale).rounded()
+        return CGSize(width: originalSize.width * scale, height: originalSize.height * scale).dy_rounded()
     }
 }
 
@@ -240,8 +240,8 @@ public extension UIImage {
         mode: DyCompressionMode = .medium,
         qualityRange: ClosedRange<CGFloat> = defaultQualityRange
     ) -> UIImage? {
-        guard let resizedImage = resized(to: mode.resizedSize(for: size)) else { return nil }
-        guard let data = resizedImage.compressedData(maxFileSize: mode.maxFileSize, qualityRange: qualityRange) else { return nil }
+        guard let resizedImage = dy_resized(to: mode.resizedSize(for: size)) else { return nil }
+        guard let data = resizedImage.dy_compressedData(maxFileSize: mode.maxFileSize, qualityRange: qualityRange) else { return nil }
         return UIImage(data: data)
     }
 
@@ -252,13 +252,13 @@ public extension UIImage {
     ///   - queue: 执行队列(默认后台队列)
     ///   - completion: 完成后回调(自动返回主线程)
     func dy_asyncCompress(
-        mode: CompressionMode = .medium,
+        mode: DyCompressionMode = .medium,
         qualityRange: ClosedRange<CGFloat> = defaultQualityRange,
         queue: DispatchQueue = .global(qos: .userInitiated),
         completion: @escaping DyAction1<UIImage?>
     ) {
         queue.async {
-            guard let result = self.compress(mode: mode, qualityRange: qualityRange) else {
+            guard let result = self.dy_compress(mode: mode, qualityRange: qualityRange) else {
                 DispatchQueue.main.async { completion(nil) }
                 return
             }
@@ -288,6 +288,41 @@ public extension UIImage {
         }
 
         return result ?? jpegData(compressionQuality: qualityRange.lowerBound)
+    }
+
+    /// 调整图片尺寸
+    private func dy_resized(to newSize: CGSize) -> UIImage? {
+        if size == newSize {
+            return self
+        }
+        return dy_resizedUsingImageIO(newSize) ?? dy_resizedUsingCoreGraphics(newSize)
+    }
+
+    /// 使用`ImageIO`调整尺寸(最佳性能)
+    /// - Parameter newSize: 目标大小
+    /// - Returns: `UIImage?`
+    private func dy_resizedUsingImageIO(_ newSize: CGSize) -> UIImage? {
+        guard let data = pngData(), let source = CGImageSourceCreateWithData(data as CFData, nil) else { return nil }
+
+        let options: [CFString: Any] = [
+            kCGImageSourceCreateThumbnailWithTransform: true,
+            kCGImageSourceCreateThumbnailFromImageAlways: true,
+            kCGImageSourceThumbnailMaxPixelSize: max(newSize.width, newSize.height),
+        ]
+
+        guard let cgImage = CGImageSourceCreateThumbnailAtIndex(source, 0, options as CFDictionary) else { return nil }
+        return UIImage(cgImage: cgImage)
+    }
+
+    /// 使用`CoreGraphics`调整尺寸(兼容方案)
+    /// - Parameter newSize: 目标大小
+    /// - Returns: `UIImage?`
+    private func dy_resizedUsingCoreGraphics(_ newSize: CGSize) -> UIImage? {
+        let renderer = UIGraphicsImageRenderer(size: newSize)
+        return renderer.image { context in
+            context.cgContext.interpolationQuality = .high
+            draw(in: CGRect(origin: .zero, size: newSize))
+        }
     }
 }
 
@@ -635,7 +670,7 @@ public extension UIImage {
     /// - Returns: 圆形裁剪后的图片
     func dy_circularImage() -> UIImage? {
         let diameter = min(size.width, size.height)
-        return roundedCorner(radius: diameter / 2)
+        return dy_roundedCorner(radius: diameter / 2)
     }
 }
 
@@ -1141,7 +1176,7 @@ public extension UIImage {
     ///   ```
     func dy_color(at point: CGPoint, completion: @Sendable @escaping (UIColor?) -> Void) {
         DispatchQueue.global(qos: .userInteractive).async {
-            let color = self.color(at: point)
+            let color = self.dy_color(at: point)
             DispatchQueue.main.async {
                 completion(color)
             }
@@ -1453,7 +1488,7 @@ public extension UIImage {
     func dy_pixelateFaces(pixelScale: CGFloat = 10.0) -> UIImage? {
         guard pixelScale > 0,
               let ciImage = CIImage(image: self),
-              let faces = detectFaces(),
+              let faces = dy_detectFaces(),
               !faces.isEmpty
         else {
             return self
@@ -1594,7 +1629,7 @@ public extension UIImage {
                 locations: locations?.map { min(max($0, 0), 1) } // 限制 0～1
             ) else { return }
 
-            let (startPoint, endPoint) = direction.points(for: size)
+            let (startPoint, endPoint) = direction.dy_points(for: size)
             context.cgContext.drawLinearGradient(
                 gradient,
                 start: startPoint,
@@ -1685,7 +1720,7 @@ public extension UIImage {
     private static func dy_animatedGIF(from data: Data) -> UIImage? {
         guard !data.isEmpty,
               let source = CGImageSourceCreateWithData(data as CFData, nil),
-              let (images, duration) = extractGIFFrames(from: source),
+              let (images, duration) = dy_extractGIFFrames(from: source),
               !images.isEmpty
         else {
             return nil
@@ -1718,6 +1753,57 @@ public extension UIImage {
             }
             return asset.data
         }
+    }
+
+    /// 从 `CGImageSource` 提取所有 GIF 帧及其总播放时长
+    ///
+    /// - Parameter source: 已创建的 GIF 图像源
+    /// - Returns: 包含帧图像数组和总时长的元组,若无有效帧则返回 `nil`
+    private static func dy_extractGIFFrames(from source: CGImageSource) -> (images: [UIImage], duration: TimeInterval)? {
+        let frameCount = CGImageSourceGetCount(source)
+        guard frameCount > 0 else { return nil }
+
+        var images: [UIImage] = []
+        var totalDuration: TimeInterval = 0
+
+        for index in 0 ..< frameCount {
+            guard let cgImage = CGImageSourceCreateImageAtIndex(source, index, nil) else {
+                continue
+            }
+
+            let delay = dy_gifFrameDelay(from: source, at: index)
+            totalDuration += max(delay, 0.01) // 防止零延迟导致播放异常
+
+            images.append(UIImage(cgImage: cgImage))
+        }
+
+        return images.isEmpty ? nil : (images, totalDuration)
+    }
+
+    /// 获取 GIF 指定帧的显示延迟时间(秒)
+    ///
+    /// 优先读取 `kCGImagePropertyGIFUnclampedDelayTime`,其次 `kCGImagePropertyGIFDelayTime`
+    /// 若均未设置,默认返回 0.1 秒
+    ///
+    /// - Parameters:
+    ///   - source: GIF 图像源
+    ///   - index: 帧索引(从 0 开始)
+    /// - Returns: 延迟时间(秒)
+    private static func dy_gifFrameDelay(from source: CGImageSource, at index: Int) -> TimeInterval {
+        guard let properties = CGImageSourceCopyPropertiesAtIndex(source, index, nil) as? [String: Any],
+              let gifDict = properties[kCGImagePropertyGIFDictionary as String] as? [String: Any]
+        else {
+            return 0.1
+        }
+
+        // 注意：GIF 规范中 delay time 单位为 1/100 秒
+        if let unclamped = gifDict[kCGImagePropertyGIFUnclampedDelayTime as String] as? Double, unclamped > 0 {
+            return unclamped
+        }
+        if let clamped = gifDict[kCGImagePropertyGIFDelayTime as String] as? Double, clamped > 0 {
+            return clamped
+        }
+        return 0.1
     }
 }
 
@@ -1823,7 +1909,7 @@ public extension UIImage {
             guard textSize.width > 0, textSize.height > 0 else { return }
 
             // 计算水印位置
-            let textRect = position.rect(forSize: textSize, inImageSize: size, margin: margin)
+            let textRect = position.dy_rect(forSize: textSize, inImageSize: size, margin: margin)
             text.draw(in: textRect, withAttributes: attributes)
         }
     }
@@ -1872,7 +1958,7 @@ public extension UIImage {
             self.draw(at: .zero)
 
             let watermarkSize = watermarkImage.size
-            let watermarkRect = position.rect(forSize: watermarkSize, inImageSize: size, margin: margin)
+            let watermarkRect = position.dy_rect(forSize: watermarkSize, inImageSize: size, margin: margin)
             watermarkImage.draw(in: watermarkRect, blendMode: .normal, alpha: min(max(alpha, 0), 1))
         }
     }

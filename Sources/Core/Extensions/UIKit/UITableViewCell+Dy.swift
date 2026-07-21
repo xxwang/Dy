@@ -16,7 +16,7 @@ public extension UITableViewCell {
 
     /// 返回当前 cell 在 tableView 中的 `IndexPath`(若存在)
     var dy_indexPath: IndexPath? {
-        guard let tableView = self.tableView else { return nil }
+        guard let tableView = self.dy_tableView else { return nil }
         return tableView.indexPath(for: self)
     }
 }

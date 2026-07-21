@@ -76,11 +76,11 @@ public extension MKCoordinateRegion {
         if span.latitudeDelta == 0, span.longitudeDelta == 0 {
             // 单点：使用 margin 反推一个合理 span
             let tempRegion = MKCoordinateRegion(center: center, span: MKCoordinateSpan(latitudeDelta: 0.001, longitudeDelta: 0.001))
-            return tempRegion.expanded(by: margin)
+            return tempRegion.dy_expanded(by: margin)
         }
 
         let baseRegion = MKCoordinateRegion(center: center, span: span)
-        return baseRegion.expanded(by: margin)
+        return baseRegion.dy_expanded(by: margin)
     }
 
     /// 在当前区域四周扩展指定距离(米)

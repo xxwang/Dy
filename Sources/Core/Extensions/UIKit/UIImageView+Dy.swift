@@ -12,7 +12,7 @@ public extension UIImageView {
         from url: URL,
         placeholder: UIImage? = nil,
         contentMode: UIView.ContentMode = .scaleAspectFill,
-        completion: @escaping DyAction<UIImage?, Error?>? = nil
+        completion: DyAction2<UIImage?, Error?>? = nil
     ) {
         self.contentMode = contentMode
         self.image = placeholder

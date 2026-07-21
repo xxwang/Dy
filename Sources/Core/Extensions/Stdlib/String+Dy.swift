@@ -390,7 +390,7 @@ public extension String {
     /// - Returns: 首次出现的起始索引（从 0 开始）,未找到返回 `-1`
     /// - Note: 基于 UTF-16 编码单位计算位置,与 JavaScript 行为一致
     func dy_positionFirst(of substring: String) -> Int {
-        return self.position(of: substring, backwards: false)
+        return self.dy_position(of: substring, backwards: false)
     }
 
     /// 返回子字符串最后一次出现的 UTF-16 索引位置
@@ -398,7 +398,17 @@ public extension String {
     /// - Parameter substring: 要查找的子字符串
     /// - Returns: 最后一次出现的起始索引,未找到返回 `-1`
     func dy_positionLast(of substring: String) -> Int {
-        return self.position(of: substring, backwards: true)
+        return self.dy_position(of: substring, backwards: true)
+    }
+
+    /// 私有辅助方法：统一实现前后向查找
+    private func dy_position(of substring: String, backwards: Bool) -> Int {
+        guard !substring.isEmpty else { return -1 }
+        let options: String.CompareOptions = backwards ? .backwards : []
+        if let range = self.range(of: substring, options: options) {
+            return self.utf16.distance(from: self.startIndex, to: range.lowerBound)
+        }
+        return -1
     }
 }
 
@@ -2262,17 +2272,17 @@ public extension String {
 public extension String {
     /// 加法：`self + other`
     func dy_add(_ other: String?) -> String {
-        return performOperation(other) { $0.adding($1) }
+        return dy_performOperation(other) { $0.adding($1) }
     }
 
     /// 减法：`self - other`
     func dy_subtract(_ other: String?) -> String {
-        return performOperation(other) { $0.subtracting($1) }
+        return dy_performOperation(other) { $0.subtracting($1) }
     }
 
     /// 乘法：`self * other`
     func dy_multiply(_ other: String?) -> String {
-        return performOperation(other) { $0.multiplying(by: $1) }
+        return dy_performOperation(other) { $0.multiplying(by: $1) }
     }
 
     /// 除法：`self / other`,若 `other` 为 nil、空或 0,则返回 `self`
@@ -2282,7 +2292,15 @@ public extension String {
         if divisor == .zero {
             return self
         }
-        return performOperation(other) { $0.dividing(by: $1) }
+        return dy_performOperation(other) { $0.dividing(by: $1) }
+    }
+
+    // MARK: Private Helpers
+    private func dy_performOperation(_ other: String?, _ operation: DyFunc2<NSDecimalNumber, NSDecimalNumber, NSDecimalNumber>) -> String {
+        let left = self.dy_toNSDecimalNumber()
+        let right = (other ?? "").dy_toNSDecimalNumber()
+        let result = operation(left, right)
+        return result.stringValue
     }
 }
 
@@ -2572,7 +2590,7 @@ public extension String {
         let fullHTML = "<span>\(processedHTML)</span>"
 
         guard let data = fullHTML.data(using: .utf8) else {
-            return fallbackAttributedString(font: font, lineSpacing: lineSpacing)
+            return dy_fallbackAttributedString(font: font, lineSpacing: lineSpacing)
         }
 
         do {
@@ -2603,7 +2621,7 @@ public extension String {
             return attributedString
         } catch {
             print("HTML to Attributed String failed: \(error)")
-            return fallbackAttributedString(font: font, lineSpacing: lineSpacing)
+            return dy_fallbackAttributedString(font: font, lineSpacing: lineSpacing)
         }
     }
 
@@ -2638,6 +2656,20 @@ public extension String {
         }
 
         return attributedString
+    }
+
+    // MARK: - 私有辅助方法
+    private func dy_fallbackAttributedString(font: UIFont?, lineSpacing: CGFloat?) -> NSMutableAttributedString {
+        let attr = NSMutableAttributedString(string: self)
+        if let font {
+            attr.addAttribute(.font, value: font, range: NSRange(location: 0, length: attr.length))
+        }
+        if let lineSpacing {
+            let style = NSMutableParagraphStyle()
+            style.lineSpacing = lineSpacing
+            attr.addAttribute(.paragraphStyle, value: style, range: NSRange(location: 0, length: attr.length))
+        }
+        return attr
     }
 }
 

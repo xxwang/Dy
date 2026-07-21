@@ -23,6 +23,7 @@ public extension DyWrapper where Base: UIPanGestureRecognizer {
     /// 设置允许的滚动类型掩码（如惯性滚动、直接拖拽等）
     /// - Parameter mask: 滚动类型组合掩码
     /// - Returns: `Self`
+    @available(iOS 13.4, *)
     @discardableResult
     func allowedScrollTypesMask(_ mask: UIScrollTypeMask) -> Self {
         base.allowedScrollTypesMask = mask

@@ -39,8 +39,8 @@ public extension UIDevice {
 
     /// 已用磁盘容量(字节)
     static var dy_usedDiskCapacityInBytes: Int64 {
-        let total = self.totalDiskCapacityInBytes
-        let free = self.freeDiskCapacityInBytes
+        let total = self.dy_totalDiskCapacityInBytes
+        let free = self.dy_freeDiskCapacityInBytes
         guard total > 0, free >= 0 else { return -1 }
         let used = total - free
         return used > 0 ? used : -1

@@ -78,7 +78,7 @@ public extension Decimal {
     ///   ```
     var dy_intValue: Int? {
         // 先检查是否为整数
-        guard self.isInteger else { return nil }
+        guard self.dy_isInteger else { return nil }
 
         // 转为 NSDecimalNumber 再转 Int(注意：可能溢出)
         let nsdn = NSDecimalNumber(decimal: self)

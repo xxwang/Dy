@@ -26,7 +26,7 @@ public extension UIWindow {
     /// - Returns: 最顶层的 `UIViewController`
     ///
     static var dy_topViewController: UIViewController? {
-        return self.findTopViewController(from: self.keyWindow?.rootViewController, depth: 0)
+        return self.dy_findTopViewController(from: self.dy_keyWindow?.rootViewController, depth: 0)
     }
 
     /// 递归查找最顶层控制器
@@ -38,24 +38,24 @@ public extension UIWindow {
         guard depth < 10, let base else { return base }
 
         if let nav = base as? UINavigationController {
-            return self.findTopViewController(from: nav.visibleViewController, depth: depth + 1)
+            return self.dy_findTopViewController(from: nav.visibleViewController, depth: depth + 1)
         }
 
         if let tab = base as? UITabBarController {
-            return self.findTopViewController(from: tab.selectedViewController, depth: depth + 1)
+            return self.dy_findTopViewController(from: tab.selectedViewController, depth: depth + 1)
         }
 
         if let split = base as? UISplitViewController {
             if let detail = split.viewControllers.last,
                split.isCollapsed == false
             {
-                return self.findTopViewController(from: detail, depth: depth + 1)
+                return self.dy_findTopViewController(from: detail, depth: depth + 1)
             }
-            return self.findTopViewController(from: split.viewControllers.first, depth: depth + 1)
+            return self.dy_findTopViewController(from: split.viewControllers.first, depth: depth + 1)
         }
 
         if let presented = base.presentedViewController {
-            return self.findTopViewController(from: presented, depth: depth + 1)
+            return self.dy_findTopViewController(from: presented, depth: depth + 1)
         }
 
         return base

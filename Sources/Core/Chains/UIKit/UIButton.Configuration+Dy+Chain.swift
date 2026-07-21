@@ -1,8 +1,10 @@
 import UIKit
 
+@available(iOS 15.0, *)
 extension UIButton.Configuration: DyExtension {}
 
 // MARK: - 属性
+@available(iOS 15.0, *)
 public extension DyWrapper where Base == UIButton.Configuration {
     /// 设置按钮在指定状态下的普通文本标题
     /// - Parameters:

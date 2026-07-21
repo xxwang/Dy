@@ -48,7 +48,7 @@ public extension Calendar {
     ///   }
     ///   ```
     func dy_endOfMonth(year: Int, month: Int) -> Date? {
-        guard let start = startOfMonth(year: year, month: month),
+        guard let start = dy_startOfMonth(year: year, month: month),
               let next = self.date(byAdding: .month, value: 1, to: start)
         else {
             return nil
@@ -117,7 +117,7 @@ public extension Calendar {
     ///   weekDates.forEach { print($0) }
     ///   ```
     func dy_datesInWeek(for date: Date = Date()) -> [Date] {
-        guard let start = startOfWeek(for: date) else { return [] }
+        guard let start = dy_startOfWeek(for: date) else { return [] }
         return (0 ..< 7).compactMap { offset in
             self.date(byAdding: .day, value: offset, to: start)
         }
@@ -353,7 +353,7 @@ public extension Calendar {
 
     /// 获取指定日期所在月的最后一天(23:59:59)
     func dy_endOfMonth(for date: Date = Date()) -> Date? {
-        guard let startOfMonth = startOfMonth(for: date),
+        guard let startOfMonth = dy_startOfMonth(for: date),
               let startOfNextMonth = self.date(byAdding: .month, value: 1, to: startOfMonth)
         else {
             return nil

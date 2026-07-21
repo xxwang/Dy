@@ -1,6 +1,7 @@
 import UIKit
 
 // MARK: - 属性
+@available(iOS 15.0, *)
 public extension DyWrapper where Base: UISheetPresentationController {
     /// 设置代理
     /// - Parameter delegate: 代理对象

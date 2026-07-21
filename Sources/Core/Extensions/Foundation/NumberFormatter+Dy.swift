@@ -101,7 +101,7 @@ public extension NumberFormatter {
     ///   - groupingSize: 每组位数(通常为 3)
     /// - Returns: 格式化后的字符串;失败返回 `nil`
     static func dy_withGroupingSeparator(_ string: String, separator: String = ",", groupingSize: Int = 3) -> String? {
-        return customFormat(string) { formatter in
+        return dy_customFormat(string) { formatter in
             formatter.numberStyle = .decimal
             formatter.usesGroupingSeparator = true
             formatter.groupingSeparator = separator
@@ -118,7 +118,7 @@ public extension NumberFormatter {
     ///   - position: 填充位置(默认在前缀前)
     /// - Returns: 格式化后的字符串;失败返回 `nil`
     static func dy_padded(_ string: String, width: Int, padding: String = "0", position: PadPosition = .beforePrefix) -> String? {
-        return customFormat(string) { formatter in
+        return dy_customFormat(string) { formatter in
             formatter.formatWidth = width
             formatter.paddingCharacter = padding
             formatter.paddingPosition = position
@@ -141,7 +141,7 @@ public extension NumberFormatter {
         minFraction: Int? = nil,
         maxFraction: Int? = nil
     ) -> String? {
-        return customFormat(string) { formatter in
+        return dy_customFormat(string) { formatter in
             if let min = minInteger {
                 formatter.minimumIntegerDigits = min
             }
@@ -165,7 +165,7 @@ public extension NumberFormatter {
     ///   - suffix: 正数后缀(如 `" USD"`)
     /// - Returns: 格式化后的字符串;失败返回 `nil`
     static func dy_withAffixes(_ string: String, prefix: String = "", suffix: String = "") -> String? {
-        return customFormat(string) { formatter in
+        return dy_customFormat(string) { formatter in
             formatter.positivePrefix = prefix
             formatter.positiveSuffix = suffix
         }
@@ -178,7 +178,7 @@ public extension NumberFormatter {
     ///   - format: 格式模板
     /// - Returns: 格式化后的字符串;失败返回 `nil`
     static func dy_withPositiveFormat(_ string: String, format: String) -> String? {
-        return customFormat(string) { formatter in
+        return dy_customFormat(string) { formatter in
             formatter.positiveFormat = format
         }
     }

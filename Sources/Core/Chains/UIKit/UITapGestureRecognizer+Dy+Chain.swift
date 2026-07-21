@@ -23,6 +23,7 @@ public extension DyWrapper where Base: UITapGestureRecognizer {
     /// 设置触发点击所需匹配的按钮掩码（用于外接鼠标或触控板）
     /// - Parameter mask: 按钮类型掩码（如主按钮、副按钮等）
     /// - Returns: `Self`
+    @available(iOS 13.4, *)
     @discardableResult
     func buttonMaskRequired(_ mask: UIEvent.ButtonMask) -> Self {
         base.buttonMaskRequired = mask

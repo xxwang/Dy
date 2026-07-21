@@ -17,7 +17,7 @@ public extension UIView {
         completion: ((Bool) -> Void)? = nil
     ) {
         let newTransform = relative ? self.transform.rotated(by: angle) : CGAffineTransform(rotationAngle: angle)
-        self.add2DTransform(transform: newTransform, animated: animated, duration: duration, completion: completion)
+        self.dy_add2DTransform(transform: newTransform, animated: animated, duration: duration, completion: completion)
     }
 
     /// 缩放
@@ -37,7 +37,7 @@ public extension UIView {
         completion: ((Bool) -> Void)? = nil
     ) {
         let newTransform = relative ? self.transform.scaledBy(x: x, y: y) : CGAffineTransform(scaleX: x, y: y)
-        self.add2DTransform(transform: newTransform, animated: animated, duration: duration, completion: completion)
+        self.dy_add2DTransform(transform: newTransform, animated: animated, duration: duration, completion: completion)
     }
 
     /// 添加2D 变换(支持动画)
@@ -91,7 +91,7 @@ public extension UIView {
         let rotation = CATransform3DRotate(transform, angle, 1, 0, 0)
         let newTransform = relative ? CATransform3DConcat(current, rotation) : rotation
 
-        self.add3DTransform(newTransform, animated: animated, duration: duration, completion: completion)
+        self.dy_add3DTransform(newTransform, animated: animated, duration: duration, completion: completion)
     }
 
     /// 沿 Y 轴进行 3D 旋转
@@ -116,7 +116,7 @@ public extension UIView {
         let rotation = CATransform3DRotate(transform, angle, 0, 1, 0)
         let newTransform = relative ? CATransform3DConcat(current, rotation) : rotation
 
-        self.add3DTransform(newTransform, animated: animated, duration: duration, completion: completion)
+        self.dy_add3DTransform(newTransform, animated: animated, duration: duration, completion: completion)
     }
 
     /// 沿 Z 轴进行 3D 旋转（等效于 2D 旋转，但使用 3D 引擎）
@@ -141,7 +141,7 @@ public extension UIView {
         let rotation = CATransform3DRotate(transform, angle, 0, 0, 1)
         let newTransform = relative ? CATransform3DConcat(current, rotation) : rotation
 
-        self.add3DTransform(newTransform, animated: animated, duration: duration, completion: completion)
+        self.dy_add3DTransform(newTransform, animated: animated, duration: duration, completion: completion)
     }
 
     /// 复合 3D 旋转（按 X → Y → Z 顺序应用）
@@ -174,7 +174,7 @@ public extension UIView {
         transform = CATransform3DRotate(transform, z, 0, 0, 1)
         let newTransform = relative ? CATransform3DConcat(current, transform) : transform
 
-        self.add3DTransform(newTransform, animated: animated, duration: duration, completion: completion)
+        self.dy_add3DTransform(newTransform, animated: animated, duration: duration, completion: completion)
     }
 
     /// 3D 缩放
@@ -203,7 +203,7 @@ public extension UIView {
         let scale = CATransform3DScale(transform, x, y, z)
         let newTransform = relative ? CATransform3DConcat(current, scale) : scale
 
-        self.add3DTransform(newTransform, animated: animated, duration: duration, completion: completion)
+        self.dy_add3DTransform(newTransform, animated: animated, duration: duration, completion: completion)
     }
 
     /// 添加3D变化(支持动画)
@@ -302,7 +302,7 @@ public extension UIView {
     ///   - position: 相对于自身 `bounds` 的归一化位置 (`0～1`),默认右上角 (`x=1, y=0`)
     func dy_showBadge(_ number: String, position: CGPoint = CGPoint(x: 1, y: 0)) {
         guard number != "0" else {
-            self.removeBadge()
+            self.dy_removeBadge()
             return
         }
 
@@ -355,22 +355,89 @@ public extension UIView {
         density: CGFloat = 0.5,
         angle: CGFloat = -CGFloat.pi / 6
     ) {
-        self.removeWatermark()
-        let config = UIView.WatermarkConfig(text: text, textColor: textColor, font: font, density: density, angle: angle)
+        self.dy_removeWatermark()
+        let config = UIView.DyWatermarkConfig(text: text, textColor: textColor, font: font, density: density, angle: angle)
         self.watermarkConfig = config
-        self.applyWatermark(with: config)
+        self.dy_applyWatermark(with: config)
     }
 
     /// 手动刷新水印(例如在 `viewDidLayoutSubviews`、`rotation` 后调用)
     func dy_updateWatermark() {
         guard let config = self.watermarkConfig else { return }
-        self.applyWatermark(with: config)
+        self.dy_applyWatermark(with: config)
     }
 
     /// 移除水印
     func dy_removeWatermark() {
-        self.removeWatermarkLayers()
+        self.dy_removeWatermarkLayers()
         self.watermarkConfig = nil
+    }
+
+    private func dy_applyWatermark(with config: UIView.DyWatermarkConfig) {
+        self.dy_removeWatermarkLayers()
+        self.dy_addWatermarkLayers(
+            text: config.text,
+            textColor: config.textColor,
+            font: config.font,
+            density: config.density,
+            angle: config.angle
+        )
+    }
+
+    private func dy_addWatermarkLayers(text: String, textColor: UIColor, font: UIFont, density: CGFloat, angle: CGFloat) {
+        let textSize = (text as NSString).boundingRect(
+            with: CGSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude),
+            options: .usesLineFragmentOrigin,
+            attributes: [.font: font],
+            context: nil
+        ).size
+
+        let safeDensity = max(density, 0.01)
+        let hSpacing = textSize.width * 2 / safeDensity
+        let vSpacing = textSize.height * 2 / safeDensity
+
+        let rows = Int((bounds.height + vSpacing) / vSpacing) + 1
+        let cols = Int((bounds.width + hSpacing) / hSpacing) + 1
+
+        for r in 0 ..< rows {
+            for c in 0 ..< cols {
+                let x = CGFloat(c) * hSpacing - hSpacing / 2
+                let y = CGFloat(r) * vSpacing - vSpacing / 2
+                let layer = self.dy_createWatermarkLayer(text: text, textColor: textColor, font: font, position: CGPoint(x: x, y: y), angle: angle)
+                layer.name = "dy.watermark"
+                self.layer.addSublayer(layer)
+            }
+        }
+    }
+
+    private func dy_removeWatermarkLayers() {
+        self.layer.sublayers?.forEach {
+            if $0.name == "dy.watermark" {
+                $0.removeFromSuperlayer()
+            }
+        }
+    }
+
+    private func dy_createWatermarkLayer(text: String, textColor: UIColor, font: UIFont, position: CGPoint, angle: CGFloat) -> CALayer {
+        let size = (text as NSString).boundingRect(
+            with: CGSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude),
+            options: .usesLineFragmentOrigin,
+            attributes: [.font: font],
+            context: nil
+        ).size
+
+        let renderer = UIGraphicsImageRenderer(size: size)
+        let image = renderer.image { ctx in
+            textColor.set()
+            (text as NSString).draw(at: .zero, withAttributes: [.font: font, .foregroundColor: textColor])
+        }
+
+        let layer = CALayer()
+        layer.contents = image.cgImage
+        layer.frame = CGRect(origin: position, size: size)
+        layer.transform = CATransform3DMakeRotation(angle, 0, 0, 1)
+        layer.name = "dy.watermark.content"
+        return layer
     }
 }
 
@@ -386,7 +453,7 @@ public extension UIView {
     ///   - `不会自动修改 `isHidden``,请确保视图已处于可见状态(`isHidden = false`)
     ///   - 若视图当前 `alpha == 1`,仍会执行动画(从当前 alpha 到 1)
     func dy_fadeIn(
-        options: UIView.FadeAnimationOptions = UIView.FadeAnimationOptions(),
+        options: UIView.DyFadeAnimationOptions = UIView.DyFadeAnimationOptions(),
         completion: ((Bool) -> Void)? = nil
     ) {
         // 仅重置 alpha,不干预 isHidden(避免意外显示)
@@ -414,7 +481,7 @@ public extension UIView {
     ///   - 若 `removeOnCompletion = true`,视图将被移除,后续操作无效
     ///   - `hideOnCompletion` 在 `removeOnCompletion = true` 时被忽略
     func dy_fadeOut(
-        options: UIView.FadeAnimationOptions = UIView.FadeAnimationOptions(),
+        options: UIView.DyFadeAnimationOptions = UIView.DyFadeAnimationOptions(),
         completion: ((Bool) -> Void)? = nil
     ) {
         let finalCompletion: (Bool) -> Void = { [weak self] finished in
@@ -457,8 +524,8 @@ public extension UIView {
     ///   - 弹簧模式 (`spring`) 会模拟自然衰减的弹性抖动,`不依赖 `shakeCount` 和 `duration``,
     ///     但 `amplitude` 仍控制初始偏移量
     func dy_shake(
-        direction: UIView.ShakeDirection = .horizontal,
-        animationType: UIView.ShakeAnimationType = .easeOut,
+        direction: UIView.DyShakeDirection = .horizontal,
+        animationType: UIView.DyShakeAnimationType = .easeOut,
         duration: TimeInterval = 0.6,
         amplitude: CGFloat = 20,
         shakeCount: Int = 5,
@@ -469,13 +536,13 @@ public extension UIView {
         self.layer.removeAnimation(forKey: "springShake")
 
         if animationType == .spring {
-            self.springShake(
+            self.dy_springShake(
                 direction: direction,
                 amplitude: amplitude,
                 completion: completion
             )
         } else {
-            let animation = self.createShakeAnimation(
+            let animation = self.dy_createShakeAnimation(
                 direction: direction,
                 animationType: animationType,
                 duration: duration,
@@ -489,6 +556,106 @@ public extension UIView {
             self.layer.add(animation, forKey: "shake")
             CATransaction.commit()
         }
+    }
+
+    /// 创建基础关键帧抖动动画(非弹簧)
+    private func dy_createShakeAnimation(
+        direction: UIView.DyShakeDirection,
+        animationType: UIView.DyShakeAnimationType,
+        duration: TimeInterval,
+        amplitude: CGFloat,
+        shakeCount: Int
+    ) -> CAKeyframeAnimation {
+        let keyPath = direction == .horizontal ?
+            "transform.translation.x" : "transform.translation.y"
+
+        let animation = CAKeyframeAnimation(keyPath: keyPath)
+        animation.duration = duration
+        animation.isRemovedOnCompletion = true
+        animation.fillMode = .forwards
+
+        // 设置缓动函数
+        switch animationType {
+        case .linear:
+            animation.timingFunction = CAMediaTimingFunction(name: .linear)
+        case .easeIn:
+            animation.timingFunction = CAMediaTimingFunction(name: .easeIn)
+        case .easeOut:
+            animation.timingFunction = CAMediaTimingFunction(name: .easeOut)
+        case .easeInOut:
+            animation.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+        case .spring:
+            assertionFailure("Spring should not use this path")
+        }
+
+        // 生成振幅递减的关键帧值
+        var values: [CGFloat] = [0] // 从原点开始
+        let step = amplitude / CGFloat(shakeCount)
+
+        for i in 1 ... shakeCount {
+            let currentAmplitude = amplitude - step * CGFloat(i - 1)
+            if i % 2 == 1 {
+                values.append(currentAmplitude)
+            } else {
+                values.append(-currentAmplitude)
+            }
+        }
+        values.append(0) // 回到原点
+
+        animation.values = values
+        return animation
+    }
+
+    /// 创建弹簧抖动效果(更真实的物理回弹)
+    private func dy_springShake(
+        direction: UIView.DyShakeDirection,
+        amplitude: CGFloat,
+        completion: (() -> Void)?
+    ) {
+        let keyPath = direction == .horizontal ?
+            "transform.translation.x" : "transform.translation.y"
+
+        // 第一次向正方向弹出
+        let firstSpring = CASpringAnimation(keyPath: keyPath)
+        firstSpring.fromValue = 0
+        firstSpring.toValue = amplitude
+        firstSpring.damping = 8
+        firstSpring.stiffness = 200
+        firstSpring.mass = 1.0
+        firstSpring.initialVelocity = 5
+        firstSpring.duration = firstSpring.settlingDuration
+
+        // 第二次向负方向回弹(衔接第一次)
+        let secondSpring = CASpringAnimation(keyPath: keyPath)
+        secondSpring.fromValue = amplitude
+        secondSpring.toValue = -amplitude * 0.7 // 衰减
+        secondSpring.beginTime = CACurrentMediaTime() + firstSpring.duration
+        secondSpring.damping = 8
+        secondSpring.stiffness = 200
+        secondSpring.mass = 1.0
+        secondSpring.duration = secondSpring.settlingDuration
+
+        // 第三次回到原点
+        let thirdSpring = CASpringAnimation(keyPath: keyPath)
+        thirdSpring.fromValue = -amplitude * 0.7
+        thirdSpring.toValue = 0
+        thirdSpring.beginTime = CACurrentMediaTime() + firstSpring.duration + secondSpring.duration
+        thirdSpring.damping = 8
+        thirdSpring.stiffness = 200
+        thirdSpring.mass = 1.0
+        thirdSpring.duration = thirdSpring.settlingDuration
+
+        // 组合动画
+        let group = CAAnimationGroup()
+        group.animations = [firstSpring, secondSpring, thirdSpring]
+        group.duration = firstSpring.duration + secondSpring.duration + thirdSpring.duration
+        group.isRemovedOnCompletion = true
+        group.fillMode = .forwards
+
+        CATransaction.begin()
+        CATransaction.setCompletionBlock(completion)
+        self.layer.add(group, forKey: "springShake")
+        CATransaction.commit()
     }
 }
 
@@ -504,8 +671,8 @@ public extension UIView {
     ///   - `config.cellImages` 中的图片必须存在于 Asset Catalog
     ///   - 若图片加载失败,该粒子将被跳过(不会崩溃)
     @discardableResult
-    func dy_startEmitter(config: UIView.EmitterConfig) -> CAEmitterLayer {
-        self.stopEmitter()
+    func dy_startEmitter(config: UIView.DyEmitterConfig) -> CAEmitterLayer {
+        self.dy_stopEmitter()
 
         let emitter = CAEmitterLayer()
         emitter.name = "emitter"
@@ -631,7 +798,7 @@ public extension UIView {
     /// - 注意:
     ///   - 请确保在`主线程`调用,且视图已完成布局和渲染
     ///   - 对于大视图可能消耗较多内存
-    func dy_captureScreenshot(options: UIView.ScreenshotOptions = UIView.ScreenshotOptions()) -> UIImage? {
+    func dy_captureScreenshot(options: UIView.DyScreenshotOptions = UIView.DyScreenshotOptions()) -> UIImage? {
         assert(Thread.isMainThread, "captureScreenshot must be called on main thread")
 
         let bounds = self.bounds
@@ -661,7 +828,7 @@ public extension UIView {
             return nil
         }
 
-        return image.compress(qualityRange: options.qualityRange)
+        return image.dy_compress(qualityRange: options.qualityRange)
     }
 
     /// 截取视图指定区域
@@ -672,8 +839,8 @@ public extension UIView {
     ///
     /// - 注意:
     ///   - 区域超出视图范围会自动裁剪
-    func dy_captureScreenshot(in rect: CGRect, options: UIView.ScreenshotOptions = UIView.ScreenshotOptions()) -> UIImage? {
-        guard let fullImage = self.captureScreenshot(options: options) else {
+    func dy_captureScreenshot(in rect: CGRect, options: UIView.DyScreenshotOptions = UIView.DyScreenshotOptions()) -> UIImage? {
+        guard let fullImage = self.dy_captureScreenshot(options: options) else {
             return nil
         }
 
@@ -691,6 +858,6 @@ public extension UIView {
             height: validRect.size.height * fullImage.scale
         )
 
-        return fullImage.crop(to: scaledRect)
+        return fullImage.dy_crop(to: scaledRect)
     }
 }

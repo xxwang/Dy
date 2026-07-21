@@ -31,7 +31,7 @@ public extension Timer {
     /// - Note: 内部使用 `.common` 模式，确保在主线程执行；无需手动管理 timer 生命周期
     static func dy_after(_ delay: TimeInterval, block: @Sendable @escaping () -> Void) {
         // ⚠️ 必须持有 timer 引用，否则可能被提前释放
-        let timer = scheduled(timeInterval: delay, repeats: false) { _ in
+        let timer = dy_scheduled(timeInterval: delay, repeats: false) { _ in
             block()
         }
         // 无需外部持有，timer 在触发后自动失效
@@ -61,7 +61,7 @@ public extension Timer {
         let startTime = Date()
         let endTime = startTime.addingTimeInterval(duration)
 
-        return scheduled(timeInterval: interval, repeats: true) { timer in
+        return dy_scheduled(timeInterval: interval, repeats: true) { timer in
             let now = Date()
             let remaining = endTime.timeIntervalSince(now)
 

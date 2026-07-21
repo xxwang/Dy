@@ -69,7 +69,7 @@ public extension UIBezierPath {
         to endPoint: CGPoint,
         clockwise: Bool
     ) {
-        guard let center = self.calculateCircleCenter(
+        guard let center = self.dy_calculateCircleCenter(
             pointA: startPoint,
             pointB: middlePoint,
             pointC: endPoint
@@ -80,7 +80,7 @@ public extension UIBezierPath {
             return
         }
 
-        let radius = self.calculateRadius(center: center, point: startPoint)
+        let radius = self.dy_calculateRadius(center: center, point: startPoint)
         let startAngle = atan2(startPoint.y - center.y, startPoint.x - center.x)
         let endAngle = atan2(endPoint.y - center.y, endPoint.x - center.x)
 
@@ -105,7 +105,7 @@ public extension UIBezierPath {
         to end: CGPoint,
         clockwise: Bool
     ) {
-        let radius = self.calculateRadius(center: center, point: start)
+        let radius = self.dy_calculateRadius(center: center, point: start)
         let startAngle = atan2(start.y - center.y, start.x - center.x)
         let endAngle = atan2(end.y - center.y, end.x - center.x)
         self.addArc(

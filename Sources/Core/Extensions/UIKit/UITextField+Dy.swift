@@ -76,7 +76,7 @@ public extension UITextField {
         }
 
         // 正则校验(仅校验新增字符)
-        if let regexPattern = regex, !text.isMatch(pattern: regexPattern) {
+        if let regexPattern = regex, !text.dy_isMatch(pattern: regexPattern) {
             return false
         }
 

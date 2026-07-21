@@ -75,7 +75,7 @@ public extension NSDecimalNumberHandler {
     ///   print(result) // 输出: 12.80
     ///   ```
     static func dy_calculate(
-        operator: DecimalNumberHandlerOperator,
+        operator: DyDecimalNumberHandlerOperator,
         valueA: some LosslessStringConvertible,
         valueB: some LosslessStringConvertible,
         roundingMode: NSDecimalNumber.RoundingMode = .plain,
@@ -95,7 +95,7 @@ public extension NSDecimalNumberHandler {
             raiseOnUnderflow: underflow,
             raiseOnDivideByZero: divideByZero
         )
-        return `operator`.calculate(numberA: numberA, numberB: numberB, behavior: handler)
+        return `operator`.dy_calculate(numberA: numberA, numberB: numberB, behavior: handler)
     }
 }
 
@@ -121,8 +121,8 @@ public extension NSDecimalNumberHandler {
         if divisor == .zero {
             return false
         }
-        let result = calculate(operator: .divide, valueA: valueA, valueB: valueB, roundingMode: .down, scale: 10)
-        return result.isInteger
+        let result = dy_calculate(operator: .divide, valueA: valueA, valueB: valueB, roundingMode: .down, scale: 10)
+        return result.dy_isInteger
     }
 
     /// 执行向下取整的整数除法(即“地板除”)
@@ -143,7 +143,7 @@ public extension NSDecimalNumberHandler {
     ) -> Int {
         let divisor = NSDecimalNumber(string: String(valueB))
         guard divisor != .zero else { return 0 }
-        let result = calculate(operator: .divide, valueA: valueA, valueB: valueB, roundingMode: .down, scale: 0)
+        let result = dy_calculate(operator: .divide, valueA: valueA, valueB: valueB, roundingMode: .down, scale: 0)
         return result.intValue
     }
 
@@ -163,7 +163,7 @@ public extension NSDecimalNumberHandler {
         value: some LosslessStringConvertible,
         percentage: some LosslessStringConvertible
     ) -> NSDecimalNumber {
-        let product = calculate(operator: .multiply, valueA: value, valueB: percentage)
+        let product = dy_calculate(operator: .multiply, valueA: value, valueB: percentage)
         return product.dividing(by: NSDecimalNumber(100))
     }
 
@@ -234,7 +234,7 @@ public extension NSDecimalNumberHandler {
     ///   ```
     static func dy_positive(_ value: some LosslessStringConvertible) -> NSDecimalNumber {
         let number = NSDecimalNumber(string: String(value))
-        return number.absoluteValue
+        return number.dy_absoluteValue
     }
 
     /// 获取数值的相反数(符号取反)
@@ -249,7 +249,7 @@ public extension NSDecimalNumberHandler {
     ///   ```
     static func dy_negative(_ value: some LosslessStringConvertible) -> NSDecimalNumber {
         let number = NSDecimalNumber(string: String(value))
-        return number.negated
+        return number.dy_negated
     }
 
     /// 计算数值数组的总和
@@ -301,7 +301,7 @@ public extension NSDecimalNumberHandler {
         ratios: [some LosslessStringConvertible]
     ) -> [NSDecimalNumber] {
         let totalNum = NSDecimalNumber(string: String(total))
-        let ratioSum = sum(of: ratios)
+        let ratioSum = dy_sum(of: ratios)
         guard ratioSum != .zero else { return Array(repeating: .zero, count: ratios.count) }
         return ratios.map { ratio in
             let r = NSDecimalNumber(string: String(ratio))

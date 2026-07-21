@@ -19,7 +19,7 @@ public extension CGVector {
 
     /// 返回单位向量(长度为 1 的方向向量)若原向量长度为 0,则返回 `.zero`
     var dy_normalized: CGVector {
-        let length = magnitude
+        let length = dy_magnitude
         guard length > 0 else { return .zero }
         return self / length
     }

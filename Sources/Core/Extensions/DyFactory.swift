@@ -56,12 +56,11 @@ import WebKit
 @objc extension UITableView {
     /// 创建一个默认配置的 `UITableView`(`grouped` 样式),启用自动尺寸、透明背景、无分隔线等
     open class func dy_tableView() -> UITableView {
-        return UITableView(frame: .zero, style: .grouped)
+        let tableView = UITableView(frame: .zero, style: .grouped)
             .dy
             .rowHeight(UITableView.automaticDimension)
             .sectionHeaderHeight(UITableView.automaticDimension)
             .sectionFooterHeight(UITableView.automaticDimension)
-            .sectionHeaderTopPadding(0)
             .backgroundColor(.clear)
             .separatorStyle(.none)
             .keyboardDismissMode(.onDrag)
@@ -69,7 +68,11 @@ import WebKit
             .showsHorizontalScrollIndicator(false)
             .showsVerticalScrollIndicator(false)
             .cellLayoutMarginsFollowReadableWidth(false)
-            .build()
+
+        if #available(iOS 15.0, *) {
+            tableView.sectionHeaderTopPadding(0)
+        }
+        return tableView.build()
     }
 }
 
@@ -77,7 +80,7 @@ import WebKit
 @objc extension UICollectionView {
     /// 创建一个水平滚动的 `UICollectionView`,使用 `UICollectionViewFlowLayout`
     open class func dy_hCollectionView() -> UICollectionView {
-        let layout = UICollectionViewFlowLayout.layout()
+        let layout = UICollectionViewFlowLayout.dy_layout()
             .dy
             .scrollDirection(.horizontal)
             .build()
@@ -92,7 +95,7 @@ import WebKit
 
     /// 创建一个垂直滚动的 `UICollectionView`,使用 `UICollectionViewFlowLayout`
     open class func dy_vCollectionView() -> UICollectionView {
-        let layout = UICollectionViewFlowLayout.layout()
+        let layout = UICollectionViewFlowLayout.dy_layout()
             .dy
             .scrollDirection(.vertical)
             .build()
@@ -133,48 +136,56 @@ import WebKit
     }
 
     /// 创建一个纯文本样式的 `UIButton`
+    @available(iOS 15.0, *)
     open class func dy_plain() -> UIButton {
         let configuration = UIButton.Configuration.plain()
         return UIButton(configuration: configuration)
     }
 
     /// 创建一个着色样式的 `UIButton`
+    @available(iOS 15.0, *)
     open class func dy_tinted() -> UIButton {
         let configuration = UIButton.Configuration.tinted()
         return UIButton(configuration: configuration)
     }
 
     /// 创建一个灰色样式的 `UIButton`
+    @available(iOS 15.0, *)
     open class func dy_gray() -> UIButton {
         let configuration = UIButton.Configuration.gray()
         return UIButton(configuration: configuration)
     }
 
     /// 创建一个填充样式的 `UIButton`
+    @available(iOS 15.0, *)
     open class func dy_filled() -> UIButton {
         let configuration = UIButton.Configuration.filled()
         return UIButton(configuration: configuration)
     }
 
     /// 创建一个无边框样式的 `UIButton`
+    @available(iOS 15.0, *)
     open class func dy_borderless() -> UIButton {
         let configuration = UIButton.Configuration.borderless()
         return UIButton(configuration: configuration)
     }
 
     /// 创建一个边框样式的 `UIButton`
+    @available(iOS 15.0, *)
     open class func dy_bordered() -> UIButton {
         let configuration = UIButton.Configuration.bordered()
         return UIButton(configuration: configuration)
     }
 
     /// 创建一个着色边框样式的 `UIButton`
+    @available(iOS 15.0, *)
     open class func dy_borderedTinted() -> UIButton {
         let configuration = UIButton.Configuration.borderedTinted()
         return UIButton(configuration: configuration)
     }
 
     /// 创建一个突出边框样式的 `UIButton`
+    @available(iOS 15.0, *)
     open class func dy_borderedProminent() -> UIButton {
         let configuration = UIButton.Configuration.borderedProminent()
         return UIButton(configuration: configuration)

@@ -98,14 +98,14 @@ public extension UILabel {
         else {
             return []
         }
-        return text.wrappedLines(maxWidth: bounds.width, font: font)
+        return text.dy_wrappedLines(maxWidth: bounds.width, font: font)
     }
 
     /// 获取第一行显示的文本内容(若存在)
     ///
     /// - Returns: 第一行字符串,若无内容则返回 `nil`
     var dy_firstLine: String? {
-        self.allTextLines.first
+        self.dy_allTextLines.first
     }
 
     /// 判断当前文本是否因空间不足而被截断(省略号或隐藏)
@@ -192,9 +192,9 @@ public extension UILabel {
     ///   ```
     func dy_size(maxWidth: CGFloat = .greatestFiniteMagnitude) -> CGSize {
         return if self.attributedText != nil {
-            self.attributedText?.size(maxWidth: maxWidth) ?? .zero
+            self.attributedText?.dy_size(maxWidth: maxWidth) ?? .zero
         } else {
-            self.text?.size(maxWidth: maxWidth, font: self.font) ?? .zero
+            self.text?.dy_size(maxWidth: maxWidth, font: self.font) ?? .zero
         }
     }
 

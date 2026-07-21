@@ -6,7 +6,7 @@ public extension UIApplication {
     /// 清除应用图标角标数字
     func dy_clearBadgeNumber() {
         if #available(iOS 17.0, *) {
-            try? await UNUserNotificationCenter.current().setBadgeCount(0)
+            UNUserNotificationCenter.current().setBadgeCount(0)
         } else {
             self.applicationIconBadgeNumber = 0
         }
@@ -60,11 +60,13 @@ public extension UIApplication {
 public extension UIApplication {
     /// 在应用内打开应用的`App Store评价`弹窗(一年最多3次)
     func dy_requestAppReview() {
-        if let windowScene = UIWindow.keyWindow?.windowScene {
+        if let windowScene = UIWindow.dy_keyWindow?.windowScene {
             if #available(iOS 16.0, *) {
                 AppStore.requestReview(in: windowScene)
             } else {
-                SKStoreReviewController.requestReview(in: windowScene)
+                if #available(iOS 14.0, *) {
+                    SKStoreReviewController.requestReview(in: windowScene)
+                }
             }
         }
     }
@@ -112,13 +114,13 @@ public extension UIApplication {
         }
 
         let telURL = URL(string: "tel://\(cleanNumber)")!
-        self.open(telURL, completion: completion)
+        self.dy_open(telURL, completion: completion)
     }
 
     /// 打开系统设置中的本 `App` 页面
     func dy_openSettings() {
         guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
-        self.open(url)
+        self.dy_open(url)
     }
 
     /// 打开通知设置页面
@@ -129,7 +131,7 @@ public extension UIApplication {
                 return
             }
         }
-        self.openSettings()
+        self.dy_openSettings()
     }
 }
 
@@ -146,11 +148,11 @@ public extension UIApplication {
 
         init(_ versionString: String) {
             self.versionString = versionString
-            let comps = versionString.split(bySeparator: ".")
+            let comps = versionString.dy_split(bySeparator: ".")
             if comps.count >= 3 {
-                self.major = comps[0].toInt()
-                self.minor = comps[1].toInt()
-                self.patch = comps[2].toInt()
+                self.major = comps[0].dy_toInt()
+                self.minor = comps[1].dy_toInt()
+                self.patch = comps[2].dy_toInt()
                 self.isValid = true
             } else {
                 self.major = 0
@@ -174,13 +176,13 @@ public extension UIApplication {
 
     /// 当前 App 的结构化版本信息
     var dy_currentAppVersion: DyAppVersion {
-        return DyAppVersion(Bundle.appVersion)
+        return DyAppVersion(Bundle.dy_appVersion)
     }
 
     /// 检查是否为首次安装或升级到新版本
     /// - 自动记录当前版本到 UserDefaults
     var dy_isNewVersion: Bool {
-        let current = Bundle.appVersion
+        let current = Bundle.dy_appVersion
         let saved = UserDefaults.standard.string(forKey: "Dy.AppVersion") ?? ""
         UserDefaults.standard.set(current, forKey: "Dy.AppVersion")
         return DyAppVersion(current).isGreaterThan(DyAppVersion(saved))
@@ -189,7 +191,7 @@ public extension UIApplication {
     /// 比较当前版本是否低于指定版本
     /// - Returns: `true` 表示当前版本 < 参数版本(即有更新)
     func dy_isVersionBelow(_ targetVersion: String) -> Bool {
-        let current = self.currentAppVersion
+        let current = self.dy_currentAppVersion
         let target = DyAppVersion(targetVersion)
         return current.isGreaterThan(target) == false && current != target
     }

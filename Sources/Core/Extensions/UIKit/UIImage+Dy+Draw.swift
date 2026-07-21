@@ -120,7 +120,7 @@ public extension UIImage {
     static func dy_drawTriangle(
         size: CGSize,
         fillColor: UIColor,
-        direction: ArrowDirection
+        direction: DyArrowDirection
     ) -> UIImage {
         guard size.width > 0, size.height > 0 else {
             return UIImage()

@@ -35,7 +35,7 @@ public extension UITextView {
         // 用户使用中文拼音输入法时(如九宫格),`markedTextRange != nil` 表示正在输入中,此时不应截断
         if self.markedTextRange != nil {
             // 在高亮状态下,只做正则校验(不截断,避免打断输入)
-            if let pattern = regexPattern, !text.isMatch(pattern: pattern) {
+            if let pattern = regexPattern, !text.dy_isMatch(pattern: pattern) {
                 return false
             }
             // 不在此处判断长度,因为高亮文本尚未确认
@@ -43,7 +43,7 @@ public extension UITextView {
         }
 
         // 非高亮状态：先校验正则
-        if let pattern = regexPattern, !text.isMatch(pattern: pattern) {
+        if let pattern = regexPattern, !text.dy_isMatch(pattern: pattern) {
             return false
         }
 

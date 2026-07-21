@@ -321,6 +321,7 @@ public extension DyWrapper where Base: UIView {
     /// 限制最小字体尺寸
     /// - Parameter category: 最小字体尺寸
     /// - Returns: `Self`
+    @available(iOS 15.0, *)
     @discardableResult
     func minimumContentSizeCategory(_ category: UIContentSizeCategory?) -> Self {
         base.minimumContentSizeCategory = category
@@ -330,6 +331,7 @@ public extension DyWrapper where Base: UIView {
     /// 限制最大字体尺寸
     /// - Parameter category: 最大字体尺寸
     /// - Returns: `Self`
+    @available(iOS 15.0, *)
     @discardableResult
     func maximumContentSizeCategory(_ category: UIContentSizeCategory?) -> Self {
         base.maximumContentSizeCategory = category
@@ -358,6 +360,7 @@ public extension DyWrapper where Base: UIView {
     /// 设置焦点组标识符
     /// - Parameter identifier: 焦点组的唯一标识符
     /// - Returns: `Self`
+    @available(iOS 14.0, *)
     @discardableResult
     func focusGroupIdentifier(_ identifier: String?) -> Self {
         base.focusGroupIdentifier = identifier
@@ -367,6 +370,7 @@ public extension DyWrapper where Base: UIView {
     /// 设置焦点组优先级
     /// - Parameter priority: 焦点组的优先级
     /// - Returns: `Self`
+    @available(iOS 15.0, *)
     @discardableResult
     func focusGroupPriority(_ priority: UIFocusGroupPriority) -> Self {
         base.focusGroupPriority = priority
@@ -376,6 +380,7 @@ public extension DyWrapper where Base: UIView {
     /// 设置焦点效果
     /// - Parameter effect: 应用于视图的焦点视觉效果
     /// - Returns: `Self`
+    @available(iOS 15.0, *)
     @discardableResult
     func focusEffect(_ effect: UIFocusEffect?) -> Self {
         base.focusEffect = effect
@@ -403,6 +408,7 @@ public extension DyWrapper where Base: UIView {
     /// 设置锚点
     /// - Parameter point: 图层变换的锚点，取值范围 [0,1]
     /// - Returns: `Self`
+    @available(iOS 16.0, *)
     @discardableResult
     func anchorPoint(_ point: CGPoint) -> Self {
         base.anchorPoint = point
@@ -912,7 +918,7 @@ public extension DyWrapper where Base: UIView {
     /// - Returns: `Self`
     @discardableResult
     func onLongPressGestureRecognizer(minimumDuration: TimeInterval = 0.5, _ block: @escaping (UILongPressGestureRecognizer) -> Void) -> Self {
-        let longPress = UILongPressGestureRecognizer.longPressGestureRecognizer()
+        let longPress = UILongPressGestureRecognizer.dy_longPressGestureRecognizer()
             .dy
             .minimumPressDuration(minimumDuration)
             .onRecognized { recognizer in
@@ -929,7 +935,7 @@ public extension DyWrapper where Base: UIView {
     /// - Returns: `Self`
     @discardableResult
     func onPanGestureRecognizer(_ block: @escaping (UIPanGestureRecognizer) -> Void) -> Self {
-        let pan = UIPanGestureRecognizer.panGestureRecognizer()
+        let pan = UIPanGestureRecognizer.dy_panGestureRecognizer()
             .dy
             .onRecognized { recognizer in
                 if let pan = recognizer as? UIPanGestureRecognizer {
@@ -947,7 +953,7 @@ public extension DyWrapper where Base: UIView {
     /// - Returns: `Self`
     @discardableResult
     func onScreenEdgePanGestureRecognizer(edges: UIRectEdge, _ block: @escaping (UIScreenEdgePanGestureRecognizer) -> Void) -> Self {
-        let screenEdgePan = UIScreenEdgePanGestureRecognizer.screenEdgePanGestureRecognizer()
+        let screenEdgePan = UIScreenEdgePanGestureRecognizer.dy_screenEdgePanGestureRecognizer()
             .dy
             .edges(edges)
             .onRecognized { recognizer in
@@ -968,7 +974,7 @@ public extension DyWrapper where Base: UIView {
     func onSwipeGestureRecognizer(direction: UISwipeGestureRecognizer.Direction = .right,
                                   _ block: @escaping (UISwipeGestureRecognizer) -> Void) -> Self
     {
-        let swipeGesture = UISwipeGestureRecognizer.swipeGestureRecognizer()
+        let swipeGesture = UISwipeGestureRecognizer.dy_swipeGestureRecognizer()
             .dy
             .direction(direction)
             .onRecognized { recognizer in
@@ -985,7 +991,7 @@ public extension DyWrapper where Base: UIView {
     /// - Returns: `Self`
     @discardableResult
     func onPinchGestureRecognizer(_ block: @escaping (UIPinchGestureRecognizer) -> Void) -> Self {
-        let pinch = UIPinchGestureRecognizer.pinchGestureRecognizer()
+        let pinch = UIPinchGestureRecognizer.dy_pinchGestureRecognizer()
             .dy
             .onRecognized { recognizer in
                 if let pinch = recognizer as? UIPinchGestureRecognizer {
@@ -1001,7 +1007,7 @@ public extension DyWrapper where Base: UIView {
     /// - Returns: `Self`
     @discardableResult
     func onRotationGestureRecognizer(_ block: @escaping (UIRotationGestureRecognizer) -> Void) -> Self {
-        let rotation = UIRotationGestureRecognizer.rotationGestureRecognizer()
+        let rotation = UIRotationGestureRecognizer.dy_rotationGestureRecognizer()
             .dy
             .onRecognized { recognizer in
                 if let rotation = recognizer as? UIRotationGestureRecognizer {

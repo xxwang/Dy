@@ -23,6 +23,7 @@ public extension DyWrapper where Base: UIDatePicker {
     /// 设置首选样式
     /// - Parameter style: 样式
     /// - Returns: `Self`
+    @available(iOS 13.4, *)
     @discardableResult
     func preferredDatePickerStyle(_ style: UIDatePickerStyle) -> Self {
         base.preferredDatePickerStyle = style
@@ -103,6 +104,7 @@ public extension DyWrapper where Base: UIDatePicker {
     /// 是否将时间四舍五入到最接近的`minuteInterval`
     /// - Parameter rounds: 是否四舍五入
     /// - Returns: `Self`
+    @available(iOS 15.0, *)
     @discardableResult
     func roundsToMinuteInterval(_ rounds: Bool) -> Self {
         base.roundsToMinuteInterval = rounds

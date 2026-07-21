@@ -16,9 +16,9 @@ public extension UIButton {
     func dy_size(maxWidth: CGFloat? = nil) -> CGSize {
         let maxWidth = maxWidth ?? DyScreen.screenWidth
         return if let currentAttributedTitle = self.currentAttributedTitle {
-            currentAttributedTitle.size(maxWidth: maxWidth)
+            currentAttributedTitle.dy_size(maxWidth: maxWidth)
         } else {
-            self.titleLabel?.size(maxWidth: maxWidth) ?? .zero
+            self.titleLabel?.dy_size(maxWidth: maxWidth) ?? .zero
         }
     }
 }
@@ -35,7 +35,7 @@ extension UIButton {
     /// - Parameter event: 当前的触摸事件
     /// - Returns: 如果触摸点在扩展的区域内,则返回 `true`,否则返回 `false`
     override open func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
-        let expandedRect = self.expandedRect()
+        let expandedRect = self.dy_expandedRect()
         // 如果没有扩展范围,则使用原始范围
         if expandedRect.equalTo(bounds) {
             return super.point(inside: point, with: event)
@@ -46,7 +46,7 @@ extension UIButton {
 
     /// 获取扩展的点击区域,如果没有设置扩展范围,则使用按钮的原始大小
     func dy_expandedRect() -> CGRect {
-        if let expandSize: CGFloat = self.GetAO(forKey: &Keys.dy_expandSizeKey) {
+        if let expandSize: CGFloat = self.dy_getAssociatedObject(forKey: &Keys.dy_expandSizeKey) {
             return CGRect(
                 x: bounds.origin.x - expandSize,
                 y: bounds.origin.y - expandSize,

@@ -69,7 +69,7 @@ public extension UIScrollView {
         }
 
         UIGraphicsEndImageContext()
-        return image.compress(qualityRange: options.qualityRange)
+        return image.dy_compress(qualityRange: options.qualityRange)
     }
 
     /// 异步截取整个 contentSize 的长截图
@@ -129,15 +129,15 @@ public extension UIScrollView {
                 context.restoreGState()
 
                 if index < totalPages - 1 {
-                    renderPage(index: index + 1)
+                    dy_renderPage(index: index + 1)
                 } else {
                     let image = UIGraphicsGetImageFromCurrentImageContext()
                     UIGraphicsEndImageContext()
-                    completion(image?.compress(qualityRange: options.qualityRange))
+                    completion(image?.dy_compress(qualityRange: options.qualityRange))
                 }
             }
         }
 
-        renderPage(index: 0)
+        dy_renderPage(index: 0)
     }
 }

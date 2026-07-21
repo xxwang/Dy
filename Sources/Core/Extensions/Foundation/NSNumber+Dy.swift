@@ -76,7 +76,7 @@ public extension NSNumber {
     /// - Parameter decimalPlaces: 小数位数
     /// - Returns: 字符串(如 "12345.679")
     func dy_fixed(_ decimalPlaces: Int) -> String? {
-        return decimal(
+        return dy_decimal(
             minimumFractionDigits: decimalPlaces,
             maximumFractionDigits: decimalPlaces
         )

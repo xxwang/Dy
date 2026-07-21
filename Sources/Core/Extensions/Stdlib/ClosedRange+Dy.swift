@@ -84,7 +84,7 @@ public extension ClosedRange where Bound: Strideable, Bound.Stride: SignedIntege
     ///   print(r1.dy_difference(with: r2)) // [1...4]
     ///   ```
     func dy_difference(with other: ClosedRange<Bound>) -> [ClosedRange<Bound>] {
-        guard let intersection = intersection(with: other) else {
+        guard let intersection = dy_intersection(with: other) else {
             return [self] // 无交集,整个区间保留
         }
 

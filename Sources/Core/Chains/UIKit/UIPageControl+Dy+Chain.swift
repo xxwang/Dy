@@ -56,6 +56,7 @@ public extension DyWrapper where Base: UIPageControl {
     ///
     /// - Parameter style: 背景样式
     /// - Returns: 当前实例(支持链式调用)
+    @available(iOS 14.0, *)
     @discardableResult
     func backgroundStyle(_ style: UIPageControl.BackgroundStyle) -> Self {
         base.backgroundStyle = style
@@ -66,6 +67,7 @@ public extension DyWrapper where Base: UIPageControl {
     ///
     /// - Parameter allows: 是否允许连续交互
     /// - Returns: 当前实例(支持链式调用)
+    @available(iOS 14.0, *)
     @discardableResult
     func allowsContinuousInteraction(_ allows: Bool) -> Self {
         base.allowsContinuousInteraction = allows
@@ -76,6 +78,7 @@ public extension DyWrapper where Base: UIPageControl {
     ///
     /// - Parameter image: 图像,传入 `nil` 清除图像设置
     /// - Returns: 当前实例(支持链式调用)
+    @available(iOS 14.0, *)
     @discardableResult
     func preferredIndicatorImage(_ image: UIImage?) -> Self {
         base.preferredIndicatorImage = image
@@ -113,6 +116,7 @@ public extension DyWrapper where Base: UIPageControl {
     ///   - image: 指示器图像,传入 `nil` 清除图像设置
     ///   - page: 页码,必须在 `[0, numberOfPages - 1]` 范围内
     /// - Returns: 当前实例(支持链式调用)
+    @available(iOS 14.0, *)
     @discardableResult
     func indicatorImage(_ image: UIImage?, forPage page: Int) -> Self {
         guard (0 ..< base.numberOfPages).contains(page) else { return self }
@@ -126,6 +130,7 @@ public extension DyWrapper where Base: UIPageControl {
     ///   - image: 当前页指示器图像,传入 `nil` 清除图像设置
     ///   - page: 页码,必须在 `[0, numberOfPages - 1]` 范围内
     /// - Returns: 当前实例(支持链式调用)
+    @available(iOS 16.0, *)
     @discardableResult
     func currentPageIndicatorImage(_ image: UIImage?, forPage page: Int) -> Self {
         guard (0 ..< base.numberOfPages).contains(page) else { return self }

@@ -82,13 +82,13 @@ public extension UIStackView {
                 delay: delay,
                 options: options,
                 animations: {
-                    self.switchViews(firstView, secondView)
+                    self.dy_switchViews(firstView, secondView)
                     self.superview?.layoutIfNeeded()
                 },
                 completion: completion
             )
         } else {
-            self.switchViews(firstView, secondView)
+            self.dy_switchViews(firstView, secondView)
         }
     }
 }
