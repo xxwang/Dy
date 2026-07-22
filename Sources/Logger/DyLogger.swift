@@ -68,18 +68,18 @@ public class DyLogger {
         log(.info, message(), file: file, function: function, line: line)
     }
 
-    public func warning(_ message: @autoclosure () -> String,
-                        file: String = #file,
-                        function: String = #function,
-                        line: Int = #line)
+    public func warn(_ message: @autoclosure () -> String,
+                     file: String = #file,
+                     function: String = #function,
+                     line: Int = #line)
     {
         log(.warning, message(), file: file, function: function, line: line)
     }
 
-    public func error(_ message: @autoclosure () -> String,
-                      file: String = #file,
-                      function: String = #function,
-                      line: Int = #line)
+    public func err(_ message: @autoclosure () -> String,
+                    file: String = #file,
+                    function: String = #function,
+                    line: Int = #line)
     {
         log(.error, message(), file: file, function: function, line: line)
     }
@@ -110,20 +110,20 @@ public func dy_logInfo(_ message: @autoclosure () -> String,
     DyLogger.shared.info(message(), file: file, function: function, line: line)
 }
 
-public func dy_logWarning(_ message: @autoclosure () -> String,
-                          file: String = #file,
-                          function: String = #function,
-                          line: Int = #line)
+public func dy_logWarn(_ message: @autoclosure () -> String,
+                       file: String = #file,
+                       function: String = #function,
+                       line: Int = #line)
 {
-    DyLogger.shared.warning(message(), file: file, function: function, line: line)
+    DyLogger.shared.warn(message(), file: file, function: function, line: line)
 }
 
-public func dy_logError(_ message: @autoclosure () -> String,
-                        file: String = #file,
-                        function: String = #function,
-                        line: Int = #line)
+public func dy_logErr(_ message: @autoclosure () -> String,
+                      file: String = #file,
+                      function: String = #function,
+                      line: Int = #line)
 {
-    DyLogger.shared.error(message(), file: file, function: function, line: line)
+    DyLogger.shared.err(message(), file: file, function: function, line: line)
 }
 
 public func dy_logFatal(_ message: @autoclosure () -> String,
