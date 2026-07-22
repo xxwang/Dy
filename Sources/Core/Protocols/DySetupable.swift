@@ -14,8 +14,8 @@ public protocol DySetupable: AnyObject {
     /// 获取数据
     func fetchData()
 
-    /// 更新(绑定)数据
-    func updateData()
+    /// 更新UI(绑定)数据
+    func updateUI()
 }
 
 // MARK: - 默认实现
@@ -32,6 +32,6 @@ public extension DySetupable {
     /// 获取数据
     func fetchData() {}
 
-    /// 更新(绑定)数据
-    func updateData() {}
+    /// 更新UI(绑定)数据
+    func updateUI() {}
 }

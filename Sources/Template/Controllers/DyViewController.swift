@@ -33,7 +33,7 @@ open class DyViewController: UIViewController, DySetupable {
 // MARK: - 支持子类重写的方法
 @objc extension DyViewController {
     /// 控制器初始化样式
-    open func initUI() {
+    open func setupUI() {
         self
             .dy
             // 设置界面样式

@@ -17,8 +17,8 @@ open class DyTableViewController: DyViewController {
 // MARK: - 支持子类重写的方法
 @objc extension DyTableViewController {
     /// 控制器初始化样式
-    override open func initUI() {
-        super.initUI()
+    override open func setupUI() {
+        super.setupUI()
 
         // 添加到导航栏下面 确保导航栏阴影可以正常显示
         self.view.insertSubview(

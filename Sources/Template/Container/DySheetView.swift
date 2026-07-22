@@ -11,7 +11,6 @@ open class DySheetView: UIView {
 
     override public init(frame: CGRect) {
         super.init(frame: frame)
-        self.initUI()
         self.setupUI()
     }
 
@@ -23,39 +22,6 @@ open class DySheetView: UIView {
 
 // MARK: - 初始化与布局
 public extension DySheetView {
-    /// 通用初始化逻辑
-    private func initUI() {
-        // 添加子视图
-        self
-            .dy
-            .addSubviews([
-                self.shadeView,
-                self.contentContainer,
-            ])
-
-        // 配置遮罩
-        self.shadeView
-            .dy
-            .backgroundColor(shadeBackgroundColor())
-            .isUserInteractionEnabled(isTapOutsideToDismiss())
-
-        // 配置内容容器
-        self.contentContainer
-            .dy
-            .backgroundColor(contentContainerBackgroundColor())
-            .maskedCorners([.dy_topLeft, .dy_topRight])
-            .cornerRadius(contentContainerCornerRadius())
-            .masksToBounds(true)
-
-        // 遮罩点击关闭
-        self.shadeView
-            .dy
-            .onTapGestureRecognizer { [weak self] _ in
-                guard let self, self.isTapOutsideToDismiss() else { return }
-                self.dismiss()
-            }
-    }
-
     override func layoutSubviews() {
         super.layoutSubviews()
     }
@@ -109,9 +75,37 @@ public extension DySheetView {
 
 // MARK: - 子类可重写方法
 @objc extension DySheetView {
-    /// 设置UI (子类重写该方法)
+    /// 设置UI (子类重写该方法)在子类中应该在该方法中,设置contentContainer的size
     open func setupUI() {
-        // 在子类中应该在该方法中,设置contentContainer的size
+        // 添加子视图
+        self
+            .dy
+            .addSubviews([
+                self.shadeView,
+                self.contentContainer,
+            ])
+
+        // 配置遮罩
+        self.shadeView
+            .dy
+            .backgroundColor(shadeBackgroundColor())
+            .isUserInteractionEnabled(isTapOutsideToDismiss())
+
+        // 配置内容容器
+        self.contentContainer
+            .dy
+            .backgroundColor(contentContainerBackgroundColor())
+            .maskedCorners([.dy_topLeft, .dy_topRight])
+            .cornerRadius(contentContainerCornerRadius())
+            .masksToBounds(true)
+
+        // 遮罩点击关闭
+        self.shadeView
+            .dy
+            .onTapGestureRecognizer { [weak self] _ in
+                guard let self, self.isTapOutsideToDismiss() else { return }
+                self.dismiss()
+            }
     }
 
     /// 内容容器圆角（默认只作用于顶部）
