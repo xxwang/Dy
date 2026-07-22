@@ -34,8 +34,7 @@ public final class DyFileDestination: DyLogDestination {
 
     public func log(level: DyLogLevel, message: String, context: DyLogContext, timestamp: Date) {
         let timestampStr = dateFormatter.string(from: timestamp)
-        let levelStr = String(format: "%-7@", level.description)
-        let line = "[\(timestampStr)] [\(levelStr)] [\(context.fileName):\(context.line)] \(message)\n"
+        let line = "[\(timestampStr)] [\(level.description)] [\(context.fileName):\(context.line)] \(message)\n"
 
         queue.async { [weak self] in
             guard let self, let data = line.data(using: .utf8) else { return }
