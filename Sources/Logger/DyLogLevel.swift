@@ -12,30 +12,6 @@ public enum DyLogLevel: Int, Comparable, CustomStringConvertible {
         lhs.rawValue < rhs.rawValue
     }
 
-    public var description: String {
-        switch self {
-        case .debug: return "DEBUG"
-        case .info: return "INFO"
-        case .warning: return "WARNING"
-        case .error: return "ERROR"
-        case .fatal: return "FATAL"
-        }
-    }
-}
-
-// MARK: - 日志级别与颜色的映射
-public extension DyLogLevel {
-    /// 每个日志级别对应的颜色方案
-    var color: DyANSIColor {
-        switch self {
-        case .debug: return .cyan
-        case .info: return .green
-        case .warning: return .yellow
-        case .error: return .brightRed
-        case .fatal: return .bgRed
-        }
-    }
-
     /// 图标前缀（可选，增强可读性）
     var icon: String {
         switch self {
@@ -44,6 +20,16 @@ public extension DyLogLevel {
         case .warning: return "⚠️"
         case .error: return "❌"
         case .fatal: return "☠️"
+        }
+    }
+
+    public var description: String {
+        switch self {
+        case .debug: return "调试"
+        case .info: return "正常"
+        case .warning: return "警告"
+        case .error: return "错误"
+        case .fatal: return "致命"
         }
     }
 }

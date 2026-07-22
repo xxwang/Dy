@@ -1,40 +1,3 @@
-/*
- /// 初始化配置（在 App 启动时调用一次）
- func setupLogger() {
-     let logger = DyLogger.shared
-
-     // 添加终端彩色输出
-     let console = DyConsoleDestination(
-         enableColors: true,
-         enableIcons: true,
-         showContext: true
-     )
-     logger.addDestination(console)
-
-     // 可选：添加文件输出
-     if let fileDest = DyFileDestination(filePath: "/tmp/app.log") {
-         logger.addDestination(fileDest)
-     }
-
-     // 设置最低日志级别（Release 下可设为 .info 或 .warning）
-     #if DEBUG
-     logger.minimumLevel = .verbose
-     #else
-     logger.minimumLevel = .info
-     #endif
- }
-
- // MARK: - 日常使用
- setupLogger()
-
- dy_logVerbose("正在加载配置文件...")
- dy_logDebug("用户 ID: \(userId), Token: \(token)")
- dy_logInfo("服务器连接成功")
- dy_logWarning("内存使用率超过 80%")
- dy_logError("网络请求失败: \(error.localizedDescription)")
- dy_logFatal("数据库连接丢失，无法恢复")
- */
-
 import Foundation
 
 // MARK: - DyLogger
@@ -89,44 +52,84 @@ public class DyLogger {
     }
 
     // MARK: - 便捷方法
-    public func debug(_ message: @autoclosure () -> String, file: String = #file, function: String = #function, line: Int = #line) {
+    public func debug(_ message: @autoclosure () -> String,
+                      file: String = #file,
+                      function: String = #function,
+                      line: Int = #line)
+    {
         log(.debug, message(), file: file, function: function, line: line)
     }
 
-    public func info(_ message: @autoclosure () -> String, file: String = #file, function: String = #function, line: Int = #line) {
+    public func info(_ message: @autoclosure () -> String,
+                     file: String = #file,
+                     function: String = #function,
+                     line: Int = #line)
+    {
         log(.info, message(), file: file, function: function, line: line)
     }
 
-    public func warning(_ message: @autoclosure () -> String, file: String = #file, function: String = #function, line: Int = #line) {
+    public func warning(_ message: @autoclosure () -> String,
+                        file: String = #file,
+                        function: String = #function,
+                        line: Int = #line)
+    {
         log(.warning, message(), file: file, function: function, line: line)
     }
 
-    public func error(_ message: @autoclosure () -> String, file: String = #file, function: String = #function, line: Int = #line) {
+    public func error(_ message: @autoclosure () -> String,
+                      file: String = #file,
+                      function: String = #function,
+                      line: Int = #line)
+    {
         log(.error, message(), file: file, function: function, line: line)
     }
 
-    public func fatal(_ message: @autoclosure () -> String, file: String = #file, function: String = #function, line: Int = #line) {
+    public func fatal(_ message: @autoclosure () -> String,
+                      file: String = #file,
+                      function: String = #function,
+                      line: Int = #line)
+    {
         log(.fatal, message(), file: file, function: function, line: line)
     }
 }
 
 // MARK: - 全局便捷函数
-public func dy_logDebug(_ message: @autoclosure () -> String, file: String = #file, function: String = #function, line: Int = #line) {
+public func dy_logDebug(_ message: @autoclosure () -> String,
+                        file: String = #file,
+                        function: String = #function,
+                        line: Int = #line)
+{
     DyLogger.shared.debug(message(), file: file, function: function, line: line)
 }
 
-public func dy_logInfo(_ message: @autoclosure () -> String, file: String = #file, function: String = #function, line: Int = #line) {
+public func dy_logInfo(_ message: @autoclosure () -> String,
+                       file: String = #file,
+                       function: String = #function,
+                       line: Int = #line)
+{
     DyLogger.shared.info(message(), file: file, function: function, line: line)
 }
 
-public func dy_logWarning(_ message: @autoclosure () -> String, file: String = #file, function: String = #function, line: Int = #line) {
+public func dy_logWarning(_ message: @autoclosure () -> String,
+                          file: String = #file,
+                          function: String = #function,
+                          line: Int = #line)
+{
     DyLogger.shared.warning(message(), file: file, function: function, line: line)
 }
 
-public func dy_logError(_ message: @autoclosure () -> String, file: String = #file, function: String = #function, line: Int = #line) {
+public func dy_logError(_ message: @autoclosure () -> String,
+                        file: String = #file,
+                        function: String = #function,
+                        line: Int = #line)
+{
     DyLogger.shared.error(message(), file: file, function: function, line: line)
 }
 
-public func dy_logFatal(_ message: @autoclosure () -> String, file: String = #file, function: String = #function, line: Int = #line) {
+public func dy_logFatal(_ message: @autoclosure () -> String,
+                        file: String = #file,
+                        function: String = #function,
+                        line: Int = #line)
+{
     DyLogger.shared.fatal(message(), file: file, function: function, line: line)
 }
