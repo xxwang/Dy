@@ -4,10 +4,8 @@ import DyCore
 open class DyCollectionViewController: DyViewController {
     /// `UICollectionView`
     open lazy var collectionView = UICollectionView.dy_vCollectionView()
-        .dy
-        .dataSource(self)
-        .delegate(self)
-        .build()
+        .dy_dataSource(self)
+        .dy_delegate(self)
 
     override open func viewDidLoad() {
         super.viewDidLoad()
@@ -25,28 +23,24 @@ open class DyCollectionViewController: DyViewController {
             self.collectionView,
             belowSubview: self.naview
         )
-        self.collectionView
-            .dy
-            .frame(CGRect(
-                x: 0,
-                y: DyScreen.navBarTotalHeight,
-                width: self.view.dy_width,
-                height: self.view.dy_height - DyScreen.navBarTotalHeight
-            ))
+        self.collectionView.dy_frame(CGRect(
+            x: 0,
+            y: DyScreen.navBarTotalHeight,
+            width: self.view.dy_width,
+            height: self.view.dy_height - DyScreen.navBarTotalHeight
+        ))
     }
 
     /// 更新导航栏及受影响的其它view
     override open func updateNaview() {
         super.updateNaview()
 
-        self.collectionView
-            .dy
-            .frame(CGRect(
-                x: 0,
-                y: DyScreen.navBarTotalHeight,
-                width: self.view.dy_width,
-                height: self.view.dy_height - DyScreen.navBarTotalHeight
-            ))
+        self.collectionView.dy_frame(CGRect(
+            x: 0,
+            y: DyScreen.navBarTotalHeight,
+            width: self.view.dy_width,
+            height: self.view.dy_height - DyScreen.navBarTotalHeight
+        ))
     }
 }
 

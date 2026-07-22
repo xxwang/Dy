@@ -44,7 +44,7 @@ public extension Optional {
     ///   let name: String? = "Alice"
     ///   name.dy_run { print("Hello, $0)") } // Hello, Alice
     ///   ```
-    func dy_run(_ body: (Wrapped) -> Void) {
+    func dy_run(_ body: DyAction1<Wrapped>) {
         if let value = self {
             body(value)
         }
@@ -60,7 +60,7 @@ public extension Optional {
     ///   let value: Int? = nil
     ///   let unwrapped = value.dy_unwrap(orFail: "Value must not be nil!") // 触发 fatalError
     ///   ```
-    func dy_unwrap(orFail message: @autoclosure () -> String = "Unexpected nil") -> Wrapped {
+    func dy_unwrap(orFail message: @autoclosure DyFunc<String> = "Unexpected nil") -> Wrapped {
         guard let value = self else { fatalError(message()) }
         return value
     }
@@ -87,7 +87,7 @@ public extension Optional {
     ///   let config: String? = nil
     ///   let setting = config.dy_or { loadDefaultConfig() } // 仅当 config 为 nil 时调用 loadDefaultConfig()
     ///   ```
-    func dy_or(fallback: () -> Wrapped) -> Wrapped {
+    func dy_or(fallback: DyFunc<Wrapped>) -> Wrapped {
         self ?? fallback()
     }
 
@@ -117,7 +117,7 @@ public extension Optional {
     ///   let positive = number.dy_takeIf { $0 > 0 } // Optional(5)
     ///   let negative = number.dy_takeIf { $0 < 0 } // nil
     ///   ```
-    func dy_takeIf(_ predicate: (Wrapped) -> Bool) -> Wrapped? {
+    func dy_takeIf(_ predicate: DyFunc1<Wrapped, Bool>) -> Wrapped? {
         guard let value = self, predicate(value) else { return nil }
         return value
     }

@@ -156,3 +156,162 @@ public extension UITextView {
         self.attributedText = attributed
     }
 }
+
+// MARK: - 链式设置属性
+public extension UITextView {
+    /// 设置是否可编辑
+    /// - Parameter isEditable: 是否可以编辑
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_isEditable(_ isEditable: Bool) -> Self {
+        self.isEditable = isEditable
+        return self
+    }
+
+    /// 清空文本内容
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_clear() -> Self {
+        self.text = ""
+        self.attributedText = NSAttributedString()
+        return self
+    }
+
+    /// 设置纯文本内容
+    /// - Parameter text: 要设置的内容
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_text(_ text: String) -> Self {
+        self.text = text
+        return self
+    }
+
+    /// 设置富文本内容
+    /// - Parameter attributedText: 要设置的富文本内容
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_attributedText(_ attributedText: NSAttributedString) -> Self {
+        self.attributedText = attributedText
+        return self
+    }
+
+    /// 设置文本对齐方式
+    /// - Parameter alignment: 要设置的对齐方式
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_textAlignment(_ alignment: NSTextAlignment) -> Self {
+        self.textAlignment = alignment
+        return self
+    }
+
+    /// 设置文本颜色
+    /// - Parameter color: 要设置的颜色
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_textColor(_ color: UIColor) -> Self {
+        self.textColor = color
+        return self
+    }
+
+    /// 设置字体
+    /// - Parameter font: 要设置的字体
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_font(_ font: UIFont) -> Self {
+        self.font = font
+        return self
+    }
+
+    /// 设置代理
+    /// - Parameter delegate: 要设置的代理对象
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_delegate(_ delegate: UITextViewDelegate) -> Self {
+        self.delegate = delegate
+        return self
+    }
+
+    /// 设置键盘类型
+    /// - Parameter type: 要设置的键盘类型
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_keyboardType(_ type: UIKeyboardType) -> Self {
+        self.keyboardType = type
+        return self
+    }
+
+    /// 设置`Return`键类型
+    /// - Parameter type: 要设置的类型
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_returnKeyType(_ type: UIReturnKeyType) -> Self {
+        self.returnKeyType = type
+        return self
+    }
+
+    /// 是否自动启用/禁用 `Return`键(基于内容是否为空)
+    /// - Parameter enabled: 是否开启
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_enablesReturnKeyAutomatically(_ enabled: Bool) -> Self {
+        self.enablesReturnKeyAutomatically = enabled
+        return self
+    }
+
+    /// 设置文本容器外边距
+    /// - Parameter inset: 外边距
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_textContainerInset(_ inset: UIEdgeInsets) -> Self {
+        self.textContainerInset = inset
+        return self
+    }
+
+    /// 设置行片段左右内边距(通常设为 0 以贴边)
+    /// - Parameter padding: 内边距
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_lineFragmentPadding(_ padding: CGFloat) -> Self {
+        self.textContainer.lineFragmentPadding = padding
+        return self
+    }
+}
+
+// MARK: - 链式方法(自定义)
+public extension UITextView {
+    /// 滚动到顶部
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_scrollToTop() -> Self {
+        if !self.text.isEmpty {
+            let range = NSRange(location: 0, length: 1)
+            self.scrollRangeToVisible(range)
+        }
+        return self
+    }
+
+    /// 滚动到底部
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_scrollToBottom() -> Self {
+        if !self.text.isEmpty {
+            let end = self.text.count - 1
+            let range = NSRange(location: max(0, end), length: 1)
+            self.scrollRangeToVisible(range)
+        }
+        return self
+    }
+
+    /// 自动调整视图大小以适应内容(常用于动态高度`TextView`)
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_wrapToContent() -> Self {
+        self.contentInset = .zero
+        self.scrollIndicatorInsets = .zero
+        self.contentOffset = .zero
+        self.textContainerInset = .zero
+        self.textContainer.lineFragmentPadding = 0
+        self.sizeToFit()
+        return self
+    }
+}

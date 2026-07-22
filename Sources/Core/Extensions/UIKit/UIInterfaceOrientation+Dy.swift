@@ -8,7 +8,7 @@ public extension UIInterfaceOrientation {
     }
 
     /// 转换为 `UIInterfaceOrientationMask`(用于判断支持性)
-    func dy_toInterfaceOrientationMask() -> UIInterfaceOrientationMask {
+    var dy_interfaceOrientationMask: UIInterfaceOrientationMask {
         switch self {
         case .portrait: return .portrait
         case .portraitUpsideDown: return .portraitUpsideDown

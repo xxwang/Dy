@@ -69,7 +69,7 @@ public extension DyQueue {
     ///
     /// - Example:
     ///   ```swift
-    ///   let tasks: [@Sendable () -> Void] = [
+    ///   let tasks: [DyAction] = [
     ///       { print("步骤1：初始化") },
     ///       { Thread.sleep(forTimeInterval: 0.2); print("步骤2：处理数据") }
     ///   ]
@@ -100,7 +100,7 @@ public extension DyQueue {
     ///
     /// - Example:
     ///   ```swift
-    ///   let tasks: [@Sendable () -> Void] = [
+    ///   let tasks: [DyAction] = [
     ///       { API.fetchUserProfile() },
     ///       { API.fetchUserSettings() }
     ///   ]
@@ -291,7 +291,7 @@ public extension DyQueue {
         delay: TimeInterval,
         on queue: DispatchQueue = .main,
         execute work: @escaping DyAction
-    ) -> () -> Void {
+    ) -> DyAction {
         var pendingWorkItem: DispatchWorkItem?
         return {
             pendingWorkItem?.cancel()

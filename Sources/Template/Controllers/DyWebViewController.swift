@@ -15,10 +15,8 @@ open class DyWebViewController: DyViewController {
 
     /// `WKWebView`浏览器视图
     open lazy var webView = WKWebView.init(frame: .zero, configuration: self.configuration)
-        .dy
-        .uiDelegate(self)
-        .navigationDelegate(self)
-        .build()
+        .dy_uiDelegate(self)
+        .dy_navigationDelegate(self)
 
     override open func viewDidLoad() {
         super.viewDidLoad()
@@ -36,28 +34,25 @@ open class DyWebViewController: DyViewController {
             self.webView,
             belowSubview: self.naview
         )
-        self.webView
-            .dy
-            .frame(CGRect(
-                x: 0,
-                y: DyScreen.navBarTotalHeight,
-                width: self.view.dy_width,
-                height: self.view.dy_height - DyScreen.navBarTotalHeight
-            ))
+
+        self.webView.dy_frame(CGRect(
+            x: 0,
+            y: DyScreen.navBarTotalHeight,
+            width: self.view.dy_width,
+            height: self.view.dy_height - DyScreen.navBarTotalHeight
+        ))
     }
 
     /// 更新导航栏及受影响的其它view
     override open func updateNaview() {
         super.updateNaview()
 
-        self.webView
-            .dy
-            .frame(CGRect(
-                x: 0,
-                y: DyScreen.navBarTotalHeight,
-                width: self.view.dy_width,
-                height: self.view.dy_height - DyScreen.navBarTotalHeight
-            ))
+        self.webView.dy_frame(CGRect(
+            x: 0,
+            y: DyScreen.navBarTotalHeight,
+            width: self.view.dy_width,
+            height: self.view.dy_height - DyScreen.navBarTotalHeight
+        ))
     }
 }
 

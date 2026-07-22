@@ -13,15 +13,10 @@ open class DyTabBarController: UITabBarController {
 @objc extension DyTabBarController {
     /// 控制器初始化样式
     open func setupUI() {
-        self.dy
-            // 设置UI样式
-            .overrideUserInterfaceStyle(self.selectedViewController?.overrideUserInterfaceStyle ?? .light)
-            // 设置代理
-            .delegate(self)
+        self.dy_delegate(self) // 设置代理
+            .dy_overrideUserInterfaceStyle(self.selectedViewController?.overrideUserInterfaceStyle ?? .light) // 设置UI样式
 
-        // 控制器背景色
-        self.view.dy
-            .backgroundColor(.white)
+        self.view.dy_backgroundColor(.white) // 控制器背景色
     }
 
     override open func viewDidLayoutSubviews() {

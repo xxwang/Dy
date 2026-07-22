@@ -20,3 +20,16 @@ public extension UITableViewCell {
         return tableView.indexPath(for: self)
     }
 }
+
+// MARK: - 链式设置属性
+public extension UITableViewCell {
+    /// 设置单元格的选中样式
+    ///
+    /// - Parameter style: 选中样式(如 `.none`, `.gray`, `.blue` 等)
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_selectionStyle(_ style: UITableViewCell.SelectionStyle) -> Self {
+        self.selectionStyle = style
+        return self
+    }
+}

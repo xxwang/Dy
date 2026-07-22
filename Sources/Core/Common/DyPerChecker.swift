@@ -83,7 +83,7 @@ public final class DyPerChecker: NSObject {
 // MARK: - 通知
 public extension DyPerChecker {
     /// 异步获取通知权限的详细设置状态
-    func checkNotificationSettings(for options: UNAuthorizationOptions, completion: @escaping (DyPerStatus) -> Void) {
+    func checkNotificationSettings(for options: UNAuthorizationOptions, completion: @escaping DyAction1<DyPerStatus>) {
         UNUserNotificationCenter.current().getNotificationSettings { settings in
             var status: DyPerStatus = .denied
             switch settings.authorizationStatus {
@@ -140,7 +140,7 @@ public extension DyPerChecker {
 
     /// 请求相册权限
     func requestPhotoLibraryPer(completion: @escaping DyAction1<DyPerReqResult>) {
-        let handler: (PHAuthorizationStatus) -> Void = { status in
+        let handler: DyAction1<PHAuthorizationStatus> = { status in
             let result: DyPerReqResult = {
                 switch status {
                 case .authorized, .limited: return .authorized

@@ -412,3 +412,888 @@ public extension UIView {
         return self.bounds.contains(localPoint)
     }
 }
+
+// MARK: - 链式设置属性
+public extension UIView {
+    /// 是否启用 `autoresizing mask`(即`Autoresizing`)
+    /// - Parameter enable: 是否开启
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_translatesAutoresizingMaskIntoConstraints(_ enable: Bool) -> Self {
+        self.translatesAutoresizingMaskIntoConstraints = enable
+        return self
+    }
+
+    /// 设置自动调整掩码（Autoresizing Mask）
+    /// - Parameter mask: 自动调整规则
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_autoresizingMask(_ mask: UIView.AutoresizingMask) -> Self {
+        self.autoresizingMask = mask
+        return self
+    }
+
+    /// 设置布局边距
+    /// - Parameter margins: 边距
+    /// - Returns: `Self`
+    @discardableResult
+    @objc func dy_layoutMargins(_ margins: UIEdgeInsets) -> Self {
+        self.layoutMargins = margins
+        return self
+    }
+
+    /// 设置是否保留父视图的布局边距
+    /// - Parameter preserves: `true` 保留父视图边距
+    /// - Returns: `Self`
+    @discardableResult
+    @objc func dy_preservesSuperviewLayoutMargins(_ preserves: Bool) -> Self {
+        self.preservesSuperviewLayoutMargins = preserves
+        return self
+    }
+
+    /// 设置方向性布局边距
+    /// - Parameter margins: 方向性边距
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_directionalLayoutMargins(_ margins: NSDirectionalEdgeInsets) -> Self {
+        self.directionalLayoutMargins = margins
+        return self
+    }
+
+    /// 设置是否从安全区域插入布局边距
+    /// - Parameter insets: `true` 从安全区域插入
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_insetsLayoutMarginsFromSafeArea(_ insets: Bool) -> Self {
+        self.insetsLayoutMarginsFromSafeArea = insets
+        return self
+    }
+
+    /// 设置是否裁剪超出部分
+    /// - Parameter clipsToBounds: 是否裁剪超出部分,`true`裁剪,`false`不裁剪
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_clipsToBounds(_ clipsToBounds: Bool) -> Self {
+        self.clipsToBounds = clipsToBounds
+        return self
+    }
+
+    /// 设置`tag`
+    /// - Parameter tag: 要设置的`tag`数值
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_tag(_ tag: Int) -> Self {
+        self.tag = tag
+        return self
+    }
+
+    /// 设置内容填充模式
+    /// - Parameter mode: 填充模式,例如`.scaleAspectFit`或`.scaleToFill`
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_contentMode(_ mode: UIView.ContentMode) -> Self {
+        self.contentMode = mode
+        return self
+    }
+
+    /// 设置是否允许用户交互
+    /// - Parameter enabled: 是否允许交互,`true`表示允许交互,`false`表示禁用交互
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_isUserInteractionEnabled(_ enabled: Bool) -> Self {
+        self.isUserInteractionEnabled = enabled
+        return self
+    }
+
+    /// 设置多点触控是否启用
+    /// - Parameter enabled: `true` 启用多点触控
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_isMultipleTouchEnabled(_ enabled: Bool) -> Self {
+        self.isMultipleTouchEnabled = enabled
+        return self
+    }
+
+    /// 设置是否独占触摸（阻止其他视图接收触摸）
+    /// - Parameter exclusive: `true` 独占触摸
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_isExclusiveTouch(_ exclusive: Bool) -> Self {
+        self.isExclusiveTouch = exclusive
+        return self
+    }
+
+    /// 设置自动调整子视图尺寸
+    /// - Parameter resizes: `true` 自动调整子视图
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_autoresizesSubviews(_ resizes: Bool) -> Self {
+        self.autoresizesSubviews = resizes
+        return self
+    }
+
+    /// 设置界面样式
+    /// - Parameter style: 设置界面风格
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_overrideUserInterfaceStyle(_ style: UIUserInterfaceStyle) -> Self {
+        self.overrideUserInterfaceStyle = style
+        return self
+    }
+
+    /// 设置是否隐藏视图
+    /// - Parameter isHidden: 是否隐藏视图,`true`表示隐藏,`false`表示显示
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_isHidden(_ isHidden: Bool) -> Self {
+        self.isHidden = isHidden
+        return self
+    }
+
+    /// 设置是否不透明（用于性能优化）
+    /// - Parameter opaque: `true` 表示完全不透明，可提升渲染性能
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_isOpaque(_ opaque: Bool) -> Self {
+        self.isOpaque = opaque
+        return self
+    }
+
+    /// 设置透明度
+    /// - Parameter alpha: 透明度值,范围为`0.0`到`1.0`,`0.0`为完全透明,`1.0`为完全不透明
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_alpha(_ alpha: CGFloat) -> Self {
+        self.alpha = alpha
+        return self
+    }
+
+    /// 设置`backgroundColor`
+    /// - Parameter color: 背景颜色
+    /// - Returns: `Self`
+    @discardableResult
+    @objc func dy_backgroundColor(_ color: UIColor?) -> Self {
+        self.backgroundColor = color
+        return self
+    }
+
+    /// 设置`tintColor`
+    /// - Parameter tintColor: 调整视图的 tintColor
+    /// - Returns: `Self`
+    @discardableResult
+    @objc func dy_tintColor(_ tintColor: UIColor?) -> Self {
+        self.tintColor = tintColor
+        return self
+    }
+
+    /// 设置着色调整模式
+    /// - Parameter mode: 调整模式（自动/正常/变暗）
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_tintAdjustmentMode(_ mode: UIView.TintAdjustmentMode) -> Self {
+        self.tintAdjustmentMode = mode
+        return self
+    }
+
+    /// 设置变换
+    /// - Parameter transform: 变换
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_transform(_ transform: CGAffineTransform) -> Self {
+        self.transform = transform
+        return self
+    }
+
+    /// 设置3D变换
+    /// - Parameter transform3D: 3D变换
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_transform3D(_ transform3D: CATransform3D) -> Self {
+        self.transform3D = transform3D
+        return self
+    }
+
+    /// 限制最小字体尺寸
+    /// - Parameter category: 最小字体尺寸
+    /// - Returns: `Self`
+    @available(iOS 15.0, *)
+    @discardableResult
+    func dy_minimumContentSizeCategory(_ category: UIContentSizeCategory?) -> Self {
+        self.minimumContentSizeCategory = category
+        return self
+    }
+
+    /// 限制最大字体尺寸
+    /// - Parameter category: 最大字体尺寸
+    /// - Returns: `Self`
+    @available(iOS 15.0, *)
+    @discardableResult
+    func dy_maximumContentSizeCategory(_ category: UIContentSizeCategory?) -> Self {
+        self.maximumContentSizeCategory = category
+        return self
+    }
+
+    /// 设置圆角配置
+    /// - Parameter configuration: 圆角配置对象
+    /// - Returns: `Self`
+    @discardableResult
+    @available(iOS 26.0, *)
+    func dy_cornerConfiguration(_ configuration: UICornerConfiguration) -> Self {
+        self.cornerConfiguration = configuration
+        return self
+    }
+
+    /// 设置恢复标识符
+    /// - Parameter identifier: 恢复标识符字符串，用于状态恢复
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_restorationIdentifier(_ identifier: String?) -> Self {
+        self.restorationIdentifier = identifier
+        return self
+    }
+
+    /// 设置焦点组标识符
+    /// - Parameter identifier: 焦点组的唯一标识符
+    /// - Returns: `Self`
+    @available(iOS 14.0, *)
+    @discardableResult
+    func dy_focusGroupIdentifier(_ identifier: String?) -> Self {
+        self.focusGroupIdentifier = identifier
+        return self
+    }
+
+    /// 设置焦点组优先级
+    /// - Parameter priority: 焦点组的优先级
+    /// - Returns: `Self`
+    @available(iOS 15.0, *)
+    @discardableResult
+    func dy_focusGroupPriority(_ priority: UIFocusGroupPriority) -> Self {
+        self.focusGroupPriority = priority
+        return self
+    }
+
+    /// 设置焦点效果
+    /// - Parameter effect: 应用于视图的焦点视觉效果
+    /// - Returns: `Self`
+    @available(iOS 15.0, *)
+    @discardableResult
+    func dy_focusEffect(_ effect: UIFocusEffect?) -> Self {
+        self.focusEffect = effect
+        return self
+    }
+
+    /// 设置语义内容属性
+    /// - Parameter attribute: 内容的语义方向属性（如强制从左到右）
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_semanticContentAttribute(_ attribute: UISemanticContentAttribute) -> Self {
+        self.semanticContentAttribute = attribute
+        return self
+    }
+
+    /// 设置内容缩放因子
+    /// - Parameter factor: 内容的缩放比例，影响绘制分辨率
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_contentScaleFactor(_ factor: CGFloat) -> Self {
+        self.contentScaleFactor = factor
+        return self
+    }
+
+    /// 设置锚点
+    /// - Parameter point: 图层变换的锚点，取值范围 [0,1]
+    /// - Returns: `Self`
+    @available(iOS 16.0, *)
+    @discardableResult
+    func dy_anchorPoint(_ point: CGPoint) -> Self {
+        self.anchorPoint = point
+        return self
+    }
+
+    /// 设置是否在绘制前清空上下文
+    /// - Parameter clear: 是否清空，默认为 true
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_clearsContextBeforeDrawing(_ clear: Bool) -> Self {
+        self.clearsContextBeforeDrawing = clear
+        return self
+    }
+
+    /// 设置遮罩视图
+    /// - Parameter mask: 用作遮罩的视图，其 alpha 通道决定可见区域
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_mask(_ mask: UIView?) -> Self {
+        self.mask = mask
+        return self
+    }
+
+    /// 设置手势识别器数组
+    /// - Parameter recognizers: 手势识别器列表
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_gestureRecognizers(_ recognizers: [UIGestureRecognizer]?) -> Self {
+        self.gestureRecognizers = recognizers
+        return self
+    }
+
+    /// 设置运动效果数组
+    /// - Parameter effects: 应用于视图的运动效果（如倾斜、摇晃）
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_motionEffects(_ effects: [UIMotionEffect]) -> Self {
+        self.motionEffects = effects
+        return self
+    }
+}
+
+// MARK: - 链式设置图层属性
+public extension UIView {
+    /// 设置`layer.borderColor`
+    /// - Parameter color: 边框颜色
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_borderColor(_ color: UIColor) -> Self {
+        self.layer.borderColor = color.cgColor
+        return self
+    }
+
+    /// 设置`layer.borderWidth`
+    /// - Parameter width: 边框宽度
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_borderWidth(_ width: CGFloat) -> Self {
+        self.layer.borderWidth = width
+        return self
+    }
+
+    /// 是否开启光栅化
+    /// - Parameter rasterize: 是否开启光栅化,`true`表示开启,`false`表示关闭
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_shouldRasterize(_ rasterize: Bool) -> Self {
+        self.layer.shouldRasterize = rasterize
+        return self
+    }
+
+    /// 设置光栅化比例
+    /// - Parameter scale: 光栅化比例,通常为`UIScreen.main.scale`,用于优化性能
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_rasterizationScale(_ scale: CGFloat) -> Self {
+        self.layer.rasterizationScale = scale
+        return self
+    }
+
+    /// 设置阴影颜色
+    /// - Parameter color: 阴影颜色
+    /// - Returns: `Self`
+    @discardableResult
+    @objc func dy_shadowColor(_ color: UIColor) -> Self {
+        self.layer.shadowColor = color.cgColor
+        return self
+    }
+
+    /// 设置阴影偏移
+    /// - Parameter offset: 阴影的偏移量,正值表示偏向右下,负值偏向左上
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_shadowOffset(_ offset: CGSize) -> Self {
+        self.layer.shadowOffset = offset
+        return self
+    }
+
+    /// 设置阴影圆角
+    /// - Parameter radius: 阴影的圆角半径,设置为`0`表示没有圆角
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_shadowRadius(_ radius: CGFloat) -> Self {
+        self.layer.shadowRadius = radius
+        return self
+    }
+
+    /// 设置阴影不透明度
+    /// - Parameter opacity: 阴影的透明度,范围是`0.0`到`1.0`,`0.0`表示完全透明,`1.0`表示完全不透明
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_shadowOpacity(_ opacity: Float) -> Self {
+        self.layer.shadowOpacity = opacity
+        return self
+    }
+
+    /// 设置阴影路径
+    /// - Parameter path: 用于阴影的`CGPath`路径,通常设置为视图的`boundingPath`,以优化阴影渲染性能
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_shadowPath(_ path: CGPath) -> Self {
+        self.layer.shadowPath = path
+        return self
+    }
+
+    /// 设置`layer.cornerRadius`
+    /// - Parameter cornerRadius: 圆角半径,设置为0表示没有圆角
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_cornerRadius(_ cornerRadius: CGFloat) -> Self {
+        self.layer.cornerRadius = cornerRadius
+        return self
+    }
+
+    /// 设置`layer.maskedCorners`
+    /// - Parameter maskedCorners: 要设置的角
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_maskedCorners(_ maskedCorners: CACornerMask) -> Self {
+        self.layer.maskedCorners = maskedCorners
+        return self
+    }
+
+    /// 设置是否`layer.masksToBounds`
+    /// - Parameter masksToBounds: 是否裁切,`true`表示裁切,`false`表示不裁切
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_masksToBounds(_ masksToBounds: Bool) -> Self {
+        self.layer.masksToBounds = masksToBounds
+        return self
+    }
+}
+
+// MARK: - 链式方法
+public extension UIView {
+    /// 添加子控件到当前视图上
+    /// - Parameter subviews: 要添加的子控件数组
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_addSubview(_ subview: UIView) -> Self {
+        self.addSubview(subview)
+        return self
+    }
+
+    /// 将当前视图从父视力中移除
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_removeFromSuperview() -> Self {
+        self.removeFromSuperview()
+        return self
+    }
+
+    /// 标记固有尺寸需要重新计算
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_invalidateIntrinsicContentSize() -> Self {
+        self.invalidateIntrinsicContentSize()
+        return self
+    }
+
+    /// 请求重新布局
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_setNeedsLayout() -> Self {
+        self.setNeedsLayout()
+        return self
+    }
+
+    /// 立即强制布局更新
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_layoutIfNeeded() -> Self {
+        self.layoutIfNeeded()
+        return self
+    }
+
+    /// 标记需要更新约束
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_setNeedsUpdateConstraints() -> Self {
+        self.setNeedsUpdateConstraints()
+        return self
+    }
+
+    /// 标记属性需要更新
+    /// - Returns: `Self`
+    @available(iOS 26.0, *)
+    @discardableResult
+    func dy_setNeedsUpdateProperties() -> Self {
+        self.setNeedsUpdateProperties()
+        return self
+    }
+
+    /// 立即更新属性
+    /// - Returns: `Self`
+    @available(iOS 26.0, *)
+    @discardableResult
+    func dy_updateProperties() -> Self {
+        self.updateProperties()
+        return self
+    }
+
+    /// 在需要时更新属性
+    /// - Returns: `Self`
+    @available(iOS 26.0, *)
+    @discardableResult
+    func dy_updatePropertiesIfNeeded() -> Self {
+        self.updatePropertiesIfNeeded()
+        return self
+    }
+
+    /// 如果需要，立即更新约束
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_updateConstraintsIfNeeded() -> Self {
+        self.updateConstraintsIfNeeded()
+        return self
+    }
+
+    /// 更新视图的约束（子类可重写）
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_updateConstraints() -> Self {
+        self.updateConstraints()
+        return self
+    }
+
+    /// 如果需要，更新 trait 集合
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_updateTraitsIfNeeded() -> Self {
+        if #available(iOS 17.0, *) {
+            self.updateTraitsIfNeeded()
+        }
+        return self
+    }
+
+    /// 内容吸附优先级(防止视图被拉伸得比其内容所需更大)
+    /// - Parameters:
+    ///   - priority: 约束优先级
+    ///   - axis: 约束作用的轴向
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_setContentHuggingPriority(_ priority: UILayoutPriority, for axis: NSLayoutConstraint.Axis) -> Self {
+        self.setContentHuggingPriority(priority, for: axis)
+        return self
+    }
+
+    /// 内容抗压缩优先级(防止视图被压缩得比其内容所需更小)
+    /// - Parameters:
+    ///   - priority: 约束优先级
+    ///   - axis: 约束作用的轴向
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_setContentCompressionResistancePriority(_ priority: UILayoutPriority, for axis: NSLayoutConstraint.Axis) -> Self {
+        self.setContentCompressionResistancePriority(priority, for: axis)
+        return self
+    }
+
+    /// 调整视图尺寸以适应其内容
+    /// - Returns: `Self`
+    @discardableResult
+    @objc func dy_sizeToFit() -> Self {
+        self.sizeToFit()
+        return self
+    }
+
+    /// 在指定索引位置插入子视图
+    /// - Parameters:
+    ///   - view: 要插入的子视图
+    ///   - index: 插入位置的索引
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_insertSubview(_ view: UIView, at index: Int) -> Self {
+        self.insertSubview(view, at: index)
+        return self
+    }
+
+    /// 交换两个子视图的位置
+    /// - Parameters:
+    ///   - index1: 第一个子视图的索引
+    ///   - index2: 第二个子视图的索引
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_exchangeSubview(at index1: Int, withSubviewAt index2: Int) -> Self {
+        self.exchangeSubview(at: index1, withSubviewAt: index2)
+        return self
+    }
+
+    /// 将子视图插入到指定兄弟视图的下方
+    /// - Parameters:
+    ///   - view: 要插入的子视图
+    ///   - siblingSubview: 参考的兄弟视图
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_insertSubview(_ view: UIView, belowSubview siblingSubview: UIView) -> Self {
+        self.insertSubview(view, belowSubview: siblingSubview)
+        return self
+    }
+
+    /// 将子视图插入到指定兄弟视图的上方
+    /// - Parameters:
+    ///   - view: 要插入的子视图
+    ///   - siblingSubview: 参考的兄弟视图
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_insertSubview(_ view: UIView, aboveSubview siblingSubview: UIView) -> Self {
+        self.insertSubview(view, aboveSubview: siblingSubview)
+        return self
+    }
+
+    /// 将指定子视图移到最前面
+    /// - Parameter view: 要前置的子视图
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_bringSubviewToFront(_ view: UIView) -> Self {
+        self.bringSubviewToFront(view)
+        return self
+    }
+
+    /// 将指定子视图移到最后面
+    /// - Parameter view: 要后置的子视图
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_sendSubviewToBack(_ view: UIView) -> Self {
+        self.sendSubviewToBack(view)
+        return self
+    }
+
+    /// 标记视图需要重绘
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_setNeedsDisplay() -> Self {
+        self.setNeedsDisplay()
+        return self
+    }
+
+    /// 添加运动效果
+    /// - Parameter effect: 要添加的运动效果（如倾斜、摇晃）
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_addMotionEffect(_ effect: UIMotionEffect) -> Self {
+        self.addMotionEffect(effect)
+        return self
+    }
+
+    /// 移除运动效果
+    /// - Parameter effect: 要移除的运动效果
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_removeMotionEffect(_ effect: UIMotionEffect) -> Self {
+        self.removeMotionEffect(effect)
+        return self
+    }
+}
+
+// MARK: - 链式方法自定义
+public extension UIView {
+    /// 把`self`添加到父视图
+    /// - Parameter superview: 父视图,`self`将被添加为该视图的子视图
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_add2(_ superview: UIView?) -> Self {
+        if let superview {
+            superview.addSubview(self)
+        }
+        return self
+    }
+
+    /// 把`self`添加到`UIStackView`中
+    /// - Parameter stackView: `UIStackView`
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_add2(_ stackView: UIStackView) -> Self {
+        stackView.addArrangedSubview(self)
+        return self
+    }
+
+    /// 添加子控件数组到当前视图上
+    /// - Parameter subviews: 要添加的子控件数组
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_addSubviews(_ subviews: [UIView]) -> Self {
+        subviews.forEach { self.addSubview($0) }
+        return self
+    }
+
+    /// 离屏渲染 + 栅格化 - 异步绘制之后, 会生成一张独立的图像,停止滚动后可以监听
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_rasterize() -> Self {
+        self.layer.drawsAsynchronously = true
+        self.layer.shouldRasterize = true
+        self.layer.rasterizationScale = self.traitCollection.displayScale
+        return self
+    }
+
+    /// 立即刷新布局
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_updateLayout() -> Self {
+        self.setNeedsLayout()
+        self.layoutIfNeeded()
+        return self
+    }
+}
+
+// MARK: - 链式设置手势
+public extension UIView {
+    /// 添加手势识别器
+    /// - Parameter gestureRecognizer: 要添加的手势识别器
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_addGestureRecognizer(_ gestureRecognizer: UIGestureRecognizer) -> Self {
+        self.addGestureRecognizer(gestureRecognizer)
+        return self
+    }
+
+    /// 移除手势识别器
+    /// - Parameter gestureRecognizer: 要移除的手势识别器
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_removeGestureRecognizer(_ gestureRecognizer: UIGestureRecognizer) -> Self {
+        self.removeGestureRecognizer(gestureRecognizer)
+        return self
+    }
+
+    /// 添加多个手势识别器
+    /// - Parameter recognizers: 手势识别器数组
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_addGestureRecognizers(_ recognizers: [UIGestureRecognizer]) -> Self {
+        self.isUserInteractionEnabled = true
+        for recognizer in recognizers {
+            self.addGestureRecognizer(recognizer)
+        }
+        return self
+    }
+
+    /// 移除多个指定手势识别器
+    /// - Parameter recognizers: 要移除的手势识别器数组
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_removeGestureRecognizer(_ recognizers: [UIGestureRecognizer]) -> Self {
+        for recognizer in recognizers {
+            self.removeGestureRecognizer(recognizer)
+        }
+        return self
+    }
+
+    /// 移除所有手势识别器
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_removeGestureRecognizers() -> Self {
+        self.gestureRecognizers?.forEach { recognizer in
+            self.removeGestureRecognizer(recognizer)
+        }
+        return self
+    }
+}
+
+// MARK: - 链式手势(自定义)
+public extension UIView {
+    /// 添加单击手势
+    /// - Parameter block: 手势触发时的回调
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_onTapGestureRecognizer(_ block: @escaping DyAction1<UITapGestureRecognizer>) -> Self {
+        let tap = UITapGestureRecognizer()
+            .dy_onRecognized { recognizer in
+                if let tap = recognizer as? UITapGestureRecognizer {
+                    block(tap)
+                }
+            }
+        return self.dy_addGestureRecognizer(tap)
+    }
+
+    /// 添加长按手势
+    /// - Parameters:
+    ///   - minimumDuration: 最小按压时长
+    ///   - block: 手势触发时的回调
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_onLongPressGestureRecognizer(minimumDuration: TimeInterval = 0.5, _ block: @escaping DyAction1<UILongPressGestureRecognizer>) -> Self {
+        let longPress = UILongPressGestureRecognizer.dy_longPressGestureRecognizer()
+            .dy_minimumPressDuration(minimumDuration)
+            .dy_onRecognized { recognizer in
+                if let longPress = recognizer as? UILongPressGestureRecognizer {
+                    block(longPress)
+                }
+            }
+        return self.dy_addGestureRecognizer(longPress)
+    }
+
+    /// 添加拖动手势(平移)
+    /// - Parameter block: 手势触发时的回调(识别时持续回调)
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_onPanGestureRecognizer(_ block: @escaping DyAction1<UIPanGestureRecognizer>) -> Self {
+        let pan = UIPanGestureRecognizer.dy_panGestureRecognizer()
+            .dy_onRecognized { recognizer in
+                if let pan = recognizer as? UIPanGestureRecognizer {
+                    block(pan)
+                }
+            }
+        return self.dy_addGestureRecognizer(pan)
+    }
+
+    /// 添加从屏幕边缘开始的拖动手势
+    /// - Parameters:
+    ///   - edges: 触发边缘
+    ///   - block: 手势触发时的回调
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_onScreenEdgePanGestureRecognizer(edges: UIRectEdge, _ block: @escaping DyAction1<UIScreenEdgePanGestureRecognizer>) -> Self {
+        let screenEdgePan = UIScreenEdgePanGestureRecognizer.dy_screenEdgePanGestureRecognizer()
+            .dy_edges(edges)
+            .dy_onRecognized { recognizer in
+                if let screenEdgePan = recognizer as? UIScreenEdgePanGestureRecognizer {
+                    block(screenEdgePan)
+                }
+            }
+        return self.dy_addGestureRecognizer(screenEdgePan)
+    }
+
+    /// 添加滑动手势(轻扫)
+    /// - Parameters:
+    ///   - direction: 滑动方向
+    ///   - block: 手势触发时回调
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_onSwipeGestureRecognizer(direction: UISwipeGestureRecognizer.Direction = .right,
+                                     _ block: @escaping DyAction1<UISwipeGestureRecognizer>) -> Self
+    {
+        let swipeGesture = UISwipeGestureRecognizer.dy_swipeGestureRecognizer()
+            .dy_direction(direction)
+            .dy_onRecognized { recognizer in
+                if let swipe = recognizer as? UISwipeGestureRecognizer {
+                    block(swipe)
+                }
+            }
+        return self.dy_addGestureRecognizer(swipeGesture)
+    }
+
+    /// 添加捏合手势(用于缩放)
+    /// - Parameter block: 手势触发时回调
+    /// - Returns: `Self`
+    @discardableResult
+    func onPinchGestureRecognizer(_ block: @escaping DyAction1<UIPinchGestureRecognizer>) -> Self {
+        let pinch = UIPinchGestureRecognizer.dy_pinchGestureRecognizer()
+            .dy_onRecognized { recognizer in
+                if let pinch = recognizer as? UIPinchGestureRecognizer {
+                    block(pinch)
+                }
+            }
+        return self.dy_addGestureRecognizer(pinch)
+    }
+
+    /// 添加旋转手势
+    /// - Parameter block: 手势触发时回调
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_onRotationGestureRecognizer(_ block: @escaping DyAction1<UIRotationGestureRecognizer>) -> Self {
+        let rotation = UIRotationGestureRecognizer.dy_rotationGestureRecognizer()
+            .dy_onRecognized { recognizer in
+                if let rotation = recognizer as? UIRotationGestureRecognizer {
+                    block(rotation)
+                }
+            }
+        return self.dy_addGestureRecognizer(rotation)
+    }
+}

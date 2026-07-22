@@ -47,3 +47,65 @@ public extension UIImageView {
         task.resume()
     }
 }
+
+// MARK: - 链式设置属性
+public extension UIImageView {
+    /// 设置图像的`tintColor`(自动将图像转为模板模式)
+    /// - Parameter color: 主色调
+    /// - Returns: `Self`
+    @discardableResult
+    override func dy_tintColor(_ color: UIColor?) -> Self {
+        if let image = self.image {
+            self.image = image.withRenderingMode(.alwaysTemplate)
+        }
+        self.tintColor = color
+        return self
+    }
+
+    /// 设置普通图片
+    /// - Parameter image: 要设置的图片
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_image(_ image: UIImage?) -> Self {
+        self.image = image
+        return self
+    }
+
+    /// 设置高亮状态图片
+    /// - Parameter image: 要设置的高亮图片
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_highlightedImage(_ image: UIImage?) -> Self {
+        self.highlightedImage = image
+        return self
+    }
+}
+
+// MARK: - 链式方法(自定义)
+public extension UIImageView {
+    /// 添加模糊背景
+    /// - Parameter style: 模糊样式
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_blur(_ style: UIBlurEffect.Style = .light) -> Self {
+        for subview in self.subviews where subview is UIVisualEffectView {
+            subview.removeFromSuperview()
+        }
+
+        let blurEffect = UIBlurEffect(style: style)
+        let blurView = UIVisualEffectView(effect: blurEffect)
+        blurView.frame = self.bounds
+        blurView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        self.addSubview(blurView)
+        return self
+    }
+
+    /// 移除模糊效果
+    @discardableResult
+    func dy_removeBlur() -> Self {
+        for subview in self.subviews where subview is UIVisualEffectView {
+            subview.removeFromSuperview()
+        }
+        return self
+    }
+}

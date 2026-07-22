@@ -62,3 +62,135 @@ public extension UIImage.SymbolConfiguration {
         return configuration
     }
 }
+
+// MARK: - 链式设置属性(自定义)
+public extension UIImage.SymbolConfiguration {
+    /// 设置文本样式
+    /// - Parameter textStyle: 文本样式
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_textStyle(_ textStyle: UIFont.TextStyle) -> Self {
+        let configuration = UIImage.SymbolConfiguration(textStyle: textStyle)
+        return self.applying(configuration)
+    }
+
+    /// 设置缩放样式
+    /// - Parameter scale: 缩放样式
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_scale(_ scale: UIImage.SymbolScale) -> Self {
+        let configuration = UIImage.SymbolConfiguration(scale: scale)
+        return self.applying(configuration)
+    }
+
+    /// 设置自定义字体大小
+    /// - Parameter pointSize: 自定义字体大小
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_pointSize(_ pointSize: CGFloat) -> Self {
+        let configuration = UIImage.SymbolConfiguration(pointSize: pointSize)
+        return self.applying(configuration)
+    }
+
+    /// 设置字体字重
+    /// - Parameter weight: 字体字重
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_weight(_ weight: UIImage.SymbolWeight) -> Self {
+        let configuration = UIImage.SymbolConfiguration(weight: weight)
+        return self.applying(configuration)
+    }
+
+    /// 同时设置自定义字体大小和字重
+    /// - Parameters:
+    ///   - pointSize: 自定义字体大小
+    ///   - weight: 字体字重
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_pointSize(_ pointSize: CGFloat, weight: UIImage.SymbolWeight) -> Self {
+        let configuration = UIImage.SymbolConfiguration(pointSize: pointSize, weight: weight)
+        return self.applying(configuration)
+    }
+
+    /// 同时设置自定义字体大小字重和缩放
+    /// - Parameters:
+    ///   - pointSize: 自定义字体大小
+    ///   - weight: 字体字重
+    ///   - scale: 缩放样式
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_pointSize(_ pointSize: CGFloat, weight: UIImage.SymbolWeight, scale: UIImage.SymbolScale) -> Self {
+        let configuration = UIImage.SymbolConfiguration(pointSize: pointSize, weight: weight, scale: scale)
+        return self.applying(configuration)
+    }
+
+    /// 同时设置文本样式和缩放
+    /// - Parameters:
+    ///   - textStyle: 文本样式
+    ///   - scale: 缩放样式
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_textStyle(_ textStyle: UIFont.TextStyle, scale: UIImage.SymbolScale) -> Self {
+        let configuration = UIImage.SymbolConfiguration(textStyle: textStyle, scale: scale)
+        return self.applying(configuration)
+    }
+
+    /// 设置字体
+    /// - Parameters:
+    ///   - font: 字体
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_font(_ font: UIFont) -> Self {
+        let configuration = UIImage.SymbolConfiguration(font: font)
+        return self.applying(configuration)
+    }
+
+    /// 同时设置字体和缩放
+    /// - Parameters:
+    ///   - font: 字体
+    ///   - scale: 缩放样式
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_font(_ font: UIFont, scale: UIImage.SymbolScale) -> Self {
+        let configuration = UIImage.SymbolConfiguration(font: font, scale: scale)
+        return self.applying(configuration)
+    }
+
+    /// 设置分层颜色
+    /// - Parameter hierarchicalColor: 分层颜色
+    /// - Returns: `Self`
+    @available(iOS 15.0, *)
+    @discardableResult
+    func dy_hierarchicalColor(_ hierarchicalColor: UIColor) -> Self {
+        let configuration = UIImage.SymbolConfiguration(hierarchicalColor: hierarchicalColor)
+        return self.applying(configuration)
+    }
+
+    /// 设置调色板
+    /// - Parameter paletteColors: 调色板
+    /// - Returns: `Self`
+    @available(iOS 15.0, *)
+    @discardableResult
+    func dy_paletteColors(_ paletteColors: [UIColor]) -> Self {
+        let configuration = UIImage.SymbolConfiguration(paletteColors: paletteColors)
+        return self.applying(configuration)
+    }
+
+    /// 多色渲染偏好
+    /// - Returns: `Self`
+    @available(iOS 15.0, *)
+    @discardableResult
+    func dy_preferringMulticolor() -> Self {
+        let configuration = UIImage.SymbolConfiguration.preferringMulticolor()
+        return self.applying(configuration)
+    }
+
+    /// 单色渲染偏好
+    /// - Returns: `Self`
+    @available(iOS 16.0, *)
+    @discardableResult
+    func dy_preferringMonochrome() -> Self {
+        let configuration = UIImage.SymbolConfiguration.preferringMonochrome()
+        return self.applying(configuration)
+    }
+}

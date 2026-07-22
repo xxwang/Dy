@@ -76,7 +76,7 @@ public extension Collection {
     ///     ```swift
     ///     [1, 2, 3].dy_forEach { print($0) }
     ///     ```
-    func dy_forEach(_ operation: (Element) -> Void) {
+    func dy_forEach(_ operation: DyAction1<Element>) {
         for element in self {
             operation(element)
         }
@@ -96,7 +96,7 @@ public extension Collection {
     ///     }
     ///     // 输出: [0, 1], [2, 3], [4]
     ///     ```
-    func dy_slice(by size: Int, operation: ([Element]) -> Void) {
+    func dy_slice(by size: Int, operation: DyAction1<[Element]>) {
         guard size > 0 else { return }
         var start = startIndex
         while start != endIndex {

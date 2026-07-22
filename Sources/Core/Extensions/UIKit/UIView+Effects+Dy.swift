@@ -14,7 +14,7 @@ public extension UIView {
         relative: Bool = true,
         animated: Bool = false,
         duration: TimeInterval = 1,
-        completion: ((Bool) -> Void)? = nil
+        completion: DyAction1<Bool>? = nil
     ) {
         let newTransform = relative ? self.transform.rotated(by: angle) : CGAffineTransform(rotationAngle: angle)
         self.dy_add2DTransform(transform: newTransform, animated: animated, duration: duration, completion: completion)
@@ -34,7 +34,7 @@ public extension UIView {
         relative: Bool = true,
         animated: Bool = false,
         duration: TimeInterval = 1,
-        completion: ((Bool) -> Void)? = nil
+        completion: DyAction1<Bool>? = nil
     ) {
         let newTransform = relative ? self.transform.scaledBy(x: x, y: y) : CGAffineTransform(scaleX: x, y: y)
         self.dy_add2DTransform(transform: newTransform, animated: animated, duration: duration, completion: completion)
@@ -50,7 +50,7 @@ public extension UIView {
         transform: CGAffineTransform,
         animated: Bool,
         duration: TimeInterval,
-        completion: ((Bool) -> Void)?
+        completion: DyAction1<Bool>? = nil
     ) {
         if animated {
             UIView.animate(
@@ -83,7 +83,7 @@ public extension UIView {
         animated: Bool = false,
         duration: TimeInterval = 1,
         perspective: CGFloat = 1 / 500,
-        completion: ((Bool) -> Void)? = nil
+        completion: DyAction1<Bool>? = nil
     ) {
         let current = relative ? self.layer.transform : CATransform3DIdentity
         var transform = CATransform3DIdentity
@@ -108,7 +108,7 @@ public extension UIView {
         animated: Bool = false,
         duration: TimeInterval = 1,
         perspective: CGFloat = 1 / 500,
-        completion: ((Bool) -> Void)? = nil
+        completion: DyAction1<Bool>? = nil
     ) {
         let current = relative ? self.layer.transform : CATransform3DIdentity
         var transform = CATransform3DIdentity
@@ -133,7 +133,7 @@ public extension UIView {
         animated: Bool = false,
         duration: TimeInterval = 1,
         perspective: CGFloat = 1 / 500,
-        completion: ((Bool) -> Void)? = nil
+        completion: DyAction1<Bool>? = nil
     ) {
         let current = relative ? self.layer.transform : CATransform3DIdentity
         var transform = CATransform3DIdentity
@@ -164,7 +164,7 @@ public extension UIView {
         animated: Bool = false,
         duration: TimeInterval = 1,
         perspective: CGFloat = 1 / 500,
-        completion: ((Bool) -> Void)? = nil
+        completion: DyAction1<Bool>? = nil
     ) {
         let current = relative ? self.layer.transform : CATransform3DIdentity
         var transform = CATransform3DIdentity
@@ -195,7 +195,7 @@ public extension UIView {
         animated: Bool = false,
         duration: TimeInterval = 1,
         perspective: CGFloat = 1 / 500,
-        completion: ((Bool) -> Void)? = nil
+        completion: DyAction1<Bool>? = nil
     ) {
         let current = relative ? self.layer.transform : CATransform3DIdentity
         var transform = CATransform3DIdentity
@@ -216,7 +216,7 @@ public extension UIView {
         _ transform: CATransform3D,
         animated: Bool,
         duration: TimeInterval,
-        completion: ((Bool) -> Void)?
+        completion: DyAction1<Bool>? = nil
     ) {
         if animated {
             CATransaction.begin()
@@ -454,7 +454,7 @@ public extension UIView {
     ///   - 若视图当前 `alpha == 1`,仍会执行动画(从当前 alpha 到 1)
     func dy_fadeIn(
         options: UIView.DyFadeAnimationOptions = UIView.DyFadeAnimationOptions(),
-        completion: ((Bool) -> Void)? = nil
+        completion: DyAction1<Bool>? = nil
     ) {
         // 仅重置 alpha,不干预 isHidden(避免意外显示)
         self.alpha = 0
@@ -482,9 +482,9 @@ public extension UIView {
     ///   - `hideOnCompletion` 在 `removeOnCompletion = true` 时被忽略
     func dy_fadeOut(
         options: UIView.DyFadeAnimationOptions = UIView.DyFadeAnimationOptions(),
-        completion: ((Bool) -> Void)? = nil
+        completion: DyAction1<Bool>? = nil
     ) {
-        let finalCompletion: (Bool) -> Void = { [weak self] finished in
+        let finalCompletion: DyAction1<Bool> = { [weak self] finished in
             guard let self else { return }
             if options.removeOnCompletion {
                 self.removeFromSuperview()
@@ -529,7 +529,7 @@ public extension UIView {
         duration: TimeInterval = 0.6,
         amplitude: CGFloat = 20,
         shakeCount: Int = 5,
-        completion: (() -> Void)? = nil
+        completion: DyAction? = nil
     ) {
         // 移除可能存在的旧抖动动画,防止叠加
         self.layer.removeAnimation(forKey: "shake")
@@ -610,7 +610,7 @@ public extension UIView {
     private func dy_springShake(
         direction: UIView.DyShakeDirection,
         amplitude: CGFloat,
-        completion: (() -> Void)?
+        completion: DyAction? = nil
     ) {
         let keyPath = direction == .horizontal ?
             "transform.translation.x" : "transform.translation.y"

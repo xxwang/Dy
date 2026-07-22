@@ -4,10 +4,8 @@ import DyCore
 open class DyTableViewController: DyViewController {
     /// `UITableView`
     open lazy var tableView = UITableView.dy_tableView()
-        .dy
-        .dataSource(self)
-        .delegate(self)
-        .build()
+        .dy_dataSource(self)
+        .dy_delegate(self)
 
     override open func viewDidLoad() {
         super.viewDidLoad()
@@ -25,28 +23,24 @@ open class DyTableViewController: DyViewController {
             self.tableView,
             belowSubview: self.naview
         )
-        self.tableView
-            .dy
-            .frame(CGRect(
-                x: 0,
-                y: DyScreen.navBarTotalHeight,
-                width: self.view.dy_width,
-                height: self.view.dy_height - DyScreen.navBarTotalHeight
-            ))
+        self.tableView.dy_frame(CGRect(
+            x: 0,
+            y: DyScreen.navBarTotalHeight,
+            width: self.view.dy_width,
+            height: self.view.dy_height - DyScreen.navBarTotalHeight
+        ))
     }
 
     /// 更新导航栏及受影响的其它view
     override open func updateNaview() {
         super.updateNaview()
 
-        self.tableView
-            .dy
-            .frame(CGRect(
-                x: 0,
-                y: DyScreen.navBarTotalHeight,
-                width: self.view.dy_width,
-                height: self.view.dy_height - DyScreen.navBarTotalHeight
-            ))
+        self.tableView.dy_frame(CGRect(
+            x: 0,
+            y: DyScreen.navBarTotalHeight,
+            width: self.view.dy_width,
+            height: self.view.dy_height - DyScreen.navBarTotalHeight
+        ))
     }
 }
 

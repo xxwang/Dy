@@ -157,7 +157,7 @@ public extension SignedInteger {
     ///     }
     ///     // 输出三次 "Hello!"
     ///     ```
-    func dy_times(_ body: () -> Void) {
+    func dy_times(_ body: DyAction) {
         guard self > 0 else { return }
         var count: Self = 0
         while count < self {

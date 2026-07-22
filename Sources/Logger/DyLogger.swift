@@ -39,7 +39,7 @@ import Foundation
 
 // MARK: - DyLogger
 public class DyLogger {
-    static let shared = DyLogger()
+    public static let shared = DyLogger()
     private init() {}
 
     // MARK: - 属性

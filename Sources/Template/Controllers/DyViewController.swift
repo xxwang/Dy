@@ -10,11 +10,9 @@ open class DyViewController: UIViewController, DySetupable {
 
     /// 导航栏
     open lazy var naview = DyNaView.naview()
-        .dy
-        .backAction {
+        .dy_backAction {
             self.onBackActionHandler()
         }
-        .build()
 
     public init() {
         super.init(nibName: nil, bundle: nil)
@@ -34,22 +32,14 @@ open class DyViewController: UIViewController, DySetupable {
 @objc extension DyViewController {
     /// 控制器初始化样式
     open func setupUI() {
-        self
-            .dy
-            // 设置界面样式
-            .overrideUserInterfaceStyle(.light)
+        self.dy_overrideUserInterfaceStyle(.light) // 设置界面样式
 
-        self.view
-            .dy
-            // 控制器背景色
-            .backgroundColor(.white)
+        self.view.dy_backgroundColor(.white) // 控制器背景色
 
         // 添加导航条
-        self.naview
-            .dy
-            .isHidden(self.navigationController == nil)
-            .add2(self.view)
-            .frame(.init(
+        self.naview.dy_isHidden(self.navigationController == nil)
+            .dy_add2(self.view)
+            .dy_frame(CGRect(
                 x: 0,
                 y: 0,
                 width: DyScreen.screenWidth,
@@ -59,23 +49,21 @@ open class DyViewController: UIViewController, DySetupable {
 
     /// 更新导航栏及受影响的其它view
     open func updateNaview() {
-        self.naview
-            .dy
-            .frame(.init(
-                x: 0,
-                y: 0,
-                width: DyScreen.screenWidth,
-                height: DyScreen.navBarTotalHeight
-            ))
+        self.naview.dy_frame(CGRect(
+            x: 0,
+            y: 0,
+            width: DyScreen.screenWidth,
+            height: DyScreen.navBarTotalHeight
+        ))
     }
 
     /// 返回方法
     open func onBackActionHandler() {
         let count = self.navigationController?.children.count ?? 0
         if count > 1 {
-            self.dy.pop()
+            self.dy_pop()
         } else {
-            self.dy.dismiss()
+            self.dy_dismiss()
         }
     }
 }

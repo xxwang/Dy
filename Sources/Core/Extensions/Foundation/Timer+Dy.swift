@@ -16,7 +16,7 @@ public extension Timer {
         in mode: RunLoop.Mode = .common,
         timeInterval: TimeInterval,
         repeats: Bool,
-        block: @Sendable @escaping (Timer) -> Void
+        block: @escaping DyAction1<Timer>
     ) -> Timer {
         let timer = Timer(timeInterval: timeInterval, repeats: repeats, block: block)
         RunLoop.main.add(timer, forMode: mode)
@@ -29,7 +29,7 @@ public extension Timer {
     ///   - delay: 延迟时间（秒），必须 ≥ 0
     ///   - block: 延迟后执行的无参闭包
     /// - Note: 内部使用 `.common` 模式，确保在主线程执行；无需手动管理 timer 生命周期
-    static func dy_after(_ delay: TimeInterval, block: @Sendable @escaping () -> Void) {
+    static func dy_after(_ delay: TimeInterval, block: @escaping DyAction) {
         // ⚠️ 必须持有 timer 引用，否则可能被提前释放
         let timer = dy_scheduled(timeInterval: delay, repeats: false) { _ in
             block()
@@ -52,8 +52,8 @@ public extension Timer {
     static func dy_countdown(
         from duration: TimeInterval,
         interval: TimeInterval = 1.0,
-        tick: @Sendable @escaping (TimeInterval) -> Void,
-        completion: @Sendable @escaping () -> Void
+        tick: @escaping DyAction1<TimeInterval>,
+        completion: @escaping DyAction
     ) -> Timer {
         precondition(duration > 0, "Duration must be positive")
         precondition(interval > 0, "Interval must be positive")
@@ -100,5 +100,25 @@ public extension Timer {
     func dy_resume(after delay: TimeInterval) {
         guard isValid else { return }
         fireDate = Date().addingTimeInterval(delay)
+    }
+}
+
+// MARK: - 链式方法
+public extension Timer {
+    /// 设置运行模式
+    /// - Parameter mode: 运行模式
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_mode(_ mode: RunLoop.Mode) -> Self {
+        RunLoop.current.add(self, forMode: mode)
+        return self
+    }
+
+    /// 立即启动
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_fire() -> Self {
+        self.fire()
+        return self
     }
 }

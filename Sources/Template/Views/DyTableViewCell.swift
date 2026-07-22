@@ -7,10 +7,8 @@ open class DyTableViewCell: UITableViewCell, DySetupable {
     override public init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
 
-        self
-            .dy
-            .selectionStyle(.none)
-            .backgroundColor(.clear)
+        self.dy_selectionStyle(.none)
+            .dy_backgroundColor(.clear)
     }
 
     @available(*, unavailable)

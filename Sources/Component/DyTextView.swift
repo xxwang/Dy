@@ -7,13 +7,11 @@ open class DyTextView: UITextView {
 
     /// 占位文本标签
     lazy var placeholderLabel: UILabel = UILabel.dy_label()
-        .dy
-        .numberOfLines(0)
-        .backgroundColor(.clear)
-        .textColor(.placeholderText)
-        .font(self.font ?? .systemFont(ofSize: 14))
-        .translatesAutoresizingMaskIntoConstraints(false)
-        .build()
+        .dy_numberOfLines(0)
+        .dy_backgroundColor(.clear)
+        .dy_textColor(.placeholderText)
+        .dy_font(self.font ?? .systemFont(ofSize: 14))
+        .dy_translatesAutoresizingMaskIntoConstraints(false)
 
     override public init(frame: CGRect, textContainer: NSTextContainer?) {
         super.init(frame: frame, textContainer: textContainer)
@@ -86,14 +84,14 @@ open class DyTextView: UITextView {
 }
 
 // MARK: - 链式语法
-public extension DyWrapper where Base: DyTextView {
+public extension DyTextView {
     /// 设置占位文字内容
     /// - Parameter text: 要设置的文字
     /// - Returns: `Self`
     @discardableResult
-    func placeholder(_ text: String?) -> Self {
-        base.placeholderLabel.text = text
-        base.updatePlaceholderVisibility()
+    func dy_placeholder(_ text: String?) -> Self {
+        self.placeholderLabel.text = text
+        self.updatePlaceholderVisibility()
         return self
     }
 
@@ -101,8 +99,8 @@ public extension DyWrapper where Base: DyTextView {
     /// - Parameter font: 要设置的占位文字字体
     /// - Returns: `Self`
     @discardableResult
-    func placeholderFont(_ font: UIFont) -> Self {
-        base.placeholderLabel.font = font
+    func dy_placeholderFont(_ font: UIFont) -> Self {
+        self.placeholderLabel.font = font
         return self
     }
 
@@ -110,8 +108,8 @@ public extension DyWrapper where Base: DyTextView {
     /// - Parameter color: 要设置的占位文字颜色
     /// - Returns: `Self`
     @discardableResult
-    func placeholderColor(_ color: UIColor) -> Self {
-        base.placeholderLabel.textColor = color
+    func dy_placeholderColor(_ color: UIColor) -> Self {
+        self.placeholderLabel.textColor = color
         return self
     }
 }

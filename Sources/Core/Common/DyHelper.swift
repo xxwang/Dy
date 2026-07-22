@@ -158,6 +158,6 @@ public extension DyHelper {
     /// 判断指定方向是否被当前 App 支持
     func isSupportedOrientation(_ orientation: UIInterfaceOrientation) -> Bool {
         let supported = UIApplication.shared.supportedInterfaceOrientations(for: nil)
-        return supported.contains(orientation.dy_toInterfaceOrientationMask())
+        return supported.contains(orientation.dy_interfaceOrientationMask)
     }
 }

@@ -11,9 +11,6 @@ open class DyLabel: UILabel {
     }
 
     override open class func dy_label() -> DyLabel {
-        DyLabel()
-            .dy
-            .lineBreakMode(.byCharWrapping)
-            .build()
+        DyLabel().dy_lineBreakMode(.byCharWrapping)
     }
 }

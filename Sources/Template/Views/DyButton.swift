@@ -9,9 +9,6 @@ open class DyButton: UIButton {
     }
 
     override open class func dy_button() -> DyButton {
-        DyButton(type: .custom)
-            .dy
-            .isHighlighted(false)
-            .build()
+        DyButton(type: .custom).dy_isHighlighted(false)
     }
 }

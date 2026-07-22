@@ -20,7 +20,7 @@ public extension NSAttributedString {
 // MARK: - 类型转换
 public extension NSAttributedString {
     /// 将当前不可变属性字符串转换为可变属性字符串
-    func dy_toNSMutableAttributedString() -> NSMutableAttributedString {
+    func dy_toMutable() -> NSMutableAttributedString {
         NSMutableAttributedString(attributedString: self)
     }
 }

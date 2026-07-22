@@ -932,7 +932,7 @@ public extension UIImage {
     ///       }
     ///   }
     ///   ```
-    func dy_extractThemeColor(_ completion: @Sendable @escaping (UIColor?) -> Void) {
+    func dy_extractThemeColor(_ completion: @escaping DyAction1<UIColor?>) {
         guard let cgImage = self.cgImage else {
             DispatchQueue.main.async { completion(nil) }
             return
@@ -1174,7 +1174,7 @@ public extension UIImage {
     ///       }
     ///   }
     ///   ```
-    func dy_color(at point: CGPoint, completion: @Sendable @escaping (UIColor?) -> Void) {
+    func dy_color(at point: CGPoint, completion: @escaping DyAction1<UIColor?>) {
         DispatchQueue.global(qos: .userInteractive).async {
             let color = self.dy_color(at: point)
             DispatchQueue.main.async {

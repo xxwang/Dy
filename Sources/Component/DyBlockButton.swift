@@ -34,7 +34,7 @@ public extension DyWrapper where Base: DyBlockButton {
     /// 绑定点击处理回调
     /// - Parameter block: 点击处理回调
     /// - Returns: `Self`
-    func clickBlock(_ block: @escaping (DyBlockButton) -> Void) -> Self {
+    func clickBlock(_ block: @escaping DyAction1<DyBlockButton>) -> Self {
         base.clickBlock = block
         base.removeTarget(self.base, action: #selector(DyBlockButton.clickHandler(_:)), for: .touchUpInside)
         base.addTarget(self.base, action: #selector(DyBlockButton.clickHandler(_:)), for: .touchUpInside)

@@ -4,9 +4,7 @@ import DyCore
 open class DyScrollViewController: DyViewController {
     /// `UIScrollView`
     open lazy var scrollView = UIScrollView.dy_scrollView()
-        .dy
-        .delegate(self)
-        .build()
+        .dy_delegate(self)
 
     /// 内容视图
     open lazy var contentView = UIView.dy_view()
@@ -27,34 +25,28 @@ open class DyScrollViewController: DyViewController {
             self.scrollView,
             belowSubview: self.naview
         )
-        self.scrollView
-            .dy
-            .frame(.init(
-                x: 0,
-                y: DyScreen.navBarTotalHeight,
-                width: self.view.dy_width,
-                height: self.view.dy_height - DyScreen.navBarTotalHeight
-            ))
+        self.scrollView.dy_frame(.init(
+            x: 0,
+            y: DyScreen.navBarTotalHeight,
+            width: self.view.dy_width,
+            height: self.view.dy_height - DyScreen.navBarTotalHeight
+        ))
 
         // 内容容器
-        self.contentView
-            .dy
-            .size(self.scrollView.dy_size)
-            .add2(self.scrollView)
+        self.contentView.dy_size(self.scrollView.dy_size)
+            .dy_add2(self.scrollView)
     }
 
     /// 更新导航栏及受影响的其它view
     override open func updateNaview() {
         super.updateNaview()
 
-        self.scrollView
-            .dy
-            .frame(CGRect(
-                x: 0,
-                y: DyScreen.navBarTotalHeight,
-                width: self.view.dy_width,
-                height: self.view.dy_height - DyScreen.navBarTotalHeight
-            ))
+        self.scrollView.dy_frame(CGRect(
+            x: 0,
+            y: DyScreen.navBarTotalHeight,
+            width: self.view.dy_width,
+            height: self.view.dy_height - DyScreen.navBarTotalHeight
+        ))
     }
 }
 

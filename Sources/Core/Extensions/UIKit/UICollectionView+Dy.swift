@@ -4,25 +4,23 @@ import UIKit
 public extension UICollectionView {
     /// 启用长按拖拽移动 `Item` 功能(自动添加长按手势并处理交互式移动)
     func dy_allowMoveItem() {
-        self
-            .dy
-            .onLongPressGestureRecognizer { [weak self] recognizer in
-                guard let self else { return }
+        self.dy_onLongPressGestureRecognizer { [weak self] recognizer in
+            guard let self else { return }
 
-                let location = recognizer.location(in: self)
-                switch recognizer.state {
-                case .began:
-                    if let indexPath = self.indexPathForItem(at: location) {
-                        self.beginInteractiveMovementForItem(at: indexPath)
-                    }
-                case .changed:
-                    self.updateInteractiveMovementTargetPosition(location)
-                case .ended:
-                    self.endInteractiveMovement()
-                default:
-                    self.cancelInteractiveMovement()
+            let location = recognizer.location(in: self)
+            switch recognizer.state {
+            case .began:
+                if let indexPath = self.indexPathForItem(at: location) {
+                    self.beginInteractiveMovementForItem(at: indexPath)
                 }
+            case .changed:
+                self.updateInteractiveMovementTargetPosition(location)
+            case .ended:
+                self.endInteractiveMovement()
+            default:
+                self.cancelInteractiveMovement()
             }
+        }
     }
 
     /// 禁用拖拽移动功能(移除所有长按手势)
@@ -121,5 +119,131 @@ public extension UICollectionView {
             fatalError("未能正确复用 Supplementary View: \(viewType). 请确认已注册！")
         }
         return view
+    }
+}
+
+// MARK: - 链式设置属性
+public extension UICollectionView {
+    /// 设置 `delegate`
+    /// - Parameter delegate: 代理对象
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_delegate(_ delegate: UICollectionViewDelegate) -> Self {
+        self.delegate = delegate
+        return self
+    }
+
+    /// 设置 `dataSource`
+    /// - Parameter dataSource: 数据源对象
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_dataSource(_ dataSource: UICollectionViewDataSource) -> Self {
+        self.dataSource = dataSource
+        return self
+    }
+
+    /// 设置键盘交互模式(如拖拽时自动收起键盘)
+    /// - Parameter mode: 模式
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_keyboardDismissMode(_ mode: UIScrollView.KeyboardDismissMode) -> Self {
+        self.keyboardDismissMode = mode
+        return self
+    }
+}
+
+// MARK: - 方法
+public extension UICollectionView {
+    /// 注册 `Cell` 类(纯代码方式),支持链式调用
+    /// - Parameter cell: `UICollectionViewCell` 的子类类型
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_register(_ cell: (some UICollectionViewCell).Type) -> Self {
+        self.dy_register(cellWithClass: cell)
+        return self
+    }
+
+    /// 设置 `CollectionView` 布局,支持动画和完成回调
+    /// - Parameters:
+    ///   - layout: 布局对象
+    ///   - animated: 是否动画
+    ///   - completion: 完成回调
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_collectionViewLayout(
+        _ layout: UICollectionViewLayout,
+        animated: Bool = true,
+        completion: DyAction1<Bool>? = nil
+    ) -> Self {
+        self.setCollectionViewLayout(layout, animated: animated, completion: completion)
+        return self
+    }
+
+    /// 滚动使指定区域可见
+    /// - Parameters:
+    ///   - rect: 可视区域
+    ///   - animated: 是否动画
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_scrollRectToVisible(_ rect: CGRect, animated: Bool = true) -> Self {
+        self.scrollRectToVisible(rect, animated: animated)
+        return self
+    }
+
+    /// 设置 `contentOffset`
+    /// - Parameters:
+    ///   - offset: 目标偏移量,默认为 .zero
+    ///   - animated: 是否动画
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_contentOffset(_ offset: CGPoint = .zero, animated: Bool = true) -> Self {
+        self.setContentOffset(offset, animated: animated)
+        return self
+    }
+}
+
+// MARK: - 链式方法(自定义)
+public extension UICollectionView {
+    /// 滚动到指定 `Item`
+    /// - Parameters:
+    ///   - indexPath: `Item`索引
+    ///   - scrollPosition: 滚动位置
+    ///   - animated: 是否动画
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_scrollToItem(
+        _ indexPath: IndexPath,
+        at scrollPosition: UICollectionView.ScrollPosition = .top,
+        animated: Bool = true
+    ) -> Self {
+        guard
+            indexPath.section >= 0,
+            indexPath.item >= 0,
+            indexPath.section < self.numberOfSections,
+            indexPath.item < self.numberOfItems(inSection: indexPath.section)
+        else {
+            return self
+        }
+        self.scrollToItem(at: indexPath, at: scrollPosition, animated: animated)
+        return self
+    }
+
+    /// 滚动到顶部
+    /// - Parameter animated: 是否动画
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_scrollToTop(animated: Bool = true) -> Self {
+        self.setContentOffset(.zero, animated: animated)
+        return self
+    }
+
+    /// 滚动到底部
+    /// - Parameter animated: 是否动画
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_scrollToBottom(animated: Bool = true) -> Self {
+        let yOffset = max(0, self.contentSize.height - self.bounds.height)
+        self.setContentOffset(CGPoint(x: 0, y: yOffset), animated: animated)
+        return self
     }
 }

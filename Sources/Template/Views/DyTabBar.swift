@@ -14,11 +14,8 @@ open class DyTabBar: UITabBar {
     }
 
     override open class func dy_tabBar() -> DyTabBar {
-        DyTabBar()
-            .dy
-            .isTranslucent(false)
-            .backgroundColor(.clear)
-            .shadowImage(UIImage(color: .clear)!)
-            .build()
+        DyTabBar().dy_isTranslucent(false)
+            .dy_backgroundColor(.clear)
+            .dy_shadowImage(UIImage(color: .clear)!)
     }
 }

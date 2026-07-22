@@ -14,21 +14,17 @@ import WebKit
     /// 创建一个水平布局的 `UIStackView`,默认对齐方式为 `.fill`,分布方式为 `.equalSpacing`
     open class func dy_hStackView() -> UIStackView {
         return UIStackView()
-            .dy
-            .axis(.horizontal)
-            .alignment(.fill)
-            .distribution(.equalSpacing)
-            .build()
+            .dy_axis(.horizontal)
+            .dy_alignment(.fill)
+            .dy_distribution(.equalSpacing)
     }
 
     /// 创建一个垂直布局的 `UIStackView`,默认对齐方式为 `.fill`,分布方式为 `.equalSpacing`
     open class func dy_vStackView() -> UIStackView {
         return UIStackView()
-            .dy
-            .axis(.vertical)
-            .alignment(.fill)
-            .distribution(.equalSpacing)
-            .build()
+            .dy_axis(.vertical)
+            .dy_alignment(.fill)
+            .dy_distribution(.equalSpacing)
     }
 }
 
@@ -45,10 +41,8 @@ import WebKit
     /// 创建一个默认 `UIScrollView`,隐藏滚动指示器
     open class func dy_scrollView() -> UIScrollView {
         return UIScrollView()
-            .dy
-            .showsHorizontalScrollIndicator(false)
-            .showsVerticalScrollIndicator(false)
-            .build()
+            .dy_showsHorizontalScrollIndicator(false)
+            .dy_showsVerticalScrollIndicator(false)
     }
 }
 
@@ -57,22 +51,21 @@ import WebKit
     /// 创建一个默认配置的 `UITableView`(`grouped` 样式),启用自动尺寸、透明背景、无分隔线等
     open class func dy_tableView() -> UITableView {
         let tableView = UITableView(frame: .zero, style: .grouped)
-            .dy
-            .rowHeight(UITableView.automaticDimension)
-            .sectionHeaderHeight(UITableView.automaticDimension)
-            .sectionFooterHeight(UITableView.automaticDimension)
-            .backgroundColor(.clear)
-            .separatorStyle(.none)
-            .keyboardDismissMode(.onDrag)
-            .contentInsetAdjustmentBehavior(.never)
-            .showsHorizontalScrollIndicator(false)
-            .showsVerticalScrollIndicator(false)
-            .cellLayoutMarginsFollowReadableWidth(false)
+            .dy_rowHeight(UITableView.automaticDimension)
+            .dy_sectionHeaderHeight(UITableView.automaticDimension)
+            .dy_sectionFooterHeight(UITableView.automaticDimension)
+            .dy_backgroundColor(.clear)
+            .dy_separatorStyle(.none)
+            .dy_keyboardDismissMode(.onDrag)
+            .dy_contentInsetAdjustmentBehavior(.never)
+            .dy_showsHorizontalScrollIndicator(false)
+            .dy_showsVerticalScrollIndicator(false)
+            .dy_cellLayoutMarginsFollowReadableWidth(false)
 
         if #available(iOS 15.0, *) {
-            tableView.sectionHeaderTopPadding(0)
+            tableView.dy_sectionHeaderTopPadding(0)
         }
-        return tableView.build()
+        return tableView
     }
 }
 
@@ -81,31 +74,23 @@ import WebKit
     /// 创建一个水平滚动的 `UICollectionView`,使用 `UICollectionViewFlowLayout`
     open class func dy_hCollectionView() -> UICollectionView {
         let layout = UICollectionViewFlowLayout.dy_layout()
-            .dy
-            .scrollDirection(.horizontal)
-            .build()
+            .dy_scrollDirection(.horizontal)
 
         return UICollectionView(frame: .zero, collectionViewLayout: layout)
-            .dy
-            .showsHorizontalScrollIndicator(false)
-            .showsVerticalScrollIndicator(false)
-            .backgroundColor(.clear)
-            .build()
+            .dy_showsHorizontalScrollIndicator(false)
+            .dy_showsVerticalScrollIndicator(false)
+            .dy_backgroundColor(.clear)
     }
 
     /// 创建一个垂直滚动的 `UICollectionView`,使用 `UICollectionViewFlowLayout`
     open class func dy_vCollectionView() -> UICollectionView {
         let layout = UICollectionViewFlowLayout.dy_layout()
-            .dy
-            .scrollDirection(.vertical)
-            .build()
+            .dy_scrollDirection(.vertical)
 
         return UICollectionView(frame: .zero, collectionViewLayout: layout)
-            .dy
-            .showsHorizontalScrollIndicator(false)
-            .showsVerticalScrollIndicator(false)
-            .backgroundColor(.clear)
-            .build()
+            .dy_showsHorizontalScrollIndicator(false)
+            .dy_showsVerticalScrollIndicator(false)
+            .dy_backgroundColor(.clear)
     }
 }
 
@@ -130,9 +115,7 @@ import WebKit
     /// 创建一个自定义类型的 `UIButton`
     open class func dy_button() -> UIButton {
         return UIButton(type: .custom)
-            .dy
-            .isHighlighted(false)
-            .build()
+            .dy_isHighlighted(false)
     }
 
     /// 创建一个纯文本样式的 `UIButton`
@@ -333,10 +316,8 @@ import WebKit
     /// 创建一个默认 `UITextView` 实例,隐藏滚动指示器
     open class func dy_textView() -> UITextView {
         return UITextView()
-            .dy
-            .showsHorizontalScrollIndicator(false)
-            .showsVerticalScrollIndicator(false)
-            .build()
+            .dy_showsHorizontalScrollIndicator(false)
+            .dy_showsVerticalScrollIndicator(false)
     }
 }
 
@@ -398,13 +379,11 @@ import WebKit
     /// 创建一个默认 `NSMutableParagraphStyle`,预设常用文本属性
     open class func dy_mutableParagraphStyle() -> NSMutableParagraphStyle {
         return NSMutableParagraphStyle()
-            .dy
-            .hyphenationFactor(1.0)
-            .firstLineHeadIndent(0.0)
-            .paragraphSpacingBefore(0.0)
-            .headIndent(0)
-            .tailIndent(0)
-            .build()
+            .dy_hyphenationFactor(1.0)
+            .dy_firstLineHeadIndent(0.0)
+            .dy_paragraphSpacingBefore(0.0)
+            .dy_headIndent(0)
+            .dy_tailIndent(0)
     }
 }
 

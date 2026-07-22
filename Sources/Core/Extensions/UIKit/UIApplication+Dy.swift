@@ -90,7 +90,7 @@ public extension UIApplication {
     /// - Parameters:
     ///   - url: 要打开的 URL
     ///   - completion: 打开结果回调
-    func dy_open(_ url: URL, completion: ((Bool) -> Void)? = nil) {
+    func dy_open(_ url: URL, completion: DyAction1<Bool>? = nil) {
         guard self.canOpenURL(url) else {
             completion?(false)
             return
@@ -106,7 +106,7 @@ public extension UIApplication {
     /// - Parameters:
     ///   - phoneNumber: 电话号码(纯数字,不含空格或符号)
     ///   - completion: 拨号结果回调
-    func dy_call(to phoneNumber: String, completion: ((Bool) -> Void)? = nil) {
+    func dy_call(to phoneNumber: String, completion: DyAction1<Bool>? = nil) {
         let cleanNumber = phoneNumber.replacingOccurrences(of: "[^0-9]", with: "", options: .regularExpression)
         guard !cleanNumber.isEmpty else {
             completion?(false)

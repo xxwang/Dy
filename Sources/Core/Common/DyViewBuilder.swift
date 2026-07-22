@@ -54,7 +54,7 @@ public extension UIView {
     /// ```
     convenience init(
         @DyViewBuilder content: () -> [UIView],
-        configure: ((UIView) -> Void)? = nil
+        configure: DyAction1<UIView>? = nil
     ) {
         self.init()
 

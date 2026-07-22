@@ -41,7 +41,7 @@ public extension DyAlertView {
         container.addSubview(self)
 
         // 设置约束填充父视图
-        self.fillSuperview()
+        self.dy_fillSuperview()
 
         // 设置初始化状态
         self.shadeView.alpha = 0.01
@@ -74,34 +74,27 @@ public extension DyAlertView {
     /// 设置UI (子类重写该方法)在子类中应该在该方法中,设置contentContainer的size
     func setupUI() {
         // 配置弹窗基础属性
-        self
-            .dy
-            .addSubviews([
-                self.shadeView,
-                self.contentContainer,
-            ])
+        self.dy_addSubviews([
+            self.shadeView,
+            self.contentContainer,
+        ])
 
         // 配置遮罩层初始状态
-        self.shadeView
-            .dy
-            .frame(self.bounds)
-            .backgroundColor(self.shadeBackgroundColor())
-            .isUserInteractionEnabled(self.isTapOutsideToDismiss())
+        self.shadeView.dy_frame(self.bounds)
+            .dy_backgroundColor(self.shadeBackgroundColor())
+            .dy_isUserInteractionEnabled(self.isTapOutsideToDismiss())
 
         // 配置内容容器
-        self.contentContainer
-            .dy
-            .backgroundColor(self.contentContainerBackgroundColor())
-            .maskedCorners(.dy_all)
-            .cornerRadius(self.contentContainerCornerRadius())
-            .masksToBounds(true)
+        self.contentContainer.dy_backgroundColor(self.contentContainerBackgroundColor())
+            .dy_maskedCorners(.dy_all)
+            .dy_cornerRadius(self.contentContainerCornerRadius())
+            .dy_masksToBounds(true)
 
         // 设置遮罩点击手势
-        self.shadeView.dy
-            .onTapGestureRecognizer { [weak self] tap in
-                guard let self, self.isTapOutsideToDismiss() else { return }
-                self.dismiss()
-            }
+        self.shadeView.dy_onTapGestureRecognizer { [weak self] tap in
+            guard let self, self.isTapOutsideToDismiss() else { return }
+            self.dismiss()
+        }
     }
 
     /// 设置内容容器的圆角半径
