@@ -10,7 +10,7 @@ open class DyTextField: UITextField {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override open class func dy_textField() -> DyLabel {
+    override open class func dy_textField() -> DyTextField {
         DyTextField()
     }
 }

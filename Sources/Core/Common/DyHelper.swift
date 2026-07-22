@@ -43,7 +43,7 @@ public extension DyHelper {
     /// 判断依据：`key window` 的 `safeAreaInsets.bottom > 0`
     /// 注意：在 `iPad` 或非全面屏设备上返回 `false`
     var isIPhoneXSeries: Bool {
-        let bottomInset = self.keyWindow?.safeAreaInsets.bottom ?? 0
+        let bottomInset = UIWindow.dy_keyWindow?.safeAreaInsets.bottom ?? 0
 
         return isPhone && bottomInset > 0
     }
@@ -158,37 +158,6 @@ public extension DyHelper {
     /// 判断指定方向是否被当前 App 支持
     func isSupportedOrientation(_ orientation: UIInterfaceOrientation) -> Bool {
         let supported = UIApplication.shared.supportedInterfaceOrientations(for: nil)
-
-        func toInterfaceOrientationMask(_ orientation: UIInterfaceOrientation) -> UIInterfaceOrientationMask {
-            switch orientation {
-            case .portrait: return .portrait
-            case .portraitUpsideDown: return .portraitUpsideDown
-            case .landscapeLeft: return .landscapeLeft
-            case .landscapeRight: return .landscapeRight
-            case .unknown: return []
-            default: return []
-            }
-        }
-
-        return supported.contains(toInterfaceOrientationMask(orientation))
-    }
-}
-
-public extension DyHelper {
-    /// 获取当前应用中最合适的主窗口
-    var keyWindow: UIWindow? {
-        return UIApplication.shared.connectedScenes
-            .compactMap { $0 as? UIWindowScene }
-            .first { $0.activationState == .foregroundActive }?
-            .windows
-            .first { !$0.isHidden && $0.isKeyWindow }
-    }
-
-    /// 获取所有有效的、非隐藏的 `UIWindow` 实例
-    var windows: [UIWindow] {
-        return UIApplication.shared.connectedScenes
-            .compactMap { $0 as? UIWindowScene }
-            .flatMap(\.windows)
-            .filter { !$0.isHidden }
+        return supported.contains(orientation.dy_toInterfaceOrientationMask())
     }
 }

@@ -44,7 +44,7 @@ public extension DyScreen {
 public extension DyScreen {
     /// 当前 `keyWindow` 的安全区域插值
     static var safeAreaInsets: UIEdgeInsets {
-        return DyHelper.shared.keyWindow?.safeAreaInsets ?? .zero
+        return UIWindow.dy_keyWindow?.safeAreaInsets ?? .zero
     }
 
     /// 安全区顶部高度(通常为状态栏 + 导航栏下方留白)
@@ -72,7 +72,7 @@ public extension DyScreen {
 public extension DyScreen {
     /// 状态栏高度
     static var statusBarHeight: CGFloat {
-        DyHelper.shared.keyWindow?.windowScene?.statusBarManager?.statusBarFrame.height ?? 0
+        UIWindow.dy_keyWindow?.windowScene?.statusBarManager?.statusBarFrame.height ?? 0
     }
 
     /// 导航栏高度
@@ -81,7 +81,7 @@ public extension DyScreen {
     }
 
     /// 导航栏总高度 = 状态栏 + 导航栏
-    static var navigationBarTotalHeight: CGFloat {
+    static var navBarTotalHeight: CGFloat {
         statusBarHeight + navigationBarHeight
     }
 }

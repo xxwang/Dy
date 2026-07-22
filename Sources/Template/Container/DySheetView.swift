@@ -4,10 +4,10 @@ import DyCore
 // MARK: - 底部弹出面板
 open class DySheetView: UIView {
     /// 遮罩层
-    private lazy var shadeView = UIView.view()
+    private lazy var shadeView = UIView.dy_view()
 
     /// 内容容器（从底部弹出的部分）
-    public lazy var contentContainer = UIView.view()
+    public lazy var contentContainer = UIView.dy_view()
 
     override public init(frame: CGRect) {
         super.init(frame: frame)
@@ -43,7 +43,7 @@ public extension DySheetView {
         self.contentContainer
             .dy
             .backgroundColor(contentContainerBackgroundColor())
-            .maskedCorners([.topLeft, .topRight])
+            .maskedCorners([.dy_topLeft, .dy_topRight])
             .cornerRadius(contentContainerCornerRadius())
             .masksToBounds(true)
 
@@ -65,7 +65,7 @@ public extension DySheetView {
 @objc extension DySheetView {
     /// 显示底部弹窗
     open func show(in container: UIView? = nil) {
-        let container = container ?? UIWindow.keyWindow
+        let container = container ?? UIWindow.dy_keyWindow
         guard let container else { return }
         container.addSubview(self)
 
@@ -78,13 +78,13 @@ public extension DySheetView {
         // 内容容器
         self.contentContainer
             .dy
-            .left((container.width - self.contentContainer.width) / 2)
-            .top(self.height - self.contentContainer.height)
+            .left((container.dy_width - self.contentContainer.dy_width) / 2)
+            .top(self.dy_height - self.contentContainer.dy_height)
 
         // 设置初始化状态
         self.shadeView.alpha = 0.01
         self.contentContainer.alpha = 0.01
-        self.contentContainer.transform = CGAffineTransform(translationX: 0, y: self.contentContainer.height)
+        self.contentContainer.transform = CGAffineTransform(translationX: 0, y: self.contentContainer.dy_height)
 
         // 从底部滑入
         UIView.animate(withDuration: animationDuration(), delay: 0, options: .curveEaseOut) {
@@ -100,7 +100,7 @@ public extension DySheetView {
         UIView.animate(withDuration: animationDuration(), delay: 0, options: .curveEaseIn) {
             self.shadeView.alpha = 0.01
             self.contentContainer.alpha = 0.01
-            self.contentContainer.transform = CGAffineTransform(translationX: 0, y: self.height)
+            self.contentContainer.transform = CGAffineTransform(translationX: 0, y: self.dy_height)
         } completion: { _ in
             self.removeFromSuperview()
         }

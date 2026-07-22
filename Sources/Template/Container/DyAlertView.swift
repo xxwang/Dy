@@ -4,10 +4,10 @@ import DyCore
 /// 居中弹窗
 open class DyAlertView: UIView {
     /// 遮罩层
-    private lazy var shadeView = UIView.view()
+    private lazy var shadeView = UIView.dy_view()
 
     /// 内容容器
-    lazy var contentContainer = UIView.view()
+    lazy var contentContainer = UIView.dy_view()
 
     override public init(frame: CGRect) {
         super.init(frame: frame)
@@ -43,7 +43,7 @@ public extension DyAlertView {
         self.contentContainer
             .dy
             .backgroundColor(self.contentContainerBackgroundColor())
-            .maskedCorners(.all)
+            .maskedCorners(.dy_all)
             .cornerRadius(self.contentContainerCornerRadius())
             .masksToBounds(true)
 
@@ -62,7 +62,7 @@ public extension DyAlertView {
         self.shadeView.frame = self.bounds
 
         // 设置内容容器中心点
-        self.contentContainer.center = self.localCenter
+        self.contentContainer.center = self.dy_middle
     }
 }
 
@@ -70,7 +70,7 @@ public extension DyAlertView {
 @objc extension DyAlertView {
     /// 显示弹窗
     open func show(in container: UIView? = nil) {
-        let container = container ?? UIWindow.keyWindow
+        let container = container ?? UIWindow.dy_keyWindow
         guard let container else { return }
         container.addSubview(self)
 

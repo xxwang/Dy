@@ -1,15 +1,15 @@
 import UIKit
-import Dy
+import DyCore
 
 open class DyScrollViewController: DyViewController {
     /// `UIScrollView`
-    open lazy var scrollView = UIScrollView.scrollView()
+    open lazy var scrollView = UIScrollView.dy_scrollView()
         .dy
         .delegate(self)
         .build()
 
     /// 内容视图
-    open lazy var contentView = UIView.view()
+    open lazy var contentView = UIView.dy_view()
 
     override open func viewDidLoad() {
         super.viewDidLoad()
@@ -31,15 +31,15 @@ open class DyScrollViewController: DyViewController {
             .dy
             .frame(.init(
                 x: 0,
-                y: DyScreen.navigationBarTotalHeight,
-                width: self.view.width,
-                height: self.view.height - DyScreen.navigationBarTotalHeight
+                y: DyScreen.navBarTotalHeight,
+                width: self.view.dy_width,
+                height: self.view.dy_height - DyScreen.navBarTotalHeight
             ))
 
         // 内容容器
         self.contentView
             .dy
-            .size(self.scrollView.size)
+            .size(self.scrollView.dy_size)
             .add2(self.scrollView)
     }
 
@@ -51,9 +51,9 @@ open class DyScrollViewController: DyViewController {
             .dy
             .frame(CGRect(
                 x: 0,
-                y: DyScreen.navigationBarTotalHeight,
-                width: self.view.width,
-                height: self.view.height - DyScreen.navigationBarTotalHeight
+                y: DyScreen.navBarTotalHeight,
+                width: self.view.dy_width,
+                height: self.view.dy_height - DyScreen.navBarTotalHeight
             ))
     }
 }

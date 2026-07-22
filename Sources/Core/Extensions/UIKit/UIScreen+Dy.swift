@@ -66,17 +66,13 @@ private final class DyScreenCaptureMonitor {
             queue: .main
         ) { [weak self] _ in
             guard let self else { return }
-            MainActor.assumeIsolated {
-                self.onScreenshot?()
-            }
+            self.onScreenshot?()
         }
 
         // 监听录屏(iOS 11+)
         if #available(iOS 11.0, *) {
             if UIScreen.main.isCaptured {
-                MainActor.assumeIsolated {
-                    self.onRecordingStart?()
-                }
+                self.onRecordingStart?()
             }
 
             captureObserver = NotificationCenter.default.addObserver(
@@ -85,12 +81,10 @@ private final class DyScreenCaptureMonitor {
                 queue: .main
             ) { [weak self] _ in
                 guard let self else { return }
-                MainActor.assumeIsolated {
-                    if UIScreen.main.isCaptured {
-                        self.onRecordingStart?()
-                    } else {
-                        self.onRecordingStop?()
-                    }
+                if UIScreen.main.isCaptured {
+                    self.onRecordingStart?()
+                } else {
+                    self.onRecordingStop?()
                 }
             }
         }

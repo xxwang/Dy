@@ -1,7 +1,8 @@
 import UIKit
-import Dy
+import DyCore
 
 // MARK: - 底部抽屉控制器
+@available(iOS 15.0, *)
 open class DySheetViewController: DyViewController {
     override open func viewDidLoad() {
         super.viewDidLoad()
@@ -9,6 +10,7 @@ open class DySheetViewController: DyViewController {
 }
 
 // MARK: - 公开方法
+@available(iOS 15.0, *)
 public extension DySheetViewController {
     /// 显示底部抽屉
     /// - Parameter parent: 父视图控制器
@@ -34,6 +36,7 @@ public extension DySheetViewController {
 }
 
 // MARK: - 子类可重写配置
+@available(iOS 15.0, *)
 @objc extension DySheetViewController {
     /// 是否禁止用户通过下拉或点击背景关闭抽屉
     /// - Returns: 默认 `false`（允许关闭）

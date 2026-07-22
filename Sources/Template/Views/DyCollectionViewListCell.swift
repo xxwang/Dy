@@ -1,6 +1,7 @@
 import UIKit
 import Combine
 
+@available(iOS 14.0, *)
 open class DyCollectionViewListCell: UICollectionViewListCell, DySetupable {
     public var cancellables = Set<AnyCancellable>()
 

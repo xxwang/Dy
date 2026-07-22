@@ -10,24 +10,24 @@ extension UIGestureRecognizer {
 
     /// 手势识别成功时触发的闭包
     var dy_recognizedBlock: ((UIGestureRecognizer) -> Void)? {
-        get { return self.GetAO(forKey: AssociatedKeys.recognized) }
-        set { self.SetAO(newValue, forKey: AssociatedKeys.recognized) }
+        get { return self.dy_getAssociatedObject(forKey: AssociatedKeys.recognized) }
+        set { self.dy_setAssociatedObject(newValue, forKey: AssociatedKeys.recognized) }
     }
 
     /// 手势状态变化时触发的闭包
     var dy_stateChangedBlock: ((UIGestureRecognizer.State) -> Void)? {
-        get { return self.GetAO(forKey: AssociatedKeys.stateChanged) }
-        set { self.SetAO(newValue, forKey: AssociatedKeys.stateChanged) }
+        get { return self.dy_getAssociatedObject(forKey: AssociatedKeys.stateChanged) }
+        set { self.dy_setAssociatedObject(newValue, forKey: AssociatedKeys.stateChanged) }
     }
 
     /// 处理手势状态变化
     @objc func dy_stateChangeHandler() {
         // 状态回调
-        self.stateChangedBlock?(state)
+        self.dy_stateChangedBlock?(state)
 
         if state == .recognized {
             // 手势识别回调
-            self.recognizedBlock?(self)
+            self.dy_recognizedBlock?(self)
         }
     }
 }

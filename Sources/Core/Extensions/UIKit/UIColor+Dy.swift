@@ -24,14 +24,14 @@ public extension UIColor {
 
     /// 获取 `RGB` 分量(标准化为 0...1 范围)
     var dy_rgbComponents: (red: CGFloat, green: CGFloat, blue: CGFloat) {
-        let (r, g, b, _) = self.rgbaComponents
+        let (r, g, b, _) = self.dy_rgbaComponents
         return (r, g, b)
     }
 
     /// 安全获取 `RGB` 分量(0 ～ 255 整数)
     /// - Returns: `(red, green, blue)` 元组(Int,范围 0–255),若无法转换则返回 `nil`
     var dy_rgbIntComponents: (red: Int, green: Int, blue: Int)? {
-        let rgba = self.rgbaComponents
+        let rgba = self.dy_rgbaComponents
         return (
             red: Int((rgba.red * 255).rounded()),
             green: Int((rgba.green * 255).rounded()),
@@ -42,7 +42,7 @@ public extension UIColor {
     /// 安全获取 `RGB` 分量(0.0 ～ 1.0 浮点)
     /// - Returns: `(red, green, blue)` 元组(`CGFloat`),若无法转换则返回 `nil`
     var dy_rgbFloatComponents: (red: CGFloat, green: CGFloat, blue: CGFloat) {
-        let rgba = self.rgbaComponents
+        let rgba = self.dy_rgbaComponents
         return (red: rgba.red, green: rgba.green, blue: rgba.blue)
     }
 }
@@ -62,37 +62,37 @@ public extension UIColor {
 public extension UIColor {
     /// 获取红色分量(0.0 ～ 1.0)
     var dy_redComponent: CGFloat? {
-        return self.rgbaComponents.red
+        return self.dy_rgbaComponents.red
     }
 
     /// 获取绿色分量(0.0 ～ 1.0)
     var dy_greenComponent: CGFloat? {
-        return self.rgbaComponents.green
+        return self.dy_rgbaComponents.green
     }
 
     /// 获取蓝色分量(0.0 ～ 1.0)
     var dy_blueComponent: CGFloat? {
-        return self.rgbaComponents.blue
+        return self.dy_rgbaComponents.blue
     }
 
     /// 获取透明度分量(0.0 ～ 1.0)
     var dy_alphaComponent: CGFloat? {
-        return self.rgbaComponents.alpha
+        return self.dy_rgbaComponents.alpha
     }
 
     /// 获取色相分量(0.0 ～ 1.0)
     var dy_hueComponent: CGFloat? {
-        return self.hsbaComponents.hue
+        return self.dy_hsbaComponents.hue
     }
 
     /// 获取饱和度分量(0.0 ～ 1.0)
     var dy_saturationComponent: CGFloat? {
-        return self.hsbaComponents.saturation
+        return self.dy_hsbaComponents.saturation
     }
 
     /// 获取亮度分量(0.0 ～ 1.0)
     var dy_brightnessComponent: CGFloat? {
-        return self.hsbaComponents.brightness
+        return self.dy_hsbaComponents.brightness
     }
 }
 
@@ -141,7 +141,7 @@ public extension UIColor {
             red: r / 255.0,
             green: g / 255.0,
             blue: b / 255.0,
-            alpha: alpha.clamped(to: 0 ... 1)
+            alpha: alpha.dy_clamped(to: 0 ... 1)
         )
     }
 
@@ -191,7 +191,7 @@ public extension UIColor {
             return nil
         }
 
-        self.init(red: r, green: g, blue: b, alpha: a.clamped(to: 0 ... 1))
+        self.init(red: r, green: g, blue: b, alpha: a.dy_clamped(to: 0 ... 1))
     }
 
     /// 使用十六进制 `Int` 值创建颜色(如 `0xFF5733`)
@@ -206,7 +206,7 @@ public extension UIColor {
             red: r / 255.0,
             green: g / 255.0,
             blue: b / 255.0,
-            alpha: alpha.clamped(to: 0 ... 1)
+            alpha: alpha.dy_clamped(to: 0 ... 1)
         )
     }
 
@@ -218,10 +218,10 @@ public extension UIColor {
     ///   - alpha: 透明度
     convenience init(r: CGFloat, g: CGFloat, b: CGFloat, alpha: CGFloat = 1.0) {
         self.init(
-            red: (r.clamped(to: 0 ... 255)) / 255.0,
-            green: (g.clamped(to: 0 ... 255)) / 255.0,
-            blue: (b.clamped(to: 0 ... 255)) / 255.0,
-            alpha: alpha.clamped(to: 0 ... 1)
+            red: (r.dy_clamped(to: 0 ... 255)) / 255.0,
+            green: (g.dy_clamped(to: 0 ... 255)) / 255.0,
+            blue: (b.dy_clamped(to: 0 ... 255)) / 255.0,
+            alpha: alpha.dy_clamped(to: 0 ... 1)
         )
     }
 
@@ -267,14 +267,14 @@ public extension UIColor {
 
     /// 返回 RGB 整数表示(如 0xFF0000)
     func dy_toRGBInt() -> Int {
-        let (r, g, b, _) = self.rgbaComponents
+        let (r, g, b, _) = self.dy_rgbaComponents
         return (Int(r * 255) << 16) | (Int(g * 255) << 8) | Int(b * 255)
     }
 
     /// 返回长格式十六进制字符串(#RRGGBB)
     /// - Parameter prefixed: 是否包含 `#` 前缀(默认 `true`)
     func dy_toHexString(prefixed: Bool = true) -> String {
-        let (r, g, b, _) = self.rgbaComponents
+        let (r, g, b, _) = self.dy_rgbaComponents
         let hex = String(format: "%02X%02X%02X", Int(r * 255), Int(g * 255), Int(b * 255))
         return prefixed ? "#\(hex)" : hex
     }
@@ -282,7 +282,7 @@ public extension UIColor {
     /// 尝试返回短格式十六进制(#RGB),若不能则返回长格式
     /// - Returns: `String`
     func dy_toShortHexOrLong() -> String {
-        let long = self.toHexString(prefixed: false)
+        let long = self.dy_toHexString(prefixed: false)
         let chars = Array(long)
         guard chars.count == 6,
               chars[0] == chars[1],
@@ -346,8 +346,8 @@ public extension UIColor {
         let w1 = weight1 / total
         let w2 = weight2 / total
 
-        let (r1, g1, b1, a1) = color1.rgbaComponents
-        let (r2, g2, b2, a2) = color2.rgbaComponents
+        let (r1, g1, b1, a1) = color1.dy_rgbaComponents
+        let (r2, g2, b2, a2) = color2.dy_rgbaComponents
 
         return UIColor(
             red: r1 * w1 + r2 * w2,
@@ -360,8 +360,8 @@ public extension UIColor {
     /// 在两个颜色之间插值
     static func dy_interpolate(from start: UIColor, to end: UIColor, progress: CGFloat) -> UIColor {
         let p = min(max(progress, 0), 1)
-        let (sr, sg, sb, sa) = start.rgbaComponents
-        let (er, eg, eb, ea) = end.rgbaComponents
+        let (sr, sg, sb, sa) = start.dy_rgbaComponents
+        let (er, eg, eb, ea) = end.dy_rgbaComponents
         return UIColor(
             red: sr + (er - sr) * p,
             green: sg + (eg - sg) * p,
@@ -377,7 +377,7 @@ public extension UIColor {
     ///
     /// 使用亮度公式 `0.2126 * R + 0.7152 * G + 0.0722 * B` 计算亮度值,小于 0.5 视为暗色
     var dy_isDark: Bool {
-        let components = self.rgbComponents
+        let components = self.dy_rgbComponents
         let luminance = 0.2126 * components.red + 0.7152 * components.green + 0.0722 * components.blue
         return luminance < 0.5
     }
@@ -386,7 +386,7 @@ public extension UIColor {
     ///
     /// 如果颜色接近纯黑(RGB 值均小于 0.09)或纯白(RGB 值均大于 0.91),则返回 true
     var dy_isBlackOrWhite: Bool {
-        let components = self.rgbComponents
+        let components = self.dy_rgbComponents
         return (components.red > 0.91 && components.green > 0.91 && components.blue > 0.91) ||
             (components.red < 0.09 && components.green < 0.09 && components.blue < 0.09)
     }
@@ -395,7 +395,7 @@ public extension UIColor {
     ///
     /// 若颜色非常接近黑色(RGB 值均小于 0.09),返回 true
     var dy_isBlack: Bool {
-        let components = self.rgbComponents
+        let components = self.dy_rgbComponents
         return components.red < 0.09 && components.green < 0.09 && components.blue < 0.09
     }
 
@@ -403,7 +403,7 @@ public extension UIColor {
     ///
     /// 若颜色非常接近白色(RGB 值均大于 0.91),返回 true
     var dy_isWhite: Bool {
-        let components = self.rgbComponents
+        let components = self.dy_rgbComponents
         return components.red > 0.91 && components.green > 0.91 && components.blue > 0.91
     }
 
@@ -414,8 +414,8 @@ public extension UIColor {
     ///   - threshold: 差异阈值,默认 0.25
     /// - Returns: 如果颜色显著不同,返回 true
     func dy_isDistinct(from color: UIColor, threshold: CGFloat = 0.25) -> Bool {
-        let bg = self.rgbComponents
-        let fg = color.self.rgbComponents
+        let bg = self.dy_rgbComponents
+        let fg = color.self.dy_rgbComponents
 
         // 确保两个颜色都不是灰色系
         if abs(bg.red - bg.green) < 0.03 && abs(bg.red - bg.blue) < 0.03 &&
@@ -436,8 +436,8 @@ public extension UIColor {
     /// - Parameter color: 要比较的颜色
     /// - Returns: 如果有足够对比度,返回 true
     func dy_hasSufficientContrast(with color: UIColor) -> Bool {
-        let bg = self.rgbComponents
-        let fg = color.rgbComponents
+        let bg = self.dy_rgbComponents
+        let fg = color.dy_rgbComponents
 
         let bgLum = 0.2126 * bg.red + 0.7152 * bg.green + 0.0722 * bg.blue
         let fgLum = 0.2126 * fg.red + 0.7152 * fg.green + 0.0722 * fg.blue
@@ -451,7 +451,7 @@ public extension UIColor {
 public extension UIColor {
     /// 使用相同的十六进制颜色创建动态颜色(浅色/深色模式下颜色相同)
     static func dy_dynamic(hex: String) -> UIColor {
-        let color = UIColor.color(from: hex)
+        let color = UIColor.dy_color(from: hex)
         return self.dy_dynamic(light: color, dark: color)
     }
 
@@ -461,8 +461,8 @@ public extension UIColor {
     ///   - darkHex: 深色模式下的颜色
     /// - Returns: 动态颜色对象
     static func dy_dynamic(lightHex: String, darkHex: String) -> UIColor {
-        let light = UIColor.color(from: lightHex)
-        let dark = UIColor.color(from: darkHex)
+        let light = UIColor.dy_color(from: lightHex)
+        let dark = UIColor.dy_color(from: darkHex)
         return self.dy_dynamic(light: light, dark: dark)
     }
 
@@ -570,7 +570,7 @@ public extension UIColor {
         startPoint: CGPoint = .zero,
         endPoint: CGPoint = CGPoint(x: 1, y: 1)
     ) -> UIColor? {
-        guard let image = self.createGradientImage(
+        guard let image = self.dy_createGradientImage(
             size: size,
             colors: colors,
             locations: locations,
@@ -591,7 +591,7 @@ public extension DyWrapper where Base == [UIColor] {
         startPoint: CGPoint = .zero,
         endPoint: CGPoint = CGPoint(x: 1, y: 1)
     ) -> CAGradientLayer {
-        UIColor.createGradientLayer(
+        UIColor.dy_createGradientLayer(
             frame: frame,
             colors: self.base,
             locations: locations,
@@ -607,7 +607,7 @@ public extension DyWrapper where Base == [UIColor] {
         startPoint: CGPoint = .zero,
         endPoint: CGPoint = CGPoint(x: 1, y: 1)
     ) -> UIImage? {
-        UIColor.createGradientImage(
+        UIColor.dy_createGradientImage(
             size: size,
             colors: self.base,
             locations: locations,
@@ -623,7 +623,7 @@ public extension DyWrapper where Base == [UIColor] {
         startPoint: CGPoint = .zero,
         endPoint: CGPoint = CGPoint(x: 1, y: 1)
     ) -> UIColor? {
-        UIColor.createGradientColor(
+        UIColor.dy_createGradientColor(
             size: size,
             colors: self.base,
             locations: locations,

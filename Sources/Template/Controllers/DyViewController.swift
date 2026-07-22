@@ -53,7 +53,7 @@ open class DyViewController: UIViewController, DySetupable {
                 x: 0,
                 y: 0,
                 width: DyScreen.screenWidth,
-                height: DyScreen.navigationBarTotalHeight
+                height: DyScreen.navBarTotalHeight
             ))
     }
 
@@ -65,7 +65,7 @@ open class DyViewController: UIViewController, DySetupable {
                 x: 0,
                 y: 0,
                 width: DyScreen.screenWidth,
-                height: DyScreen.navigationBarTotalHeight
+                height: DyScreen.navBarTotalHeight
             ))
     }
 

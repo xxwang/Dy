@@ -29,9 +29,9 @@ open class DyCollectionViewController: DyViewController {
             .dy
             .frame(CGRect(
                 x: 0,
-                y: DyScreen.navigationBarTotalHeight,
-                width: self.view.width,
-                height: self.view.height - DyScreen.navigationBarTotalHeight
+                y: DyScreen.navBarTotalHeight,
+                width: self.view.dy_width,
+                height: self.view.dy_height - DyScreen.navBarTotalHeight
             ))
     }
 
@@ -43,9 +43,9 @@ open class DyCollectionViewController: DyViewController {
             .dy
             .frame(CGRect(
                 x: 0,
-                y: DyScreen.navigationBarTotalHeight,
-                width: self.view.width,
-                height: self.view.height - DyScreen.navigationBarTotalHeight
+                y: DyScreen.navBarTotalHeight,
+                width: self.view.dy_width,
+                height: self.view.dy_height - DyScreen.navBarTotalHeight
             ))
     }
 }

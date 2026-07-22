@@ -1,12 +1,12 @@
 import UIKit
 import Combine
-import Dy
+import DyCore
 
 open class DyTextView: UITextView {
     public var cancellables = Set<AnyCancellable>()
 
     /// 占位文本标签
-    lazy var placeholderLabel: UILabel = UILabel.label()
+    lazy var placeholderLabel: UILabel = UILabel.dy_label()
         .dy
         .numberOfLines(0)
         .backgroundColor(.clear)

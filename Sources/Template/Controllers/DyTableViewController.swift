@@ -3,7 +3,7 @@ import DyCore
 
 open class DyTableViewController: DyViewController {
     /// `UITableView`
-    open lazy var tableView = UITableView.tableView()
+    open lazy var tableView = UITableView.dy_tableView()
         .dy
         .dataSource(self)
         .delegate(self)
@@ -29,9 +29,9 @@ open class DyTableViewController: DyViewController {
             .dy
             .frame(CGRect(
                 x: 0,
-                y: DyScreen.navigationBarTotalHeight,
-                width: self.view.width,
-                height: self.view.height - DyScreen.navigationBarTotalHeight
+                y: DyScreen.navBarTotalHeight,
+                width: self.view.dy_width,
+                height: self.view.dy_height - DyScreen.navBarTotalHeight
             ))
     }
 
@@ -43,9 +43,9 @@ open class DyTableViewController: DyViewController {
             .dy
             .frame(CGRect(
                 x: 0,
-                y: DyScreen.navigationBarTotalHeight,
-                width: self.view.width,
-                height: self.view.height - DyScreen.navigationBarTotalHeight
+                y: DyScreen.navBarTotalHeight,
+                width: self.view.dy_width,
+                height: self.view.dy_height - DyScreen.navBarTotalHeight
             ))
     }
 }

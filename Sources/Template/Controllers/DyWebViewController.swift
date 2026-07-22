@@ -8,7 +8,7 @@ open class DyWebViewController: DyViewController {
 
     /// `WKWebView`配置文件
     open lazy var configuration: WKWebViewConfiguration = {
-        let configuration = WKWebViewConfiguration.default()
+        let configuration = WKWebViewConfiguration.dy_default()
         configuration.userContentController = self.userContentController
         return configuration
     }()
@@ -38,9 +38,9 @@ open class DyWebViewController: DyViewController {
             .dy
             .frame(CGRect(
                 x: 0,
-                y: DyScreen.navigationBarTotalHeight,
-                width: self.view.width,
-                height: self.view.height - DyScreen.navigationBarTotalHeight
+                y: DyScreen.navBarTotalHeight,
+                width: self.view.dy_width,
+                height: self.view.dy_height - DyScreen.navBarTotalHeight
             ))
     }
 
@@ -52,9 +52,9 @@ open class DyWebViewController: DyViewController {
             .dy
             .frame(CGRect(
                 x: 0,
-                y: DyScreen.navigationBarTotalHeight,
-                width: self.view.width,
-                height: self.view.height - DyScreen.navigationBarTotalHeight
+                y: DyScreen.navBarTotalHeight,
+                width: self.view.dy_width,
+                height: self.view.dy_height - DyScreen.navBarTotalHeight
             ))
     }
 }
