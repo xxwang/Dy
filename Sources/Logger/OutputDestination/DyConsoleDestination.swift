@@ -37,13 +37,13 @@ public final class DyConsoleDestination {
 // MARK: - DyLogDestination
 extension DyConsoleDestination: DyLogDestination {
     public func log(context: DyLogContext) {
-        let timestampStr = dateFormatter.string(from: context.date)
+        let dateStr = dateFormatter.string(from: context.date)
 
         // 构建最终消息
         var output = ""
 
-        // 时间戳（白色）
-        output += "[\(timestampStr)] "
+        // 日志时间
+        output += "[\(dateStr)] "
 
         // 图标
         if enableIcons {
