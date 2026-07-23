@@ -1,9 +1,12 @@
 import Foundation
 
 // MARK: - 文件输出目标
-public final class DyFileDestination: DyLogDestination {
+public final class DyFileDestination {
+    /// 文件句柄
     private let fileHandle: FileHandle
+    /// 日期格式化
     private let dateFormatter: DateFormatter
+    /// 写入队列
     private let queue = DispatchQueue(label: "logger.file.destination", qos: .utility)
 
     public init?(filePath: String) {
@@ -31,10 +34,13 @@ public final class DyFileDestination: DyLogDestination {
     deinit {
         fileHandle.closeFile()
     }
+}
 
-    public func log(level: DyLogLevel, message: String, context: DyLogContext, timestamp: Date) {
-        let timestampStr = dateFormatter.string(from: timestamp)
-        let line = "[\(timestampStr)] [\(level.description)] [\(context.fileName):\(context.line)] \(message)\n"
+// MARK: - DyLogDestination
+extension DyFileDestination: DyLogDestination {
+    public func log(context: DyLogContext) {
+        let timestampStr = dateFormatter.string(from: context.timestamp)
+        let line = "[\(timestampStr)] [\(context.level.description)] [\(context.fileName):\(context.line)] \(context.message)\n"
 
         queue.async { [weak self] in
             guard let self, let data = line.data(using: .utf8) else { return }

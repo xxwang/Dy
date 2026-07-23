@@ -2,10 +2,15 @@ import Foundation
 
 // MARK: - 日志级别
 public enum DyLogLevel: Int, Comparable, CustomStringConvertible {
+    /// 调试
     case debug = 1
+    /// 正常打印
     case info = 2
+    /// 警告
     case warning = 3
+    /// 错误
     case error = 4
+    /// 致命错误
     case fatal = 5
 
     public static func < (lhs: DyLogLevel, rhs: DyLogLevel) -> Bool {

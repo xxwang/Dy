@@ -2,98 +2,134 @@ import Foundation
 
 // MARK: - DyLogger
 public class DyLogger {
-    public static let shared = DyLogger()
-    private init() {}
-
-    // MARK: - 属性
-
     /// 最低日志级别，低于此级别的日志将被忽略
     public var minimumLevel: DyLogLevel = .debug
-
     /// 所有输出目标
     private var destinations: [DyLogDestination] = []
-
     /// 串行队列，保证线程安全
     private let queue = DispatchQueue(label: "logger.queue", qos: .userInitiated)
 
+    public static let shared = DyLogger()
+    private init() {}
+}
+
+public extension DyLogger {
     /// 添加输出目标
     @discardableResult
-    public func addDestination(_ destination: DyLogDestination) -> DyLogger {
+    func addDestination(_ destination: DyLogDestination) -> DyLogger {
         destinations.append(destination)
         return self
     }
 
     /// 移除所有输出目标
-    public func removeAllDestinations() {
+    func removeAllDestinations() {
         destinations.removeAll()
     }
 
-    // MARK: - 核心日志方法
-    public func log(
-        _ level: DyLogLevel,
-        _ message: @autoclosure () -> String,
-        file: String = #file,
-        function: String = #function,
-        line: Int = #line
-    ) {
-        guard level >= minimumLevel else { return }
-
-        let context = DyLogContext(file: file, function: function, line: line)
-        let timestamp = Date()
-        let msg = message()
+    /// 核心日志方法
+    func log(context: DyLogContext) {
+        guard context.level >= minimumLevel else { return }
 
         // 异步分发到各目标，避免阻塞主线程
-        queue.async { [weak self] in
+        self.queue.async { [weak self] in
             guard let self else { return }
             for destination in self.destinations {
-                destination.log(level: level, message: msg, context: context, timestamp: timestamp)
+                destination.log(context: context)
             }
         }
     }
+}
 
-    // MARK: - 便捷方法
-    public func debug(_ message: @autoclosure () -> String,
-                      file: String = #file,
-                      function: String = #function,
-                      line: Int = #line)
+// MARK: - 便捷方法
+public extension DyLogger {
+    /// 调试
+    func debug(_ message: @autoclosure () -> String,
+               file: String = #file,
+               function: String = #function,
+               line: Int = #line)
     {
-        log(.debug, message(), file: file, function: function, line: line)
+        let context = DyLogContext(
+            file: file,
+            function: function,
+            line: line,
+            timestamp: Date(),
+            level: .debug,
+            message: message()
+        )
+        self.log(context: context)
     }
 
-    public func info(_ message: @autoclosure () -> String,
-                     file: String = #file,
-                     function: String = #function,
-                     line: Int = #line)
+    /// 正常打印
+    func info(_ message: @autoclosure () -> String,
+              file: String = #file,
+              function: String = #function,
+              line: Int = #line)
     {
-        log(.info, message(), file: file, function: function, line: line)
+        let context = DyLogContext(
+            file: file,
+            function: function,
+            line: line,
+            timestamp: Date(),
+            level: .info,
+            message: message()
+        )
+        self.log(context: context)
     }
 
-    public func warn(_ message: @autoclosure () -> String,
-                     file: String = #file,
-                     function: String = #function,
-                     line: Int = #line)
+    /// 警告
+    func warn(_ message: @autoclosure () -> String,
+              file: String = #file,
+              function: String = #function,
+              line: Int = #line)
     {
-        log(.warning, message(), file: file, function: function, line: line)
+        let context = DyLogContext(
+            file: file,
+            function: function,
+            line: line,
+            timestamp: Date(),
+            level: .warning,
+            message: message()
+        )
+        self.log(context: context)
     }
 
-    public func err(_ message: @autoclosure () -> String,
-                    file: String = #file,
-                    function: String = #function,
-                    line: Int = #line)
+    /// 错误
+    func err(_ message: @autoclosure () -> String,
+             file: String = #file,
+             function: String = #function,
+             line: Int = #line)
     {
-        log(.error, message(), file: file, function: function, line: line)
+        let context = DyLogContext(
+            file: file,
+            function: function,
+            line: line,
+            timestamp: Date(),
+            level: .error,
+            message: message()
+        )
+        self.log(context: context)
     }
 
-    public func fatal(_ message: @autoclosure () -> String,
-                      file: String = #file,
-                      function: String = #function,
-                      line: Int = #line)
+    /// 致命错误
+    func fatal(_ message: @autoclosure () -> String,
+               file: String = #file,
+               function: String = #function,
+               line: Int = #line)
     {
-        log(.fatal, message(), file: file, function: function, line: line)
+        let context = DyLogContext(
+            file: file,
+            function: function,
+            line: line,
+            timestamp: Date(),
+            level: .fatal,
+            message: message()
+        )
+        self.log(context: context)
     }
 }
 
 // MARK: - 全局便捷函数
+/// 调试
 public func dy_logDebug(_ message: @autoclosure () -> String,
                         file: String = #file,
                         function: String = #function,
@@ -102,6 +138,7 @@ public func dy_logDebug(_ message: @autoclosure () -> String,
     DyLogger.shared.debug(message(), file: file, function: function, line: line)
 }
 
+/// 正常打印
 public func dy_logInfo(_ message: @autoclosure () -> String,
                        file: String = #file,
                        function: String = #function,
@@ -110,6 +147,7 @@ public func dy_logInfo(_ message: @autoclosure () -> String,
     DyLogger.shared.info(message(), file: file, function: function, line: line)
 }
 
+/// 警告
 public func dy_logWarn(_ message: @autoclosure () -> String,
                        file: String = #file,
                        function: String = #function,
@@ -118,6 +156,7 @@ public func dy_logWarn(_ message: @autoclosure () -> String,
     DyLogger.shared.warn(message(), file: file, function: function, line: line)
 }
 
+/// 错误
 public func dy_logErr(_ message: @autoclosure () -> String,
                       file: String = #file,
                       function: String = #function,
@@ -126,6 +165,7 @@ public func dy_logErr(_ message: @autoclosure () -> String,
     DyLogger.shared.err(message(), file: file, function: function, line: line)
 }
 
+/// 致命错误
 public func dy_logFatal(_ message: @autoclosure () -> String,
                         file: String = #file,
                         function: String = #function,
