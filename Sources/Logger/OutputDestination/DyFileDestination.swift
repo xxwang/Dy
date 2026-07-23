@@ -39,8 +39,11 @@ public final class DyFileDestination {
 // MARK: - DyLogDestination
 extension DyFileDestination: DyLogDestination {
     public func log(context: DyLogContext) {
-        let timestampStr = dateFormatter.string(from: context.timestamp)
-        let line = "[\(timestampStr)] [\(context.level.description)] [\(context.fileName):\(context.line)] \(context.message)\n"
+        let timestampStr = dateFormatter.string(from: context.date)
+        let message = context.items.map { item in
+            "\(item)"
+        }.joined(separator: ", ")
+        let line = "[\(timestampStr)] [\(context.level.description)] [\(context.fileName):\(context.line)] \(message)\n"
 
         queue.async { [weak self] in
             guard let self, let data = line.data(using: .utf8) else { return }

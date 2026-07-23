@@ -7,9 +7,9 @@ public enum DyLogLevel: Int, Comparable, CustomStringConvertible {
     /// 正常打印
     case info = 2
     /// 警告
-    case warning = 3
+    case warn = 3
     /// 错误
-    case error = 4
+    case err = 4
     /// 致命错误
     case fatal = 5
 
@@ -22,8 +22,8 @@ public enum DyLogLevel: Int, Comparable, CustomStringConvertible {
         switch self {
         case .debug: return "👻"
         case .info: return "🌸"
-        case .warning: return "⚠️"
-        case .error: return "❌"
+        case .warn: return "⚠️"
+        case .err: return "❌"
         case .fatal: return "☠️"
         }
     }
@@ -32,8 +32,8 @@ public enum DyLogLevel: Int, Comparable, CustomStringConvertible {
         switch self {
         case .debug: return "调试"
         case .info: return "正常"
-        case .warning: return "警告"
-        case .error: return "错误"
+        case .warn: return "警告"
+        case .err: return "错误"
         case .fatal: return "致命"
         }
     }

@@ -8,29 +8,23 @@ public class DyLogContext {
     /// 所在行号
     public let line: Int
     /// 日志日期
-    public let timestamp: Date
+    public let date: Date
     /// 日志级别
     public let level: DyLogLevel
     /// 日志内容
-    public let message: String
+    public let items: [Any]
 
     /// 仅保留文件名，去除完整路径
     public var fileName: String {
         (file as NSString).lastPathComponent
     }
 
-    public init(file: String,
-                function: String,
-                line: Int,
-                timestamp: Date,
-                level: DyLogLevel,
-                message: String)
-    {
+    public init(file: String, function: String, line: Int, date: Date, level: DyLogLevel, items: [Any]) {
         self.file = file
         self.function = function
         self.line = line
-        self.timestamp = timestamp
+        self.date = date
         self.level = level
-        self.message = message
+        self.items = items
     }
 }

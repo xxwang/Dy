@@ -27,8 +27,10 @@ public extension DyLogger {
     }
 
     /// 核心日志方法
-    func log(context: DyLogContext) {
-        guard context.level >= minimumLevel else { return }
+    func log(file: String, function: String, line: Int, date: Date, level: DyLogLevel, items: [Any]) {
+        guard level >= minimumLevel else { return }
+
+        let context = DyLogContext(file: file, function: function, line: line, date: date, level: level, items: items)
 
         // 异步分发到各目标，避免阻塞主线程
         self.queue.async { [weak self] in
@@ -43,133 +45,53 @@ public extension DyLogger {
 // MARK: - 便捷方法
 public extension DyLogger {
     /// 调试
-    func debug(_ message: @autoclosure () -> String,
-               file: String = #file,
-               function: String = #function,
-               line: Int = #line)
-    {
-        let context = DyLogContext(
-            file: file,
-            function: function,
-            line: line,
-            timestamp: Date(),
-            level: .debug,
-            message: message()
-        )
-        self.log(context: context)
+    func debug(_ items: Any..., file: String = #file, function: String = #function, line: Int = #line) {
+        self.log(file: file, function: function, line: line, date: Date(), level: .debug, items: items)
     }
 
     /// 正常打印
-    func info(_ message: @autoclosure () -> String,
-              file: String = #file,
-              function: String = #function,
-              line: Int = #line)
-    {
-        let context = DyLogContext(
-            file: file,
-            function: function,
-            line: line,
-            timestamp: Date(),
-            level: .info,
-            message: message()
-        )
-        self.log(context: context)
+    func info(_ items: Any..., file: String = #file, function: String = #function, line: Int = #line) {
+        self.log(file: file, function: function, line: line, date: Date(), level: .info, items: items)
     }
 
     /// 警告
-    func warn(_ message: @autoclosure () -> String,
-              file: String = #file,
-              function: String = #function,
-              line: Int = #line)
-    {
-        let context = DyLogContext(
-            file: file,
-            function: function,
-            line: line,
-            timestamp: Date(),
-            level: .warning,
-            message: message()
-        )
-        self.log(context: context)
+    func warn(_ items: Any..., file: String = #file, function: String = #function, line: Int = #line) {
+        self.log(file: file, function: function, line: line, date: Date(), level: .warn, items: items)
     }
 
     /// 错误
-    func err(_ message: @autoclosure () -> String,
-             file: String = #file,
-             function: String = #function,
-             line: Int = #line)
-    {
-        let context = DyLogContext(
-            file: file,
-            function: function,
-            line: line,
-            timestamp: Date(),
-            level: .error,
-            message: message()
-        )
-        self.log(context: context)
+    func err(_ items: Any..., file: String = #file, function: String = #function, line: Int = #line) {
+        self.log(file: file, function: function, line: line, date: Date(), level: .err, items: items)
     }
 
     /// 致命错误
-    func fatal(_ message: @autoclosure () -> String,
-               file: String = #file,
-               function: String = #function,
-               line: Int = #line)
-    {
-        let context = DyLogContext(
-            file: file,
-            function: function,
-            line: line,
-            timestamp: Date(),
-            level: .fatal,
-            message: message()
-        )
-        self.log(context: context)
+    func fatal(_ items: Any..., file: String = #file, function: String = #function, line: Int = #line) {
+        self.log(file: file, function: function, line: line, date: Date(), level: .fatal, items: items)
     }
 }
 
 // MARK: - 全局便捷函数
 /// 调试
-public func dy_logDebug(_ message: @autoclosure () -> String,
-                        file: String = #file,
-                        function: String = #function,
-                        line: Int = #line)
-{
-    DyLogger.shared.debug(message(), file: file, function: function, line: line)
+public func dy_logDebug(_ items: Any..., file: String = #file, function: String = #function, line: Int = #line) {
+    DyLogger.shared.debug(items, file: file, function: function, line: line)
 }
 
 /// 正常打印
-public func dy_logInfo(_ message: @autoclosure () -> String,
-                       file: String = #file,
-                       function: String = #function,
-                       line: Int = #line)
-{
-    DyLogger.shared.info(message(), file: file, function: function, line: line)
+public func dy_logInfo(_ items: Any..., file: String = #file, function: String = #function, line: Int = #line) {
+    DyLogger.shared.info(items, file: file, function: function, line: line)
 }
 
 /// 警告
-public func dy_logWarn(_ message: @autoclosure () -> String,
-                       file: String = #file,
-                       function: String = #function,
-                       line: Int = #line)
-{
-    DyLogger.shared.warn(message(), file: file, function: function, line: line)
+public func dy_logWarn(_ items: Any..., file: String = #file, function: String = #function, line: Int = #line) {
+    DyLogger.shared.warn(items, file: file, function: function, line: line)
 }
 
 /// 错误
-public func dy_logErr(_ message: @autoclosure () -> String,
-                      file: String = #file,
-                      function: String = #function,
-                      line: Int = #line)
-{
-    DyLogger.shared.err(message(), file: file, function: function, line: line)
+public func dy_logErr(_ items: Any..., file: String = #file, function: String = #function, line: Int = #line) {
+    DyLogger.shared.err(items, file: file, function: function, line: line)
 }
 
 /// 致命错误
-public func dy_logFatal(_ message: @autoclosure () -> String,
-                        file: String = #file,
-                        function: String = #function,
-                        line: Int = #line)
-{
-    DyLogger.shared.fatal(message(), file: file, function: function, line: line)
+public func dy_logFatal(_ items: Any..., file: String = #file, function: String = #function, line: Int = #line) {
+    DyLogger.shared.fatal(items, file: file, function: function, line: line)
 }

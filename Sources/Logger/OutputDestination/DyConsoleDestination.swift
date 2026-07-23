@@ -37,7 +37,7 @@ public final class DyConsoleDestination {
 // MARK: - DyLogDestination
 extension DyConsoleDestination: DyLogDestination {
     public func log(context: DyLogContext) {
-        let timestampStr = dateFormatter.string(from: context.timestamp)
+        let timestampStr = dateFormatter.string(from: context.date)
 
         // 构建最终消息
         var output = ""
@@ -59,7 +59,10 @@ extension DyConsoleDestination: DyLogDestination {
         }
 
         // 日志内容
-        output += context.message
+        let message = context.items.map { item in
+            "\(item)"
+        }.joined(separator: ", ")
+        output += message
 
         // 获取对应 category 的 OSLog
         let category = context.fileName
@@ -71,9 +74,9 @@ extension DyConsoleDestination: DyLogDestination {
             os_log(.debug, log: osLog, "%{public}@", output)
         case .info:
             os_log(.info, log: osLog, "%{public}@", output)
-        case .warning:
+        case .warn:
             os_log(.default, log: osLog, "%{public}@", output)
-        case .error:
+        case .err:
             os_log(.error, log: osLog, "%{public}@", output)
         case .fatal:
             os_log(.fault, log: osLog, "%{public}@", output)
