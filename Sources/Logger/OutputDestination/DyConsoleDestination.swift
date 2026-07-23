@@ -43,7 +43,7 @@ extension DyConsoleDestination: DyLogDestination {
         var output = ""
 
         // 时间戳（白色）
-        output += "[\(timestampStr)]"
+        output += "[\(timestampStr)] "
 
         // 图标
         if enableIcons {
@@ -51,7 +51,7 @@ extension DyConsoleDestination: DyLogDestination {
         }
 
         // 日志级别
-        output += "[\(context.level.description)]"
+        output += "[\(context.level.description)] "
 
         // 上下文信息
         if showContext {
