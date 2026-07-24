@@ -17,13 +17,14 @@ public extension DyLogger {
     /// 添加输出目标
     @discardableResult
     func addDestination(_ destination: DyLogDestination) -> DyLogger {
-        destinations.append(destination)
+        // 与 `log()` 的串行队列访问保持同步，避免并发读写触发数组 COW crash
+        queue.sync { destinations.append(destination) }
         return self
     }
 
     /// 移除所有输出目标
     func removeAllDestinations() {
-        destinations.removeAll()
+        queue.sync { destinations.removeAll() }
     }
 
     /// 核心日志方法

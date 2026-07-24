@@ -106,7 +106,10 @@ extension DyViewController {
 
     override open func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        self.navigationController?.interactivePopGestureRecognizer?.delegate = nil
+        // 防御性清空：仅当 delegate 仍指向自身时才置空，避免误清空其他控制器设置的 delegate
+        if self.navigationController?.interactivePopGestureRecognizer?.delegate === self {
+            self.navigationController?.interactivePopGestureRecognizer?.delegate = nil
+        }
     }
 
     override open func viewDidAppear(_ animated: Bool) {

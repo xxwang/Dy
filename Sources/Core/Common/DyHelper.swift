@@ -137,7 +137,8 @@ public extension DyHelper {
 
     /// 检查设备是否支持拨打电话(通过 tel scheme 判断)
     var canPlacePhoneCalls: Bool {
-        return UIApplication.shared.canOpenURL(URL(string: "tel:123")!)
+        guard let url = URL(string: "tel:123") else { return false }
+        return UIApplication.shared.canOpenURL(url)
     }
 }
 

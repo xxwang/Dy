@@ -13,6 +13,10 @@ public final class DyConsoleDestination {
 
     /// `os_log` 缓存（按`category`缓存，避免重复创建）
     private var logCache: [String: OSLog] = [:]
+    /// 缓存插入顺序，配合 `maxCacheCount` 实现 FIFO 上限控制
+    private var cacheOrder: [String] = []
+    /// `logCache` 最大条目数，防止无限增长
+    private let maxCacheCount = 64
     private let lock = NSLock()
 
     /// 初始化
@@ -94,6 +98,12 @@ extension DyConsoleDestination: DyLogDestination {
 
         let osLog = OSLog(subsystem: subsystem, category: category)
         logCache[category] = osLog
+        cacheOrder.append(category)
+        // 超过上限时移除最早创建的条目，避免缓存无限增长
+        if cacheOrder.count > maxCacheCount {
+            let oldest = cacheOrder.removeFirst()
+            logCache.removeValue(forKey: oldest)
+        }
         return osLog
     }
 }

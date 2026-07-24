@@ -43,13 +43,13 @@ public extension DyPlist {
             return false
         }
 
-        let plistData = try? PropertyListSerialization.data(
+        guard let plistData = try? PropertyListSerialization.data(
             fromPropertyList: data,
             format: .xml,
             options: 0
-        )
+        ) else { return false }
 
-        return plistData != nil
+        return (try? plistData.write(to: url, options: .atomic)) != nil
     }
 }
 

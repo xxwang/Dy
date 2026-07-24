@@ -96,6 +96,7 @@ public extension DyPath {
     /// 在 `Documents` 目录下构建完整路径
     /// - Parameter relativePath: 相对路径组件(如 `"data/file.txt"`)
     /// - Returns: 绝对路径字符串
+    /// - Note: 仅做路径拼接，**不会**创建父目录。如需写入文件请先调用 `createParentDirectoryIfNeeded(at:)` 或 `createFile(at:)`。
     func path(inDocuments relativePath: String) -> String {
         buildPath(in: documentsPath, relativePath: relativePath)
     }
@@ -120,11 +121,10 @@ public extension DyPath {
         buildPath(in: tempPath, relativePath: relativePath)
     }
 
-    /// 内部通用路径拼接 + 自动创建父目录
+    /// 内部通用路径拼接
+    /// - Note: 路径构建属于纯计算，不做任何 I/O（如创建目录），以保持 String 与 URL 两类方法行为一致。
     private func buildPath(in base: String, relativePath: String) -> String {
-        let fullPath = (base as NSString).appendingPathComponent(relativePath)
-        createParentDirectoryIfNeeded(at: fullPath)
-        return fullPath
+        (base as NSString).appendingPathComponent(relativePath)
     }
 }
 
@@ -147,11 +147,12 @@ public extension DyPath {
         cachesURL.appendingPathComponent(relativePath)
     }
 
-    /// 在 `Application Support` 目录下构建文件 URL(自动创建父目录)
+    /// 在 `Application Support` 目录下构建文件 URL
+    /// - Parameter relativePath: 相对路径组件
+    /// - Returns: 文件 URL
+    /// - Note: 仅做路径拼接，**不会**创建父目录。写入前请先调用 `createParentDirectoryIfNeeded(at:)`。
     func url(inApplicationSupport relativePath: String) -> URL {
-        let url = applicationSupportURL.appendingPathComponent(relativePath)
-        createParentDirectoryIfNeeded(at: url.path)
-        return url
+        applicationSupportURL.appendingPathComponent(relativePath)
     }
 
     /// 在临时目录下构建文件 URL

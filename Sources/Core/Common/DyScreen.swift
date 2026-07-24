@@ -16,7 +16,12 @@ public final class DyScreen: Sendable {
 public extension DyScreen {
     /// 当前主屏幕的边界,会随设备旋转动态变化
     static var screenBounds: CGRect {
-        UIScreen.main.bounds
+        if #available(iOS 16.0, *) {
+            let scene = UIApplication.shared.connectedScenes
+                .first { $0.activationState == .foregroundActive } as? UIWindowScene
+            return scene?.screen.bounds ?? UIScreen.main.bounds
+        }
+        return UIScreen.main.bounds
     }
 
     /// 当前屏幕尺寸
@@ -36,7 +41,12 @@ public extension DyScreen {
 
     /// 屏幕缩放
     static var screenScale: CGFloat {
-        UIScreen.main.scale
+        if #available(iOS 16.0, *) {
+            let scene = UIApplication.shared.connectedScenes
+                .first { $0.activationState == .foregroundActive } as? UIWindowScene
+            return scene?.screen.scale ?? UIScreen.main.scale
+        }
+        return UIScreen.main.scale
     }
 }
 
@@ -101,7 +111,11 @@ public extension DyScreen {
 
 // MARK: - 适配比例计算(基于设计稿)
 public extension DyScreen {
-    /// 宽度方向的缩放比例 = 当前屏幕短边 / 设计稿短边
+    /// 宽度方向的缩放比例
+    /// - Note: 供 `fitWidth` / `fitLarger` / `fitSmaller` 等扩展使用，采用"短边/长边自适应"策略：
+    ///   - 竖屏：屏幕短边 / 设计稿短边
+    ///   - 横屏：屏幕长边 / 设计稿长边
+    ///   即横屏时它实际按"长边"计算，并非字面的宽度比例。如需严格按当前宽度缩放，请用 `screenWidth / sketchSize.width`。
     static var widthRatio: CGFloat {
         let isLandscape = self.screenWidth > self.screenHeight
 
@@ -116,7 +130,11 @@ public extension DyScreen {
         }
     }
 
-    /// 高度方向的缩放比例 = 当前屏幕长边 / 设计稿长边
+    /// 高度方向的缩放比例
+    /// - Note: 与 `widthRatio` 互补（同样基于短边/长边自适应）：
+    ///   - 竖屏：屏幕长边 / 设计稿长边
+    ///   - 横屏：屏幕短边 / 设计稿短边
+    ///   即横屏时它实际按"短边"计算。如需严格按当前高度缩放，请用 `screenHeight / sketchSize.height`。
     static var heightRatio: CGFloat {
         let isLandscape = self.screenWidth > self.screenHeight
 

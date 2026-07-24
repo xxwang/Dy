@@ -3,6 +3,8 @@ import Foundation
 public final class DyQueue {
     private var onceTokens: Set<String> = []
     private let onceLock = NSLock()
+    /// 复用的私有串行队列，避免 `executeSerially` 每次调用都新建队列
+    private let serialTaskQueue = DispatchQueue(label: "com.dy.serial-task-queue")
 
     public static let shared = DyQueue()
     private init() {}
@@ -81,8 +83,7 @@ public extension DyQueue {
         _ tasks: [DyAction],
         then completion: @escaping DyAction
     ) {
-        let serialQueue = DispatchQueue(label: "com.dy.serial-task-queue")
-        serialQueue.async {
+        serialTaskQueue.async {
             for task in tasks {
                 task()
             }
@@ -324,12 +325,18 @@ public extension DyQueue {
     ///   }
     ///   ```
     func executeOnce(token: String, execute work: DyAction) {
+        // `NSLock` 是非递归锁：锁内执行外部闭包时，若 `work` 内部再次调用 `executeOnce`
+        // 会立即死锁。因此锁内只做检查与标记，闭包执行放到锁外。
+        let shouldRun: Bool
         onceLock.lock()
-        defer { onceLock.unlock() }
-
         if !onceTokens.contains(token) {
             onceTokens.insert(token)
-            work()
+            shouldRun = true
+        } else {
+            shouldRun = false
         }
+        onceLock.unlock()
+
+        if shouldRun { work() }
     }
 }
