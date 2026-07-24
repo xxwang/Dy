@@ -32,6 +32,8 @@ extension DyBlockButton {
 // MARK: - 链式配置(自定义)
 public extension DyWrapper where Base: DyBlockButton {
     /// 绑定点击处理回调
+    /// - Warning: 闭包被按钮**强引用**。若闭包内使用 `self`，
+    ///   请使用 `[weak self]` 避免循环引用泄漏。
     /// - Parameter block: 点击处理回调
     /// - Returns: `Self`
     func clickBlock(_ block: @escaping DyAction1<DyBlockButton>) -> Self {

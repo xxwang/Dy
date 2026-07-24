@@ -185,6 +185,9 @@ public extension UIGestureRecognizer {
     }
 
     /// 设置手势识别成功(`.recognized`)时的回调
+    /// - Warning: 闭包被手势识别器**强引用**（通过关联对象存储）。若闭包内使用 `self`，
+    ///   请务必使用 `[weak self]`（如 `{ [weak self] recognizer in ... }`），
+    ///   否则 `view → gesture → block → self → view` 会造成循环引用泄漏。
     /// - Parameter block: 回调闭包
     /// - Returns: `Self`
     @discardableResult
@@ -196,6 +199,8 @@ public extension UIGestureRecognizer {
     }
 
     /// 监听手势状态变化(如 `began`, `changed`, `ended` 等)
+    /// - Warning: 闭包被手势识别器**强引用**。若闭包内使用 `self`，
+    ///   请使用 `[weak self]` 避免循环引用泄漏。
     /// - Parameter block: 回调闭包
     /// - Returns: `Self`
     @discardableResult

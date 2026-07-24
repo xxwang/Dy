@@ -188,6 +188,8 @@ public extension DyNaView {
     }
 
     /// 设置返回按钮点击回调
+    /// - Warning: 闭包被导航栏**强引用**（存储于 `backBlock`）。若闭包内使用 `self`，
+    ///   请使用 `[weak self]` 避免循环引用泄漏。
     @discardableResult
     func dy_backAction(_ handler: DyAction?) -> Self {
         self.backBlock = handler

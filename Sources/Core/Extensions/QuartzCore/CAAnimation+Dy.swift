@@ -23,6 +23,7 @@ extension CAAnimation.DyBlockAnimationDelegate: CAAnimationDelegate {
 
     public func animationDidStop(_ anim: CAAnimation, finished flag: Bool) {
         self.dy_onStop?(anim, flag)
+        anim.delegate = nil
     }
 }
 
@@ -154,6 +155,9 @@ public extension CAAnimation {
 public extension CAAnimation {
     /// 使用闭包方式设置动画的开始与结束回调
     /// 推荐的 completion 处理方式,避免 `CATransaction` 的全局副作用
+    /// - Warning: 闭包被 `CAAnimation.delegate` **强引用**。若闭包内使用 `self`，
+    ///   请务必使用 `[weak self]`（如 `stop: { [weak self] _, _ in ... }`），
+    ///   否则配合 `dy_isRemovedOnCompletion(false)` 使用时会造成 `self → animation → delegate → 闭包 → self` 的循环引用泄漏。
     /// - Parameters:
     ///   - start: 动画开始时调用的闭包(可选)
     ///   - stop: 动画结束时调用的闭包(可选),`finished` 表示是否正常完成

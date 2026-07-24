@@ -4,6 +4,9 @@ import Foundation
 public extension Timer {
     /// 在主线程 `RunLoop` 中创建并自动调度的定时器
     ///
+    /// - Warning: `RunLoop.main` 强持有 timer，timer 强引用 `block`。
+    ///   若 `repeats: true` 且 block 内使用 `self`，必须使用 `[weak self]`
+    ///   并配合手动调用 `invalidate()` 停止，否则会造成永久泄漏。
     /// - Parameters:
     ///   - mode: `RunLoop` 模式，默认为 `.common`（兼容滚动、拖拽等场景）
     ///   - timeInterval: 触发间隔（秒），必须大于 0

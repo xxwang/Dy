@@ -1189,6 +1189,8 @@ public extension UIView {
 // MARK: - 链式手势(自定义)
 public extension UIView {
     /// 添加单击手势
+    /// - Warning: 闭包被内部手势识别器**强引用**。若闭包内使用 `self`，
+    ///   请使用 `[weak self]` 避免循环引用泄漏。
     /// - Parameter block: 手势触发时的回调
     /// - Returns: `Self`
     @discardableResult
@@ -1203,6 +1205,8 @@ public extension UIView {
     }
 
     /// 添加长按手势
+    /// - Warning: 闭包被内部手势识别器**强引用**。若闭包内使用 `self`，
+    ///   请使用 `[weak self]` 避免循环引用泄漏。
     /// - Parameters:
     ///   - minimumDuration: 最小按压时长
     ///   - block: 手势触发时的回调
@@ -1220,6 +1224,8 @@ public extension UIView {
     }
 
     /// 添加拖动手势(平移)
+    /// - Warning: 闭包被内部手势识别器**强引用**。若闭包内使用 `self`，
+    ///   请使用 `[weak self]` 避免循环引用泄漏。
     /// - Parameter block: 手势触发时的回调(识别时持续回调)
     /// - Returns: `Self`
     @discardableResult
@@ -1234,6 +1240,8 @@ public extension UIView {
     }
 
     /// 添加从屏幕边缘开始的拖动手势
+    /// - Warning: 闭包被内部手势识别器**强引用**。若闭包内使用 `self`，
+    ///   请使用 `[weak self]` 避免循环引用泄漏。
     /// - Parameters:
     ///   - edges: 触发边缘
     ///   - block: 手势触发时的回调
@@ -1251,6 +1259,8 @@ public extension UIView {
     }
 
     /// 添加滑动手势(轻扫)
+    /// - Warning: 闭包被内部手势识别器**强引用**。若闭包内使用 `self`，
+    ///   请使用 `[weak self]` 避免循环引用泄漏。
     /// - Parameters:
     ///   - direction: 滑动方向
     ///   - block: 手势触发时回调
@@ -1270,6 +1280,8 @@ public extension UIView {
     }
 
     /// 添加捏合手势(用于缩放)
+    /// - Warning: 闭包被内部手势识别器**强引用**。若闭包内使用 `self`，
+    ///   请使用 `[weak self]` 避免循环引用泄漏。
     /// - Parameter block: 手势触发时回调
     /// - Returns: `Self`
     @discardableResult
@@ -1284,6 +1296,8 @@ public extension UIView {
     }
 
     /// 添加旋转手势
+    /// - Warning: 闭包被内部手势识别器**强引用**。若闭包内使用 `self`，
+    ///   请使用 `[weak self]` 避免循环引用泄漏。
     /// - Parameter block: 手势触发时回调
     /// - Returns: `Self`
     @discardableResult
