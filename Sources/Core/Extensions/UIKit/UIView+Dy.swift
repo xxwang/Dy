@@ -754,7 +754,7 @@ public extension UIView {
     /// - Returns: `Self`
     @discardableResult
     func dy_borderColor(_ color: UIColor) -> Self {
-        self.layer.borderColor = color.cgColor
+        self.layer.dy_borderColor(color)
         return self
     }
 
@@ -763,7 +763,7 @@ public extension UIView {
     /// - Returns: `Self`
     @discardableResult
     func dy_borderWidth(_ width: CGFloat) -> Self {
-        self.layer.borderWidth = width
+        self.layer.dy_borderWidth(width)
         return self
     }
 
@@ -772,7 +772,7 @@ public extension UIView {
     /// - Returns: `Self`
     @discardableResult
     func dy_shouldRasterize(_ rasterize: Bool) -> Self {
-        self.layer.shouldRasterize = rasterize
+        self.layer.dy_shouldRasterize(rasterize)
         return self
     }
 
@@ -781,7 +781,7 @@ public extension UIView {
     /// - Returns: `Self`
     @discardableResult
     func dy_rasterizationScale(_ scale: CGFloat) -> Self {
-        self.layer.rasterizationScale = scale
+        self.layer.dy_rasterizationScale(scale)
         return self
     }
 
@@ -790,7 +790,7 @@ public extension UIView {
     /// - Returns: `Self`
     @discardableResult
     @objc func dy_shadowColor(_ color: UIColor) -> Self {
-        self.layer.shadowColor = color.cgColor
+        self.layer.dy_shadowColor(color)
         return self
     }
 
@@ -799,7 +799,7 @@ public extension UIView {
     /// - Returns: `Self`
     @discardableResult
     func dy_shadowOffset(_ offset: CGSize) -> Self {
-        self.layer.shadowOffset = offset
+        self.layer.dy_shadowOffset(offset)
         return self
     }
 
@@ -808,7 +808,7 @@ public extension UIView {
     /// - Returns: `Self`
     @discardableResult
     func dy_shadowRadius(_ radius: CGFloat) -> Self {
-        self.layer.shadowRadius = radius
+        self.layer.dy_shadowRadius(radius)
         return self
     }
 
@@ -817,7 +817,7 @@ public extension UIView {
     /// - Returns: `Self`
     @discardableResult
     func dy_shadowOpacity(_ opacity: Float) -> Self {
-        self.layer.shadowOpacity = opacity
+        self.layer.dy_shadowOpacity(opacity)
         return self
     }
 
@@ -826,7 +826,7 @@ public extension UIView {
     /// - Returns: `Self`
     @discardableResult
     func dy_shadowPath(_ path: CGPath) -> Self {
-        self.layer.shadowPath = path
+        self.layer.dy_shadowPath(path)
         return self
     }
 
@@ -835,7 +835,7 @@ public extension UIView {
     /// - Returns: `Self`
     @discardableResult
     func dy_cornerRadius(_ cornerRadius: CGFloat) -> Self {
-        self.layer.cornerRadius = cornerRadius
+        self.layer.dy_cornerRadius(cornerRadius)
         return self
     }
 
@@ -844,7 +844,7 @@ public extension UIView {
     /// - Returns: `Self`
     @discardableResult
     func dy_maskedCorners(_ maskedCorners: CACornerMask) -> Self {
-        self.layer.maskedCorners = maskedCorners
+        self.layer.dy_maskedCorners(maskedCorners)
         return self
     }
 
@@ -853,7 +853,7 @@ public extension UIView {
     /// - Returns: `Self`
     @discardableResult
     func dy_masksToBounds(_ masksToBounds: Bool) -> Self {
-        self.layer.masksToBounds = masksToBounds
+        self.layer.dy_masksToBounds(masksToBounds)
         return self
     }
 }

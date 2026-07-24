@@ -156,15 +156,7 @@ public extension Array where Element: NSAttributedString {
     }
 }
 
-// MARK: - Element: Encodable
-public extension Array where Element: Encodable {
-    /// 将数组编码为 `Data?`
-    /// - Parameter encoder: 编码器,默认为 `JSONEncoder()`
-    /// - Returns: 成功: `Data?` 失败: `nil`
-    func dy_encode(using encoder: JSONEncoder = .init()) -> Data? {
-        try? encoder.encode(self)
-    }
-}
+
 
 // MARK: - Element: NSObjectProtocol
 public extension Array where Element: NSObjectProtocol {

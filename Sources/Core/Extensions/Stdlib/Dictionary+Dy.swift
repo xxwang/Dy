@@ -219,12 +219,4 @@ public extension Dictionary {
     }
 }
 
-// MARK: - JSON 编码（基于 JSONEncoder,类型安全）
-public extension Dictionary where Key: Encodable, Value: Encodable {
-    /// 将字典编码为 `Data?`
-    /// - Parameter encoder: 编码器,默认为 `JSONEncoder()`
-    /// - Returns: 成功: `Data?` 失败: `nil`
-    func dy_encode(using encoder: JSONEncoder = .init()) -> Data? {
-        try? encoder.encode(self)
-    }
-}
+

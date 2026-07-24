@@ -186,12 +186,4 @@ public extension Collection where Element: FloatingPoint {
     }
 }
 
-// MARK: - JSON 编码扩展
-public extension Collection where Element: Encodable {
-    /// 将对象编码为 `Data?`
-    /// - Parameter encoder: 编码器,默认为 `JSONEncoder()`
-    /// - Returns: 成功: `Data?` 失败: `nil`
-    func dy_encode(using encoder: JSONEncoder = .init()) -> Data? {
-        try? encoder.encode(Array(self))
-    }
-}
+
