@@ -10,7 +10,8 @@ open class DyViewController: UIViewController, DySetupable {
 
     /// 导航栏
     open lazy var naview = DyNaView.naview()
-        .dy_backAction {
+        .dy_backAction {[weak self] in
+            guard let self else { return }
             self.onBackActionHandler()
         }
 
