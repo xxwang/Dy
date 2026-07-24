@@ -109,11 +109,6 @@ public extension URL {
 
 // MARK: - 方法
 public extension URL {
-    /// 合并查询参数(等同于 appendParameters)
-    func dy_mergeParameters(with parameters: [String: String]) -> URL {
-        dy_appendParameters(parameters)
-    }
-
     /// 删除指定查询参数
     func dy_removeQueryParameter(for key: String) -> URL {
         guard var components = URLComponents(url: self, resolvingAgainstBaseURL: true) else {

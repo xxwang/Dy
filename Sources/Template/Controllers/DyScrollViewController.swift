@@ -34,7 +34,7 @@ open class DyScrollViewController: DyViewController {
 
         // 内容容器
         self.contentView.dy_size(self.scrollView.dy_size)
-            .dy_add2(self.scrollView)
+            .dy_addTo(self.scrollView)
     }
 
     /// 更新导航栏及受影响的其它view

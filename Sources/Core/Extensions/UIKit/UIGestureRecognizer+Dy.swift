@@ -170,7 +170,7 @@ public extension UIGestureRecognizer {
     /// - Parameter view: 目标视图
     /// - Returns: `Self`
     @discardableResult
-    func dy_add2(_ view: UIView) -> Self {
+    func dy_addTo(_ view: UIView) -> Self {
         view.isUserInteractionEnabled = true
         view.addGestureRecognizer(self)
         return self

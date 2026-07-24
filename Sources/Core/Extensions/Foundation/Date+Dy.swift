@@ -393,7 +393,7 @@ public extension Date {
 
     /// 返回当前日期的秒级 Unix 时间戳(UTC)
     /// - Returns: 秒级时间戳
-    func dy_nowSecond() -> TimeInterval {
+    func dy_secondsSince1970() -> TimeInterval {
         timeIntervalSince1970
     }
 
@@ -405,7 +405,7 @@ public extension Date {
 
     /// 返回当前日期的毫秒级时间戳(UTC)
     /// - Returns: 毫秒级时间戳(四舍五入)
-    func dy_nowMillisecond() -> TimeInterval {
+    func dy_millisecondsSince1970() -> TimeInterval {
         timeIntervalSince1970 * 1000
     }
 
@@ -451,9 +451,9 @@ public extension Date {
 public extension Date {
     /// 将当前日期`视为 UTC 时间`,并返回其在本地时区下的等效显示值
     ///
-    /// - 注意：此方法`不会改变时间戳`,仅调整显示逻辑
+    /// - 注意：此方法会按当前时区偏移量调整绝对时间点(`timeIntervalSince1970`),并非仅调整显示
     ///   适用于将 API 返回的 UTC 字符串按本地时间展示(如 `"2024-01-01T08:00:00Z"` 显示为本地 16:00)
-    /// - Returns: 本地时区下对应的日期对象(时间点不变)
+    /// - Returns: 本地时区下对应的日期对象(绝对时间点已偏移)
     func dy_asLocal() -> Date {
         let offset = dy_timeZone.secondsFromGMT(for: self)
         return addingTimeInterval(TimeInterval(offset))
@@ -461,9 +461,9 @@ public extension Date {
 
     /// 将当前日期`视为本地时间`,并返回其在 UTC 下的等效表示
     ///
-    /// - 注意：此方法`不会改变时间戳`,仅用于序列化
+    /// - 注意：此方法会按当前时区偏移量调整绝对时间点(`timeIntervalSince1970`)
     ///   适用于将用户选择的本地日历时间(如“今天 10:00”)转换为 UTC 存储
-    /// - Returns: UTC 时区下对应的日期对象(时间点不变)
+    /// - Returns: UTC 时区下对应的日期对象(绝对时间点已偏移)
     func dy_asUTC() -> Date {
         let offset = dy_timeZone.secondsFromGMT(for: self)
         return addingTimeInterval(-TimeInterval(offset))

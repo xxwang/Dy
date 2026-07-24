@@ -1087,7 +1087,7 @@ public extension UIView {
     /// - Parameter superview: 父视图,`self`将被添加为该视图的子视图
     /// - Returns: `Self`
     @discardableResult
-    func dy_add2(_ superview: UIView?) -> Self {
+    func dy_addTo(_ superview: UIView?) -> Self {
         if let superview {
             superview.addSubview(self)
         }
@@ -1098,7 +1098,7 @@ public extension UIView {
     /// - Parameter stackView: `UIStackView`
     /// - Returns: `Self`
     @discardableResult
-    func dy_add2(_ stackView: UIStackView) -> Self {
+    func dy_addTo(_ stackView: UIStackView) -> Self {
         stackView.addArrangedSubview(self)
         return self
     }

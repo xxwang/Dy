@@ -30,28 +30,6 @@ public extension Collection {
         indices.contains(index) ? self[index] : nil
     }
 
-    /// 将集合按指定大小分组
-    ///
-    /// - Parameter size: 每组的元素数量,必须大于 `0`
-    /// - Returns: 分组后的二维数组若 `size <= 0` 或集合为空,返回空数组 `[]`
-    ///
-    /// - Example:
-    ///     ```swift
-    ///     let numbers = [1, 2, 3, 4, 5]
-    ///     print(numbers.dy_grouped(by: 2)) // [[1, 2], [3, 4], [5]]
-    ///     ```
-    func dy_grouped(by size: Int) -> [[Element]] {
-        guard size > 0, !isEmpty else { return [] }
-        var result: [[Element]] = []
-        var start = startIndex
-        while start != endIndex {
-            let end = index(start, offsetBy: size, limitedBy: endIndex) ?? endIndex
-            result.append(Array(self[start ..< end]))
-            start = end
-        }
-        return result
-    }
-
     /// 查找满足条件的所有元素索引
     ///
     /// - Parameter condition: 判断元素是否符合条件的闭包

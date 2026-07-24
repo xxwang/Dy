@@ -66,7 +66,7 @@ public extension BinaryInteger {
     /// 尝试将当前值解释为 `Unicode` 码点,并返回对应的 `Character`
     ///
     /// - Returns: 有效的 `Character`,若码点无效则返回 `nil`
-    func dy_toASCII() -> Character? {
+    func dy_toCharacter() -> Character? {
         guard let scalar = UnicodeScalar(Int(self)) else { return nil }
         return Character(scalar)
     }
