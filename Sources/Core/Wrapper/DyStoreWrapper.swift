@@ -1,8 +1,13 @@
 import Foundation
+import os.log
 
 /// 用 `UserDefaults` 存储属性,自动处理默认值、编码和类型兼容
 @propertyWrapper
 public struct DyStoreWrapper<T> {
+    /// 复用的 JSONEncoder / JSONDecoder，避免每次读写都重新创建
+    private static var encoder: JSONEncoder { _encoder }
+    private static var decoder: JSONDecoder { _decoder }
+
     private let key: String
     private let defaultValue: T
     private let userDefaults: UserDefaults
@@ -35,7 +40,7 @@ public struct DyStoreWrapper<T> {
             return defaultValue
         }
         set {
-            // 如果是 nil(仅 Optional 类型),删除键
+            // 如果是 nil(仅 Optional 类型),删除键。使用 Mirror 检测 Optional nil
             if let style = Mirror(reflecting: newValue).displayStyle,
                style == .optional,
                Mirror(reflecting: newValue).children.isEmpty
@@ -53,17 +58,17 @@ public struct DyStoreWrapper<T> {
             // Codable 类型：转成 Data 存
             if let encodable = newValue as? Encodable {
                 do {
-                    let data = try JSONEncoder().encode(encodable)
+                    let data = try Self.encoder.encode(encodable)
                     userDefaults.set(data, forKey: key)
                 } catch {
-                    print("⚠️ DyDefault 编码失败 (key: \(key)) - \(error)")
+                    os_log(.error, "DyStoreWrapper 编码失败 key=%{public}@ error=%{public}@", key, String(describing: error))
                     userDefaults.removeObject(forKey: key)
                 }
                 return
             }
 
             // 不支持的类型：报错并清理
-            print("❌ DyDefault 不支持类型 \(T.self) (key: \(key))")
+            os_log(.error, "DyStoreWrapper 不支持类型 %{public}@ key=%{public}@", String(describing: T.self), key)
             userDefaults.removeObject(forKey: key)
         }
     }
@@ -84,10 +89,10 @@ private extension DyStoreWrapper {
     func decode(from data: Data) -> T? {
         guard let decodableType = T.self as? Decodable.Type else { return nil }
         do {
-            let decoded = try JSONDecoder().decode(decodableType, from: data)
+            let decoded = try Self.decoder.decode(decodableType, from: data)
             return decoded as? T
         } catch {
-            print("⚠️ DyDefault 解码失败 (key: \(key)) - \(error)")
+            os_log(.error, "DyStoreWrapper 解码失败 key=%{public}@ error=%{public}@", key, String(describing: error))
             return nil
         }
     }
@@ -113,3 +118,13 @@ extension Date: DyStorable {}
 extension Data: DyStorable {}
 extension Array: DyStorable where Element: DyStorable {}
 extension Dictionary: DyStorable where Key == String, Value: DyStorable {}
+
+// 编码器/解码器实例，惰性创建并复用，避免每次读写都重新初始化
+private let _encoder: JSONEncoder = {
+    let encoder = JSONEncoder()
+    return encoder
+}()
+private let _decoder: JSONDecoder = {
+    let decoder = JSONDecoder()
+    return decoder
+}()

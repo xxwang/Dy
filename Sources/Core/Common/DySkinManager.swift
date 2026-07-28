@@ -15,6 +15,8 @@ public extension DySkinable where Self: UITraitEnvironment {
 }
 
 // MARK: - 皮肤管理器实现
+/// 主题皮肤管理器，刷新操作必须在主线程执行，因此标注为 ``@MainActor``
+@MainActor
 public final class DySkinManager {
     /// 存储皮肤观察者的弱引用集合(自动清理已释放对象)
     private let observers = NSHashTable<AnyObject>.weakObjects()

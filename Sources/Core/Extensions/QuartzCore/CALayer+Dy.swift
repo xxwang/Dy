@@ -16,7 +16,7 @@ public extension CALayer {
     /// - Parameters:
     ///   - scale: 缩放比例,默认值为当前屏幕的scale,通常与设备的屏幕密度相匹配
     /// - Returns: 返回转换后的`UIImage`,如果失败则返回`nil`
-    func dy_toUIImage(scale: CGFloat = UIScreen.main.scale) -> UIImage? {
+    func dy_toUIImage(scale: CGFloat = DyScreen.screenScale) -> UIImage? {
         UIGraphicsBeginImageContextWithOptions(self.bounds.size, self.isOpaque, scale)
         defer { UIGraphicsEndImageContext() }
 
@@ -182,7 +182,7 @@ public extension CALayer {
     /// 启用或禁用光栅化(将图层预渲染为位图)
     /// - Parameter shouldRasterize: 是否启用光栅化
     /// - Returns: `Self`
-    /// - Important: 启用后建议调用 `rasterizationScale(UIScreen.main.scale)` 以适配 Retina 屏幕
+    /// - Important: 启用后建议调用 `dy_rasterizationScale(DyScreen.screenScale)` 以适配 Retina 屏幕
     @discardableResult
     func dy_shouldRasterize(_ shouldRasterize: Bool) -> Self {
         self.shouldRasterize = shouldRasterize
@@ -190,7 +190,7 @@ public extension CALayer {
     }
 
     /// 设置光栅化缩放比例(通常等于屏幕 scale)
-    /// - Parameter scale: 缩放因子(如 `UIScreen.main.scale`)
+    /// - Parameter scale: 缩放因子(如 `DyScreen.screenScale`)
     /// - Returns: `Self`
     @discardableResult
     func dy_rasterizationScale(_ scale: CGFloat) -> Self {

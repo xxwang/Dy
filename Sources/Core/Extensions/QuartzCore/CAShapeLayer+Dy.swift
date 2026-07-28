@@ -17,7 +17,7 @@ public extension CAShapeLayer {
     /// - Important: 若不设置,高分辨率设备上路径可能模糊
     /// - Returns: `Self`
     @discardableResult
-    func dy_contentsScale(_ scale: CGFloat = UIScreen.main.scale) -> Self {
+    func dy_contentsScale(_ scale: CGFloat = DyScreen.screenScale) -> Self {
         self.contentsScale = scale
         return self
     }

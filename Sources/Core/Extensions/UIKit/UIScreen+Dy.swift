@@ -12,7 +12,7 @@ public extension UIScreen {
     /// - Note:
     ///   - 自动在主线程执行,支持从任意线程调用
     ///   - 多次调用不会重复注册
-    ///   - 仅监听主屏幕(`UIScreen.main`)
+    ///   - 仅监听主屏幕,自动适配 iOS 16+ Scene API
     static func dy_startMonitoring(
         onScreenshot: DyAction? = nil,
         onScreenRecordingStart: DyAction? = nil,
@@ -71,7 +71,7 @@ private final class DyScreenCaptureMonitor {
 
         // 监听录屏(iOS 11+)
         if #available(iOS 11.0, *) {
-            if UIScreen.main.isCaptured {
+            if DyScreen.isCaptured {
                 self.onRecordingStart?()
             }
 
@@ -81,7 +81,7 @@ private final class DyScreenCaptureMonitor {
                 queue: .main
             ) { [weak self] _ in
                 guard let self else { return }
-                if UIScreen.main.isCaptured {
+                if DyScreen.isCaptured {
                     self.onRecordingStart?()
                 } else {
                     self.onRecordingStop?()

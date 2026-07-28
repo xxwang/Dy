@@ -1,6 +1,8 @@
 import Foundation
 
-public class DyLogContext {
+/// 日志上下文——携带单条日志的元信息（文件、行号、级别、内容等）。
+/// 定义为 `struct` 而非 `class`，避免堆分配和引用计数开销；在高频日志场景下性能更优
+public struct DyLogContext {
     /// 所在文件
     public let file: String
     /// 所在方法

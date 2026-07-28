@@ -1,6 +1,8 @@
 import UIKit
 
 // MARK: - 触觉反馈工具
+/// 触觉反馈管理器。必须在主线程使用，因此标注为 ``@MainActor``
+@MainActor
 public final class DyHaptic {
     /// 触觉反馈类型
     public enum DyFeedback {

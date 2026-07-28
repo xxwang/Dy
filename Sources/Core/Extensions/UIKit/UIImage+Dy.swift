@@ -69,7 +69,7 @@ public extension UIImage {
     ///   - size: 图片尺寸,默认为1x1像素
     ///   - cornerRadius: 圆角半径,默认为0表示直角矩形
     convenience init?(color: UIColor = .black, size: CGSize = CGSize(width: 1, height: 1), cornerRadius: CGFloat = 0) {
-        UIGraphicsBeginImageContextWithOptions(size, false, UIScreen.main.scale)
+        UIGraphicsBeginImageContextWithOptions(size, false, DyScreen.screenScale)
         defer { UIGraphicsEndImageContext() }
 
         guard let context = UIGraphicsGetCurrentContext() else { return nil }
@@ -1613,7 +1613,7 @@ public extension UIImage {
         }
 
         let format = UIGraphicsImageRendererFormat.default()
-        format.scale = UIScreen.main.scale // 使用主屏缩放,适合 UI 资源
+        format.scale = DyScreen.screenScale // 使用主屏缩放,适合 UI 资源
         let renderer = UIGraphicsImageRenderer(size: size, format: format)
 
         return renderer.image { context in

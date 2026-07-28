@@ -2,11 +2,16 @@ import Foundation
 
 // MARK: - DyLogger
 public class DyLogger {
-    /// 最低日志级别，低于此级别的日志将被忽略
-    public var minimumLevel: DyLogLevel = .debug
+    /// 最低日志级别，低于此级别的日志将被忽略。读取通过队列同步保证线程安全
+    public var minimumLevel: DyLogLevel {
+        get { queue.sync { _minimumLevel } }
+        set { queue.sync { _minimumLevel = newValue } }
+    }
+    private var _minimumLevel: DyLogLevel = .debug
+
     /// 所有输出目标
     private var destinations: [DyLogDestination] = []
-    /// 串行队列，保证线程安全
+    /// 串行队列，保证所有读写操作的线程安全
     private let queue = DispatchQueue(label: "logger.queue", qos: .userInitiated)
 
     public static let shared = DyLogger()
@@ -17,7 +22,6 @@ public extension DyLogger {
     /// 添加输出目标
     @discardableResult
     func addDestination(_ destination: DyLogDestination) -> DyLogger {
-        // 与 `log()` 的串行队列访问保持同步，避免并发读写触发数组 COW crash
         queue.sync { destinations.append(destination) }
         return self
     }
@@ -27,15 +31,13 @@ public extension DyLogger {
         queue.sync { destinations.removeAll() }
     }
 
-    /// 核心日志方法
+    /// 核心日志方法。低于 minimumLevel 的日志将被丢弃;
+    /// 分发到各输出目标在串行队列中异步执行，不阻塞调用线程
     func log(file: String, function: String, line: Int, date: Date, level: DyLogLevel, items: [Any]) {
-        guard level >= minimumLevel else { return }
-
-        let context = DyLogContext(file: file, function: function, line: line, date: date, level: level, items: items)
-
-        // 异步分发到各目标，避免阻塞主线程
+        // level 和 destinations 的访问都通过 queue 序列化，避免数据竞争
         self.queue.async { [weak self] in
-            guard let self else { return }
+            guard let self, level >= self._minimumLevel else { return }
+            let context = DyLogContext(file: file, function: function, line: line, date: date, level: level, items: items)
             for destination in self.destinations {
                 destination.log(context: context)
             }

@@ -1,4 +1,5 @@
 import Foundation
+import os.log
 
 /// 沙盒路径管理工具
 public final class DyPath: Sendable {
@@ -178,7 +179,7 @@ public extension DyPath {
                 )
                 return true
             } catch {
-                print("DyPath: Failed to create directory \(parentDir): \(error.localizedDescription)")
+                os_log(.error, "DyPath: 创建目录失败 %{public}@: %{public}@", parentDir, error.localizedDescription)
                 return false
             }
         }
@@ -213,7 +214,7 @@ public extension DyPath {
             try FileManager.default.removeItem(atPath: path)
             return true
         } catch {
-            print("DyPath: Failed to remove \(path): \(error.localizedDescription)")
+            os_log(.error, "DyPath: 删除失败 %{public}@: %{public}@", path, error.localizedDescription)
             return false
         }
     }

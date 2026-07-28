@@ -46,7 +46,7 @@ public extension UIScrollView {
             showsVerticalScrollIndicator = originalShowsIndicators.1
         }
 
-        let scale = options.scaleToScreen ? UIScreen.main.scale : 1.0
+        let scale = options.scaleToScreen ? DyScreen.screenScale : 1.0
         UIGraphicsBeginImageContextWithOptions(bounds.size, options.opaque, scale)
         defer {
             if options.releaseContextImmediately {
@@ -88,7 +88,7 @@ public extension UIScrollView {
             showsVerticalScrollIndicator = false
         }
 
-        let scale = options.scaleToScreen ? UIScreen.main.scale : 1.0
+        let scale = options.scaleToScreen ? DyScreen.screenScale : 1.0
         let totalSize = contentSize
         guard totalSize.width > 0, totalSize.height > 0 else {
             debugPrint("截图失败: contentSize 无效")

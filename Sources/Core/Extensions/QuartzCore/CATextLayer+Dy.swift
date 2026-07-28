@@ -62,11 +62,11 @@ public extension CATextLayer {
     }
 
     /// 设置内容缩放比例,用于适配 Retina 屏幕
-    /// - Parameter scale: 缩放因子,默认为 `UIScreen.main.scale`
+    /// - Parameter scale: 缩放因子,默认为当前主屏幕缩放比例
     /// - Important: 若不设置,高分辨率屏幕可能出现模糊
     /// - Returns: `Self`
     @discardableResult
-    func dy_contentsScale(_ scale: CGFloat = UIScreen.main.scale) -> Self {
+    func dy_contentsScale(_ scale: CGFloat = DyScreen.screenScale) -> Self {
         self.contentsScale = scale
         return self
     }

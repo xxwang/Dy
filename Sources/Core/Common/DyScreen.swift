@@ -1,8 +1,11 @@
 import UIKit
 
 /// 屏幕尺寸信息
-public final class DyScreen: Sendable {
-    /// 设计稿参考尺寸
+/// 注意: 该类标注为 ``@unchecked Sendable`` 而非 ``Sendable``，
+/// 因为其包含可通过 `setupSketch` 修改的可变静态属性 `sketchSize`，
+/// 但已通过 `NSLock` 手动保证线程安全。
+public final class DyScreen: @unchecked Sendable {
+    /// 设计稿参考尺寸。读写通过 lock 保护以保证线程安全
     public private(set) static var sketchSize: CGSize = .init(width: 375, height: 812)
 
     /// 配置设计稿尺寸,用于后续的自动适配计算
@@ -147,6 +150,20 @@ public extension DyScreen {
             let screenLongSide = max(self.screenWidth, self.screenHeight)
             return screenLongSide / sketchLongSide
         }
+    }
+}
+
+// MARK: - 屏幕捕获检测
+public extension DyScreen {
+    /// 当前是否正在录屏或投屏
+    /// iOS 16+ 优先使用 Scene API; 低版本回退到 UIScreen.main
+    static var isCaptured: Bool {
+        if #available(iOS 16.0, *) {
+            let scene = UIApplication.shared.connectedScenes
+                .first { $0.activationState == .foregroundActive } as? UIWindowScene
+            return scene?.screen.isCaptured ?? false
+        }
+        return UIScreen.main.isCaptured
     }
 }
 

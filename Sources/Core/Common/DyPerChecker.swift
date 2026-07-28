@@ -296,6 +296,47 @@ private extension DyPerChecker {
     }
 }
 
+// MARK: - 统一权限入口(公共 API)
+public extension DyPerChecker {
+    /// 查询指定权限的当前授权状态(同步)
+    /// - Parameter type: 权限类型
+    /// - Returns: 权限状态
+    func checkStatus(for type: DyPerReqType) -> DyPerStatus {
+        switch type {
+        case .photoLibrary:     return checkPhotoLibraryStatus()
+        case .camera:           return checkCameraStatus()
+        case .microphone:       return checkMicrophoneStatus()
+        case .contacts:         return checkContactsStatus()
+        case .adTracking:       return checkAdTrackingStatus()
+        case .location:         return checkLocationStatus()
+        case .notification:     return .notDetermined
+        }
+    }
+
+    /// 请求指定权限(异步回调主线程)
+    /// - Parameters:
+    ///   - type: 权限类型
+    ///   - completion: 完成回调,在主线程执行
+    func request(_ type: DyPerReqType, completion: @escaping DyAction1<DyPerReqResult>) {
+        switch type {
+        case .photoLibrary:
+            requestPhotoLibraryPer(completion: completion)
+        case .camera:
+            requestCameraPer(completion: completion)
+        case .microphone:
+            requestMicrophonePer(completion: completion)
+        case .contacts:
+            requestContactsPerm(completion: completion)
+        case .adTracking:
+            requestAdTrackingPer(completion: completion)
+        case let .location(locType):
+            requestLocationPer(type: locType, completion: completion)
+        case let .notification(options):
+            requestNotificationPer(options: options, completion: completion)
+        }
+    }
+}
+
 // MARK: - CLLocationManagerDelegate
 extension DyPerChecker: CLLocationManagerDelegate {
     public func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {

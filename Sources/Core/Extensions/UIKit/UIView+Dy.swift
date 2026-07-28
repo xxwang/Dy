@@ -777,7 +777,7 @@ public extension UIView {
     }
 
     /// 设置光栅化比例
-    /// - Parameter scale: 光栅化比例,通常为`UIScreen.main.scale`,用于优化性能
+    /// - Parameter scale: 光栅化比例,通常为当前主屏幕 scale(`DyScreen.screenScale`)
     /// - Returns: `Self`
     @discardableResult
     func dy_rasterizationScale(_ scale: CGFloat) -> Self {

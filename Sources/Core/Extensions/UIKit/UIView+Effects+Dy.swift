@@ -807,7 +807,7 @@ public extension UIView {
             return nil
         }
 
-        let scale = options.scaleToScreen ? UIScreen.main.scale : 1.0
+        let scale = options.scaleToScreen ? DyScreen.screenScale : 1.0
 
         UIGraphicsBeginImageContextWithOptions(bounds.size, options.opaque, scale)
         defer {
