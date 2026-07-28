@@ -1,6 +1,6 @@
 import UIKit
 
-public class DySymbol {
+public final class DySymbol {
     /// 创建单色图标
     /// - Parameters:
     ///   - name: 图标名称

@@ -1,6 +1,6 @@
 import Foundation
 
-public final class DyQueue {
+public final class DyQueue: @unchecked Sendable {
     private var onceTokens: Set<String> = []
     private let onceLock = NSLock()
     /// 复用的私有串行队列，避免 `executeSerially` 每次调用都新建队列
@@ -25,8 +25,7 @@ public extension DyQueue {
     ///   }
     ///   ```
     func asyncOnMain(_ task: @escaping DyAction) {
-        let workItem = DispatchWorkItem(block: task)
-        DispatchQueue.main.async(execute: workItem)
+        DispatchQueue.main.async(execute: task)
     }
 
     /// 在全局并发队列中异步执行任务
@@ -54,8 +53,7 @@ public extension DyQueue {
         qos: DispatchQoS.QoSClass = .default,
         execute task: @escaping DyAction
     ) {
-        let workItem = DispatchWorkItem(block: task)
-        DispatchQueue.global(qos: qos).async(execute: workItem)
+        DispatchQueue.global(qos: qos).async(execute: task)
     }
 }
 

@@ -16,9 +16,7 @@ public extension DyLoadable where Self: UIView {
         nibName: String? = nil,
         bundle: Bundle? = nil
     ) -> Self {
-        let className = String(describing: Self.self)
-        let cleanClassName = className.components(separatedBy: ".").last ?? className
-        let name = nibName ?? cleanClassName
+        let name = nibName ?? DyHelper.className(Self.self)
         let targetBundle = bundle ?? Bundle(for: Self.self)
 
         guard let views = targetBundle.loadNibNamed(name, owner: nil, options: nil) else {
@@ -57,9 +55,7 @@ public extension DyLoadable where Self: UIViewController {
         bundle: Bundle? = nil,
         identifier: String? = nil
     ) -> Self {
-        let className = String(describing: self)
-        let cleanClassName = className.components(separatedBy: ".").last ?? className
-        let storyboardId = identifier ?? cleanClassName
+        let storyboardId = identifier ?? DyHelper.className(self)
         let targetBundle = bundle ?? Bundle(for: self)
 
         let storyboard = UIStoryboard(name: storyboardName, bundle: targetBundle)

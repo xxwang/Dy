@@ -1,7 +1,7 @@
 import Foundation
 
 // MARK: - 用于读写 plist 文件的工具类
-public final class DyPlist {
+public final class DyPlist: @unchecked Sendable {
     /// 全局共享实例
     public static let shared = DyPlist()
 

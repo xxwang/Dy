@@ -18,7 +18,7 @@ public final class DyHaptic {
     private init() {}
 
     // 缓存 generator 实例，避免每次触觉反馈都新建 + `prepare()` 的开销（Apple 也建议复用）。
-    private let impactLock = NSLock()
+    // @MainActor 已保证所有访问串行化，无需额外锁
     private var impactGenerators: [Int: UIImpactFeedbackGenerator] = [:]
     private let selectionGenerator = UISelectionFeedbackGenerator()
     private let notificationGenerator = UINotificationFeedbackGenerator()
@@ -44,8 +44,6 @@ public extension DyHaptic {
     /// 获取（并按 style 缓存）冲击反馈 generator；仅在首次创建时 `prepare()` 一次
     private func impactGenerator(for style: UIImpactFeedbackGenerator.FeedbackStyle) -> UIImpactFeedbackGenerator {
         let key = style.rawValue
-        impactLock.lock()
-        defer { impactLock.unlock() }
         if let existing = impactGenerators[key] {
             return existing
         }

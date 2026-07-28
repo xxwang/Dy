@@ -1,17 +1,21 @@
 import UIKit
 
 /// 屏幕尺寸信息
-/// 注意: 该类标注为 ``@unchecked Sendable`` 而非 ``Sendable``，
-/// 因为其包含可通过 `setupSketch` 修改的可变静态属性 `sketchSize`，
-/// 但已通过 `NSLock` 手动保证线程安全。
-public final class DyScreen: @unchecked Sendable {
-    /// 设计稿参考尺寸。读写通过 lock 保护以保证线程安全
+/// 标注为 ``@unchecked Sendable`` 而非自动 ``Sendable``，
+/// 因为包含可通过 `setupSketch` 修改的可变静态属性 `sketchSize`，
+/// 读写通过 `NSLock` 保护。
+public final class DyScreen {
+    private static let lock = NSLock()
+
+    /// 设计稿参考尺寸。读写通过 lock 保护
     public private(set) static var sketchSize: CGSize = .init(width: 375, height: 812)
 
     /// 配置设计稿尺寸,用于后续的自动适配计算
     /// - Parameter size: 设计稿的逻辑尺寸(单位：`pt`)
     public static func setupSketch(size: CGSize) {
-        self.sketchSize = size
+        lock.lock()
+        sketchSize = size
+        lock.unlock()
     }
 }
 
@@ -121,32 +125,30 @@ public extension DyScreen {
     ///   即横屏时它实际按"长边"计算，并非字面的宽度比例。如需严格按当前宽度缩放，请用 `screenWidth / sketchSize.width`。
     static var widthRatio: CGFloat {
         let isLandscape = self.screenWidth > self.screenHeight
+        let sketch = self.lock.withLock { sketchSize }
 
         if isLandscape {
-            let sketchLongSide = max(sketchSize.width, sketchSize.height)
+            let sketchLongSide = max(sketch.width, sketch.height)
             let screenLongSide = max(self.screenWidth, self.screenHeight)
             return screenLongSide / sketchLongSide
         } else {
-            let sketchShortSide = min(sketchSize.width, sketchSize.height)
+            let sketchShortSide = min(sketch.width, sketch.height)
             let screenShortSide = min(self.screenWidth, self.screenHeight)
             return screenShortSide / sketchShortSide
         }
     }
 
     /// 高度方向的缩放比例
-    /// - Note: 与 `widthRatio` 互补（同样基于短边/长边自适应）：
-    ///   - 竖屏：屏幕长边 / 设计稿长边
-    ///   - 横屏：屏幕短边 / 设计稿短边
-    ///   即横屏时它实际按"短边"计算。如需严格按当前高度缩放，请用 `screenHeight / sketchSize.height`。
     static var heightRatio: CGFloat {
         let isLandscape = self.screenWidth > self.screenHeight
+        let sketch = self.lock.withLock { sketchSize }
 
         if isLandscape {
-            let sketchShortSide = min(sketchSize.width, sketchSize.height)
+            let sketchShortSide = min(sketch.width, sketch.height)
             let screenShortSide = min(self.screenWidth, self.screenHeight)
             return screenShortSide / sketchShortSide
         } else {
-            let sketchLongSide = max(sketchSize.width, sketchSize.height)
+            let sketchLongSide = max(sketch.width, sketch.height)
             let screenLongSide = max(self.screenWidth, self.screenHeight)
             return screenLongSide / sketchLongSide
         }

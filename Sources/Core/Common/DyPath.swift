@@ -57,7 +57,8 @@ public extension DyPath {
     /// `Documents` 目录 URL
     var documentsURL: URL {
         guard let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
-            fatalError("Critical: Cannot resolve Documents directory.")
+            assertionFailure("Cannot resolve Documents directory.")
+            return URL(fileURLWithPath: documentsPath)
         }
         return url
     }
@@ -65,7 +66,8 @@ public extension DyPath {
     /// `Library` 目录 URL
     var libraryURL: URL {
         guard let url = FileManager.default.urls(for: .libraryDirectory, in: .userDomainMask).first else {
-            fatalError("Critical: Cannot resolve Library directory.")
+            assertionFailure("Cannot resolve Library directory.")
+            return URL(fileURLWithPath: libraryPath)
         }
         return url
     }
@@ -73,7 +75,8 @@ public extension DyPath {
     /// `Caches` 目录 URL
     var cachesURL: URL {
         guard let url = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first else {
-            fatalError("Critical: Cannot resolve Caches directory.")
+            assertionFailure("Cannot resolve Caches directory.")
+            return URL(fileURLWithPath: cachesPath)
         }
         return url
     }
@@ -81,7 +84,8 @@ public extension DyPath {
     /// `Application Support` 目录 URL
     var applicationSupportURL: URL {
         guard let url = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first else {
-            fatalError("Critical: Cannot resolve Application Support directory.")
+            assertionFailure("Cannot resolve Application Support directory.")
+            return URL(fileURLWithPath: applicationSupportPath)
         }
         return url
     }

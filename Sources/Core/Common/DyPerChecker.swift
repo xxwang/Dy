@@ -71,8 +71,9 @@ public final class DyPerChecker: NSObject {
         return manager
     }()
 
-    /// 仅保留最新一次位置请求的回调
+    /// 仅保留最新一次位置请求的回调，通过 lock 保护
     private var latestLocationCallback: DyAction1<DyPerReqResult>?
+    private let locationCallbackLock = NSLock()
 
     public static let shared = DyPerChecker()
     override private init() {
@@ -286,7 +287,9 @@ private extension DyPerChecker {
 
     /// 请求定位权限
     func requestLocationPer(type: DyPerReqType.LocationDyPerReqType, completion: @escaping DyAction1<DyPerReqResult>) {
+        locationCallbackLock.lock()
         self.latestLocationCallback = completion
+        locationCallbackLock.unlock()
         switch type {
         case .always:
             locationManager.requestAlwaysAuthorization()
@@ -342,7 +345,9 @@ extension DyPerChecker: CLLocationManagerDelegate {
     public func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         let granted = (status == .authorizedWhenInUse || status == .authorizedAlways)
         let result: DyPerReqResult = granted ? .authorized : .denied(reason: .userDenied)
+        locationCallbackLock.lock()
         latestLocationCallback?(result)
         latestLocationCallback = nil
+        locationCallbackLock.unlock()
     }
 }

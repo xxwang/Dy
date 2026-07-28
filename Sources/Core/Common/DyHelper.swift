@@ -3,7 +3,7 @@ import AdSupport
 import AppTrackingTransparency
 
 /// 提供常用辅助信息
-public final class DyHelper {
+public final class DyHelper: @unchecked Sendable {
     public static let shared = DyHelper()
     private init() {}
 }
@@ -161,4 +161,13 @@ public extension DyHelper {
         let supported = UIApplication.shared.supportedInterfaceOrientations(for: nil)
         return supported.contains(orientation.dy_interfaceOrientationMask)
     }
+}
+
+//MARK: - 辅助方法
+public extension DyHelper {
+    /// 获取去掉模块前缀的类名（如 "MyApp.MyClass" → "MyClass"）
+    static func className<T>(_ type: T.Type) -> String {
+        String(reflecting: type).components(separatedBy: ".").last ?? String(describing: type)
+    }
+
 }
