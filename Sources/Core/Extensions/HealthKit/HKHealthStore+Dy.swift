@@ -1,4 +1,5 @@
 import HealthKit
+import os.log
 
 // MARK: - 数据保存
 public extension HKHealthStore {
@@ -10,7 +11,10 @@ public extension HKHealthStore {
     ///   - sample: 要保存的健康数据样本(例如 `HKQuantitySample`)
     ///   - completion: 保存完成后的回调`success` 表示是否成功,`error` 包含失败原因(如有)
     func dy_saveSample(_ sample: HKSample, completion: @escaping DyAction2<Bool, Error?>) {
-        save(sample, withCompletion: completion)
+        save(sample, withCompletion: { success, error in
+            // HealthKit 回调位于后台队列,统一切回主线程以保证 UI 操作安全
+            DispatchQueue.main.async { completion(success, error) }
+        })
     }
 }
 
@@ -41,7 +45,7 @@ public extension HKHealthStore {
         // 创建观察者查询
         let query = HKObserverQuery(sampleType: stepType, predicate: nil) { [weak self] _, _, error in
             if let error {
-                handler(nil, error)
+                DispatchQueue.main.async { handler(nil, error) }
                 return
             }
 
@@ -54,7 +58,7 @@ public extension HKHealthStore {
                 sortDescriptors: [sortDescriptor]
             ) { _, samples, error in
                 let latestSample = samples?.first as? HKQuantitySample
-                handler(latestSample, error)
+                DispatchQueue.main.async { handler(latestSample, error) }
             }
 
             self?.execute(sampleQuery)
@@ -66,7 +70,7 @@ public extension HKHealthStore {
         // 启用后台数据交付(即时模式)
         enableBackgroundDelivery(for: stepType, frequency: .immediate) { success, error in
             if !success {
-                print("⚠️ 后台步数交付启用失败: \(error?.localizedDescription ?? "未知错误")")
+                os_log(.error, "⚠️ 后台步数交付启用失败: %{public}@", error?.localizedDescription ?? "未知错误")
             }
         }
         return query
@@ -80,7 +84,7 @@ public extension HKHealthStore {
     ///   若无数据或查询失败,返回 `nil`
     func dy_fetchTodayStepCount(completion: @escaping DyAction2<Int?, Error?>) {
         guard let stepType = HKQuantityType.quantityType(forIdentifier: .stepCount) else {
-            completion(nil, HKError(.errorInvalidArgument))
+            DispatchQueue.main.async { completion(nil, HKError(.errorInvalidArgument)) }
             return
         }
 
@@ -95,18 +99,19 @@ public extension HKHealthStore {
             options: .cumulativeSum
         ) { _, result, error in
             if let error {
-                completion(nil, error)
+                DispatchQueue.main.async { completion(nil, error) }
                 return
             }
 
             guard let result else {
-                completion(nil, NSError(domain: "HealthKit", code: -1, userInfo: [NSLocalizedDescriptionKey: "统计结果为空"]))
+                let err = NSError(domain: "HealthKit", code: -1, userInfo: [NSLocalizedDescriptionKey: "统计结果为空"])
+                DispatchQueue.main.async { completion(nil, err) }
                 return
             }
 
             // 步数单位为 count()
             let totalSteps = result.sumQuantity()?.doubleValue(for: .count()) ?? 0
-            completion(Int(totalSteps), nil)
+            DispatchQueue.main.async { completion(Int(totalSteps), nil) }
         }
 
         execute(statisticsQuery)
@@ -140,7 +145,7 @@ public extension HKHealthStore {
             limit: limit,
             sortDescriptors: sortDescriptors
         ) { _, results, error in
-            completion(results, error)
+            DispatchQueue.main.async { completion(results, error) }
         }
 
         execute(query)

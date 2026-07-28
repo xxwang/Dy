@@ -22,10 +22,37 @@ open class DyWebViewController: DyViewController {
         super.viewDidLoad()
     }
 
+    // MARK: - 脚本消息处理器管理(iOS 13 安全)
+
+    /// 已注册脚本消息处理器名称,用于在 deinit 时(尤其 iOS 13)逐个移除,避免 WKWebView 强引用导致的内存泄漏
+    private var dy_scriptMessageHandlerNames: Set<String> = []
+
+    /// 注册脚本消息处理器(自动记录名称,deinit 时统一清理)
+    /// - Parameters:
+    ///   - handler: 消息处理器(通常为 `self`)
+    ///   - name: 处理器名称
+    open func dy_addScriptMessageHandler(_ handler: WKScriptMessageHandler, name: String) {
+        userContentController.add(handler, name: name)
+        dy_scriptMessageHandlerNames.insert(name)
+    }
+
+    /// 移除指定名称的脚本消息处理器(iOS 13 / 14+ 均安全)
+    /// - Parameter name: 处理器名称
+    open func dy_removeScriptMessageHandler(forName name: String) {
+        userContentController.removeScriptMessageHandler(forName: name)
+        dy_scriptMessageHandlerNames.remove(name)
+    }
+
     deinit {
         if #available(iOS 14.0, *) {
             self.userContentController.removeAllScriptMessageHandlers()
+        } else {
+            // iOS 13 无 removeAllScriptMessageHandlers,逐个移除以打破 WKWebView 对 VC 的强引用
+            for name in dy_scriptMessageHandlerNames {
+                self.userContentController.removeScriptMessageHandler(forName: name)
+            }
         }
+        dy_scriptMessageHandlerNames.removeAll()
     }
 }
 

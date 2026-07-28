@@ -63,9 +63,9 @@ public extension Dictionary {
     /// - Returns: 转换后的新字典
     /// - Throws: 若 `transform` 抛出错误,则本方法也会抛出相同错误
     /// - Note: 若转换后存在重复键，后者覆盖前者（类似 `uniquingKeysWith`）
-    func dy_mapToDictionary<K, V>(
+    func dy_mapToDictionary<K: Hashable, V>(
         _ transform: (_ key: Key, _ value: Value) throws -> (K, V)
-    ) rethrows -> [K: V] where K: Hashable {
+    ) rethrows -> [K: V] {
         let pairs: [(K, V)] = try self.map(transform)
         return Swift.Dictionary(pairs, uniquingKeysWith: { _, latest in latest })
     }
@@ -76,11 +76,11 @@ public extension Dictionary {
     /// - Returns: 转换后的新字典（跳过返回 `nil` 的项）
     /// - Throws: 若 `transform` 抛出错误,则本方法也会抛出相同错误
     /// - Note: 结果中不会包含 `nil` 映射项,且要求键唯一
-    func dy_compactMapToDictionary<K, V>(
+    func dy_compactMapToDictionary<K: Hashable, V>(
         _ transform: (_ key: Key, _ value: Value) throws -> (K, V)?
     ) rethrows -> [K: V] {
         let pairs: [(K, V)] = try self.compactMap(transform)
-        return Swift.Dictionary(uniqueKeysWithValues: pairs)
+        return Swift.Dictionary(pairs, uniquingKeysWith: { _, new in new })
     }
 
     /// 仅保留指定键构成的新字典

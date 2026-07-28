@@ -1,4 +1,5 @@
 import AVFoundation
+import os.log
 import UIKit
 import UniformTypeIdentifiers
 
@@ -16,15 +17,16 @@ public extension URL {
         scheme?.lowercased() == "https"
     }
 
-    /// 解析查询参数为字典(不处理重复 key,后者覆盖前者)
+    /// 解析查询参数为字典(重复 key 时后者覆盖前者)
     var dy_parameters: [String: String]? {
         guard let components = URLComponents(url: self, resolvingAgainstBaseURL: false),
               let queryItems = components.queryItems else { return nil }
         return Dictionary(
-            uniqueKeysWithValues: queryItems.compactMap { item in
+            queryItems.compactMap { item in
                 guard let value = item.value else { return nil }
                 return (item.name, value)
-            }
+            },
+            uniquingKeysWith: { _, new in new }
         )
     }
 
@@ -72,7 +74,7 @@ public extension URL {
     ///   请仅用于 `isFileURL == true` 的场景
     var dy_data: Data? {
         guard isFileURL else {
-            print("⚠️ Warning: data called on non-file URL. This may block the thread.")
+            os_log(.error, "⚠️ Warning: data called on non-file URL. This may block the thread.")
             return nil
         }
         return try? Data(contentsOf: self)

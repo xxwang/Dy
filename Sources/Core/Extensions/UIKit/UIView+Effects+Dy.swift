@@ -1,4 +1,16 @@
 import UIKit
+import os.log
+
+/// 用于保存粒子发射器暂停前的原始 birthRate,避免恢复时读不到正确值
+private var dyEmitterOriginalRatesKey: UInt8 = 0
+
+private extension UIView {
+    /// 以 CAEmitterCell 的 ObjectIdentifier 为键,保存其暂停前的 birthRate
+    var dy_emitterOriginalRates: [ObjectIdentifier: Float] {
+        get { objc_getAssociatedObject(self, &dyEmitterOriginalRatesKey) as? [ObjectIdentifier: Float] ?? [:] }
+        set { objc_setAssociatedObject(self, &dyEmitterOriginalRatesKey, newValue, .OBJC_ASSOCIATION_RETAIN) }
+    }
+}
 
 // MARK: - 2D 变换
 public extension UIView {
@@ -276,7 +288,7 @@ public extension UIView {
     @discardableResult
     func dy_roundedCorner(radius: CGFloat, corners: UIRectCorner) -> Self {
         guard !self.bounds.isEmpty else {
-            print("⚠️ Warning: roundedCorner called with zero bounds. Call after layout.")
+            os_log(.error, "⚠️ Warning: roundedCorner called with zero bounds. Call after layout.")
             return self
         }
 
@@ -318,7 +330,7 @@ public extension UIView {
         }
 
         let label = self.badgeLabel!
-        label.text = number.isEmpty ? "" : (Int(number) ?? 0 > 99 ? "99+" : number)
+        label.text = number.isEmpty ? "" : ((Int(number) ?? 0) > 99 ? "99+" : number)
 
         // 更新圆角
         label.layer.cornerRadius = number.isEmpty ? 5 : 8
@@ -692,7 +704,7 @@ public extension UIView {
         // 创建粒子单元
         let cells = config.cellImages.compactMap { imageName -> CAEmitterCell? in
             guard let image = UIImage(named: imageName)?.cgImage else {
-                print("⚠️ Warning: Particle image '\(imageName)' not found in Assets.")
+                os_log(.error, "⚠️ Warning: Particle image '%{public}@' not found in Assets.", imageName)
                 return nil
             }
             let cell = CAEmitterCell()
@@ -723,7 +735,7 @@ public extension UIView {
         }
 
         guard !cells.isEmpty else {
-            print("❌ Error: No valid particle images provided.")
+            os_log(.error, "❌ Error: No valid particle images provided.")
             return emitter // 返回空发射器(可选：抛出异常或断言)
         }
 
@@ -772,7 +784,12 @@ public extension UIView {
             .compactMap { $0 as? CAEmitterLayer }
             .filter { $0.name == "emitter" || $0.name == nil }
             .forEach { emitter in
-                emitter.emitterCells?.forEach { $0.birthRate = 0 }
+                var rates = self.dy_emitterOriginalRates
+                emitter.emitterCells?.forEach { cell in
+                    rates[ObjectIdentifier(cell)] = cell.birthRate
+                    cell.birthRate = 0
+                }
+                self.dy_emitterOriginalRates = rates
             }
     }
 
@@ -782,9 +799,11 @@ public extension UIView {
             .compactMap { $0 as? CAEmitterLayer }
             .filter { $0.name == "emitter" || $0.name == nil }
             .forEach { emitter in
-                // 恢复每个 cell 的原始 birthRate(这里假设它们相同)
-                let originalRate = emitter.emitterCells?.first?.birthRate ?? 1.0
-                emitter.emitterCells?.forEach { $0.birthRate = originalRate }
+                let rates = self.dy_emitterOriginalRates
+                emitter.emitterCells?.forEach { cell in
+                    // 恢复暂停前保存的原始 birthRate;若未保存则保持当前值
+                    cell.birthRate = rates[ObjectIdentifier(cell)] ?? cell.birthRate
+                }
             }
     }
 }

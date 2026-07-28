@@ -5,6 +5,7 @@ import Security
 import SystemConfiguration.CaptiveNetwork
 import UIKit
 import Darwin
+import os.log
 
 // MARK: - 存储与内存信息
 public extension UIDevice {
@@ -71,7 +72,7 @@ public extension UIDevice {
             device.torchMode = isOn ? .on : .off
             device.unlockForConfiguration()
         } catch {
-            print("setFlashlight error: \(error.localizedDescription)")
+            os_log(.error, "setFlashlight error: %{public}@", error.localizedDescription)
         }
     }
 }

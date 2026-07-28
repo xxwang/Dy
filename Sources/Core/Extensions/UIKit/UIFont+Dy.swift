@@ -36,6 +36,7 @@ public extension UIFont {
         case .semibold: "PingFangSC-Semibold"
         case .bold: "PingFangSC-Bold"
         case .heavy: "PingFangSC-Heavy"
+        case .black: "PingFangSC-Heavy"
         default: "PingFangSC-Regular"
         }
 

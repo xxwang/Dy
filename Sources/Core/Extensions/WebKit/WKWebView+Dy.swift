@@ -1,4 +1,5 @@
 import WebKit
+import os.log
 
 // MARK: - 辅助类
 public extension WKWebView {
@@ -144,7 +145,7 @@ public extension WKWebView {
     @discardableResult
     func dy_load(fileName: String, bundle: Bundle = .main) -> Self {
         guard let path = bundle.path(forResource: fileName, ofType: "html") else {
-            print("⚠️ Warning: HTML file '\(fileName).html' not found in bundle.")
+            os_log(.error, "⚠️ Warning: HTML file '%{public}@.html' not found in bundle.", fileName)
             return self
         }
         let fileURL = URL(fileURLWithPath: path)

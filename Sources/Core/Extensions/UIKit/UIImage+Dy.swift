@@ -90,7 +90,7 @@ public extension UIImage {
     /// - Parameters:
     ///   - lightImage: 浅色模式下的图片
     ///   - darkImage: 深色模式下的图片(可选)
-    convenience init(lightImage: UIImage, darkImage: UIImage? = nil) {
+    convenience init?(lightImage: UIImage, darkImage: UIImage? = nil) {
         if #available(iOS 13.0, *) {
             let darkImage = darkImage ?? lightImage
             let asset = UIImageAsset()
@@ -108,9 +108,11 @@ public extension UIImage {
             asset.register(lightImage, with: lightTrait)
             asset.register(darkImage, with: darkTrait)
 
-            self.init(cgImage: asset.image(with: .current).cgImage!)
+            guard let cgImage = asset.image(with: .current).cgImage else { return nil }
+            self.init(cgImage: cgImage)
         } else {
-            self.init(cgImage: lightImage.cgImage!)
+            guard let cgImage = lightImage.cgImage else { return nil }
+            self.init(cgImage: cgImage)
         }
     }
 

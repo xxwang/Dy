@@ -104,16 +104,32 @@ extension DyViewController {
 
 // MARK: - UIViewController生命周期
 extension DyViewController {
+    /// 侧滑手势原始代理(用于退出页面时还原,避免覆盖其它控制器/协调器设置的代理)
+    private enum Keys {
+        static var originalPopDelegate: UInt8 = 0
+    }
+
+    private var dy_originalPopDelegate: UIGestureRecognizerDelegate? {
+        get { self.dy_getAssociatedObject(forKey: &Keys.originalPopDelegate) as? UIGestureRecognizerDelegate }
+        set { self.dy_setAssociatedObject(newValue, forKey: &Keys.originalPopDelegate) }
+    }
+
     override open func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.navigationController?.interactivePopGestureRecognizer?.delegate = self
+        // 接管侧滑手势代理,但先记录原始代理以便退出时还原
+        if let gesture = self.navigationController?.interactivePopGestureRecognizer, gesture.delegate !== self {
+            if dy_originalPopDelegate == nil {
+                dy_originalPopDelegate = gesture.delegate
+            }
+            gesture.delegate = self
+        }
     }
 
     override open func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        // 防御性清空：仅当 delegate 仍指向自身时才置空，避免误清空其他控制器设置的 delegate
-        if self.navigationController?.interactivePopGestureRecognizer?.delegate === self {
-            self.navigationController?.interactivePopGestureRecognizer?.delegate = nil
+        // 仅当代理仍指向自身时才还原为原始代理,避免误清空其它控制器设置的代理
+        if let gesture = self.navigationController?.interactivePopGestureRecognizer, gesture.delegate === self {
+            gesture.delegate = dy_originalPopDelegate
         }
     }
 

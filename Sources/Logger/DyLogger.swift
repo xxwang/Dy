@@ -43,7 +43,9 @@ public extension DyLogger {
     /// 移除所有输出目标
     func removeAllDestinations() {
         queue.sync {
-            for dest in destinations { dest.teardown() }
+            for dest in destinations {
+                dest.teardown()
+            }
             destinations.removeAll()
         }
     }
@@ -52,7 +54,9 @@ public extension DyLogger {
     /// 入队后再按每个目标各自的 minimumLevel 分发。
     func log(file: String, function: String, line: Int, date: Date, level: DyLogLevel, items: [Any]) {
         // 快速路径：全局级别过滤，避免浪费队列调度
-        if level < minimumLevel { return }
+        if level < minimumLevel {
+            return
+        }
 
         self.queue.async { [weak self] in
             guard let self else { return }

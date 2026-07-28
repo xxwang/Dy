@@ -2,8 +2,9 @@ import CoreLocation
 
 // MARK: - 方法
 public extension CLGeocoder {
-    /// 共享的地理编码器实例，避免临时实例被提前释放
-    private static let dy_shared = CLGeocoder()
+    /// 正在进行的地理编码实例集合,用于在回调结束前保持实例存活(避免提前释放)
+    /// 同时避免复用同一实例并发请求(Apple 明确禁止单实例并发地理编码)
+    private static var dy_activeGeocoders: Set<CLGeocoder> = []
 
     /// 反向地理编码：将经纬度转换为地址信息
     ///
@@ -13,9 +14,9 @@ public extension CLGeocoder {
     ///
     /// - 注意：
     ///   - 结果语言由系统区域设置决定,无法通过 API 强制指定
-    ///   - 不要复用 CLGeocoder 实例,每次调用应新建
+    ///   - 每次调用都会新建 `CLGeocoder` 实例并发起请求,实例在回调结束后自动释放
     ///
-    /// - Example:HealthKit
+    /// - Example:
     ///   ```swift
     ///   let loc = CLLocation(latitude: 39.9042, longitude: 116.4074)
     ///   CLGeocoder.dy_reverseGeocodeLocation(loc) { marks, error in
@@ -28,7 +29,12 @@ public extension CLGeocoder {
         _ location: CLLocation,
         completionHandler: @escaping CLGeocodeCompletionHandler
     ) {
-        dy_shared.reverseGeocodeLocation(location, completionHandler: completionHandler)
+        let geocoder = CLGeocoder()
+        dy_activeGeocoders.insert(geocoder)
+        geocoder.reverseGeocodeLocation(location) { placemarks, error in
+            defer { Self.dy_activeGeocoders.remove(geocoder) }
+            completionHandler(placemarks, error)
+        }
     }
 
     /// 地理编码：将地址字符串转换为经纬度
@@ -49,6 +55,11 @@ public extension CLGeocoder {
         _ addressString: String,
         completionHandler: @escaping CLGeocodeCompletionHandler
     ) {
-        dy_shared.geocodeAddressString(addressString, completionHandler: completionHandler)
+        let geocoder = CLGeocoder()
+        dy_activeGeocoders.insert(geocoder)
+        geocoder.geocodeAddressString(addressString) { placemarks, error in
+            defer { Self.dy_activeGeocoders.remove(geocoder) }
+            completionHandler(placemarks, error)
+        }
     }
 }

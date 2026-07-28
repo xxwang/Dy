@@ -131,22 +131,22 @@ public extension UIView {
 }
 
 extension UIView {
-    /// 关联属性键
-    struct AssociatedKeys {
-        static var badgeLabel = UnsafeRawPointer(bitPattern: "UIView.badgeLabel".hashValue)!
-        static var watermark = UnsafeRawPointer(bitPattern: "UIView.watermark".hashValue)!
+    /// 关联属性键(使用稳定内存地址作为 key,避免 `String.hashValue` 为 0 时 `UnsafeRawPointer(bitPattern:)` 返回 nil 而强制解包崩溃,以及不同字符串哈希碰撞)
+    private enum AssociatedKeys {
+        static var badgeLabel: UInt8 = 0
+        static var watermark: UInt8 = 0
     }
 
     /// 角标Label
     var badgeLabel: UILabel? {
-        get { self.dy_getAssociatedObject(forKey: AssociatedKeys.badgeLabel) }
-        set { self.dy_setAssociatedObject(newValue, forKey: AssociatedKeys.badgeLabel, policy: .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
+        get { self.dy_getAssociatedObject(forKey: &AssociatedKeys.badgeLabel) }
+        set { self.dy_setAssociatedObject(newValue, forKey: &AssociatedKeys.badgeLabel, policy: .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
     }
 
     /// 水印配置属性
     var watermarkConfig: DyWatermarkConfig? {
-        get { self.dy_getAssociatedObject(forKey: AssociatedKeys.watermark) }
-        set { self.dy_setAssociatedObject(newValue, forKey: AssociatedKeys.watermark, policy: .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
+        get { self.dy_getAssociatedObject(forKey: &AssociatedKeys.watermark) }
+        set { self.dy_setAssociatedObject(newValue, forKey: &AssociatedKeys.watermark, policy: .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
     }
 }
 
@@ -1285,7 +1285,7 @@ public extension UIView {
     /// - Parameter block: 手势触发时回调
     /// - Returns: `Self`
     @discardableResult
-    func onPinchGestureRecognizer(_ block: @escaping DyAction1<UIPinchGestureRecognizer>) -> Self {
+    func dy_onPinchGestureRecognizer(_ block: @escaping DyAction1<UIPinchGestureRecognizer>) -> Self {
         let pinch = UIPinchGestureRecognizer.dy_pinchGestureRecognizer()
             .dy_onRecognized { recognizer in
                 if let pinch = recognizer as? UIPinchGestureRecognizer {

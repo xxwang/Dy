@@ -25,9 +25,10 @@ public extension UIButton {
 
 // MARK: - 扩大按钮点击区域
 extension UIButton {
-    struct Keys {
+    /// 关联属性键(使用稳定内存地址作为 key)
+    private enum Keys {
         /// 扩展点击区域大小
-        static var dy_expandSizeKey = UnsafeRawPointer(bitPattern: "UIButton.expandSize".hashValue)
+        static var dy_expandSizeKey: UInt8 = 0
     }
 
     /// 重写点触及范围检测

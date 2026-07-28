@@ -2,22 +2,22 @@ import UIKit
 
 // MARK: - 事件回调处理
 extension UIGestureRecognizer {
-    /// 关联属性键
-    struct AssociatedKeys {
-        static var recognized = UnsafeRawPointer(bitPattern: "UIGestureRecognizer.recognized".hashValue)!
-        static var stateChanged = UnsafeRawPointer(bitPattern: "UIGestureRecognizer.stateChanged".hashValue)!
+    /// 关联属性键(使用稳定内存地址作为 key)
+    private enum AssociatedKeys {
+        static var recognized: UInt8 = 0
+        static var stateChanged: UInt8 = 0
     }
 
     /// 手势识别成功时触发的闭包
     var dy_recognizedBlock: DyAction1<UIGestureRecognizer>? {
-        get { return self.dy_getAssociatedObject(forKey: AssociatedKeys.recognized) }
-        set { self.dy_setAssociatedObject(newValue, forKey: AssociatedKeys.recognized) }
+        get { return self.dy_getAssociatedObject(forKey: &AssociatedKeys.recognized) }
+        set { self.dy_setAssociatedObject(newValue, forKey: &AssociatedKeys.recognized) }
     }
 
     /// 手势状态变化时触发的闭包
     var dy_stateChangedBlock: DyAction1<UIGestureRecognizer.State>? {
-        get { return self.dy_getAssociatedObject(forKey: AssociatedKeys.stateChanged) }
-        set { self.dy_setAssociatedObject(newValue, forKey: AssociatedKeys.stateChanged) }
+        get { return self.dy_getAssociatedObject(forKey: &AssociatedKeys.stateChanged) }
+        set { self.dy_setAssociatedObject(newValue, forKey: &AssociatedKeys.stateChanged) }
     }
 
     /// 处理手势状态变化

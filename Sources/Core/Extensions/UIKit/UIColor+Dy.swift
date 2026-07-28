@@ -157,7 +157,7 @@ public extension UIColor {
         guard !normalized.isEmpty else { return nil }
 
         var hexValue: UInt64 = 0
-        Scanner(string: normalized).scanHexInt64(&hexValue)
+        guard Scanner(string: normalized).scanHexInt64(&hexValue) else { return nil }
 
         let (r, g, b, a): (CGFloat, CGFloat, CGFloat, CGFloat)
         switch normalized.count {

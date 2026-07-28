@@ -9,8 +9,13 @@ private let _decoder: JSONDecoder = JSONDecoder()
 @propertyWrapper
 public struct DyStoreWrapper<T> {
     /// 复用的 JSONEncoder / JSONDecoder，避免每次读写都重新创建
-    private static var encoder: JSONEncoder {_encoder}
-    private static var decoder: JSONDecoder {_decoder}
+    private static var encoder: JSONEncoder {
+        _encoder
+    }
+
+    private static var decoder: JSONDecoder {
+        _decoder
+    }
 
     private let key: String
     private let defaultValue: T
@@ -133,5 +138,3 @@ extension Date: DyStorable {}
 extension Data: DyStorable {}
 extension Array: DyStorable where Element: DyStorable {}
 extension Dictionary: DyStorable where Key == String, Value: DyStorable {}
-
-

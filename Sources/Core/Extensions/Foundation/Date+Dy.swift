@@ -441,8 +441,7 @@ public extension Date {
     static func dy_toString(from timestamp: String, format: String = "yyyy-MM-dd HH:mm:ss") -> String {
         guard let date = self.dy_toDate(from: timestamp) else { return "" }
 
-        let formatter = DateFormatter.dy_iso8601
-        formatter.dateFormat = format
+        let formatter = DateFormatter.dy_formatter(format: format)
         return formatter.string(from: date)
     }
 }

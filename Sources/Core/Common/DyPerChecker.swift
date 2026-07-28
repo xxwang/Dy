@@ -81,8 +81,8 @@ public final class DyPerChecker: NSObject {
     }
 }
 
-// MARK: - 通知
-public extension DyPerChecker {
+// MARK: - 通知(内部实现,对外仅通过统一入口 checkStatus/request)
+private extension DyPerChecker {
     /// 异步获取通知权限的详细设置状态
     func checkNotificationSettings(for options: UNAuthorizationOptions, completion: @escaping DyAction1<DyPerStatus>) {
         UNUserNotificationCenter.current().getNotificationSettings { settings in
@@ -120,8 +120,8 @@ public extension DyPerChecker {
     }
 }
 
-// MARK: - 相册权限
-public extension DyPerChecker {
+// MARK: - 相册权限(内部实现,对外仅通过统一入口 checkStatus/request)
+private extension DyPerChecker {
     /// 获取相册权限状态
     func checkPhotoLibraryStatus() -> DyPerStatus {
         let status: PHAuthorizationStatus = {
@@ -181,8 +181,8 @@ private extension DyPerChecker {
     }
 }
 
-// MARK: - 麦克风
-public extension DyPerChecker {
+// MARK: - 麦克风(内部实现,对外仅通过统一入口 checkStatus/request)
+private extension DyPerChecker {
     /// 获取麦克风权限状态
     func checkMicrophoneStatus() -> DyPerStatus {
         let status = AVCaptureDevice.authorizationStatus(for: .audio)
@@ -302,17 +302,33 @@ private extension DyPerChecker {
 // MARK: - 统一权限入口(公共 API)
 public extension DyPerChecker {
     /// 查询指定权限的当前授权状态(同步)
-    /// - Parameter type: 权限类型
-    /// - Returns: 权限状态
-    func checkStatus(for type: DyPerReqType) -> DyPerStatus {
+    /// - Parameters:
+    ///   - type: 权限类型
+    ///   - completion: 可选的回调。
+    ///     - 相册/相机/麦克风/通讯录/广告追踪/定位:有同步查询 API,会**同步**回调真实状态;
+    ///     - 通知:没有同步查询 API,同步返回值只能保守为 `.notDetermined`,**真实状态通过此回调异步返回**(主线程)。用户可能在系统设置里随时更改权限,故不做缓存。
+    ///     - 不传则忽略。
+    /// - Returns: 同步可得的状态(通知恒为 `.notDetermined`,真实值见 `completion`)
+    @discardableResult
+    func checkStatus(for type: DyPerReqType, completion: DyAction1<DyPerStatus>? = nil) -> DyPerStatus {
         switch type {
-        case .photoLibrary: return checkPhotoLibraryStatus()
-        case .camera: return checkCameraStatus()
-        case .microphone: return checkMicrophoneStatus()
-        case .contacts: return checkContactsStatus()
-        case .adTracking: return checkAdTrackingStatus()
-        case .location: return checkLocationStatus()
-        case .notification: return .notDetermined
+        case .photoLibrary:
+            let s = checkPhotoLibraryStatus(); completion?(s); return s
+        case .camera:
+            let s = checkCameraStatus(); completion?(s); return s
+        case .microphone:
+            let s = checkMicrophoneStatus(); completion?(s); return s
+        case .contacts:
+            let s = checkContactsStatus(); completion?(s); return s
+        case .adTracking:
+            let s = checkAdTrackingStatus(); completion?(s); return s
+        case .location:
+            let s = checkLocationStatus(); completion?(s); return s
+        case let .notification(options):
+            // 通知没有同步查询 API,只能异步获取。同步返回值保守为 .notDetermined,
+            // 真实状态通过 completion 异步返回(用户可能在系统设置里随时改权限,不做缓存)。
+            checkNotificationSettings(for: options) { completion?($0) }
+            return .notDetermined
         }
     }
 

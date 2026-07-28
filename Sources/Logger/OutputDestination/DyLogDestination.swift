@@ -16,7 +16,10 @@ public protocol DyLogDestination {
 
 // MARK: - 默认实现
 public extension DyLogDestination {
-    var minimumLevel: DyLogLevel { .debug }
+    var minimumLevel: DyLogLevel {
+        .debug
+    }
+
     func flush() {}
     func teardown() {}
 }

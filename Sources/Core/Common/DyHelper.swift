@@ -163,11 +163,10 @@ public extension DyHelper {
     }
 }
 
-//MARK: - 辅助方法
+// MARK: - 辅助方法
 public extension DyHelper {
     /// 获取去掉模块前缀的类名（如 "MyApp.MyClass" → "MyClass"）
-    static func className<T>(_ type: T.Type) -> String {
+    static func className(_ type: (some Any).Type) -> String {
         String(reflecting: type).components(separatedBy: ".").last ?? String(describing: type)
     }
-
 }

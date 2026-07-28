@@ -1,4 +1,5 @@
 import UIKit
+import os.log
 
 // MARK: - 方法
 public extension UIAlertController {
@@ -97,7 +98,7 @@ public extension UIAlertController {
         if let vc = viewController {
             DispatchQueue.main.async {
                 if let presented = vc.presentedViewController, presented.isBeingPresented || presented.isBeingDismissed {
-                    print("⚠️ [UIAlertController.show] 指定的 ViewController 正在处理其他弹窗,跳过本次弹窗")
+                    os_log(.error, "⚠️ [UIAlertController.show] 指定的 ViewController 正在处理其他弹窗,跳过本次弹窗")
                     return
                 }
                 vc.present(self, animated: animated)
@@ -105,12 +106,12 @@ public extension UIAlertController {
         } else {
             DispatchQueue.main.async {
                 guard let topVC = UIWindow.dy_topViewController else {
-                    print("⚠️ [UIAlertController.show] 无法找到顶层 ViewController,弹窗未显示")
+                    os_log(.error, "⚠️ [UIAlertController.show] 无法找到顶层 ViewController,弹窗未显示")
                     return
                 }
 
                 if let presented = topVC.presentedViewController, presented.isBeingPresented || presented.isBeingDismissed {
-                    print("⚠️ [UIAlertController.show] 当前已有视图控制器正在展示或消失,跳过本次弹窗")
+                    os_log(.error, "⚠️ [UIAlertController.show] 当前已有视图控制器正在展示或消失,跳过本次弹窗")
                     return
                 }
                 topVC.present(self, animated: animated)

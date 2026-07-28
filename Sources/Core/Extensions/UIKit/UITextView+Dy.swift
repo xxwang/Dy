@@ -1,4 +1,5 @@
 import UIKit
+import os.log
 
 // MARK: - 常用方法
 public extension UITextView {
@@ -68,7 +69,7 @@ public extension UITextView {
             // 更新文本并禁止原生插入
             self.text = fullText
             // 移动光标到末尾(可选增强体验)
-            if let newPosition = self.position(from: self.beginningOfDocument, offset: fullText.count) {
+            if let newPosition = self.position(from: self.beginningOfDocument, offset: fullText.utf16.count) {
                 self.selectedTextRange = self.textRange(from: newPosition, to: newPosition)
             }
             return false
@@ -149,7 +150,7 @@ public extension UITextView {
                     attributed.addAttribute(.link, value: url, range: fullRange)
                 }
             } catch {
-                print("Regex error in convertMentionsAndHashtags: \(error)")
+                os_log(.error, "Regex error in convertMentionsAndHashtags: %{public}@", String(describing: error))
             }
         }
 

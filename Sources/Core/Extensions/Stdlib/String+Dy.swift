@@ -1,4 +1,5 @@
 import Foundation
+import os.log
 import CoreText
 import CoreGraphics
 import CryptoKit
@@ -2112,7 +2113,7 @@ public extension String {
             return true
         } catch {
             #if DEBUG
-                print("⚠️ 删除失败 [\(self)]: \(error.localizedDescription)")
+                os_log(.error, "⚠️ 删除失败 [%{public}@]: %{public}@", self, error.localizedDescription)
             #endif
             return false
         }
@@ -2154,7 +2155,7 @@ public extension String {
                 return true
             } catch {
                 #if DEBUG
-                    print("⚠️ 创建目录失败 [\(directoryPath)]: \(error.localizedDescription)")
+                    os_log(.error, "⚠️ 创建目录失败 [%{public}@]: %{public}@", directoryPath, error.localizedDescription)
                 #endif
                 return false
             }
@@ -2603,7 +2604,7 @@ public extension String {
 
             return attributedString
         } catch {
-            print("HTML to Attributed String failed: \(error)")
+            os_log(.error, "HTML to Attributed String failed: %{public}@", String(describing: error))
             return dy_fallbackAttributedString(font: font, lineSpacing: lineSpacing)
         }
     }
@@ -2635,7 +2636,7 @@ public extension String {
                 attributedString.addAttribute(.foregroundColor, value: highlightColor, range: match.range)
             }
         } catch {
-            print("Highlight keyword regex error: \(error)")
+            os_log(.error, "Highlight keyword regex error: %{public}@", String(describing: error))
         }
 
         return attributedString

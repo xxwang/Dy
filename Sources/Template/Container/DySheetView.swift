@@ -37,7 +37,7 @@ public extension DySheetView {
 @objc extension DySheetView {
     /// 显示底部弹窗
     open func show(in container: UIView? = nil) {
-        let container = container ?? UIWindow.dy_keyWindow
+        let container = container ?? UIWindow.dy_keyWindow ?? UIWindow.dy_windows.first
         guard let container else { return }
         container.addSubview(self)
 

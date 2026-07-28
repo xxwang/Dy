@@ -55,9 +55,15 @@ public final class DyConsoleDestination {
     /// 线程安全地更新显示选项
     public func configure(enableIcons: Bool? = nil, showContext: Bool? = nil, subsystem: String? = nil) {
         lock.lock()
-        if let v = enableIcons { self.enableIcons = v }
-        if let v = showContext  { self.showContext = v }
-        if let v = subsystem   { self.subsystem = v }
+        if let v = enableIcons {
+            self.enableIcons = v
+        }
+        if let v = showContext {
+            self.showContext = v
+        }
+        if let v = subsystem {
+            self.subsystem = v
+        }
         lock.unlock()
     }
 }
