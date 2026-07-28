@@ -58,8 +58,10 @@ public extension Timer {
         tick: @escaping DyAction1<TimeInterval>,
         completion: @escaping DyAction
     ) -> Timer {
-        precondition(duration > 0, "Duration must be positive")
-        precondition(interval > 0, "Interval must be positive")
+        guard duration > 0, interval > 0 else {
+            assertionFailure("Duration and interval must be positive")
+            return Timer()
+        }
 
         let startTime = Date()
         let endTime = startTime.addingTimeInterval(duration)

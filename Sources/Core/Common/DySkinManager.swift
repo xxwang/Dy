@@ -7,6 +7,7 @@ public protocol DySkinable: AnyObject {
 }
 
 // MARK: - 提供对全局皮肤管理器的快捷访问
+@MainActor
 public extension DySkinable where Self: UITraitEnvironment {
     /// 全局皮肤管理器实例,用于注册/移除观察者或触发刷新
     var skinManager: DySkinManager {

@@ -125,7 +125,9 @@ public extension DyScreen {
     ///   即横屏时它实际按"长边"计算，并非字面的宽度比例。如需严格按当前宽度缩放，请用 `screenWidth / sketchSize.width`。
     static var widthRatio: CGFloat {
         let isLandscape = self.screenWidth > self.screenHeight
-        let sketch = self.lock.withLock { sketchSize }
+        lock.lock()
+        let sketch = sketchSize
+        lock.unlock()
 
         if isLandscape {
             let sketchLongSide = max(sketch.width, sketch.height)
@@ -141,7 +143,9 @@ public extension DyScreen {
     /// 高度方向的缩放比例
     static var heightRatio: CGFloat {
         let isLandscape = self.screenWidth > self.screenHeight
-        let sketch = self.lock.withLock { sketchSize }
+        lock.lock()
+        let sketch = sketchSize
+        lock.unlock()
 
         if isLandscape {
             let sketchShortSide = min(sketch.width, sketch.height)

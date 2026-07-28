@@ -354,9 +354,8 @@ public extension CALayer {
         if let path {
             animation.path = path
             animation.calculationMode = .paced
+            animation.rotationMode = .rotateAuto
         }
-
-        animation.rotationMode = .rotateAuto // 适用于路径动画
 
         add(animation, forKey: animation.keyPath)
     }

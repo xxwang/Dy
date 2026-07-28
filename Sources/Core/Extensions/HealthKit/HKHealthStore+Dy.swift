@@ -29,13 +29,13 @@ public extension HKHealthStore {
     @discardableResult
     func dy_startStepSampleUpdates(
         handler: @escaping DyAction2<HKQuantitySample?, Error?>
-    ) -> HKObserverQuery {
+    ) -> HKObserverQuery? {
         // 获取步数类型,若不可用则立即失败
         guard let stepType = HKObjectType.quantityType(forIdentifier: .stepCount) else {
             DispatchQueue.main.async {
                 handler(nil, HKError(.errorInvalidArgument))
             }
-            fatalError("步数类型不可用,通常不会发生")
+            return nil
         }
 
         // 创建观察者查询

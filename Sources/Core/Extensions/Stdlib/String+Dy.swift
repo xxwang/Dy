@@ -1,5 +1,4 @@
 import Foundation
-import CommonCrypto
 import CoreText
 import CoreGraphics
 import CryptoKit
@@ -846,41 +845,25 @@ public extension String {
 
     /// 支持的加密哈希算法
     ///
-    /// - Warning:
-    ///   - `.md5` 已被密码学界视为**不安全**,仅用于遗留系统兼容
-    ///   - 推荐使用 `.sha256`（通用）或 `.sha512`（高安全需求）
+    /// - Warning: `.md5` 已被密码学界破解，仅用于非安全场景（如缓存 key）
     enum DyHashAlgorithm {
-        case md5 // < ❌ 已破解,仅兼容
-        case sha256 // < ✅ 推荐
-        case sha512 // < ✅ 更高安全级别
-
-        /// 返回对应算法的摘要字节长度
-        var digestLength: Int {
-            switch self {
-            case .md5: return Int(CC_MD5_DIGEST_LENGTH)
-            case .sha256: return Int(CC_SHA256_DIGEST_LENGTH)
-            case .sha512: return Int(CC_SHA512_DIGEST_LENGTH)
-            }
-        }
+        case md5
+        case sha256
+        case sha512
 
         /// 对给定数据执行哈希运算
-        ///
-        /// - Parameter data: 输入数据
-        /// - Returns: 哈希摘要的字节数组
         func dy_hash(_ data: Data) -> [UInt8] {
-            var digest = [UInt8](repeating: 0, count: digestLength)
-            data.withUnsafeBytes { buffer in
-                guard let baseAddress = buffer.baseAddress else { return }
-                switch self {
-                case .md5:
-                    _ = CC_MD5(baseAddress, CC_LONG(data.count), &digest)
-                case .sha256:
-                    _ = CC_SHA256(baseAddress, CC_LONG(data.count), &digest)
-                case .sha512:
-                    _ = CC_SHA512(baseAddress, CC_LONG(data.count), &digest)
-                }
+            switch self {
+            case .md5:
+                let digest = Insecure.MD5.hash(data: data)
+                return Array(digest)
+            case .sha256:
+                let digest = SHA256.hash(data: data)
+                return Array(digest)
+            case .sha512:
+                let digest = SHA512.hash(data: data)
+                return Array(digest)
             }
-            return digest
         }
     }
 
@@ -1477,7 +1460,7 @@ public extension String {
     /// - Returns: 移除后缀后的新字符串
     func dy_removingSuffix(_ suffix: String) -> String {
         guard hasSuffix(suffix) else { return self }
-        return String(self[..<suffix.startIndex])
+        return String(self.dropLast(suffix.count))
     }
 }
 

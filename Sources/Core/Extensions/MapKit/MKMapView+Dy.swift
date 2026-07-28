@@ -45,7 +45,8 @@ public extension MKMapView {
             withIdentifier: String(describing: T.self),
             for: annotation
         ) as? T else {
-            fatalError("Failed to dequeue annotation view of type \(T.self). Did you forget to register it?")
+            assertionFailure("Failed to dequeue annotation view of type \(T.self). Did you forget to register it?")
+            return T(annotation: annotation, reuseIdentifier: String(describing: T.self))
         }
         return view
     }

@@ -523,7 +523,9 @@ public extension Date {
     /// 获取中文星期名称(如“星期一”)
     var dy_weekdayString: String {
         let weekdays = ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"]
-        return weekdays[dy_weekday - 1]
+        let idx = dy_weekday - 1
+        guard idx >= 0, idx < weekdays.count else { return "" }
+        return weekdays[idx]
     }
 
     /// 获取英文月份全称(如 "January")
@@ -601,7 +603,7 @@ public extension Date {
     }
 
     /// 最近的 30 分钟整点
-    func nearest30Minutes() -> Date? {
+    func dy_nearest30Minutes() -> Date? {
         dy_nearest(minutes: 30)
     }
 
@@ -633,7 +635,7 @@ public extension Date {
     }
 
     /// 后天
-    static var dayAfterTomorrow: Date? {
+    static var dy_dayAfterTomorrow: Date? {
         Date().dy_adding(days: 2)
     }
 
@@ -648,7 +650,7 @@ public extension Date {
         case 1, 3, 5, 7, 8, 10, 12: return 31
         case 4, 6, 9, 11: return 30
         case 2: return ((year % 4 == 0 && year % 100 != 0) || (year % 400 == 0)) ? 29 : 28
-        default: fatalError("Invalid month: \(month)")
+        default: return 0
         }
     }
 

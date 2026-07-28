@@ -62,12 +62,12 @@ public extension Dictionary {
     /// - Parameter transform: 接收 `(Key, Value)` 并返回 `(K, V)` 元组的闭包
     /// - Returns: 转换后的新字典
     /// - Throws: 若 `transform` 抛出错误,则本方法也会抛出相同错误
-    /// - Note: 若转换后存在重复键,将导致运行时崩溃（因使用 `uniqueKeysWithValues`）
+    /// - Note: 若转换后存在重复键，后者覆盖前者（类似 `uniquingKeysWith`）
     func dy_mapToDictionary<K, V>(
         _ transform: (_ key: Key, _ value: Value) throws -> (K, V)
-    ) rethrows -> [K: V] {
+    ) rethrows -> [K: V] where K: Hashable {
         let pairs: [(K, V)] = try self.map(transform)
-        return Swift.Dictionary(uniqueKeysWithValues: pairs)
+        return Swift.Dictionary(pairs, uniquingKeysWith: { _, latest in latest })
     }
 
     /// 过滤并映射字典为新字典,支持跳过某些元素（返回 `nil`）

@@ -2,6 +2,9 @@ import CoreLocation
 
 // MARK: - 方法
 public extension CLGeocoder {
+    /// 共享的地理编码器实例，避免临时实例被提前释放
+    private static let dy_shared = CLGeocoder()
+
     /// 反向地理编码：将经纬度转换为地址信息
     ///
     /// - Parameters:
@@ -25,7 +28,7 @@ public extension CLGeocoder {
         _ location: CLLocation,
         completionHandler: @escaping CLGeocodeCompletionHandler
     ) {
-        CLGeocoder().reverseGeocodeLocation(location, completionHandler: completionHandler)
+        dy_shared.reverseGeocodeLocation(location, completionHandler: completionHandler)
     }
 
     /// 地理编码：将地址字符串转换为经纬度
@@ -46,6 +49,6 @@ public extension CLGeocoder {
         _ addressString: String,
         completionHandler: @escaping CLGeocodeCompletionHandler
     ) {
-        CLGeocoder().geocodeAddressString(addressString, completionHandler: completionHandler)
+        dy_shared.geocodeAddressString(addressString, completionHandler: completionHandler)
     }
 }

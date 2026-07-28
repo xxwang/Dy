@@ -206,6 +206,9 @@ public extension WKWebView {
     }
 
     /// 添加脚本消息处理器(用于接收 `JavaScript` 发来的消息)
+    /// - Warning: handlerWrapper 被 `WKUserContentController` 强引用。
+    ///   若 handler 闭包捕获了 WebView 的持有者将形成循环引用。
+    ///   请在 `deinit` 中调用 `dy_removeScriptMessageHandler(name:)` 来释放。
     /// - Parameters:
     ///   - name: 消息名称(`JavaScript` 中通过 `window.webkit.messageHandlers.<name>.postMessage(...)` 调用)
     ///   - handler: 接收消息的闭包
