@@ -13,6 +13,12 @@ open class DyTextView: UITextView {
         .dy_font(self.font ?? .systemFont(ofSize: 14))
         .dy_translatesAutoresizingMaskIntoConstraints(false)
 
+    override open var font: UIFont? {
+        didSet {
+            placeholderLabel.font = font ?? .systemFont(ofSize: 14)
+        }
+    }
+
     override public init(frame: CGRect, textContainer: NSTextContainer?) {
         super.init(frame: frame, textContainer: textContainer)
         self.setupUI()
@@ -21,6 +27,12 @@ open class DyTextView: UITextView {
 
     public required init?(coder: NSCoder) {
         super.init(coder: coder)
+        self.setupUI()
+        self.eventHandler()
+    }
+
+    deinit {
+        cancellables.removeAll()
     }
 }
 

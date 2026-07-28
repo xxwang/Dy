@@ -2,8 +2,8 @@ import UIKit
 import DyCore
 
 open class DyBlockButton: UIButton {
-    /// 按钮点击处理回调
-    var clickBlock: DyAction1<DyBlockButton>?
+    /// 按钮点击处理回调。子类可重写或在初始化后设置
+    open var clickBlock: DyAction1<DyBlockButton>?
 
     override init(frame: CGRect) {
         super.init(frame: frame)

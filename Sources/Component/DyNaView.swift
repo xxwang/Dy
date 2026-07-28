@@ -27,10 +27,10 @@ open class DyNaView: UIView {
         .dy_lineBreakMode(.byTruncatingTail)
 
     /// 背景图片视图(按需添加,初始不创建)
-    var backgroundImageView: UIImageView?
+    open var backgroundImageView: UIImageView?
 
     /// 渐变层(可选)
-    var gradientLayer: CAGradientLayer?
+    open var gradientLayer: CAGradientLayer?
 
     override public init(frame: CGRect) {
         super.init(frame: frame)
@@ -75,12 +75,13 @@ open class DyNaView: UIView {
             height: DyScreen.navigationBarHeight
         )
 
-        // 分割线：位于整个导航栏底部
+        // 分割线：位于整个导航栏底部，高度适配屏幕密度
+        let lineHeight = 1.0 / DyScreen.screenScale
         lineView.frame = CGRect(
             x: 0,
-            y: bounds.height - 0.5,
+            y: bounds.height - lineHeight,
             width: bounds.width,
-            height: 0.5
+            height: lineHeight
         )
 
         // 返回按钮：左侧安全区域或 10pt 内边距
@@ -93,8 +94,9 @@ open class DyNaView: UIView {
             height: buttonSize
         )
 
-        // 标题：居中于标题栏,避开返回按钮
-        let availableWidth = bounds.width - backButton.frame.maxX - 10
+        // 标题：居中于标题栏，左右各留安全距离给返回按钮和右侧安全区
+        let rightInset = max(10, DyScreen.safeAreaRight)
+        let availableWidth = bounds.width - backButton.frame.maxX - rightInset
         let titleSize = titleLabel.sizeThatFits(CGSize(width: availableWidth, height: navigationBar.bounds.height))
         titleLabel.frame = CGRect(
             x: (bounds.width - titleSize.width) / 2,
@@ -108,6 +110,11 @@ open class DyNaView: UIView {
 
         // 渐变层：同步 bounds
         gradientLayer?.frame = bounds
+
+        // 阴影路径跟随 bounds（在 layoutSubviews 中更新，避免 init 时 bounds 为 .zero）
+        if layer.shadowOpacity > 0 {
+            layer.shadowPath = UIBezierPath(rect: bounds).cgPath
+        }
     }
 
     /// 返回按钮点击处理
@@ -210,7 +217,9 @@ public extension DyNaView {
         self.layer.shadowRadius = 0
         self.layer.shadowOffset = CGSize(width: 0, height: 1)
         self.layer.shadowOpacity = isShow ? 1 : 0
-        self.layer.shadowPath = UIBezierPath(rect: self.bounds).cgPath
+        if isShow {
+            self.layer.shadowPath = UIBezierPath(rect: self.bounds).cgPath
+        }
         return self
     }
 
