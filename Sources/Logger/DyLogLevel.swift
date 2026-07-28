@@ -1,7 +1,7 @@
 import Foundation
 
 // MARK: - 日志级别
-public enum DyLogLevel: Int, Comparable, CustomStringConvertible {
+public enum DyLogLevel: Int, Comparable, CustomStringConvertible, CaseIterable {
     /// 调试
     case debug = 1
     /// 正常打印

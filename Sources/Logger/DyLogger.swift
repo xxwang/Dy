@@ -27,19 +27,38 @@ public extension DyLogger {
         return self
     }
 
-    /// 移除所有输出目标
-    func removeAllDestinations() {
-        queue.sync { destinations.removeAll() }
+    /// 根据标识符移除指定输出目标
+    @discardableResult
+    func removeDestination(identifier: String) -> Bool {
+        queue.sync {
+            if let idx = destinations.firstIndex(where: { $0.identifier == identifier }) {
+                destinations[idx].teardown()
+                destinations.remove(at: idx)
+                return true
+            }
+            return false
+        }
     }
 
-    /// 核心日志方法。低于 minimumLevel 的日志将被丢弃;
-    /// 分发到各输出目标在串行队列中异步执行，不阻塞调用线程
+    /// 移除所有输出目标
+    func removeAllDestinations() {
+        queue.sync {
+            for dest in destinations { dest.teardown() }
+            destinations.removeAll()
+        }
+    }
+
+    /// 核心日志方法。在入队前先快速检查全局 minimumLevel（避免不必要的队列操作）；
+    /// 入队后再按每个目标各自的 minimumLevel 分发。
     func log(file: String, function: String, line: Int, date: Date, level: DyLogLevel, items: [Any]) {
-        // level 和 destinations 的访问都通过 queue 序列化，避免数据竞争
+        // 快速路径：全局级别过滤，避免浪费队列调度
+        if level < minimumLevel { return }
+
         self.queue.async { [weak self] in
-            guard let self, level >= self._minimumLevel else { return }
+            guard let self else { return }
             let context = DyLogContext(file: file, function: function, line: line, date: date, level: level, items: items)
             for destination in self.destinations {
+                guard level >= destination.minimumLevel else { continue }
                 destination.log(context: context)
             }
         }
