@@ -16,6 +16,10 @@ open class DyTabBar: UITabBar {
     override open class func dy_tabBar() -> DyTabBar {
         DyTabBar().dy_isTranslucent(false)
             .dy_backgroundColor(.clear)
-            .dy_shadowImage(UIImage(color: .clear)!)
+            .dy_shadowImage(UIImage(color: .clear) ?? UIImage())
+    }
+
+    deinit {
+        cancellables.removeAll()
     }
 }

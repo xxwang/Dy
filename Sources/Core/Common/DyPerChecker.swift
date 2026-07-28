@@ -303,13 +303,13 @@ public extension DyPerChecker {
     /// - Returns: 权限状态
     func checkStatus(for type: DyPerReqType) -> DyPerStatus {
         switch type {
-        case .photoLibrary:     return checkPhotoLibraryStatus()
-        case .camera:           return checkCameraStatus()
-        case .microphone:       return checkMicrophoneStatus()
-        case .contacts:         return checkContactsStatus()
-        case .adTracking:       return checkAdTrackingStatus()
-        case .location:         return checkLocationStatus()
-        case .notification:     return .notDetermined
+        case .photoLibrary: return checkPhotoLibraryStatus()
+        case .camera: return checkCameraStatus()
+        case .microphone: return checkMicrophoneStatus()
+        case .contacts: return checkContactsStatus()
+        case .adTracking: return checkAdTrackingStatus()
+        case .location: return checkLocationStatus()
+        case .notification: return .notDetermined
         }
     }
 

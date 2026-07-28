@@ -16,4 +16,8 @@ open class DyImageView: UIImageView {
     override open class func dy_imageView() -> DyImageView {
         DyImageView(frame: .zero).dy_contentMode(.scaleAspectFit)
     }
+
+    deinit {
+        cancellables.removeAll()
+    }
 }

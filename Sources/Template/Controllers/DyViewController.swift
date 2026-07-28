@@ -10,7 +10,7 @@ open class DyViewController: UIViewController, DySetupable {
 
     /// 导航栏
     open lazy var naview = DyNaView.naview()
-        .dy_backAction {[weak self] in
+        .dy_backAction { [weak self] in
             guard let self else { return }
             self.onBackActionHandler()
         }
@@ -26,6 +26,11 @@ open class DyViewController: UIViewController, DySetupable {
 
     override open func viewDidLoad() {
         super.viewDidLoad()
+        setupUI()
+    }
+
+    deinit {
+        cancellables.removeAll()
     }
 }
 

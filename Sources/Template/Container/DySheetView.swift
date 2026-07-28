@@ -1,8 +1,10 @@
 import UIKit
+import Combine
 import DyCore
 
 // MARK: - 底部弹出面板
 open class DySheetView: UIView {
+    public var cancellables = Set<AnyCancellable>()
     /// 遮罩层
     private lazy var shadeView = UIView.dy_view()
 
@@ -17,6 +19,10 @@ open class DySheetView: UIView {
     @available(*, unavailable)
     public required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    deinit {
+        cancellables.removeAll()
     }
 }
 
@@ -64,7 +70,7 @@ public extension DySheetView {
         UIView.animate(withDuration: animationDuration(), delay: 0, options: .curveEaseIn) {
             self.shadeView.alpha = 0.01
             self.contentContainer.alpha = 0.01
-            self.contentContainer.transform = CGAffineTransform(translationX: 0, y: self.dy_height)
+            self.contentContainer.transform = CGAffineTransform(translationX: 0, y: self.contentContainer.dy_height)
         } completion: { _ in
             self.removeFromSuperview()
         }

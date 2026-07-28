@@ -337,6 +337,8 @@ public extension DyQueue {
         }
         onceLock.unlock()
 
-        if shouldRun { work() }
+        if shouldRun {
+            work()
+        }
     }
 }

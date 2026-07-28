@@ -1,14 +1,13 @@
 import UIKit
+import Combine
 
 open class DyButton: UIButton {
-    /// 取消按住高亮
-    override open var isHighlighted: Bool {
-        didSet {
-            super.isHighlighted = isHighlighted
-        }
-    }
-
+    public var cancellables = Set<AnyCancellable>()
     override open class func dy_button() -> DyButton {
         DyButton(type: .custom).dy_isHighlighted(false)
+    }
+
+    deinit {
+        cancellables.removeAll()
     }
 }

@@ -9,10 +9,16 @@ open class DyTableViewCell: UITableViewCell, DySetupable {
 
         self.dy_selectionStyle(.none)
             .dy_backgroundColor(.clear)
+
+        setupUI()
     }
 
     @available(*, unavailable)
     public required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    deinit {
+        cancellables.removeAll()
     }
 }

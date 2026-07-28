@@ -1,6 +1,8 @@
 import UIKit
+import Combine
 
 open class DyTextView: UITextView {
+    public var cancellables = Set<AnyCancellable>()
     override public init(frame: CGRect, textContainer: NSTextContainer?) {
         super.init(frame: frame, textContainer: textContainer)
     }
@@ -12,5 +14,9 @@ open class DyTextView: UITextView {
 
     override open class func dy_textView() -> DyTextView {
         DyTextView()
+    }
+
+    deinit {
+        cancellables.removeAll()
     }
 }

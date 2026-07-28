@@ -1,8 +1,11 @@
 import UIKit
+import Combine
 import DyCore
 
 /// 居中弹窗
 open class DyAlertView: UIView {
+    public var cancellables = Set<AnyCancellable>()
+
     /// 遮罩层
     private lazy var shadeView = UIView.dy_view()
 
@@ -17,6 +20,10 @@ open class DyAlertView: UIView {
     @available(*, unavailable)
     public required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    deinit {
+        cancellables.removeAll()
     }
 }
 

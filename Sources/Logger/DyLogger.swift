@@ -7,6 +7,7 @@ public class DyLogger {
         get { queue.sync { _minimumLevel } }
         set { queue.sync { _minimumLevel = newValue } }
     }
+
     private var _minimumLevel: DyLogLevel = .debug
 
     /// 所有输出目标

@@ -1,6 +1,8 @@
 import UIKit
+import Combine
 
 open class DyTextField: UITextField {
+    public var cancellables = Set<AnyCancellable>()
     override public init(frame: CGRect) {
         super.init(frame: frame)
     }
@@ -12,5 +14,9 @@ open class DyTextField: UITextField {
 
     override open class func dy_textField() -> DyTextField {
         DyTextField()
+    }
+
+    deinit {
+        cancellables.removeAll()
     }
 }

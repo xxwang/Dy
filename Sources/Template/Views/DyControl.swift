@@ -16,4 +16,8 @@ open class DyControl: UIControl {
     override open class func dy_control() -> DyControl {
         DyControl().dy_isHighlighted(false)
     }
+
+    deinit {
+        cancellables.removeAll()
+    }
 }

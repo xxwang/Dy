@@ -94,6 +94,13 @@ import WebKit
     }
 }
 
+// MARK: - UICollectionReusableView
+@objc extension UICollectionReusableView {
+    open class func dy_collectionReusableView() -> UICollectionReusableView {
+        UICollectionReusableView()
+    }
+}
+
 // MARK: - UICollectionViewFlowLayout
 @objc extension UICollectionViewFlowLayout {
     /// 创建一个默认的 `UICollectionViewFlowLayout` 实例

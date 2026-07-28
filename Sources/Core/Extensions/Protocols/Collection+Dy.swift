@@ -163,5 +163,3 @@ public extension Collection where Element: FloatingPoint {
         return reduce(.zero, +) / Element(count)
     }
 }
-
-

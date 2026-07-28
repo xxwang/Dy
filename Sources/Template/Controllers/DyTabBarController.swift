@@ -6,6 +6,11 @@ open class DyTabBarController: UITabBarController {
 
     override open func viewDidLoad() {
         super.viewDidLoad()
+        setupUI()
+    }
+
+    deinit {
+        cancellables.removeAll()
     }
 }
 

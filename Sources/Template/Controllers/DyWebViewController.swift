@@ -21,6 +21,12 @@ open class DyWebViewController: DyViewController {
     override open func viewDidLoad() {
         super.viewDidLoad()
     }
+
+    deinit {
+        if #available(iOS 14.0, *) {
+            self.userContentController.removeAllScriptMessageHandlers()
+        }
+    }
 }
 
 // MARK: - 支持子类重写的方法

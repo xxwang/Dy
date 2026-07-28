@@ -1,6 +1,9 @@
 import UIKit
+import Combine
 
 open class DyLabel: UILabel {
+    public var cancellables = Set<AnyCancellable>()
+
     override public init(frame: CGRect) {
         super.init(frame: frame)
     }
@@ -11,6 +14,10 @@ open class DyLabel: UILabel {
     }
 
     override open class func dy_label() -> DyLabel {
-        DyLabel().dy_lineBreakMode(.byCharWrapping)
+        DyLabel().dy_lineBreakMode(.byTruncatingTail)
+    }
+
+    deinit {
+        cancellables.removeAll()
     }
 }

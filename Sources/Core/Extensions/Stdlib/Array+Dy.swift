@@ -156,8 +156,6 @@ public extension Array where Element: NSAttributedString {
     }
 }
 
-
-
 // MARK: - Element: NSObjectProtocol
 public extension Array where Element: NSObjectProtocol {
     /// 将数组转换为 `NSArray`,用于需要 Objective-C 兼容的 API

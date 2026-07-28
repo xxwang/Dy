@@ -7,6 +7,7 @@ open class DyView: UIView, DySetupable {
 
     override public init(frame: CGRect) {
         super.init(frame: frame)
+        setupUI()
     }
 
     @available(*, unavailable)
@@ -16,5 +17,9 @@ open class DyView: UIView, DySetupable {
 
     override open class func dy_view() -> DyView {
         DyView()
+    }
+
+    deinit {
+        cancellables.removeAll()
     }
 }

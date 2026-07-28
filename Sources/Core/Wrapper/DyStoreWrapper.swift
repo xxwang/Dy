@@ -5,8 +5,13 @@ import os.log
 @propertyWrapper
 public struct DyStoreWrapper<T> {
     /// 复用的 JSONEncoder / JSONDecoder，避免每次读写都重新创建
-    private static var encoder: JSONEncoder { _encoder }
-    private static var decoder: JSONDecoder { _decoder }
+    private static var encoder: JSONEncoder {
+        _encoder
+    }
+
+    private static var decoder: JSONDecoder {
+        _decoder
+    }
 
     private let key: String
     private let defaultValue: T
@@ -119,12 +124,7 @@ extension Data: DyStorable {}
 extension Array: DyStorable where Element: DyStorable {}
 extension Dictionary: DyStorable where Key == String, Value: DyStorable {}
 
-// 编码器/解码器实例，惰性创建并复用，避免每次读写都重新初始化
-private let _encoder: JSONEncoder = {
-    let encoder = JSONEncoder()
-    return encoder
-}()
-private let _decoder: JSONDecoder = {
-    let decoder = JSONDecoder()
-    return decoder
-}()
+/// 编码器/解码器实例，惰性创建并复用，避免每次读写都重新初始化
+private let _encoder: JSONEncoder = JSONEncoder()
+
+private let _decoder: JSONDecoder = JSONDecoder()
