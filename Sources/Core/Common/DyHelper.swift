@@ -166,7 +166,14 @@ public extension DyHelper {
 // MARK: - 辅助方法
 public extension DyHelper {
     /// 获取去掉模块前缀的类名（如 "MyApp.MyClass" → "MyClass"）
-    static func className(_ type: (some Any).Type) -> String {
+    func className(_ type: (some Any).Type) -> String {
         String(reflecting: type).components(separatedBy: ".").last ?? String(describing: type)
+    }
+
+    /// 获取`deviceToken`的字符串表示
+    /// - Parameter token: 设备ID
+    /// - Returns: 设备ID字符串
+    func deviceTokenStr(_ deviceToken: Data) -> String {
+        return deviceToken.map { String(format: "%02.2hhx", $0) }.joined()
     }
 }

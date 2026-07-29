@@ -10,7 +10,7 @@ open class DyNaView: UIView {
         .dy_backgroundColor(.clear)
 
     /// 标题容器(包含返回按钮和标题)
-    open lazy var navigationBar = UIView.dy_view()
+    open lazy var naview = UIView.dy_view()
         .dy_backgroundColor(.clear)
 
     /// 底部分割线(默认半透明黑线)
@@ -41,11 +41,11 @@ open class DyNaView: UIView {
         // 添加核心子视图(顺序决定层级)
         self.dy_addSubviews([
             self.statusBar,
-            self.navigationBar,
+            self.naview,
             self.lineView,
         ])
 
-        self.navigationBar.dy_addSubviews([
+        self.naview.dy_addSubviews([
             self.backButton,
             self.titleLabel,
         ])
@@ -68,7 +68,7 @@ open class DyNaView: UIView {
         )
 
         // 标题栏：紧接状态栏下方
-        navigationBar.frame = CGRect(
+        naview.frame = CGRect(
             x: 0,
             y: statusBar.frame.maxY,
             width: bounds.width,
@@ -89,7 +89,7 @@ open class DyNaView: UIView {
         let buttonX = max(10, DyScreen.safeAreaLeft)
         backButton.frame = CGRect(
             x: buttonX,
-            y: (navigationBar.bounds.height - buttonSize) / 2,
+            y: (naview.bounds.height - buttonSize) / 2,
             width: buttonSize,
             height: buttonSize
         )
@@ -97,10 +97,10 @@ open class DyNaView: UIView {
         // 标题：居中于标题栏，左右各留安全距离给返回按钮和右侧安全区
         let rightInset = max(10, DyScreen.safeAreaRight)
         let availableWidth = bounds.width - backButton.frame.maxX - rightInset
-        let titleSize = titleLabel.sizeThatFits(CGSize(width: availableWidth, height: navigationBar.bounds.height))
+        let titleSize = titleLabel.sizeThatFits(CGSize(width: availableWidth, height: naview.bounds.height))
         titleLabel.frame = CGRect(
             x: (bounds.width - titleSize.width) / 2,
-            y: (navigationBar.bounds.height - titleSize.height) / 2,
+            y: (naview.bounds.height - titleSize.height) / 2,
             width: min(titleSize.width, availableWidth),
             height: titleSize.height
         )

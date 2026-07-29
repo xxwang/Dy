@@ -8,20 +8,44 @@ let package = Package(
         .iOS(.v13),
     ],
     products: [
-        .library(name: "DyCore", targets: ["DyCore"]),
-        .library(name: "DyComponent", targets: ["DyComponent"]),
+        .library(name: "Dy", targets: ["Dy"]),
         .library(name: "DyTemplate", targets: ["DyTemplate"]),
+        .library(name: "DyComponent", targets: ["DyComponent"]),
+        .library(name: "DyCore", targets: ["DyCore"]),
         .library(name: "DyCombineCocoa", targets: ["DyCombineCocoa"]),
         .library(name: "DyNetwork", targets: ["DyNetwork"]),
         .library(name: "DyLogger", targets: ["DyLogger"]),
+
     ],
     dependencies: [
         .package(url: "https://github.com/Alamofire/Alamofire.git", .upToNextMajor(from: "5.9.0")),
     ],
     targets: [
         .target(
-            name: "DyCore",
-            path: "Sources/Core",
+            name: "Dy",
+            dependencies: [
+                .target(name: "DyTemplate"),
+                .target(name: "DyComponent"),
+                .target(name: "DyCore"),
+                .target(name: "DyCombineCocoa"),
+                .target(name: "DyNetwork"),
+                .target(name: "DyLogger"),
+            ],
+            path: "Sources/Dy",
+            swiftSettings: [
+                .define("SPM_MODE"),
+            ]
+        ),
+        .target(
+            name: "DyTemplate",
+            dependencies: [
+                .target(name: "DyComponent"),
+                .target(name: "DyCore"),
+            ],
+            path: "Sources/Template",
+            resources: [
+                .process("Resources"),
+            ],
             swiftSettings: [
                 .define("SPM_MODE"),
             ]
@@ -40,15 +64,8 @@ let package = Package(
             ]
         ),
         .target(
-            name: "DyTemplate",
-            dependencies: [
-                .target(name: "DyCore"),
-                .target(name: "DyComponent"),
-            ],
-            path: "Sources/Template",
-            resources: [
-                .process("Resources"),
-            ],
+            name: "DyCore",
+            path: "Sources/Core",
             swiftSettings: [
                 .define("SPM_MODE"),
             ]
