@@ -22,7 +22,7 @@ public extension UIControl {
     }
 
     /// 点击（`.touchUpInside`）。
-    var dy_tap: ControlEvent<Void> {
+    var dy_tapPublisher: ControlEvent<Void> {
         let publisher = SubscribePublisher<Void> { (subscriber: AnySubscriber<Void, Never>) in
             let target = ClosureTarget {
                 _ = subscriber.receive(())
@@ -36,7 +36,7 @@ public extension UIControl {
     }
 
     /// 值变化（`.valueChanged`），发出 `UIControl` 自身。
-    var dy_valueChanged: ControlEvent<UIControl> {
+    var dy_valueChangedPublisher: ControlEvent<UIControl> {
         dy_publisher(for: .valueChanged)
     }
 }

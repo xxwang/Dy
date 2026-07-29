@@ -86,42 +86,42 @@ public extension UIScrollView {
     }
 
     /// 滚动中（contentOffset 变化）
-    var dy_didScroll: ControlEvent<Void> {
+    var dy_didScrollPublisher: ControlEvent<Void> {
         ControlEvent(cc_delegateProxy.didScroll.eraseToAnyPublisher())
     }
 
     /// 即将开始拖拽
-    var dy_willBeginDragging: ControlEvent<Void> {
+    var dy_willBeginDraggingPublisher: ControlEvent<Void> {
         ControlEvent(cc_delegateProxy.willBeginDragging.eraseToAnyPublisher())
     }
 
     /// 结束拖拽（含是否将继续减速）
-    var dy_didEndDragging: ControlEvent<Void> {
+    var dy_didEndDraggingPublisher: ControlEvent<Void> {
         ControlEvent(cc_delegateProxy.didEndDragging.eraseToAnyPublisher())
     }
 
     /// 即将开始减速
-    var dy_willBeginDecelerating: ControlEvent<Void> {
+    var dy_willBeginDeceleratingPublisher: ControlEvent<Void> {
         ControlEvent(cc_delegateProxy.willBeginDecelerating.eraseToAnyPublisher())
     }
 
     /// 结束减速
-    var dy_didEndDecelerating: ControlEvent<Void> {
+    var dy_didEndDeceleratingPublisher: ControlEvent<Void> {
         ControlEvent(cc_delegateProxy.didEndDecelerating.eraseToAnyPublisher())
     }
 
     /// 滚动动画结束
-    var dy_didEndScrollingAnimation: ControlEvent<Void> {
+    var dy_didEndScrollingAnimationPublisher: ControlEvent<Void> {
         ControlEvent(cc_delegateProxy.didEndScrollingAnimation.eraseToAnyPublisher())
     }
 
     /// 缩放中
-    var dy_didZoom: ControlEvent<Void> {
+    var dy_didZoomPublisher: ControlEvent<Void> {
         ControlEvent(cc_delegateProxy.didZoom.eraseToAnyPublisher())
     }
 
     /// 调整内容缩进变化
-    var dy_didChangeAdjustedContentInset: ControlEvent<Void> {
+    var dy_didChangeAdjustedContentInsetPublisher: ControlEvent<Void> {
         ControlEvent(cc_delegateProxy.didChangeAdjustedContentInset.eraseToAnyPublisher())
     }
 }

@@ -42,13 +42,13 @@ public extension UIView {
     // MARK: 具体手势
 
     /// 点击手势
-    var dy_tapGesture: ControlEvent<UITapGestureRecognizer> {
+    var dy_tapGesturePublisher: ControlEvent<UITapGestureRecognizer> {
         isUserInteractionEnabled = true
         return cc_event(cc_cachedGesture(key: "tap") { UITapGestureRecognizer() })
     }
 
     /// 轻扫手势（可指定方向，不同方向各自缓存）
-    func dy_swipeGesture(_ direction: UISwipeGestureRecognizer.Direction = .right) -> ControlEvent<UISwipeGestureRecognizer> {
+    func dy_swipeGesturePublisher(_ direction: UISwipeGestureRecognizer.Direction = .right) -> ControlEvent<UISwipeGestureRecognizer> {
         isUserInteractionEnabled = true
         return cc_event(cc_cachedGesture(key: "swipe-\(direction.rawValue)") {
             let recognizer = UISwipeGestureRecognizer()
@@ -58,31 +58,31 @@ public extension UIView {
     }
 
     /// 长按手势
-    var dy_longPressGesture: ControlEvent<UILongPressGestureRecognizer> {
+    var dy_longPressGesturePublisher: ControlEvent<UILongPressGestureRecognizer> {
         isUserInteractionEnabled = true
         return cc_event(cc_cachedGesture(key: "longPress") { UILongPressGestureRecognizer() })
     }
 
     /// 拖动手势
-    var dy_panGesture: ControlEvent<UIPanGestureRecognizer> {
+    var dy_panGesturePublisher: ControlEvent<UIPanGestureRecognizer> {
         isUserInteractionEnabled = true
         return cc_event(cc_cachedGesture(key: "pan") { UIPanGestureRecognizer() })
     }
 
     /// 捏合手势
-    var dy_pinchGesture: ControlEvent<UIPinchGestureRecognizer> {
+    var dy_pinchGesturePublisher: ControlEvent<UIPinchGestureRecognizer> {
         isUserInteractionEnabled = true
         return cc_event(cc_cachedGesture(key: "pinch") { UIPinchGestureRecognizer() })
     }
 
     /// 旋转手势
-    var dy_rotationGesture: ControlEvent<UIRotationGestureRecognizer> {
+    var dy_rotationGesturePublisher: ControlEvent<UIRotationGestureRecognizer> {
         isUserInteractionEnabled = true
         return cc_event(cc_cachedGesture(key: "rotation") { UIRotationGestureRecognizer() })
     }
 
     /// 屏幕边缘拖动手势
-    var dy_screenEdgePanGesture: ControlEvent<UIScreenEdgePanGestureRecognizer> {
+    var dy_screenEdgePanGesturePublisher: ControlEvent<UIScreenEdgePanGestureRecognizer> {
         isUserInteractionEnabled = true
         return cc_event(cc_cachedGesture(key: "screenEdgePan") { UIScreenEdgePanGestureRecognizer() })
     }

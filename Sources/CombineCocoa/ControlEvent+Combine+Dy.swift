@@ -10,7 +10,7 @@ import UIKit
 ///
 /// 例：
 /// ```swift
-/// button.dy_tap
+/// button.dy_tapPublisher
 ///     .sink { print("tapped") }
 ///     .store(in: &cancellables)
 /// ```

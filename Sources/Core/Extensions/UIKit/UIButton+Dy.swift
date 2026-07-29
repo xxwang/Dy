@@ -356,9 +356,19 @@ public extension UIButton {
     ///   - state: 按钮状态,默认为 `.normal`
     /// - Returns: `Self`
     @discardableResult
-    func dy_backgroundColor(_ color: UIColor, for state: UIControl.State = .normal) -> Self {
+    func dy_backgroundImage(_ color: UIColor, for state: UIControl.State = .normal) -> Self {
         let image = UIImage(color: color)
         self.setBackgroundImage(image, for: state)
+        return self
+    }
+
+    /// 设置按钮的纯色背景
+    /// - Parameters:
+    ///   - color: 背景颜色
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_backgroundColor(_ color: UIColor) -> Self {
+        self.backgroundColor = color
         return self
     }
 }
