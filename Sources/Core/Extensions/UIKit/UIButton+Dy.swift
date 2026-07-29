@@ -340,24 +340,45 @@ public extension UIButton {
     }
 
     /// 设置按钮在指定状态下的背景图片
+    ///
+    /// - Note: iOS 15+ 且按钮使用了 `UIButton.Configuration`(如 `DyFactory` 创建的按钮)时,
+    ///   传统的 `setBackgroundImage(_:for:)` 会被 `configuration.background` 覆盖而无效,
+    ///   此方法会自动改走配置路径。
     /// - Parameters:
     ///   - image: 背景图片,可为 `nil` 清除背景
     ///   - state: 按钮状态,默认为 `.normal`
     /// - Returns: `Self`
     @discardableResult
     func dy_backgroundImage(_ image: UIImage?, for state: UIControl.State = .normal) -> Self {
+        if #available(iOS 15.0, *), var configuration = self.configuration {
+            // 配置型按钮:setBackgroundImage 会被 configuration.background 覆盖,需走配置路径
+            configuration.background.image = image
+            self.configuration = configuration
+            return self
+        }
         self.setBackgroundImage(image, for: state)
         return self
     }
 
     /// 设置按钮在指定状态下的纯色背景(通过生成纯色图片实现)
+    ///
+    /// - Note: iOS 15+ 且按钮使用了 `UIButton.Configuration`(如 `DyFactory` 创建的按钮)时,
+    ///   传统的 `setBackgroundImage(_:for:)` 会被 `configuration.background` 覆盖而无效,
+    ///   此方法会自动改走配置路径(设置 `configuration.background.backgroundColor`)。
     /// - Parameters:
     ///   - color: 背景颜色
     ///   - state: 按钮状态,默认为 `.normal`
     /// - Returns: `Self`
     @discardableResult
     func dy_backgroundImage(_ color: UIColor, for state: UIControl.State = .normal) -> Self {
-        let image = UIImage(color: color)
+        if #available(iOS 15.0, *), var configuration = self.configuration {
+            // 配置型按钮:setBackgroundImage 会被 configuration.background 覆盖,需走配置路径
+            configuration.background.backgroundColor = color
+            self.configuration = configuration
+            return self
+        }
+        // 传统按钮(iOS 13/14,或未使用 configuration 的按钮):生成纯色图片作背景
+        guard let image = UIImage(color: color) else { return self }
         self.setBackgroundImage(image, for: state)
         return self
     }
