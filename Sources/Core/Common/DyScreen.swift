@@ -1,7 +1,6 @@
 import UIKit
 
 /// 屏幕尺寸信息
-/// 标注为 ``@unchecked Sendable`` 而非自动 ``Sendable``，
 /// 因为包含可通过 `setupSketch` 修改的可变静态属性 `sketchSize`，
 /// 读写通过 `NSLock` 保护。
 public final class DyScreen {
@@ -23,7 +22,7 @@ public final class DyScreen {
 public extension DyScreen {
     /// 当前主屏幕的边界,会随设备旋转动态变化
     static var screenBounds: CGRect {
-        if #available(iOS 16.0, *) {
+        if #available(iOS 13.0, *) {
             let scene = UIApplication.shared.connectedScenes
                 .first { $0.activationState == .foregroundActive } as? UIWindowScene
             return scene?.screen.bounds ?? UIScreen.main.bounds
@@ -48,7 +47,7 @@ public extension DyScreen {
 
     /// 屏幕缩放
     static var screenScale: CGFloat {
-        if #available(iOS 16.0, *) {
+        if #available(iOS 13.0, *) {
             let scene = UIApplication.shared.connectedScenes
                 .first { $0.activationState == .foregroundActive } as? UIWindowScene
             return scene?.screen.scale ?? UIScreen.main.scale
@@ -162,9 +161,9 @@ public extension DyScreen {
 // MARK: - 屏幕捕获检测
 public extension DyScreen {
     /// 当前是否正在录屏或投屏
-    /// iOS 16+ 优先使用 Scene API; 低版本回退到 UIScreen.main
+    /// iOS 11+ 优先使用 Scene API; 低版本回退到 UIScreen.main
     static var isCaptured: Bool {
-        if #available(iOS 16.0, *) {
+        if #available(iOS 11.0, *) {
             let scene = UIApplication.shared.connectedScenes
                 .first { $0.activationState == .foregroundActive } as? UIWindowScene
             return scene?.screen.isCaptured ?? false

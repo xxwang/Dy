@@ -53,9 +53,9 @@ public extension BinaryInteger {
         NSDecimalNumber(value: Double(self))
     }
 
-    /// 转换为 `Decimal`
+    /// 转换为 `Decimal`(经字符串中转,避免 `Decimal(Double(self))` 对大整数(>2^53)的精度丢失)
     func dy_toDecimal() -> Decimal {
-        Decimal(Double(self))
+        Decimal(string: String(self)) ?? .zero
     }
 
     /// 转换为十进制字符串表示

@@ -152,7 +152,10 @@ public extension DyQueue {
     ) -> DispatchSourceTimer {
         let timer = DispatchSource.makeTimerSource(queue: .main)
         timer.schedule(deadline: .now(), repeating: interval)
-        timer.setEventHandler { handler(timer) }
+        timer.setEventHandler { [weak timer] in
+            guard let timer else { return }
+            handler(timer)
+        }
         timer.resume()
         return timer
     }
@@ -189,7 +192,8 @@ public extension DyQueue {
         var remaining = count
 
         timer.schedule(deadline: .now(), repeating: interval)
-        timer.setEventHandler {
+        timer.setEventHandler { [weak timer] in
+            guard let timer else { return }
             remaining -= 1
             handler(timer, remaining)
             if remaining <= 0 {

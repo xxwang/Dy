@@ -2,6 +2,8 @@ import Foundation
 
 public extension RangeExpression where Bound == Int {
     /// 将区间转换为包含所有整数的数组
+    /// - Note: 仅支持有限区间。开放区间(如 `1...`、`..<Int.max`)元素数量无界,
+    ///   超出安全上限(1000 万)时返回空数组,避免一次性分配过量内存导致崩溃。
     /// - Returns: 区间内所有整数构成的数组
     ///
     /// - Example:
@@ -11,6 +13,8 @@ public extension RangeExpression where Bound == Int {
     ///   ```
     var dy_collect: [Int] {
         let bounds = self.relative(to: Int.min ..< Int.max)
+        let count = bounds.upperBound - bounds.lowerBound
+        guard count > 0, count <= 10000000 else { return [] }
         return Array(bounds.lowerBound ..< bounds.upperBound)
     }
 

@@ -104,7 +104,7 @@ extension DyConsoleDestination: DyLogDestination {
             os_log(.info, log: osLog, "%{public}@", output)
         case .warn:
             os_log(.default, log: osLog, "%{public}@", output)
-        case .err:
+        case .error:
             os_log(.error, log: osLog, "%{public}@", output)
         case .fatal:
             os_log(.fault, log: osLog, "%{public}@", output)

@@ -12,7 +12,7 @@ public final class DyPlist: @unchecked Sendable {
 // MARK: - 读写
 public extension DyPlist {
     /// 从`URL`指向的`.plist`文件中读取数据
-    /// - Parameter url: 指向`.plis`文件地址
+    /// - Parameter url: 指向`.plist`文件地址
     /// - Returns: `Any?`
     func read(from url: URL) -> Any? {
         guard url.pathExtension.lowercased() == "plist",

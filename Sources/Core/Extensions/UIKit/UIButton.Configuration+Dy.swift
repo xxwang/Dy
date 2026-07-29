@@ -110,7 +110,7 @@ public extension UIButton.Configuration {
     /// - Parameter attributedTitle: 属性标题
     /// - Returns: `Self`
     @discardableResult
-    mutating func attributedTitle(_ attributedTitle: AttributedString?) -> Self {
+    mutating func dy_attributedTitle(_ attributedTitle: AttributedString?) -> Self {
         var configuration = self
         configuration.attributedTitle = attributedTitle
         self = configuration
@@ -121,7 +121,7 @@ public extension UIButton.Configuration {
     /// - Parameter attributedSubtitle: 属性副标题
     /// - Returns: `Self`
     @discardableResult
-    mutating func attributedSubtitle(_ attributedSubtitle: AttributedString?) -> Self {
+    mutating func dy_attributedSubtitle(_ attributedSubtitle: AttributedString?) -> Self {
         var configuration = self
         configuration.attributedSubtitle = attributedSubtitle
         self = configuration
@@ -132,7 +132,7 @@ public extension UIButton.Configuration {
     /// - Parameter imagePlacement: 图标位置
     /// - Returns: `Self`
     @discardableResult
-    mutating func imagePlacement(_ imagePlacement: NSDirectionalRectEdge) -> Self {
+    mutating func dy_imagePlacement(_ imagePlacement: NSDirectionalRectEdge) -> Self {
         var configuration = self
         configuration.imagePlacement = imagePlacement
         self = configuration
@@ -143,7 +143,7 @@ public extension UIButton.Configuration {
     /// - Parameter contentInsets: 间距
     /// - Returns: `Self`
     @discardableResult
-    mutating func contentInsets(_ contentInsets: NSDirectionalEdgeInsets) -> Self {
+    mutating func dy_contentInsets(_ contentInsets: NSDirectionalEdgeInsets) -> Self {
         var configuration = self
         configuration.contentInsets = contentInsets
         self = configuration
@@ -154,7 +154,7 @@ public extension UIButton.Configuration {
     /// - Parameter cornerStyle: 圆角样式
     /// - Returns: `Self`
     @discardableResult
-    mutating func cornerStyle(_ cornerStyle: UIButton.Configuration.CornerStyle) -> Self {
+    mutating func dy_cornerStyle(_ cornerStyle: UIButton.Configuration.CornerStyle) -> Self {
         var configuration = self
         configuration.cornerStyle = cornerStyle
         self = configuration
@@ -165,7 +165,7 @@ public extension UIButton.Configuration {
     /// - Parameter strokeColor: 边框颜色
     /// - Returns: `Self`
     @discardableResult
-    mutating func backgroundStrokeColor(_ strokeColor: UIColor?) -> Self {
+    mutating func dy_backgroundStrokeColor(_ strokeColor: UIColor?) -> Self {
         var configuration = self
         configuration.background.strokeColor = strokeColor
         self = configuration
@@ -176,7 +176,7 @@ public extension UIButton.Configuration {
     /// - Parameter strokeWidth: 边框宽度
     /// - Returns: `Self`
     @discardableResult
-    mutating func backgroundStrokeWidth(_ strokeWidth: CGFloat) -> Self {
+    mutating func dy_backgroundStrokeWidth(_ strokeWidth: CGFloat) -> Self {
         var configuration = self
         configuration.background.strokeWidth = strokeWidth
         self = configuration

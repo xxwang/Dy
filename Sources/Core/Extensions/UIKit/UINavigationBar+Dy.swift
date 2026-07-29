@@ -23,7 +23,7 @@ public extension UINavigationBar {
             .dy_backgroundColor(background)
             .dy_barTintColor(background)
             .dy_backgroundImage(UIImage())
-            .dy_tintColor(tintColor)
+            .dy_tintColor(text)
             .dy_titleTextAttributes([.foregroundColor: text])
     }
 }

@@ -24,15 +24,29 @@ open class DyWebViewController: DyViewController {
 
     // MARK: - 脚本消息处理器管理(iOS 13 安全)
 
+    /// 弱引用转发脚本消息处理器:打破 `WKUserContentController` 强引用 handler 造成的循环引用
+    /// (`WKUserContentController` 会强引用其添加的 handler,若直接传入 `self` 则
+    /// `self → userContentController → self` 形成循环,导致 `deinit` 永不触发、handler 永不被移除)。
+    private class WeakScriptMessageHandler: NSObject, WKScriptMessageHandler {
+        weak var target: WKScriptMessageHandler?
+        init(_ target: WKScriptMessageHandler) {
+            self.target = target
+        }
+
+        func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+            target?.userContentController(userContentController, didReceive: message)
+        }
+    }
+
     /// 已注册脚本消息处理器名称,用于在 deinit 时(尤其 iOS 13)逐个移除,避免 WKWebView 强引用导致的内存泄漏
     private var dy_scriptMessageHandlerNames: Set<String> = []
 
     /// 注册脚本消息处理器(自动记录名称,deinit 时统一清理)
     /// - Parameters:
-    ///   - handler: 消息处理器(通常为 `self`)
+    ///   - handler: 消息处理器(通常为 `self`);内部以弱引用包装,不会因此持有 `self`
     ///   - name: 处理器名称
     open func dy_addScriptMessageHandler(_ handler: WKScriptMessageHandler, name: String) {
-        userContentController.add(handler, name: name)
+        userContentController.add(WeakScriptMessageHandler(handler), name: name)
         dy_scriptMessageHandlerNames.insert(name)
     }
 
@@ -44,10 +58,11 @@ open class DyWebViewController: DyViewController {
     }
 
     deinit {
+        // handler 已通过 WeakScriptMessageHandler 弱引用转发,不会阻止本对象释放,deinit 可正常触发
         if #available(iOS 14.0, *) {
             self.userContentController.removeAllScriptMessageHandlers()
         } else {
-            // iOS 13 无 removeAllScriptMessageHandlers,逐个移除以打破 WKWebView 对 VC 的强引用
+            // iOS 13 无 removeAllScriptMessageHandlers,逐个移除
             for name in dy_scriptMessageHandlerNames {
                 self.userContentController.removeScriptMessageHandler(forName: name)
             }

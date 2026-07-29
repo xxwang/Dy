@@ -1226,16 +1226,15 @@ public extension UIView {
     /// 添加拖动手势(平移)
     /// - Warning: 闭包被内部手势识别器**强引用**。若闭包内使用 `self`，
     ///   请使用 `[weak self]` 避免循环引用泄漏。
-    /// - Parameter block: 手势触发时的回调(识别时持续回调)
+    /// - Parameter block: 手势进行中持续回调(began/changed/ended 各触发一次)
     /// - Returns: `Self`
     @discardableResult
     func dy_onPanGestureRecognizer(_ block: @escaping DyAction1<UIPanGestureRecognizer>) -> Self {
         let pan = UIPanGestureRecognizer.dy_panGestureRecognizer()
-            .dy_onRecognized { recognizer in
-                if let pan = recognizer as? UIPanGestureRecognizer {
-                    block(pan)
-                }
-            }
+        pan.dy_onStateChanged { [weak pan] _ in
+            guard let pan else { return }
+            block(pan)
+        }
         return self.dy_addGestureRecognizer(pan)
     }
 
@@ -1282,32 +1281,30 @@ public extension UIView {
     /// 添加捏合手势(用于缩放)
     /// - Warning: 闭包被内部手势识别器**强引用**。若闭包内使用 `self`，
     ///   请使用 `[weak self]` 避免循环引用泄漏。
-    /// - Parameter block: 手势触发时回调
+    /// - Parameter block: 手势进行中持续回调(began/changed/ended 各触发一次)
     /// - Returns: `Self`
     @discardableResult
     func dy_onPinchGestureRecognizer(_ block: @escaping DyAction1<UIPinchGestureRecognizer>) -> Self {
         let pinch = UIPinchGestureRecognizer.dy_pinchGestureRecognizer()
-            .dy_onRecognized { recognizer in
-                if let pinch = recognizer as? UIPinchGestureRecognizer {
-                    block(pinch)
-                }
-            }
+        pinch.dy_onStateChanged { [weak pinch] _ in
+            guard let pinch else { return }
+            block(pinch)
+        }
         return self.dy_addGestureRecognizer(pinch)
     }
 
     /// 添加旋转手势
     /// - Warning: 闭包被内部手势识别器**强引用**。若闭包内使用 `self`，
     ///   请使用 `[weak self]` 避免循环引用泄漏。
-    /// - Parameter block: 手势触发时回调
+    /// - Parameter block: 手势进行中持续回调(began/changed/ended 各触发一次)
     /// - Returns: `Self`
     @discardableResult
     func dy_onRotationGestureRecognizer(_ block: @escaping DyAction1<UIRotationGestureRecognizer>) -> Self {
         let rotation = UIRotationGestureRecognizer.dy_rotationGestureRecognizer()
-            .dy_onRecognized { recognizer in
-                if let rotation = recognizer as? UIRotationGestureRecognizer {
-                    block(rotation)
-                }
-            }
+        rotation.dy_onStateChanged { [weak rotation] _ in
+            guard let rotation else { return }
+            block(rotation)
+        }
         return self.dy_addGestureRecognizer(rotation)
     }
 }

@@ -68,7 +68,6 @@ public extension UIScrollView {
             return nil
         }
 
-        UIGraphicsEndImageContext()
         return image.dy_compress(qualityRange: options.qualityRange)
     }
 
@@ -83,6 +82,10 @@ public extension UIScrollView {
 
         let originalOffset = contentOffset
         let originalShowsIndicators = (showsHorizontalScrollIndicator, showsVerticalScrollIndicator)
+        func restoreIndicators() {
+            showsHorizontalScrollIndicator = originalShowsIndicators.0
+            showsVerticalScrollIndicator = originalShowsIndicators.1
+        }
         if !options.showsScrollIndicators {
             showsHorizontalScrollIndicator = false
             showsVerticalScrollIndicator = false
@@ -97,35 +100,28 @@ public extension UIScrollView {
         }
 
         UIGraphicsBeginImageContextWithOptions(totalSize, options.opaque, scale)
-        defer {
-            if options.releaseContextImmediately {
-                UIGraphicsEndImageContext()
-            }
-            showsHorizontalScrollIndicator = originalShowsIndicators.0
-            showsVerticalScrollIndicator = originalShowsIndicators.1
-            setContentOffset(originalOffset, animated: false)
-        }
-
         guard let context = UIGraphicsGetCurrentContext() else {
             debugPrint("截图失败: 无法获取图形上下文")
+            restoreIndicators()
+            setContentOffset(originalOffset, animated: false)
             completion(nil)
             return
         }
 
-        // 分页渲染(避免内存问题)
+        // 分页渲染(避免一次性绘制过大内容导致内存峰值)
         let pageSize = bounds.size
         let totalPages = Int(ceil(totalSize.height / pageSize.height))
 
+        /// 图形上下文须在整个分页渲染完成前保持打开,否则异步渲染会拿到已关闭的上下文得到空白图
         func dy_renderPage(index: Int) {
             let yOffset = CGFloat(index) * pageSize.height
             setContentOffset(CGPoint(x: 0, y: yOffset), animated: false)
 
+            // 延迟一帧,等待布局/绘制刷新后再渲染当前页
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                 context.saveGState()
                 context.translateBy(x: 0, y: yOffset)
-
                 self.layer.render(in: context)
-
                 context.restoreGState()
 
                 if index < totalPages - 1 {
@@ -133,6 +129,8 @@ public extension UIScrollView {
                 } else {
                     let image = UIGraphicsGetImageFromCurrentImageContext()
                     UIGraphicsEndImageContext()
+                    restoreIndicators()
+                    self.setContentOffset(originalOffset, animated: false)
                     completion(image?.dy_compress(qualityRange: options.qualityRange))
                 }
             }

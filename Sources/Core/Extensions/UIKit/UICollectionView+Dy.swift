@@ -1,14 +1,18 @@
 import UIKit
 
+/// 关联属性键:记录 `dy_allowMoveItem` 添加的长按手势,供 `dy_disableMoveItem` 精准移除
+private var dy_moveItemGestureKey: UInt8 = 0
+
 // MARK: - 常用方法
 public extension UICollectionView {
     /// 启用长按拖拽移动 `Item` 功能(自动添加长按手势并处理交互式移动)
     func dy_allowMoveItem() {
-        self.dy_onLongPressGestureRecognizer { [weak self] recognizer in
-            guard let self else { return }
+        let longPress = UILongPressGestureRecognizer()
+        longPress.dy_onStateChanged { [weak self, weak longPress] state in
+            guard let self, let recognizer = longPress else { return }
 
             let location = recognizer.location(in: self)
-            switch recognizer.state {
+            switch state {
             case .began:
                 if let indexPath = self.indexPathForItem(at: location) {
                     self.beginInteractiveMovementForItem(at: indexPath)
@@ -21,13 +25,16 @@ public extension UICollectionView {
                 self.cancelInteractiveMovement()
             }
         }
+        self.dy_addGestureRecognizer(longPress)
+        self.dy_setAssociatedObject(longPress, forKey: &dy_moveItemGestureKey)
     }
 
-    /// 禁用拖拽移动功能(移除所有长按手势)
+    /// 禁用拖拽移动功能(仅移除 `dy_allowMoveItem` 添加的长按手势,不影响其它长按手势)
     func dy_disableMoveItem() {
-        self.gestureRecognizers?
-            .compactMap { $0 as? UILongPressGestureRecognizer }
-            .forEach(removeGestureRecognizer)
+        if let gesture = self.dy_getAssociatedObject(forKey: &dy_moveItemGestureKey) as? UILongPressGestureRecognizer {
+            self.removeGestureRecognizer(gesture)
+            self.dy_setAssociatedObject(nil, forKey: &dy_moveItemGestureKey)
+        }
     }
 }
 

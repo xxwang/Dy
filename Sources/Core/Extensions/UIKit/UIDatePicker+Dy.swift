@@ -3,7 +3,7 @@ import UIKit
 // MARK: - 链式设置属性
 public extension UIDatePicker {
     /// 设置时区
-    /// - Parameter timeZone: 时间
+    /// - Parameter timeZone: 时区
     /// - Returns: `Self`
     @discardableResult
     func dy_timeZone(_ timeZone: TimeZone) -> Self {

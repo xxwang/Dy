@@ -21,7 +21,7 @@ public extension UIImage.SymbolConfiguration {
     ///   - hierarchicalColor: 分层颜色
     ///   - paletteColors: 调色板颜色数组
     /// - Returns: `UIImage.SymbolConfiguration`
-    static func custom(
+    static func dy_custom(
         font: UIFont? = nil,
         textStyle: UIFont.TextStyle? = nil,
         pointSize: CGFloat? = nil,

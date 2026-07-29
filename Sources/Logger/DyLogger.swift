@@ -87,8 +87,8 @@ public extension DyLogger {
     }
 
     /// 错误
-    func err(_ items: Any..., file: String = #file, function: String = #function, line: Int = #line) {
-        self.log(file: file, function: function, line: line, date: Date(), level: .err, items: items)
+    func error(_ items: Any..., file: String = #file, function: String = #function, line: Int = #line) {
+        self.log(file: file, function: function, line: line, date: Date(), level: .error, items: items)
     }
 
     /// 致命错误
@@ -114,8 +114,8 @@ public func dy_logWarn(_ items: Any..., file: String = #file, function: String =
 }
 
 /// 错误
-public func dy_logErr(_ items: Any..., file: String = #file, function: String = #function, line: Int = #line) {
-    DyLogger.shared.err(items, file: file, function: function, line: line)
+public func dy_logError(_ items: Any..., file: String = #file, function: String = #function, line: Int = #line) {
+    DyLogger.shared.error(items, file: file, function: function, line: line)
 }
 
 /// 致命错误

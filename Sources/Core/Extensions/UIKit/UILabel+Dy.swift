@@ -636,10 +636,10 @@ public extension UILabel {
     ///
     /// - Example:
     ///
-    ///     label.dy_attributedBliqueness(0.3, for: NSRange(location: 0, length: 5))
+    ///     label.dy_attributedObliqueness(0.3, for: NSRange(location: 0, length: 5))
     ///
     @discardableResult
-    func dy_attributedBliqueness(_ inclination: Float = 0, for range: NSRange) -> Self {
+    func dy_attributedObliqueness(_ inclination: Float = 0, for range: NSRange) -> Self {
         self.attributedText = self.attributedText?
             .dy_toMutable()
             .dy_obliqueness(inclination, for: range)

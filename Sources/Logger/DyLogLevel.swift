@@ -9,7 +9,7 @@ public enum DyLogLevel: Int, Comparable, CustomStringConvertible, CaseIterable {
     /// 警告
     case warn = 3
     /// 错误
-    case err = 4
+    case error = 4
     /// 致命错误
     case fatal = 5
 
@@ -23,7 +23,7 @@ public enum DyLogLevel: Int, Comparable, CustomStringConvertible, CaseIterable {
         case .debug: return "👻"
         case .info: return "🌸"
         case .warn: return "⚠️"
-        case .err: return "❌"
+        case .error: return "❌"
         case .fatal: return "☠️"
         }
     }
@@ -33,7 +33,7 @@ public enum DyLogLevel: Int, Comparable, CustomStringConvertible, CaseIterable {
         case .debug: return "调试"
         case .info: return "正常"
         case .warn: return "警告"
-        case .err: return "错误"
+        case .error: return "错误"
         case .fatal: return "致命"
         }
     }

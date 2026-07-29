@@ -453,14 +453,15 @@ public extension UIImage {
     ///     let fixedImage = capturedImage.dy_fixOrientation()
     ///
     func dy_fixOrientation() -> UIImage {
-        guard imageOrientation != .up,
-              let _ = self.cgImage
-        else {
-            return self
-        }
-
-        // 使用 orientation-based transform
-        return dy_apply(orientation: .up) ?? self
+        guard imageOrientation != .up, let _ = self.cgImage else { return self }
+        // 通过 `draw(in:)` 让 UIKit 自动应用 `imageOrientation` 变换,将方向"烘焙"进像素,
+        // 得到一张 .up 的图片(直接对 .up 调用 dy_apply 会被短路返回原图,无法修正方向)
+        let drawRect = CGRect(origin: .zero, size: size)
+        UIGraphicsBeginImageContextWithOptions(size, false, scale)
+        self.draw(in: drawRect)
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return image ?? self
     }
 
     /// 按角度旋转图片(正数顺时针,负数逆时针)
@@ -1798,7 +1799,7 @@ public extension UIImage {
             return 0.1
         }
 
-        // 注意：GIF 规范中 delay time 单位为 1/100 秒
+        // 注意：GIF 规范中 delay time 原始单位为 1/100 秒,ImageIO 读取时已转换为秒返回
         if let unclamped = gifDict[kCGImagePropertyGIFUnclampedDelayTime as String] as? Double, unclamped > 0 {
             return unclamped
         }

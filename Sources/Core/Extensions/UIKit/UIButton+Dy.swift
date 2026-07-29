@@ -1,5 +1,8 @@
 import UIKit
 
+/// 关联属性键:记录每个 `UIControl.Event` 上一次添加的 `UIAction`,便于更新时先移除旧的
+private var dy_registeredActionsKey: UInt8 = 0
+
 // MARK: - 属性
 public extension UIButton {
     /// 按钮的常用状态
@@ -145,7 +148,7 @@ public extension UIButton {
         return self
     }
 
-    /// 添加一个`UIAction`
+    /// 添加一个`UIAction`(重复调用同一事件会先移除旧 action,避免多次触发)
     /// - Parameters:
     ///   - action: `UIAction`中实际执行的闭包代码
     ///   - controlEvents: 事件类型
@@ -153,11 +156,16 @@ public extension UIButton {
     @available(iOS 14.0, *)
     @discardableResult
     func dy_addAction(_ action: @escaping DyAction1<UIAction>, for controlEvents: UIControl.Event = .touchUpInside) -> Self {
-        let action = UIAction { a in
+        var registry = self.dy_getAssociatedObject(forKey: &dy_registeredActionsKey) as? [UInt: UIAction] ?? [:]
+        if let existing = registry[controlEvents.rawValue] {
+            self.removeAction(existing, for: controlEvents)
+        }
+        let newAction = UIAction { a in
             action(a)
         }
-        self.removeAction(action, for: controlEvents)
-        self.addAction(action, for: controlEvents)
+        registry[controlEvents.rawValue] = newAction
+        self.dy_setAssociatedObject(registry, forKey: &dy_registeredActionsKey)
+        self.addAction(newAction, for: controlEvents)
         return self
     }
 

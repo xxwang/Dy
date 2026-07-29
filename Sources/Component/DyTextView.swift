@@ -90,7 +90,8 @@ open class DyTextView: UITextView {
 
     /// 根据内容决定是否隐藏占位文本
     open func updatePlaceholderVisibility() {
-        let isEmpty = (text?.isEmpty == true) && (attributedText?.string.isEmpty == true)
+        // `text`/`attributedText` 为 nil 时按"空"处理,避免空白状态占位符被隐藏
+        let isEmpty = (text?.isEmpty ?? true) && (attributedText?.string.isEmpty ?? true)
         placeholderLabel.isHidden = !isEmpty
     }
 }

@@ -78,8 +78,8 @@ public extension DyAlertView {
 
 // MARK: - 子类可重写方法
 @objc extension DyAlertView {
-    /// 设置UI (子类重写该方法)在子类中应该在该方法中,设置contentContainer的size
-    func setupUI() {
+    /// 设置UI (子类重写该方法)在子类中应该在该方法中,设置`contentContainer`的`size`
+    open func setupUI() {
         // 配置弹窗基础属性
         self.dy_addSubviews([
             self.shadeView,

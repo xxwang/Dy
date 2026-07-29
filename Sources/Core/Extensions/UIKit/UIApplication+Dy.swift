@@ -50,7 +50,7 @@ public extension UIApplication {
     /// - Parameters:
     /// - appId: 应用的`ID`
     func dy_openInBrowser(with appId: String) {
-        let urlString = "https://itunes.apple.com/cn/app/id\(appId)?mt=12"
+        let urlString = "https://itunes.apple.com/cn/app/id\(appId)?mt=8"
         guard let url = URL(string: urlString), UIApplication.shared.canOpenURL(url) else { return }
         self.open(url)
     }
