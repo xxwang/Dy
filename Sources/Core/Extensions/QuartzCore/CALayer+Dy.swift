@@ -202,7 +202,7 @@ public extension CALayer {
     /// - Parameter view: 目标视图
     /// - Returns: `Self`
     @discardableResult
-    func dy_addTo(_ view: UIView) -> Self {
+    func dy_add2(_ view: UIView) -> Self {
         view.layer.addSublayer(self)
         return self
     }
@@ -211,7 +211,7 @@ public extension CALayer {
     /// - Parameter layer: 目标图层
     /// - Returns: `Self`
     @discardableResult
-    func dy_addTo(_ layer: CALayer) -> Self {
+    func dy_add2(_ layer: CALayer) -> Self {
         layer.addSublayer(self)
         return self
     }

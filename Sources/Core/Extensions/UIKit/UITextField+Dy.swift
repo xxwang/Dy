@@ -20,10 +20,10 @@ public extension UITextField {
     /// - Example:
     ///   ```swift
     ///   let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(dismissKeyboard))
-    ///   textField.dy_addToolbar(items: [doneButton])
+    ///   textField.dy_add2olbar(items: [doneButton])
     ///   ```
     @discardableResult
-    func dy_addToolbar(items: [UIBarButtonItem]?, height: CGFloat = 44) -> UIToolbar {
+    func dy_add2olbar(items: [UIBarButtonItem]?, height: CGFloat = 44) -> UIToolbar {
         let toolbar = UIToolbar()
         toolbar.items = items
         toolbar.sizeToFit()

@@ -36,6 +36,15 @@ public extension UIRefreshControl {
 
 // MARK: - 链式方法(自定义)
 public extension UIRefreshControl {
+    
+    /// 将刷新控件添加到滚动视图或者其子类
+    /// - Parameter scrollView: 滚动视图或者其子类
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_add2(_ scrollView: UIScrollView) -> Self {
+        return self
+    }
+    
     /// 开始刷新
     /// - Parameters:
     ///   - scrollView: 所属的 UIScrollView(如 UITableView / UICollectionView)

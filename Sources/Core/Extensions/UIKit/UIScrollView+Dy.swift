@@ -142,6 +142,17 @@ public extension UIScrollView {
 
 // MARK: - 链式设置属性
 public extension UIScrollView {
+    
+    
+    /// 设置下拉刷新控件
+    /// - Parameter refreshControl: 下拉刷新控件
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_refreshControl(_ refreshControl: UIRefreshControl) -> Self {
+        self.refreshControl = refreshControl
+        return self
+    }
+    
     /// 设置滚动视图的代理
     ///
     /// - Parameter delegate: 遵循 `UIScrollViewDelegate` 协议的对象

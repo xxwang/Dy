@@ -286,6 +286,14 @@ import WebKit
     }
 }
 
+//MARK: - UIActivityIndicatorView
+@objc extension UIActivityIndicatorView {
+    /// 创建一个默认 `UIActivityIndicatorView` 实例
+    open class func dy_activityIndicatorView() -> UIActivityIndicatorView {
+        return UIActivityIndicatorView()
+    }
+}
+
 // MARK: - UIProgressView
 @objc extension UIProgressView {
     /// 创建一个默认 `UIProgressView` 实例

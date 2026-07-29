@@ -34,7 +34,7 @@ open class DyScrollViewController: DyViewController {
 
         // 内容容器
         self.contentView.dy_size(self.scrollView.dy_size)
-            .dy_addTo(self.scrollView)
+            .dy_add2(self.scrollView)
     }
 }
 

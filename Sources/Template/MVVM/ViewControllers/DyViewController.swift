@@ -43,7 +43,7 @@ open class DyViewController: UIViewController {
 
         // 添加导航条
         self.naview.dy_isHidden(self.navigationController == nil)
-            .dy_addTo(self.view)
+            .dy_add2(self.view)
             .dy_frame(CGRect(
                 x: 0,
                 y: 0,
