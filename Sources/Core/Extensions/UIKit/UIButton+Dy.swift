@@ -372,19 +372,17 @@ public extension UIButton {
     @discardableResult
     func dy_backgroundImage(_ color: UIColor, for state: UIControl.State = .normal) -> Self {
         if #available(iOS 15.0, *), var configuration = self.configuration {
-            // 配置型按钮:setBackgroundImage 会被 configuration 覆盖,必须走配置路径。
-            // 不同样式取色来源不同:
-            // - .plain/.gray/.borderless 看 background.backgroundColor
-            // - .filled/.tinted/.bordered* 看 baseBackgroundColor(样式据此派生填充色)
-            // 两个都设,覆盖 DyFactory 提供的全部样式。
             configuration.baseBackgroundColor = color
             configuration.background.backgroundColor = color
             self.configuration = configuration
             return self
         }
-        // 传统按钮(iOS 13/14,或未使用 configuration 的按钮):生成纯色图片作背景
-        guard let image = UIImage(color: color) else { return self }
-        self.setBackgroundImage(image, for: state)
+
+        if let image = UIImage(color: color)?.resizableImage(withCapInsets: .zero) {
+            self.setBackgroundImage(image, for: state)
+        } else {
+            self.backgroundColor = color
+        }
         return self
     }
 
