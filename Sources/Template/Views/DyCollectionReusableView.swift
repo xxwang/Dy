@@ -1,12 +1,12 @@
 import UIKit
 import Combine
+import DyCore
 
-open class DyCollectionReusableView: UICollectionReusableView, DySetupable {
+open class DyCollectionReusableView: UICollectionReusableView {
     public var cancellables = Set<AnyCancellable>()
 
     override public init(frame: CGRect) {
         super.init(frame: frame)
-        setupUI()
     }
 
     @available(*, unavailable)
@@ -22,3 +22,6 @@ open class DyCollectionReusableView: UICollectionReusableView, DySetupable {
         cancellables.removeAll()
     }
 }
+
+// MARK: - DySetupable
+@objc extension DyCollectionReusableView: DySetupable {}

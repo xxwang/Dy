@@ -8,6 +8,7 @@ let package = Package(
         .iOS(.v13),
     ],
     products: [
+        .library(name: "DyCombineCocoa", targets: ["DyCombineCocoa"]),
         .library(name: "DyCore", targets: ["DyCore"]),
         .library(name: "DyLogger", targets: ["DyLogger"]),
         .library(name: "DyComponent", targets: ["DyComponent"]),
@@ -15,6 +16,12 @@ let package = Package(
     ],
     targets: [
         .target(
+            name: "DyCombineCocoa",
+            path: "Sources/CombineCocoa",
+            swiftSettings: [
+                .define("SPM_MODE"),
+            ]
+        ), .target(
             name: "DyCore",
             path: "Sources/Core",
             swiftSettings: [

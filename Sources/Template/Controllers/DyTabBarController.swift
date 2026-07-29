@@ -1,31 +1,31 @@
 import UIKit
 import Combine
+import DyCore
 
 open class DyTabBarController: UITabBarController {
     public var cancellables = Set<AnyCancellable>()
 
     override open func viewDidLoad() {
         super.viewDidLoad()
-        setupUI()
     }
 
     deinit {
         cancellables.removeAll()
     }
+
+    override open func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+    }
 }
 
-// MARK: - 支持子类重写的方法
-@objc extension DyTabBarController {
+// MARK: - DySetupable
+@objc extension DyTabBarController: DySetupable {
     /// 控制器初始化样式
     open func setupUI() {
         self.dy_delegate(self) // 设置代理
             .dy_overrideUserInterfaceStyle(self.selectedViewController?.overrideUserInterfaceStyle ?? .light) // 设置UI样式
 
         self.view.dy_backgroundColor(.white) // 控制器背景色
-    }
-
-    override open func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
     }
 }
 

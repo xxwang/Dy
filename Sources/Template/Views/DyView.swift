@@ -2,12 +2,11 @@ import UIKit
 import Combine
 import DyCore
 
-open class DyView: UIView, DySetupable {
+open class DyView: UIView {
     public var cancellables = Set<AnyCancellable>()
 
     override public init(frame: CGRect) {
         super.init(frame: frame)
-        setupUI()
     }
 
     @available(*, unavailable)
@@ -23,3 +22,6 @@ open class DyView: UIView, DySetupable {
         cancellables.removeAll()
     }
 }
+
+// MARK: - DySetupable
+@objc extension DyView: DySetupable {}

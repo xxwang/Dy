@@ -14,7 +14,7 @@ open class DyScrollViewController: DyViewController {
     }
 }
 
-// MARK: - 支持子类重写的方法
+// MARK: - DySetupable
 @objc extension DyScrollViewController {
     /// 控制器初始化样式
     override open func setupUI() {
@@ -36,7 +36,10 @@ open class DyScrollViewController: DyViewController {
         self.contentView.dy_size(self.scrollView.dy_size)
             .dy_addTo(self.scrollView)
     }
+}
 
+// MARK: - 支持子类重写的方法
+@objc extension DyScrollViewController {
     /// 更新导航栏及受影响的其它view
     override open func updateNaview() {
         super.updateNaview()

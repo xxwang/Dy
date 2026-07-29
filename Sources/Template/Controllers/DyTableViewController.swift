@@ -12,7 +12,7 @@ open class DyTableViewController: DyViewController {
     }
 }
 
-// MARK: - 支持子类重写的方法
+// MARK: - DySetupable
 @objc extension DyTableViewController {
     /// 控制器初始化样式
     override open func setupUI() {
@@ -30,7 +30,10 @@ open class DyTableViewController: DyViewController {
             height: self.view.dy_height - DyScreen.navBarTotalHeight
         ))
     }
+}
 
+// MARK: - 支持子类重写的方法
+@objc extension DyTableViewController {
     /// 更新导航栏及受影响的其它view
     override open func updateNaview() {
         super.updateNaview()

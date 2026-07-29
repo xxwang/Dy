@@ -1,16 +1,12 @@
 import UIKit
 import Combine
+import DyCore
 
-open class DyTableViewCell: UITableViewCell, DySetupable {
+open class DyTableViewCell: UITableViewCell {
     public var cancellables = Set<AnyCancellable>()
 
     override public init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-
-        self.dy_selectionStyle(.none)
-            .dy_backgroundColor(.clear)
-
-        setupUI()
     }
 
     @available(*, unavailable)
@@ -20,5 +16,13 @@ open class DyTableViewCell: UITableViewCell, DySetupable {
 
     deinit {
         cancellables.removeAll()
+    }
+}
+
+// MARK: - DySetupable
+@objc extension DyTableViewCell: DySetupable {
+    open func setupUI() {
+        self.dy_selectionStyle(.none)
+            .dy_backgroundColor(.clear)
     }
 }

@@ -77,8 +77,8 @@ public extension DySheetView {
     }
 }
 
-// MARK: - 子类可重写方法
-@objc extension DySheetView {
+// MARK: - DySetupable
+@objc extension DySheetView: DySetupable {
     /// 设置UI (子类重写该方法)在子类中应该在该方法中,设置contentContainer的size
     open func setupUI() {
         // 添加子视图
@@ -103,7 +103,10 @@ public extension DySheetView {
             self.dismiss()
         }
     }
+}
 
+// MARK: - 子类可重写方法
+@objc extension DySheetView {
     /// 内容容器圆角（默认只作用于顶部）
     open func contentContainerCornerRadius() -> CGFloat {
         return 16

@@ -2,7 +2,7 @@ import UIKit
 import Combine
 import DyComponent
 
-open class DyViewController: UIViewController, DySetupable {
+open class DyViewController: UIViewController {
     public var cancellables = Set<AnyCancellable>()
 
     /// 是否允许侧滑返回
@@ -26,7 +26,6 @@ open class DyViewController: UIViewController, DySetupable {
 
     override open func viewDidLoad() {
         super.viewDidLoad()
-        setupUI()
     }
 
     deinit {
@@ -34,9 +33,9 @@ open class DyViewController: UIViewController, DySetupable {
     }
 }
 
-// MARK: - 支持子类重写的方法
-@objc extension DyViewController {
-    /// 控制器初始化样式
+// MARK: - DySetupable
+@objc extension DyViewController: DySetupable {
+    /// 配置UI
     open func setupUI() {
         self.dy_overrideUserInterfaceStyle(.light) // 设置界面样式
 
@@ -53,6 +52,21 @@ open class DyViewController: UIViewController, DySetupable {
             ))
     }
 
+    /// 绑定事件
+    open func bindEvents() {}
+
+    /// 绑定视图模型
+    open func bindViewModel() {}
+
+    /// 获取数据
+    open func fetchData() {}
+
+    /// 更新UI(绑定)数据
+    open func updateUI() {}
+}
+
+// MARK: - 支持子类重写的方法
+@objc extension DyViewController {
     /// 更新导航栏及受影响的其它view
     open func updateNaview() {
         self.naview.dy_frame(CGRect(

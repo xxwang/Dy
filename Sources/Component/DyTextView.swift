@@ -22,13 +22,13 @@ open class DyTextView: UITextView {
     override public init(frame: CGRect, textContainer: NSTextContainer?) {
         super.init(frame: frame, textContainer: textContainer)
         self.setupUI()
-        self.eventHandler()
+        self.bindEvents()
     }
 
     public required init?(coder: NSCoder) {
         super.init(coder: coder)
         self.setupUI()
-        self.eventHandler()
+        self.bindEvents()
     }
 
     deinit {
@@ -36,7 +36,8 @@ open class DyTextView: UITextView {
     }
 }
 
-@objc extension DyTextView {
+// MARK: - DySetupable
+@objc extension DyTextView: DySetupable {
     /// 设置UI
     open func setupUI() {
         // 添加占位文本标签
@@ -72,7 +73,7 @@ open class DyTextView: UITextView {
     }
 
     /// 事件处理
-    open func eventHandler() {
+    open func bindEvents() {
         // 精准监听自身文本变化：使用 KVO
         self.publisher(for: \.text, options: [.initial, .new])
             .sink { [weak self] _ in

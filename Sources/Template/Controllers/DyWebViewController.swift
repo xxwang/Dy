@@ -71,7 +71,7 @@ open class DyWebViewController: DyViewController {
     }
 }
 
-// MARK: - 支持子类重写的方法
+// MARK: - DySetupable
 @objc extension DyWebViewController {
     /// 控制器初始化样式
     override open func setupUI() {
@@ -90,7 +90,10 @@ open class DyWebViewController: DyViewController {
             height: self.view.dy_height - DyScreen.navBarTotalHeight
         ))
     }
+}
 
+// MARK: - 支持子类重写的方法
+@objc extension DyWebViewController {
     /// 更新导航栏及受影响的其它view
     override open func updateNaview() {
         super.updateNaview()

@@ -76,8 +76,8 @@ public extension DyAlertView {
     }
 }
 
-// MARK: - 子类可重写方法
-@objc extension DyAlertView {
+// MARK: - DySetupable
+@objc extension DyAlertView: DySetupable {
     /// 设置UI (子类重写该方法)在子类中应该在该方法中,设置`contentContainer`的`size`
     open func setupUI() {
         // 配置弹窗基础属性
@@ -103,7 +103,10 @@ public extension DyAlertView {
             self.dismiss()
         }
     }
+}
 
+// MARK: - 子类可重写方法
+@objc extension DyAlertView {
     /// 设置内容容器的圆角半径
     /// - Returns: 圆角值（单位：pt）
     open func contentContainerCornerRadius() -> CGFloat {

@@ -1,4 +1,5 @@
 import UIKit
+import DyCore
 
 open class DyNavigationController: UINavigationController {
     override open func viewDidLoad() {
@@ -7,8 +8,8 @@ open class DyNavigationController: UINavigationController {
     }
 }
 
-// MARK: - 支持子类重写的方法
-@objc extension DyNavigationController {
+// MARK: - DySetupable
+@objc extension DyNavigationController: DySetupable {
     /// 控制器初始化样式
     open func setupUI() {
         self.dy_overrideUserInterfaceStyle(self.topViewController?.overrideUserInterfaceStyle ?? .light) // 设置导航控制器样式
