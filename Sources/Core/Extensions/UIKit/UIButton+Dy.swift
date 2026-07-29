@@ -350,8 +350,9 @@ public extension UIButton {
     /// - Returns: `Self`
     @discardableResult
     func dy_backgroundImage(_ image: UIImage?, for state: UIControl.State = .normal) -> Self {
-        if #available(iOS 15.0, *), var configuration = self.configuration {
-            // 配置型按钮:setBackgroundImage 会被 configuration.background 覆盖,需走配置路径
+        if #available(iOS 15.0, *),
+           var configuration = self.configuration
+        {
             configuration.background.image = image
             self.configuration = configuration
             return self
@@ -371,7 +372,9 @@ public extension UIButton {
     /// - Returns: `Self`
     @discardableResult
     func dy_backgroundImage(_ color: UIColor, for state: UIControl.State = .normal) -> Self {
-        if #available(iOS 15.0, *), var configuration = self.configuration {
+        if #available(iOS 15.0, *),
+           var configuration = self.configuration
+        {
             configuration.baseBackgroundColor = color
             configuration.background.backgroundColor = color
             self.configuration = configuration
