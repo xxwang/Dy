@@ -20,35 +20,53 @@ public extension UIFont {
 
 // MARK: - 自定义字体
 public extension UIFont {
-    /// 返回支持`Dynamic Type`的 `PingFang` 字体
+   
+    /// 按字重构建指定大小的苹方基础字体
     /// - Parameters:
-    ///   - style: 文本样式（决定缩放基准）
+    ///   - size: 字体大小
+    ///   - weight: 字重
+    /// - Returns:（不含 `Dynamic Type `缩放）的字体
+    private static func dy_pingFangBaseFont(size: CGFloat, weight: UIFont.Weight) -> UIFont {
+        switch weight {
+        case .ultraLight: return UIFont(name: "PingFangSC-UltraLight", size: size) ?? UIFont.systemFont(ofSize: size, weight: weight)
+        case .thin: return UIFont(name: "PingFangSC-Thin", size: size) ?? UIFont.systemFont(ofSize: size, weight: weight)
+        case .light: return UIFont(name: "PingFangSC-Light", size: size) ?? UIFont.systemFont(ofSize: size, weight: weight)
+        case .regular: return UIFont(name: "PingFangSC-Regular", size: size) ?? UIFont.systemFont(ofSize: size, weight: weight)
+        case .medium: return UIFont(name: "PingFangSC-Medium", size: size) ?? UIFont.systemFont(ofSize: size, weight: weight)
+        case .semibold: return UIFont(name: "PingFangSC-Semibold", size: size) ?? UIFont.systemFont(ofSize: size, weight: weight)
+        default: return UIFont.systemFont(ofSize: size, weight: weight)
+        }
+    }
+
+    /// 返回支持 `Dynamic Type` 的 `PingFang` 字体（字号由文本样式决定）
+    /// - Parameters:
+    ///   - style: 文本样式（决定缩放基准字号）
     ///   - weight: 字重（`Regular, Medium, Semibold` 等）
     /// - Returns: 自动响应系统字体大小的 `UIFont`
     static func dy_pingFang(forTextStyle style: UIFont.TextStyle, weight: UIFont.Weight = .regular) -> UIFont {
-        // 获取对应字重的 PingFang 字体名
-        let fontName: String = switch weight {
-        case .ultraLight: "PingFangSC-UltraLight"
-        case .thin: "PingFangSC-Thin"
-        case .light: "PingFangSC-Light"
-        case .regular: "PingFangSC-Regular"
-        case .medium: "PingFangSC-Medium"
-        case .semibold: "PingFangSC-Semibold"
-        case .bold: "PingFangSC-Bold"
-        case .heavy: "PingFangSC-Heavy"
-        case .black: "PingFangSC-Heavy"
-        default: "PingFangSC-Regular"
-        }
-
-        // 创建基础字体（使用 TextStyle 的默认字号作为参考）
+        // 参考字号:取对应 TextStyle 的系统默认字号作为基准
         let baseFontSize = UIFont.preferredFont(forTextStyle: style).pointSize
-        guard let baseFont = UIFont(name: fontName, size: baseFontSize) else {
-            return UIFont.preferredFont(forTextStyle: style)
-        }
+        let baseFont = dy_pingFangBaseFont(size: baseFontSize, weight: weight)
+        return UIFontMetrics(forTextStyle: style).scaledFont(for: baseFont)
+    }
 
-        // 使用 UIFontMetrics 绑定到 Dynamic Type
-        let metrics = UIFontMetrics(forTextStyle: style)
+    /// 返回指定字号的 `PingFang` 字体（**固定字号，不参与 Dynamic Type 缩放**）
+    /// - Parameters:
+    ///   - size: 字号（pt），精确生效
+    ///   - weight: 字重
+    /// - Returns: 指定大小的苹方字体
+    static func dy_pingFang(size: CGFloat, weight: UIFont.Weight = .regular) -> UIFont {
+        dy_pingFangBaseFont(size: size, weight: weight)
+    }
 
-        return metrics.scaledFont(for: baseFont)
+    /// 返回指定字号、且支持 `Dynamic Type` 缩放的 `PingFang` 字体
+    /// - Parameters:
+    ///   - size: 字号（pt），作为 Dynamic Type 缩放的基准
+    ///   - textStyle: 文本样式，决定 Dynamic Type 的缩放曲线（如 `.body` 缩放更灵敏）
+    ///   - weight: 字重
+    /// - Returns: 自动响应系统字体大小的苹方字体
+    static func dy_pingFang(size: CGFloat, textStyle: UIFont.TextStyle, weight: UIFont.Weight = .regular) -> UIFont {
+        let baseFont = dy_pingFangBaseFont(size: size, weight: weight)
+        return UIFontMetrics(forTextStyle: textStyle).scaledFont(for: baseFont)
     }
 }
