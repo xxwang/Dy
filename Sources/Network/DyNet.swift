@@ -1,5 +1,5 @@
+@_exported import Alamofire
 import Foundation
-import Alamofire
 
 /// stub 行为（对标 Moya 的 `StubBehavior`）：用于单元测试时直接返回样例数据，跳过真实网络。
 public enum DyStub {
