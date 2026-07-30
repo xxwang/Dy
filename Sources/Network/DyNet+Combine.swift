@@ -2,6 +2,7 @@ import Combine
 import Foundation
 import Alamofire
 
+// MARK: - Combine 请求
 public extension DyNet {
     /// Combine 入口（原始响应）：返回 `AnyPublisher<DyResponse, DyNetError>`。
     ///
@@ -50,7 +51,10 @@ public extension DyNet {
             .mapError { ($0 as? DyNetError) ?? .decodeFailure($0) }
             .eraseToAnyPublisher()
     }
+}
 
+// MARK: - Combine 下载
+public extension DyNet {
     /// 文件下载入口：回调 `(DyResponse, 本地文件 URL)`。
     ///
     /// - Parameters:
@@ -87,7 +91,10 @@ public extension DyNet {
         }
         .eraseToAnyPublisher()
     }
+}
 
+// MARK: - 私有 stub 辅助（Combine）
+extension DyNet {
     private static func stubPublisher(
         endpoint: DyEndpoint,
         behavior: DyStub,
@@ -118,6 +125,7 @@ public extension DyNet {
     }
 }
 
+// MARK: - 便捷订阅（sinkDy）
 public extension AnyPublisher where Output == DyResponse, Failure == DyNetError {
     /// 简化订阅：成功拿到 `DyResponse`，失败拿到 `DyNetError`。
     ///

@@ -286,7 +286,7 @@ import WebKit
     }
 }
 
-//MARK: - UIActivityIndicatorView
+// MARK: - UIActivityIndicatorView
 @objc extension UIActivityIndicatorView {
     /// 创建一个默认 `UIActivityIndicatorView` 实例
     open class func dy_activityIndicatorView() -> UIActivityIndicatorView {

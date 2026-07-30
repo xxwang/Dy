@@ -1,6 +1,7 @@
 import Foundation
 import Alamofire
 
+// MARK: - 并发请求（async/await）
 public extension DyNet {
     /// 并发（async/await）入口（原始响应）。
     ///
@@ -60,7 +61,10 @@ public extension DyNet {
             throw DyNetError.decodeFailure(error)
         }
     }
+}
 
+// MARK: - 并发下载（async/await）
+public extension DyNet {
     /// 文件下载入口（async/await）：返回 `(DyResponse, 本地文件 URL)`。
     ///
     /// - Parameters:

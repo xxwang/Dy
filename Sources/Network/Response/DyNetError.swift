@@ -28,6 +28,7 @@ public enum DyNetError: Error {
     case decodeFailure(Error)
 }
 
+// MARK: - LocalizedError
 extension DyNetError: LocalizedError {
     public var errorDescription: String? {
         switch self {

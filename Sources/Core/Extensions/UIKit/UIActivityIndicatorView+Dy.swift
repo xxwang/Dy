@@ -1,8 +1,7 @@
 import UIKit
 
-//MARK: - 链式属性
+// MARK: - 链式属性
 public extension UIActivityIndicatorView {
-    
     /// 设置是否在暂停的时候隐藏
     /// - Parameter hidesWhenStopped: 是否在暂停的时候隐藏
     /// - Returns: `Self`
@@ -11,7 +10,7 @@ public extension UIActivityIndicatorView {
         self.hidesWhenStopped = hidesWhenStopped
         return self
     }
-    
+
     /// 设置指示器样式
     /// - Parameter style: 指示器样式
     /// - Returns: `Self`
@@ -20,7 +19,7 @@ public extension UIActivityIndicatorView {
         self.style = style
         return self
     }
-    
+
     /// 设置指示器颜色
     /// - Parameter color: 指示器颜色
     /// - Returns: `Self`
@@ -30,4 +29,3 @@ public extension UIActivityIndicatorView {
         return self
     }
 }
-

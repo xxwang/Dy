@@ -1,7 +1,7 @@
 # DyNetwork
 
 > 基于 [Alamofire](https://github.com/Alamofire/Alamofire) 的轻量网络层，借鉴 Moya 的 `TargetType` / `Plugin` 设计，**零 Moya 依赖**。
-> 提供 **async/await** 与 **Combine** 两套相互独立的使用方式，内置全局配置、业务码解析、插件系统、文件上传/下载、防重复请求与调试 stub。
+> 提供 **async/await**、**Combine**、**传统闭包回调** 三套相互独立的使用方式，内置全局配置、业务码解析、插件系统、文件上传/下载、防重复请求与调试 stub。
 > 最低支持 **iOS 13**，依赖 Alamofire 5.12。
 
 ---
@@ -9,11 +9,11 @@
 ## 特性一览
 
 - **接口集中定义**：用 `enum` 遵从 `DyEndpoint`，编译期拦住拼错路径 / 漏参数等低级错误。
-- **两套互不相干的 API**：Combine（`DyNet+Combine`）与 async/await（`DyNet+Concurrency`），不混用 RxSwift 分支。
+- **三套互不相干的 API**：async/await（`DyNet+Concurrency`）、Combine（`DyNet+Combine`）、传统闭包回调（`DyNet+Closure`），不混用 RxSwift 分支。
 - **泛型模型回调**：`as:`（响应体即模型）与 `biz:`（业务码 `data` 字段）两种解码，直接拿到模型实例。
 - **全局配置单例** `DyNetConfig`：多环境、全局头/参、超时、成功业务码，运行时可切。
 - **插件系统** `DyNetPlugin`：鉴权头注入、日志、全局 Loading 计数等横切关注点抽离。
-- **常用功能齐全**：上传（`.uploadMultipart`）、下载（`download` / `downloadPublisher`）、防重复请求（指纹去重）、调试 stub。
+- **常用功能齐全**：上传（`.uploadMultipart`，并有专用 `upload` 通道 + 进度回调）、下载（`download` / `downloadPublisher` / 闭包版）、防重复请求（指纹去重）、调试 stub。
 - **刻意不校验 HTTP 状态码**：4xx/5xx 仍走 success，由调用方按 `statusCode` 自行决策（见末尾设计说明）。
 
 ---
@@ -180,6 +180,42 @@ let c3 = net.publisher(UserAPI.login(form), biz: UserList.self)
 > `sinkDy(receiveValue:receiveError:)` 仅适用于 `AnyPublisher<DyResponse, DyNetError>`（即 `requestPublisher`）。
 > 泛型 `publisher(as:)` / `publisher(biz:)` 返回 `AnyPublisher<T, DyNetError>`，用常规 `.sink` 即可。
 
+### 3.3 传统闭包回调（非 Combine / 非 async）
+
+适合不想引入 Combine、也不想用 async/await 的场景（老项目、简单回调链）。
+所有闭包**统一在主线程回调**，可直接更新 UI。
+
+```swift
+// 原始响应：用 Result 一步到位
+net.request(UserAPI.profile) { result in
+    switch result {
+    case let .success(resp): print(resp.statusCode)
+    case let .failure(err):  print(err.localizedDescription)
+    }
+}
+
+// 泛型：响应体即模型
+net.request(UserAPI.profile, as: User.self) { result in
+    if case let .success(user) = result { print(user.name) }
+}
+
+// 泛型：业务码 data 模型
+net.request(UserAPI.login(form), biz: UserList.self) { result in
+    if case let .success(list) = result { print(list.list.count) }
+}
+
+// 便捷尾随闭包（success / failure 拆分，省去一层 switch）
+net.request(UserAPI.profile,
+    success: { resp in print(resp.statusCode) },
+    failure: { err in print(err.localizedDescription) })
+
+net.request(UserAPI.login(form), as: UserList.self,
+    success: { list in print(list.list.count) },
+    failure: { err in print(err.localizedDescription) })
+```
+
+> 闭包套同样提供 `upload(...)` / `download(...)` 入口（见第 6、7 节），均支持 `success:failure:` 便捷重载。
+
 ---
 
 ## 4. 泛型模型回调：`as:` vs `biz:`
@@ -225,12 +261,40 @@ let raw = try resp.map(UserList.self)
 
 ## 6. 上传
 
-上传通过 `DyEndpoint.task = .uploadMultipart` 声明（见第 1 节示例），随后像普通请求一样发起：
+上传通过 `DyEndpoint.task = .uploadMultipart` 声明（见第 1 节示例）。
+
+### 6.1 async/await
+
+走普通请求入口，框架内部自动切到 Alamofire 的 `UploadRequest`：
 
 ```swift
-// 上传走普通请求入口，框架内部自动走 Alamofire 的 UploadRequest
 let _: DyEmpty = try await net.request(UserAPI.uploadAvatar, biz: DyEmpty.self)
 ```
+
+### 6.2 传统闭包回调（带进度）
+
+用专用 `upload` 通道，可拿到进度回调（0~1，主线程）：
+
+```swift
+// 原始响应 + 进度
+net.upload(UserAPI.uploadAvatar,
+    progress: { p in print("上传进度", p) },
+    success: { resp in print("完成", resp.statusCode) },
+    failure: { err in print(err.localizedDescription) })
+
+// 泛型：响应体即模型
+net.upload(UserAPI.uploadAvatar, as: UploadResult.self,
+    progress: { p in print(p) },
+    success: { model in print(model) },
+    failure: { err in print(err) })
+
+// 或 completion(Result) 形式
+net.upload(UserAPI.uploadAvatar, progress: { p in print(p) }) { result in
+    if case let .success(resp) = result { print(resp.statusCode) }
+}
+```
+
+> 接口 `task` 必须是 `.uploadMultipart`，否则 `upload` 会回调 `.message` 错误。
 
 ---
 
@@ -254,6 +318,13 @@ let c = net.downloadPublisher(
     progress: { p in print(p) }
 ).sink(receiveCompletion: { _ in },
        receiveValue: { (resp, fileURL) in print(fileURL) })
+
+// 传统闭包回调（带进度）
+net.download(UserAPI.downloadAvatar,
+    to: localDestinationURL,
+    progress: { p in print("进度", p) },
+    success: { resp, fileURL in print("已保存到", fileURL) },
+    failure: { err in print(err.localizedDescription) })
 ```
 
 > 下载场景的 `DyResponse.data` 为空，文件以 `URL` 形式随响应一起返回。

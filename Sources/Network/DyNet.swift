@@ -18,10 +18,11 @@ public enum DyStub {
 /// 负责：把 `DyEndpoint` 构建成请求 → 应用插件 → 调用 Alamofire 发请求
 /// （或按 `stubClosure` 直接返回样例数据，跳过网络）。
 ///
-/// 三套调用方式相互独立：
+/// 四套调用方式相互独立：
 /// - `request(_:)` / `request(_:as:)` / `request(_:biz:)` —— async/await 并发（见 `DyNet+Concurrency`）
 /// - `publisher(_:)` / `publisher(_:as:)` / `publisher(_:biz:)` —— Combine（见 `DyNet+Combine`）
-/// - `download(_:)` / `downloadPublisher(_:)` —— 文件下载
+/// - `request(_:completion:)` / `upload(_:progress:completion:)` / `download(_:to:progress:completion:)` —— 传统闭包回调（见 `DyNet+Closure`）
+/// - `download(_:)` / `downloadPublisher(_:)` —— 文件下载（前两套各自已含 download 入口）
 public final class DyNet {
     /// 底层 Alamofire `Session`，可注入自定义配置（超时、拦截器、证书锁定等）。
     public let session: Session
@@ -53,9 +54,11 @@ public final class DyNet {
 
     /// 便捷共享实例（插件为空）。
     public static let shared = DyNet()
+}
 
-    // MARK: - 请求构建
+// MARK: - 请求构建
 
+extension DyNet {
     /// 构建基础 `URLRequest`（基地址 + 路径 + 方法 + 头），并依次应用插件 `prepare`。
     ///
     /// 头会先注入全局头（`DyNetConfig.shared.globalHeaders`），再叠加接口自身 `headers`（同名覆盖）；
@@ -194,9 +197,11 @@ public final class DyNet {
         let body = request.httpBody.map { $0.base64EncodedString() } ?? ""
         return "\(method)|\(url)|\(body)"
     }
+}
 
-    // MARK: - 响应映射
+// MARK: - 响应映射
 
+extension DyNet {
     static func map(_ af: DataResponse<Data, AFError>) -> Result<DyResponse, DyNetError> {
         switch af.result {
         case let .success(data):
