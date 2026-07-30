@@ -4,13 +4,12 @@ import Foundation
 public extension NSObject {
     /// 获取对象的类名
     var dy_className: String {
-        let fullName = NSStringFromClass(type(of: self))
-        return fullName.components(separatedBy: ".").last ?? fullName
+        return DyHelper.shared.className(type(of: self))
     }
 
     /// 获取当前类的名称
     static var dy_className: String {
-        NSStringFromClass(Self.self)
+        return DyHelper.shared.className(Self.self)
     }
 }
 
