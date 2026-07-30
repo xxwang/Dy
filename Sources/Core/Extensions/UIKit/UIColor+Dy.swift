@@ -583,7 +583,7 @@ public extension UIColor {
 }
 
 // MARK: - [UIColor] 链式调用
-public extension DyWrapper where Base == [UIColor] {
+public extension [UIColor] {
     /// 生成渐变图层
     func dy_createGradientLayer(
         frame: CGRect,
@@ -593,7 +593,7 @@ public extension DyWrapper where Base == [UIColor] {
     ) -> CAGradientLayer {
         UIColor.dy_createGradientLayer(
             frame: frame,
-            colors: self.base,
+            colors: self,
             locations: locations,
             startPoint: startPoint,
             endPoint: endPoint
@@ -609,7 +609,7 @@ public extension DyWrapper where Base == [UIColor] {
     ) -> UIImage? {
         UIColor.dy_createGradientImage(
             size: size,
-            colors: self.base,
+            colors: self,
             locations: locations,
             startPoint: startPoint,
             endPoint: endPoint
@@ -625,7 +625,7 @@ public extension DyWrapper where Base == [UIColor] {
     ) -> UIColor? {
         UIColor.dy_createGradientColor(
             size: size,
-            colors: self.base,
+            colors: self,
             locations: locations,
             startPoint: startPoint,
             endPoint: endPoint

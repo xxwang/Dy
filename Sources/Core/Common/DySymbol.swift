@@ -84,17 +84,17 @@ public final class DySymbol {
 }
 
 // MARK: - String(系统图标)
-public extension DyWrapper where Base == String {
+public extension String {
     /// 创建单色图标
     /// - Parameters:
     ///   - color: 图标颜色
     ///   - configuration: 配置对象
     /// - Returns: `UIImage?`
-    func monochromeSymbol(
+    func dy_monochromeSymbol(
         color: UIColor,
         configuration: UIImage.SymbolConfiguration? = nil
     ) -> UIImage? {
-        return DySymbol.monochrome(for: base, color: color, configuration: configuration)
+        return DySymbol.monochrome(for: self, color: color, configuration: configuration)
     }
 
     /// 创建分层图标
@@ -103,11 +103,11 @@ public extension DyWrapper where Base == String {
     ///   - configuration: 配置对象
     /// - Returns: `UIImage?`
     @available(iOS 15.0, *)
-    func hierarchicalSymbol(
+    func dy_hierarchicalSymbol(
         hierarchicalColor: UIColor,
         configuration: UIImage.SymbolConfiguration? = nil
     ) -> UIImage? {
-        return DySymbol.hierarchical(for: base, hierarchicalColor: hierarchicalColor, configuration: configuration)
+        return DySymbol.hierarchical(for: self, hierarchicalColor: hierarchicalColor, configuration: configuration)
     }
 
     /// 创建调色板图标
@@ -116,10 +116,10 @@ public extension DyWrapper where Base == String {
     ///   - configuration: 配置对象
     /// - Returns: `UIImage?`
     @available(iOS 15.0, *)
-    func paletteSymbol(
+    func dy_paletteSymbol(
         paletteColors: [UIColor],
         configuration: UIImage.SymbolConfiguration? = nil
     ) -> UIImage? {
-        return DySymbol.palette(for: base, paletteColors: paletteColors, configuration: configuration)
+        return DySymbol.palette(for: self, paletteColors: paletteColors, configuration: configuration)
     }
 }
