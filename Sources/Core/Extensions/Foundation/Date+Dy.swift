@@ -727,12 +727,7 @@ public extension Date {
             switch style {
             case .narrow:
                 // veryShortStandaloneMonthSymbols: 独立显示的极短形式(如 "J")
-                if #available(iOS 13.0, macOS 10.15, *) {
-                    return formatter.veryShortStandaloneMonthSymbols
-                } else {
-                    // 旧系统无此属性,回退到缩写
-                    return formatter.shortMonthSymbols
-                }
+                return formatter.veryShortStandaloneMonthSymbols
             case .abbreviated:
                 // shortMonthSymbols: 如 "Jan", "Feb"
                 return formatter.shortMonthSymbols
@@ -769,11 +764,7 @@ public extension Date {
         let symbols: [String] = {
             switch style {
             case .narrow:
-                if #available(iOS 13.0, macOS 10.15, *) {
-                    return formatter.veryShortStandaloneWeekdaySymbols
-                } else {
-                    return formatter.shortWeekdaySymbols
-                }
+                return formatter.veryShortStandaloneWeekdaySymbols
             case .abbreviated:
                 return formatter.shortWeekdaySymbols // 如 "Sun", "Mon"
             case .wide:

@@ -91,29 +91,24 @@ public extension UIImage {
     ///   - lightImage: 浅色模式下的图片
     ///   - darkImage: 深色模式下的图片(可选)
     convenience init?(lightImage: UIImage, darkImage: UIImage? = nil) {
-        if #available(iOS 13.0, *) {
-            let darkImage = darkImage ?? lightImage
-            let asset = UIImageAsset()
+        let darkImage = darkImage ?? lightImage
+        let asset = UIImageAsset()
 
-            let lightTrait = UITraitCollection(traitsFrom: [
-                .init(userInterfaceStyle: .light),
-                .init(displayScale: lightImage.scale),
-            ])
+        let lightTrait = UITraitCollection(traitsFrom: [
+            .init(userInterfaceStyle: .light),
+            .init(displayScale: lightImage.scale),
+        ])
 
-            let darkTrait = UITraitCollection(traitsFrom: [
-                .init(userInterfaceStyle: .dark),
-                .init(displayScale: darkImage.scale),
-            ])
+        let darkTrait = UITraitCollection(traitsFrom: [
+            .init(userInterfaceStyle: .dark),
+            .init(displayScale: darkImage.scale),
+        ])
 
-            asset.register(lightImage, with: lightTrait)
-            asset.register(darkImage, with: darkTrait)
+        asset.register(lightImage, with: lightTrait)
+        asset.register(darkImage, with: darkTrait)
 
-            guard let cgImage = asset.image(with: .current).cgImage else { return nil }
-            self.init(cgImage: cgImage)
-        } else {
-            guard let cgImage = lightImage.cgImage else { return nil }
-            self.init(cgImage: cgImage)
-        }
+        guard let cgImage = asset.image(with: .current).cgImage else { return nil }
+        self.init(cgImage: cgImage)
     }
 
     /// 通过图片名称创建支持深浅色模式的动态图片

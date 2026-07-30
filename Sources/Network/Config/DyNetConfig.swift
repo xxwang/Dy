@@ -40,6 +40,7 @@ public final class DyNetConfig {
 
     private init() {
         self.baseURL = URL(string: "https://api.example.com")!
+        #warning("请在 App 启动时调用 DyNetConfig.shared.setup(environment:baseURL:) 替换占位 URL")
     }
 
     // MARK: - 环境 / 基地址

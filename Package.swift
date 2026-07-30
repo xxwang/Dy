@@ -43,9 +43,6 @@ let package = Package(
                 .target(name: "DyCore"),
             ],
             path: "Sources/Template",
-            resources: [
-                .process("Resources"),
-            ],
             swiftSettings: [
                 .define("SPM_MODE"),
             ]
