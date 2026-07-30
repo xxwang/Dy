@@ -27,7 +27,7 @@ open class DyScrollViewController: DyViewController {
         )
         self.scrollView.dy_frame(.init(
             x: 0,
-            y: DyScreen.navBarTotalHeight,
+            y: self.navigationController == nil ? 0 : DyScreen.navBarTotalHeight,
             width: self.view.dy_width,
             height: self.view.dy_height - DyScreen.navBarTotalHeight
         ))
@@ -46,7 +46,7 @@ open class DyScrollViewController: DyViewController {
 
         self.scrollView.dy_frame(CGRect(
             x: 0,
-            y: DyScreen.navBarTotalHeight,
+            y: self.navigationController == nil ? 0 : DyScreen.navBarTotalHeight,
             width: self.view.dy_width,
             height: self.view.dy_height - DyScreen.navBarTotalHeight
         ))

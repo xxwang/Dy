@@ -25,7 +25,7 @@ open class DyTableViewController: DyViewController {
         )
         self.tableView.dy_frame(CGRect(
             x: 0,
-            y: DyScreen.navBarTotalHeight,
+            y: self.navigationController == nil ? 0 : DyScreen.navBarTotalHeight,
             width: self.view.dy_width,
             height: self.view.dy_height - DyScreen.navBarTotalHeight
         ))
@@ -40,7 +40,7 @@ open class DyTableViewController: DyViewController {
 
         self.tableView.dy_frame(CGRect(
             x: 0,
-            y: DyScreen.navBarTotalHeight,
+            y: self.navigationController == nil ? 0 : DyScreen.navBarTotalHeight,
             width: self.view.dy_width,
             height: self.view.dy_height - DyScreen.navBarTotalHeight
         ))
