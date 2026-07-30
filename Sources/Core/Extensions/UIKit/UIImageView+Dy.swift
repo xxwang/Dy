@@ -79,6 +79,51 @@ public extension UIImageView {
         self.highlightedImage = image
         return self
     }
+
+    /// 设置高亮状态
+    /// - Parameter highlighted: 是否高亮
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_isHighlighted(_ highlighted: Bool) -> Self {
+        self.isHighlighted = highlighted
+        return self
+    }
+
+    /// 设置帧动画图片数组
+    /// - Parameter images: 图片数组
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_animationImages(_ images: [UIImage]?) -> Self {
+        self.animationImages = images
+        return self
+    }
+
+    /// 设置高亮状态帧动画图片数组
+    /// - Parameter images: 图片数组
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_highlightedAnimationImages(_ images: [UIImage]?) -> Self {
+        self.highlightedAnimationImages = images
+        return self
+    }
+
+    /// 设置帧动画时长
+    /// - Parameter duration: 动画时长(秒)
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_animationDuration(_ duration: TimeInterval) -> Self {
+        self.animationDuration = duration
+        return self
+    }
+
+    /// 设置帧动画重复次数
+    /// - Parameter count: 重复次数,0 表示无限循环
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_animationRepeatCount(_ count: Int) -> Self {
+        self.animationRepeatCount = count
+        return self
+    }
 }
 
 // MARK: - 链式方法(自定义)

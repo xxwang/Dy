@@ -1199,7 +1199,7 @@ public extension UIImage {
     ///
     /// > ⚠️ 注意：此方法在 iOS 13+ 才可用低版本请使用 `tint` 或确保图像为 `.alwaysTemplate` 模式
     func dy_tintColor(with color: UIColor, renderingMode: UIImage.RenderingMode = .alwaysOriginal) -> UIImage {
-        return withTintColor(color, renderingMode: renderingMode)
+        return withTintColor(color).withRenderingMode(renderingMode)
     }
 
     /// 为 SF Symbol 图像应用符号配置(如粗细、层级、尺寸等)

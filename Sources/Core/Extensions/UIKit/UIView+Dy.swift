@@ -491,7 +491,7 @@ public extension UIView {
     /// - Parameter mode: 填充模式,例如`.scaleAspectFit`或`.scaleToFill`
     /// - Returns: `Self`
     @discardableResult
-    func dy_contentMode(_ mode: UIView.ContentMode) -> Self {
+    @objc func dy_contentMode(_ mode: UIView.ContentMode) -> Self {
         self.contentMode = mode
         return self
     }
@@ -798,7 +798,7 @@ public extension UIView {
     /// - Parameter offset: 阴影的偏移量,正值表示偏向右下,负值偏向左上
     /// - Returns: `Self`
     @discardableResult
-    func dy_shadowOffset(_ offset: CGSize) -> Self {
+    @objc func dy_shadowOffset(_ offset: CGSize) -> Self {
         self.layer.dy_shadowOffset(offset)
         return self
     }
@@ -854,6 +854,42 @@ public extension UIView {
     @discardableResult
     func dy_masksToBounds(_ masksToBounds: Bool) -> Self {
         self.layer.dy_masksToBounds(masksToBounds)
+        return self
+    }
+
+    /// 设置圆角曲线风格
+    /// - Parameter curve: `.circular`(默认) 或 `.continuous`(更顺滑)
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_cornerCurve(_ curve: CALayerCornerCurve) -> Self {
+        self.layer.cornerCurve = curve
+        return self
+    }
+
+    /// 设置图层透明度(独立于 `alpha`,不影响子视图)
+    /// - Parameter opacity: 透明度值,范围 [0, 1]
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_opacity(_ opacity: Float) -> Self {
+        self.layer.opacity = opacity
+        return self
+    }
+
+    /// 设置 Z 轴层级(影响同级视图渲染/事件顺序)
+    /// - Parameter zPosition: Z 轴位置,越大越靠前
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_zPosition(_ zPosition: CGFloat) -> Self {
+        self.layer.zPosition = zPosition
+        return self
+    }
+
+    /// 设置图层名称(Xcode View Hierarchy 中可见)
+    /// - Parameter name: 图层名称,用于调试
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_name(_ name: String) -> Self {
+        self.layer.name = name
         return self
     }
 }

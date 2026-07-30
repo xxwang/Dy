@@ -6,7 +6,7 @@ public extension UIControl {
     /// - Parameter isEnabled: 是否启用
     /// - Returns: 当前实例,支持链式调用
     @discardableResult
-    func dy_isEnabled(_ isEnabled: Bool) -> Self {
+    @objc func dy_isEnabled(_ isEnabled: Bool) -> Self {
         self.isEnabled = isEnabled
         return self
     }
@@ -15,7 +15,7 @@ public extension UIControl {
     /// - Parameter isSelected: 是否选中
     /// - Returns: 当前实例,支持链式调用
     @discardableResult
-    func dy_isSelected(_ isSelected: Bool) -> Self {
+    @objc func dy_isSelected(_ isSelected: Bool) -> Self {
         self.isSelected = isSelected
         return self
     }
@@ -24,7 +24,7 @@ public extension UIControl {
     /// - Parameter isHighlighted: 是否高亮
     /// - Returns: 当前实例,支持链式调用
     @discardableResult
-    func dy_isHighlighted(_ isHighlighted: Bool) -> Self {
+    @objc func dy_isHighlighted(_ isHighlighted: Bool) -> Self {
         self.isHighlighted = isHighlighted
         return self
     }

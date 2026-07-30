@@ -328,6 +328,51 @@ public extension UIScrollView {
         self.scrollsToTop = scrollsToTop
         return self
     }
+
+    /// 设置键盘消失模式
+    /// - Parameter mode: 键盘消失模式,如 `.onDrag`
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_keyboardDismissMode(_ mode: UIScrollView.KeyboardDismissMode) -> Self {
+        self.keyboardDismissMode = mode
+        return self
+    }
+
+    /// 设置内容内边距调整行为
+    /// - Parameter behavior: 调整行为,如 `.automatic` / `.never`
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_contentInsetAdjustmentBehavior(_ behavior: UIScrollView.ContentInsetAdjustmentBehavior) -> Self {
+        self.contentInsetAdjustmentBehavior = behavior
+        return self
+    }
+
+    /// 设置最小缩放比例
+    /// - Parameter scale: 最小缩放比例
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_minimumZoomScale(_ scale: CGFloat) -> Self {
+        self.minimumZoomScale = scale
+        return self
+    }
+
+    /// 设置最大缩放比例
+    /// - Parameter scale: 最大缩放比例
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_maximumZoomScale(_ scale: CGFloat) -> Self {
+        self.maximumZoomScale = scale
+        return self
+    }
+
+    /// 设置当前缩放比例
+    /// - Parameter scale: 缩放比例
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_zoomScale(_ scale: CGFloat) -> Self {
+        self.zoomScale = scale
+        return self
+    }
 }
 
 // MARK: - 链式方法(自定义)

@@ -148,15 +148,6 @@ public extension UICollectionView {
         self.dataSource = dataSource
         return self
     }
-
-    /// 设置键盘交互模式(如拖拽时自动收起键盘)
-    /// - Parameter mode: 模式
-    /// - Returns: `Self`
-    @discardableResult
-    func dy_keyboardDismissMode(_ mode: UIScrollView.KeyboardDismissMode) -> Self {
-        self.keyboardDismissMode = mode
-        return self
-    }
 }
 
 // MARK: - 方法

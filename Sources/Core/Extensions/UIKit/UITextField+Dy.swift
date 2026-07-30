@@ -262,12 +262,58 @@ public extension UITextField {
         self.enablesReturnKeyAutomatically = enabled
         return self
     }
+
+    /// 设置边框样式
+    /// - Parameter style: 边框样式,如 `.roundedRect`
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_borderStyle(_ style: UITextField.BorderStyle) -> Self {
+        self.borderStyle = style
+        return self
+    }
+
+    /// 设置是否在开始编辑时清空文本
+    /// - Parameter clears: 是否清空
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_clearsOnBeginEditing(_ clears: Bool) -> Self {
+        self.clearsOnBeginEditing = clears
+        return self
+    }
+
+    /// 设置最小字体大小
+    /// - Parameter size: 最小字号
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_minimumFontSize(_ size: CGFloat) -> Self {
+        self.minimumFontSize = size
+        return self
+    }
+
+    /// 设置背景图片
+    /// - Parameter image: 背景图片
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_background(_ image: UIImage?) -> Self {
+        self.background = image
+        return self
+    }
+
+    /// 设置禁用状态背景图片
+    /// - Parameter image: 禁用背景图片
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_disabledBackground(_ image: UIImage?) -> Self {
+        self.disabledBackground = image
+        return self
+    }
 }
 
 // MARK: - 链式方法(自定义)
 public extension UITextField {
     /// 清空文本和富文本内容
     /// - Returns: `Self`
+    @discardableResult
     func dy_clear() -> Self {
         self.text = nil
         self.attributedText = nil

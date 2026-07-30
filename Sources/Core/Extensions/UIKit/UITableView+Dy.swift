@@ -172,15 +172,6 @@ public extension UITableView {
         return self
     }
 
-    /// 设置键盘交互模式
-    /// - Parameter mode: 模式
-    /// - Returns: `Self`
-    @discardableResult
-    func dy_keyboardDismissMode(_ mode: UIScrollView.KeyboardDismissMode) -> Self {
-        self.keyboardDismissMode = mode
-        return self
-    }
-
     /// 是否让 `Cell` 的 `layoutMargins` 跟随` readable width`(影响 iOS 8+ 的左右留白)
     /// - Parameter enabled: 是否开启
     /// - Returns: `Self`
@@ -230,15 +221,6 @@ public extension UITableView {
     @discardableResult
     func dy_removeTableFooterView() -> Self {
         self.tableFooterView = nil
-        return self
-    }
-
-    /// 设置内容内边距调整行为
-    /// - Parameter behavior: 行为
-    /// - Returns: `Self`
-    @discardableResult
-    func dy_contentInsetAdjustmentBehavior(_ behavior: UIScrollView.ContentInsetAdjustmentBehavior) -> Self {
-        self.contentInsetAdjustmentBehavior = behavior
         return self
     }
 

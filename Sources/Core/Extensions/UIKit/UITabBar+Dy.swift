@@ -63,18 +63,36 @@ public extension UITabBar {
             var attributes = appearance.stackedLayoutAppearance.normal.titleTextAttributes
             attributes[.foregroundColor] = color
             appearance.stackedLayoutAppearance.normal.titleTextAttributes = attributes
-            self.unselectedItemTintColor = color
         } else if state == .selected {
             var attributes = appearance.stackedLayoutAppearance.selected.titleTextAttributes
             attributes[.foregroundColor] = color
             appearance.stackedLayoutAppearance.selected.titleTextAttributes = attributes
-            self.tintColor = color
         }
         self.standardAppearance = appearance
         if #available(iOS 15.0, *) {
             self.scrollEdgeAppearance = appearance
         }
 
+        return self
+    }
+
+    /// 设置图标颜色
+    /// - Parameters:
+    ///   - color: 要设置的颜色
+    ///   - state: 状态(如 `normal` 或 `selected`)
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_imageColor(_ color: UIColor?, for state: UIControl.State) -> Self {
+        let appearance = self.standardAppearance
+        if state == .normal {
+            appearance.stackedLayoutAppearance.normal.iconColor = color
+        } else if state == .selected {
+            appearance.stackedLayoutAppearance.selected.iconColor = color
+        }
+        self.standardAppearance = appearance
+        if #available(iOS 15.0, *) {
+            self.scrollEdgeAppearance = appearance
+        }
         return self
     }
 

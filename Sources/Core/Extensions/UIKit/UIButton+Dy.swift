@@ -91,6 +91,7 @@ public extension UIButton {
     /// - Parameter attributedTitle: 属性标题
     /// - Returns: `Self`
     @available(iOS 15.0, *)
+    @discardableResult
     func dy_attributedTitleC(_ attributedTitle: AttributedString?) -> Self {
         var configuration = self.configuration ?? UIButton.Configuration.plain()
         configuration.attributedTitle = attributedTitle
@@ -114,6 +115,7 @@ public extension UIButton {
     /// - Parameter attributedSubtitle: 属性副标题
     /// - Returns: `Self`
     @available(iOS 15.0, *)
+    @discardableResult
     func dy_attributedSubtitle(_ attributedSubtitle: AttributedString?) -> Self {
         var configuration = self.configuration ?? UIButton.Configuration.plain()
         configuration.attributedSubtitle = attributedSubtitle
@@ -210,6 +212,7 @@ public extension UIButton {
     /// - Parameter color: 背景色
     /// - Returns: `Self`
     @available(iOS 15.0, *)
+    @discardableResult
     func dy_baseBackgroundColor(_ color: UIColor?) -> Self {
         var configuration = self.configuration ?? UIButton.Configuration.plain()
         configuration.baseBackgroundColor = color
@@ -221,6 +224,7 @@ public extension UIButton {
     /// - Parameter color: 前景色
     /// - Returns: `Self`
     @available(iOS 15.0, *)
+    @discardableResult
     func dy_baseForegroundColor(_ color: UIColor?) -> Self {
         var configuration = self.configuration ?? UIButton.Configuration.plain()
         configuration.baseForegroundColor = color
@@ -232,6 +236,7 @@ public extension UIButton {
     /// - Parameter imagePlacement: 图标位置
     /// - Returns: `Self`
     @available(iOS 15.0, *)
+    @discardableResult
     func dy_imagePlacement(_ imagePlacement: NSDirectionalRectEdge) -> Self {
         var configuration = self.configuration ?? UIButton.Configuration.plain()
         configuration.imagePlacement = imagePlacement
@@ -243,6 +248,7 @@ public extension UIButton {
     /// - Parameter contentInsets: 间距
     /// - Returns: `Self`
     @available(iOS 15.0, *)
+    @discardableResult
     func dy_contentInsets(_ contentInsets: NSDirectionalEdgeInsets) -> Self {
         var configuration = self.configuration ?? UIButton.Configuration.plain()
         configuration.contentInsets = contentInsets
@@ -254,6 +260,7 @@ public extension UIButton {
     /// - Parameter cornerStyle: 圆角样式
     /// - Returns: `Self`
     @available(iOS 15.0, *)
+    @discardableResult
     func dy_cornerStyle(_ cornerStyle: UIButton.Configuration.CornerStyle) -> Self {
         var configuration = self.configuration ?? UIButton.Configuration.plain()
         configuration.cornerStyle = cornerStyle
@@ -265,6 +272,7 @@ public extension UIButton {
     /// - Parameter strokeColor: 边框颜色
     /// - Returns: `Self`
     @available(iOS 15.0, *)
+    @discardableResult
     func dy_backgroundStrokeColor(_ strokeColor: UIColor?) -> Self {
         var configuration = self.configuration ?? UIButton.Configuration.plain()
         configuration.background.strokeColor = strokeColor
@@ -276,6 +284,7 @@ public extension UIButton {
     /// - Parameter strokeWidth: 边框宽度
     /// - Returns: `Self`
     @available(iOS 15.0, *)
+    @discardableResult
     func dy_backgroundStrokeWidth(_ strokeWidth: CGFloat) -> Self {
         var configuration = self.configuration ?? UIButton.Configuration.plain()
         configuration.background.strokeWidth = strokeWidth
@@ -396,6 +405,33 @@ public extension UIButton {
     @discardableResult
     func dy_backgroundColor(_ color: UIColor) -> Self {
         self.backgroundColor = color
+        return self
+    }
+
+    /// 设置内容边距
+    /// - Parameter insets: 边距
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_contentEdgeInsets(_ insets: UIEdgeInsets) -> Self {
+        self.contentEdgeInsets = insets
+        return self
+    }
+
+    /// 设置标题边距
+    /// - Parameter insets: 边距
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_titleEdgeInsets(_ insets: UIEdgeInsets) -> Self {
+        self.titleEdgeInsets = insets
+        return self
+    }
+
+    /// 设置图片边距
+    /// - Parameter insets: 边距
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_imageEdgeInsets(_ insets: UIEdgeInsets) -> Self {
+        self.imageEdgeInsets = insets
         return self
     }
 }

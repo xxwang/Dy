@@ -23,7 +23,7 @@ public final class DySymbol {
         }
 
         return UIImage(systemName: name, withConfiguration: configuration)?
-            .withTintColor(color, renderingMode: .alwaysOriginal)
+            .withTintColor(color).withRenderingMode(.alwaysOriginal)
     }
 
     /// 创建分层图标
@@ -81,6 +81,32 @@ public final class DySymbol {
         )
         return UIImage(systemName: name, withConfiguration: configuration)
     }
+
+    /// 创建多色图标(使用 SF Symbol 自带的层级颜色)
+    /// - Parameters:
+    ///   - name: 图标名称,需为多色符号(如 `"folder"`, `"alarm"`)
+    ///   - configuration: 配置对象
+    /// - Returns: `UIImage?`
+    @available(iOS 15.0, *)
+    public static func multicolor(
+        for name: String,
+        configuration: UIImage.SymbolConfiguration? = nil
+    ) -> UIImage? {
+        var configuration = if let configuration {
+            configuration
+        } else {
+            UIImage.SymbolConfiguration(
+                pointSize: 20,
+                weight: .regular,
+                scale: .default
+            )
+        }
+
+        configuration = configuration.applying(
+            UIImage.SymbolConfiguration.preferringMulticolor()
+        )
+        return UIImage(systemName: name, withConfiguration: configuration)
+    }
 }
 
 // MARK: - String(系统图标)
@@ -121,5 +147,15 @@ public extension String {
         configuration: UIImage.SymbolConfiguration? = nil
     ) -> UIImage? {
         return DySymbol.palette(for: self, paletteColors: paletteColors, configuration: configuration)
+    }
+
+    /// 创建多色图标
+    /// - Parameter configuration: 配置对象
+    /// - Returns: `UIImage?`
+    @available(iOS 15.0, *)
+    func dy_multicolorSymbol(
+        configuration: UIImage.SymbolConfiguration? = nil
+    ) -> UIImage? {
+        return DySymbol.multicolor(for: self, configuration: configuration)
     }
 }

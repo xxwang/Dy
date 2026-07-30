@@ -499,6 +499,51 @@ public extension UILabel {
         self.preferredMaxLayoutWidth = width
         return self
     }
+
+    /// 设置字号自动缩放的最小比例
+    /// - Parameter scale: 最小缩放因子,取值范围 (0, 1]
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_minimumScaleFactor(_ scale: CGFloat) -> Self {
+        self.minimumScaleFactor = scale
+        return self
+    }
+
+    /// 设置高亮状态
+    /// - Parameter highlighted: 是否高亮
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_isHighlighted(_ highlighted: Bool) -> Self {
+        self.isHighlighted = highlighted
+        return self
+    }
+
+    /// 设置文本阴影颜色
+    /// - Parameter color: 阴影颜色
+    /// - Returns: `Self`
+    @discardableResult
+    override func dy_shadowColor(_ color: UIColor) -> Self {
+        self.shadowColor = color
+        return self
+    }
+
+    /// 设置文本阴影偏移
+    /// - Parameter offset: 阴影偏移量
+    /// - Returns: `Self`
+    @discardableResult
+    override func dy_shadowOffset(_ offset: CGSize) -> Self {
+        self.shadowOffset = offset
+        return self
+    }
+
+    /// 设置基线调整模式
+    /// - Parameter adjustment: 基线调整模式
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_baselineAdjustment(_ adjustment: UIBaselineAdjustment) -> Self {
+        self.baselineAdjustment = adjustment
+        return self
+    }
 }
 
 // MARK: - 链式设置属性(自定义)

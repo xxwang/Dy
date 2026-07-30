@@ -276,6 +276,69 @@ public extension UITextView {
         self.textContainer.lineFragmentPadding = padding
         return self
     }
+
+    /// 设置是否可选择文本
+    /// - Parameter selectable: 是否可选择
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_isSelectable(_ selectable: Bool) -> Self {
+        self.isSelectable = selectable
+        return self
+    }
+
+    /// 设置数据检测类型(自动识别电话、链接等)
+    /// - Parameter types: 检测类型,如 `.link` / `.phoneNumber`
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_dataDetectorTypes(_ types: UIDataDetectorTypes) -> Self {
+        self.dataDetectorTypes = types
+        return self
+    }
+
+    /// 设置是否允许编辑文本属性(加粗/斜体等)
+    /// - Parameter allows: 是否允许
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_allowsEditingTextAttributes(_ allows: Bool) -> Self {
+        self.allowsEditingTextAttributes = allows
+        return self
+    }
+
+    /// 设置链接文本属性(颜色、下划线等)
+    /// - Parameter attributes: 链接属性字典
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_linkTextAttributes(_ attributes: [NSAttributedString.Key: Any]) -> Self {
+        self.linkTextAttributes = attributes
+        return self
+    }
+
+    /// 设置输入辅助视图(如工具栏)
+    /// - Parameter accessoryView: 辅助视图
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_inputAccessoryView(_ accessoryView: UIView?) -> Self {
+        self.inputAccessoryView = accessoryView
+        return self
+    }
+
+    /// 设置自定义输入视图(替代系统键盘)
+    /// - Parameter inputView: 自定义输入视图
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_inputView(_ inputView: UIView?) -> Self {
+        self.inputView = inputView
+        return self
+    }
+
+    /// 设置当前输入属性(字体、颜色等)
+    /// - Parameter attributes: 属性字典
+    /// - Returns: `Self`
+    @discardableResult
+    func dy_typingAttributes(_ attributes: [NSAttributedString.Key: Any]) -> Self {
+        self.typingAttributes = attributes
+        return self
+    }
 }
 
 // MARK: - 链式方法(自定义)
