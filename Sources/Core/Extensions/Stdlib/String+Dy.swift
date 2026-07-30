@@ -2039,31 +2039,6 @@ public extension String {
 
 // MARK: - 类型与实例反射
 public extension String {
-    /// 通过类名字符串获取对应的类类型
-    ///
-    /// - Parameters:
-    ///   - bundle: 指定 Bundle,默认为 `.main`
-    /// - Returns: 对应的 `AnyClass?`,若未找到则返回 `nil`
-    ///
-    /// - Note: 自动拼接 Bundle 的模块名(如 `MyApp.MyClass`),并替换空格和连字符为下划线
-    ///
-    /// - Example:
-    ///   ```swift
-    ///   if let type = "MyViewController".dy_classFromName() {
-    ///       let instance = type.init()
-    ///   }
-    ///   ```
-    func dy_classFromName(in bundle: Bundle = .main) -> AnyClass? {
-        guard let bundleName = bundle.bundleIdentifier ?? bundle.infoDictionary?["CFBundleExecutable"] as? String else {
-            return nil
-        }
-        // 清理模块名中的非法字符(Swift 模块名不允许空格或连字符)
-        let cleanModuleName = bundleName
-            .replacingOccurrences(of: " ", with: "_")
-            .replacingOccurrences(of: "-", with: "_")
-        let fullClassName = "\(cleanModuleName).\(self)"
-        return NSClassFromString(fullClassName)
-    }
 
     /// 通过类名字符串创建该类的实例(要求类继承自 `NSObject` 并有无参 `init()`)
     ///
@@ -2071,31 +2046,14 @@ public extension String {
     ///
     /// - Example:
     ///   ```swift
-    ///   let viewController = "MyViewController".dy_instanceFromClass() as? UIViewController
+    ///   let viewController = "MyViewController".dy_createFromClass() as? UIViewController
     ///   ```
-    func dy_instanceFromClass() -> NSObject? {
-        guard let cls = self.dy_classFromName(),
-              let nsObjectCls = cls as? NSObject.Type
+    func dy_createFromClass() -> NSObject? {
+        guard let aClass = NSClassFromString(self) as? NSObject.Type
         else {
             return nil
         }
-        return nsObjectCls.init()
-    }
-
-    /// 从类型描述字符串中提取简单类名(去除模块名和泛型)
-    ///
-    /// - Example:
-    ///   - `"MyApp.UserManager<Database>"` → `"UserManager"`
-    ///   - `"Foundation.NSArray"` → `"NSArray"`
-    ///   - `"Int"` → `"Int"`
-    func dy_simpleClassName() -> String {
-        // 先处理泛型：截断 `<...>` 部分
-        let base = (firstIndex(of: "<") ?? endIndex) == endIndex ? self : String(self[..<firstIndex(of: "<")!])
-        // 再取最后一个 '.' 之后的部分
-        if let lastDot = base.lastIndex(of: ".") {
-            return String(base[index(after: lastDot)...])
-        }
-        return base
+        return aClass.init()
     }
 }
 
