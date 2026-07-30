@@ -85,7 +85,7 @@ open class DyWebViewController: DyViewController {
 
         self.webView.dy_frame(CGRect(
             x: 0,
-            y: self.navigationController == nil ? 0 : DyScreen.navBarTotalHeight,
+            y: self.naview.isHidden ? 0 : DyScreen.navBarTotalHeight,
             width: self.view.dy_width,
             height: self.view.dy_height - DyScreen.navBarTotalHeight
         ))
@@ -100,7 +100,7 @@ open class DyWebViewController: DyViewController {
 
         self.webView.dy_frame(CGRect(
             x: 0,
-            y: self.navigationController == nil ? 0 : DyScreen.navBarTotalHeight,
+            y: self.naview.isHidden ? 0 : DyScreen.navBarTotalHeight,
             width: self.view.dy_width,
             height: self.view.dy_height - DyScreen.navBarTotalHeight
         ))
