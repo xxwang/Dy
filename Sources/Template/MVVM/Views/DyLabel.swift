@@ -14,7 +14,9 @@ open class DyLabel: UILabel {
     }
 
     override open class func label() -> DyLabel {
-        DyLabel().dy_lineBreakMode(.byTruncatingTail)
+        DyLabel().dy
+            .lineBreakMode(.byTruncatingTail)
+            .build()
     }
 
     deinit {

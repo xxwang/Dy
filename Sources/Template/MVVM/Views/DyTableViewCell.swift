@@ -22,7 +22,8 @@ open class DyTableViewCell: UITableViewCell {
 // MARK: - DySetupable
 @objc extension DyTableViewCell: DySetupable {
     open func setupUI() {
-        self.dy_selectionStyle(.none)
-            .dy_backgroundColor(.clear)
+        self.dy
+            .selectionStyle(.none)
+            .backgroundColor(.clear)
     }
 }

@@ -6,12 +6,13 @@ open class DyTextView: UITextView {
     public var cancellables = Set<AnyCancellable>()
 
     /// 占位文本标签
-    lazy var placeholderLabel: UILabel = UILabel.label()
-        .dy_numberOfLines(0)
-        .dy_backgroundColor(.clear)
-        .dy_textColor(.placeholderText)
-        .dy_font(self.font ?? .systemFont(ofSize: 14))
-        .dy_translatesAutoresizingMaskIntoConstraints(false)
+    lazy var placeholderLabel: UILabel = UILabel.label().dy
+        .numberOfLines(0)
+        .backgroundColor(.clear)
+        .textColor(.placeholderText)
+        .font(self.font ?? .systemFont(ofSize: 14))
+        .translatesAutoresizingMaskIntoConstraints(false)
+        .build()
 
     override open var font: UIFont? {
         didSet {

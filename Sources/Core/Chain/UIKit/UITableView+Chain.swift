@@ -75,7 +75,7 @@ public extension DyWrapper where Base: UITableView {
     /// - Returns: `Self`
     @discardableResult
     func register(_ cellType: (some UITableViewCell).Type) -> Self {
-        base.dy_register(withCellClass: cellType)
+        self.register(withCellClass: cellType)
         return self
     }
 

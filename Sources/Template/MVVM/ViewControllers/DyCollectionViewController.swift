@@ -3,9 +3,10 @@ import DyCore
 
 open class DyCollectionViewController: DyViewController {
     /// `UICollectionView`
-    open lazy var collectionView = UICollectionView.vCollectionView()
-        .dy_dataSource(self)
-        .dy_delegate(self)
+    open lazy var collectionView = UICollectionView.vCollectionView().dy
+        .dataSource(self)
+        .delegate(self)
+        .build()
 
     override open func viewDidLoad() {
         super.viewDidLoad()
@@ -34,12 +35,13 @@ open class DyCollectionViewController: DyViewController {
         super.updateNaview()
 
         let topMargin = self.naview.isHidden ? 0 : DyScreen.navBarTotalHeight
-        self.collectionView.dy_frame(CGRect(
-            x: 0,
-            y: topMargin,
-            width: self.view.dy_width,
-            height: self.view.dy_height - topMargin
-        ))
+        self.collectionView.dy
+            .frame(CGRect(
+                x: 0,
+                y: topMargin,
+                width: self.view.dy_width,
+                height: self.view.dy_height - topMargin
+            ))
     }
 }
 

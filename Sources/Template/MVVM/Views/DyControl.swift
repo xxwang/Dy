@@ -14,7 +14,9 @@ open class DyControl: UIControl {
     }
 
     override open class func control() -> DyControl {
-        DyControl().dy_isHighlighted(false)
+        DyControl().dy
+            .isHighlighted(false)
+            .build()
     }
 
     deinit {

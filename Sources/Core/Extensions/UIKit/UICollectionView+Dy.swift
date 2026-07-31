@@ -8,24 +8,25 @@ public extension UICollectionView {
     /// 启用长按拖拽移动 `Item` 功能(自动添加长按手势并处理交互式移动)
     func dy_allowMoveItem() {
         let longPress = UILongPressGestureRecognizer()
-        longPress.dy_onStateChanged { [weak self, weak longPress] state in
-            guard let self, let recognizer = longPress else { return }
+        longPress.dy
+            .onStateChanged { [weak self, weak longPress] state in
+                guard let self, let recognizer = longPress else { return }
 
-            let location = recognizer.location(in: self)
-            switch state {
-            case .began:
-                if let indexPath = self.indexPathForItem(at: location) {
-                    self.beginInteractiveMovementForItem(at: indexPath)
+                let location = recognizer.location(in: self)
+                switch state {
+                case .began:
+                    if let indexPath = self.indexPathForItem(at: location) {
+                        self.beginInteractiveMovementForItem(at: indexPath)
+                    }
+                case .changed:
+                    self.updateInteractiveMovementTargetPosition(location)
+                case .ended:
+                    self.endInteractiveMovement()
+                default:
+                    self.cancelInteractiveMovement()
                 }
-            case .changed:
-                self.updateInteractiveMovementTargetPosition(location)
-            case .ended:
-                self.endInteractiveMovement()
-            default:
-                self.cancelInteractiveMovement()
             }
-        }
-        self.dy_addGestureRecognizer(longPress)
+        self.addGestureRecognizer(longPress)
         self.dy_setAssociatedObject(longPress, forKey: &dy_moveItemGestureKey)
     }
 

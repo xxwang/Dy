@@ -17,7 +17,8 @@ open class DyNavigationController: UINavigationController {
             .dy_delegate(self) // 设置代理
             .dy_interactivePopGestureRecognizerDelegate(self) // 设置交互手势识别器代理
 
-        self.view.dy_backgroundColor(.white)
+        self.view.dy
+            .backgroundColor(.white)
     }
 }
 

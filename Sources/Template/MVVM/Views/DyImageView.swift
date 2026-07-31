@@ -14,7 +14,9 @@ open class DyImageView: UIImageView {
     }
 
     override open class func imageView() -> DyImageView {
-        DyImageView(frame: .zero).dy_contentMode(.scaleAspectFit)
+        DyImageView(frame: .zero).dy
+            .contentMode(.scaleAspectFit)
+            .build()
     }
 
     deinit {

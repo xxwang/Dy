@@ -33,7 +33,7 @@ public extension DyWrapper where Base: UISearchBar {
     /// - Parameter color: 颜色
     /// - Returns: `Self`
     @discardableResult
-    override func tintColor(_ color: UIColor?) -> Self {
+    func tintColor(_ color: UIColor?) -> Self {
         base.tintColor = color
         return self
     }

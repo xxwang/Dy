@@ -186,9 +186,10 @@ public extension DyWrapper where Base: UITabBar {
     /// - Returns: `Self`
     @discardableResult
     func corner(maskedCorners: CACornerMask, radius: CGFloat) -> Self {
-        base.dy_maskedCorners(maskedCorners)
-            .dy_cornerRadius(radius)
-            .dy_masksToBounds(true)
+        base.dy
+            .maskedCorners(maskedCorners)
+            .cornerRadius(radius)
+            .masksToBounds(true)
         return self
     }
 }

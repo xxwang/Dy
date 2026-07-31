@@ -6,25 +6,30 @@ open class DyNaView: UIView {
     open var backBlock: DyAction?
 
     /// 状态栏占位区域(不可交互,仅用于布局)
-    open lazy var statusBar = UIView.view()
-        .dy_backgroundColor(.clear)
+    open lazy var statusBar = UIView.view().dy
+        .backgroundColor(.clear)
+        .build()
 
     /// 标题容器(包含返回按钮和标题)
-    open lazy var naview = UIView.view()
-        .dy_backgroundColor(.clear)
+    open lazy var naview = UIView.view().dy
+        .backgroundColor(.clear)
+        .build()
 
     /// 底部分割线(默认半透明黑线)
-    open lazy var lineView = UIView.view()
-        .dy_backgroundColor(.black.dy_alpha(0.25))
+    open lazy var lineView = UIView.view().dy
+        .backgroundColor(.black.dy_alpha(0.25))
+        .build()
 
     /// 返回按钮(UIButton)
-    open lazy var backButton = UIButton.button()
-        .dy_addTarget(self, action: #selector(onBackAction))
+    open lazy var backButton = UIButton.button().dy
+        .addTarget(self, action: #selector(onBackAction))
+        .build()
 
     /// 标题标签
-    open lazy var titleLabel = UILabel.label()
-        .dy_textAlignment(.center)
-        .dy_lineBreakMode(.byTruncatingTail)
+    open lazy var titleLabel = UILabel.label().dy
+        .textAlignment(.center)
+        .lineBreakMode(.byTruncatingTail)
+        .build()
 
     /// 背景图片视图(按需添加,初始不创建)
     open var backgroundImageView: UIImageView?
@@ -35,20 +40,23 @@ open class DyNaView: UIView {
     override public init(frame: CGRect) {
         super.init(frame: frame)
 
-        self.dy_backgroundColor(.white)
-            .dy_isUserInteractionEnabled(true)
+        self.dy
+            .backgroundColor(.white)
+            .isUserInteractionEnabled(true)
 
         // 添加核心子视图(顺序决定层级)
-        self.dy_addSubviews([
-            self.statusBar,
-            self.naview,
-            self.lineView,
-        ])
+        self.dy
+            .addSubviews([
+                self.statusBar,
+                self.naview,
+                self.lineView,
+            ])
 
-        self.naview.dy_addSubviews([
-            self.backButton,
-            self.titleLabel,
-        ])
+        self.naview.dy
+            .addSubviews([
+                self.backButton,
+                self.titleLabel,
+            ])
     }
 
     @available(*, unavailable, message: "Use init(frame:) instead.")
@@ -136,22 +144,25 @@ public extension DyNaView {
     ///       .dy_backAction { /* 返回逻辑 */ }
     ///   ```
     static func naview() -> DyNaView {
-        let naView = DyNaView().dy_size(CGSize(
-            width: DyScreen.screenWidth,
-            height: DyScreen.navBarTotalHeight
-        ))
-        .dy_showLine(true)
-        .dy_showShadow(false)
-        .dy_titleColor(.black)
-        .dy_titleFont(.systemFont(ofSize: 18, weight: .medium))
+        let naView = DyNaView()
+            .dy
+            .size(CGSize(
+                width: DyScreen.screenWidth,
+                height: DyScreen.navBarTotalHeight
+            ))
+            .showLine(true)
+            .showShadow(false)
+            .titleColor(.black)
+            .titleFont(.systemFont(ofSize: 18, weight: .medium))
 
         // 设置默认返回图标(假设资源存在)
         if let image = UIImage(named: "navbar_back", in: .module, compatibleWith: nil) {
-            naView.dy_backImage(image, for: .normal)
-                .dy_backImage(image, for: .highlighted)
+            naView
+                .backImage(image, for: .normal)
+                .backImage(image, for: .highlighted)
         }
 
-        return naView
+        return naView.build()
     }
 }
 
@@ -242,12 +253,13 @@ public extension DyWrapper where Base: DyNaView {
     /// 设置渐变背景(覆盖纯色和图片)
     @discardableResult
     func backgroundGradient(_ colors: [UIColor]) -> Self {
-        let gradient = CAGradientLayer()
-            .dy_frame(base.bounds)
-            .dy_colors(colors)
-            .dy_startPoint(.zero)
-            .dy_endPoint(.init(x: 0, y: 1))
-            .dy_zPosition(-1)
+        let gradient = CAGradientLayer().dy
+            .frame(base.bounds)
+            .colors(colors)
+            .startPoint(.zero)
+            .endPoint(.init(x: 0, y: 1))
+            .zPosition(-1)
+            .build()
 
         base.gradientLayer?.removeFromSuperlayer()
         base.layer.insertSublayer(gradient, at: 0)
