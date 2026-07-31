@@ -30,15 +30,15 @@ open class DyScrollViewController: DyViewController {
         self.contentView
             .dy_add2(self.scrollView)
 
-        self.updateUI()
+        self.updateNaview()
     }
 }
 
 // MARK: - 支持子类重写的方法
 @objc extension DyScrollViewController {
-    /// 更新会受影响的UI
-    override open func updateUI() {
-        super.updateUI()
+    /// 更新导航栏位置及受影响的视图
+    override open func updateNaview() {
+        super.updateNaview()
 
         let topMargin = self.naview.isHidden ? 0 : DyScreen.navBarTotalHeight
         self.scrollView

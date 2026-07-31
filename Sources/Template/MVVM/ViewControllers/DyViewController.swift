@@ -37,19 +37,24 @@ open class DyViewController: UIViewController {
 @objc extension DyViewController: DySetupable {
     /// 配置UI
     open func setupUI() {
-        self.dy_overrideUserInterfaceStyle(.light) // 设置界面样式
+        self
+            // 设置界面样式
+            .dy_overrideUserInterfaceStyle(.light)
 
-        self.view.dy_backgroundColor(.white) // 控制器背景色
+        self.view
+            // 控制器背景色
+            .dy_backgroundColor(.white)
 
         // 添加导航条
-        self.naview.dy_isHidden(self.navigationController == nil)
-            .dy_add2(self.view)
+        self.naview
             .dy_frame(CGRect(
                 x: 0,
                 y: 0,
                 width: DyScreen.screenWidth,
                 height: DyScreen.navBarTotalHeight
             ))
+            .dy_isHidden(true)
+            .dy_add2(self.view)
     }
 
     /// 绑定事件
@@ -61,13 +66,13 @@ open class DyViewController: UIViewController {
     /// 获取数据
     open func fetchData() {}
 
-    /// 更新UI(绑定)数据
-    open func updateUI() {}
+    /// 绑定数据
+    open func bindData() {}
 }
 
 // MARK: - 支持子类重写的方法
 @objc extension DyViewController {
-    /// 更新导航栏位置(由于有可能会在进入控制器时获取不到导航栏高度)
+    /// 更新导航栏位置及受影响的视图
     open func updateNaview() {
         self.naview.dy_frame(CGRect(
             x: 0,

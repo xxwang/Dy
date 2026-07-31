@@ -5,9 +5,6 @@ public protocol DySetupable: AnyObject {
     /// 配置UI
     func setupUI()
 
-    /// 更新UI
-    func updateUI()
-
     /// 绑定事件
     func bindEvents()
 
@@ -25,9 +22,6 @@ public protocol DySetupable: AnyObject {
 public extension DySetupable {
     /// 配置UI
     func setupUI() {}
-
-    /// 更新UI
-    func updateUI() {}
 
     /// 绑定事件
     func bindEvents() {}
