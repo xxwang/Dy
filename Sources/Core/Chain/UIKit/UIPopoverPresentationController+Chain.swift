@@ -1,13 +1,13 @@
 import UIKit
 
 // MARK: - 链式配置(Popover)
-public extension UIPopoverPresentationController {
+public extension DyWrapper where Base: UIPopoverPresentationController {
     /// 设置代理
     /// - Parameter delegate: 代理对象
     /// - Returns: `Self`
     @discardableResult
-    func dy_delegate(_ delegate: (any UIPopoverPresentationControllerDelegate)?) -> Self {
-        self.delegate = delegate
+    func delegate(_ delegate: (any UIPopoverPresentationControllerDelegate)?) -> Self {
+        base.delegate = delegate
         return self
     }
 
@@ -15,8 +15,8 @@ public extension UIPopoverPresentationController {
     /// - Parameter directions: 箭头方向（如 .any, .up, .down）
     /// - Returns: `Self`
     @discardableResult
-    func dy_permittedArrowDirections(_ directions: UIPopoverArrowDirection) -> Self {
-        self.permittedArrowDirections = directions
+    func permittedArrowDirections(_ directions: UIPopoverArrowDirection) -> Self {
+        base.permittedArrowDirections = directions
         return self
     }
 
@@ -24,8 +24,8 @@ public extension UIPopoverPresentationController {
     /// - Parameter sourceView: 源视图
     /// - Returns: `Self`
     @discardableResult
-    func dy_sourceView(_ sourceView: UIView?) -> Self {
-        self.sourceView = sourceView
+    func sourceView(_ sourceView: UIView?) -> Self {
+        base.sourceView = sourceView
         return self
     }
 
@@ -33,8 +33,8 @@ public extension UIPopoverPresentationController {
     /// - Parameter sourceRect: 源矩形（默认为 bounds）
     /// - Returns: `Self`
     @discardableResult
-    func dy_sourceRect(_ sourceRect: CGRect) -> Self {
-        self.sourceRect = sourceRect
+    func sourceRect(_ sourceRect: CGRect) -> Self {
+        base.sourceRect = sourceRect
         return self
     }
 
@@ -42,8 +42,8 @@ public extension UIPopoverPresentationController {
     /// - Parameter canOverlap: 是否允许重叠
     /// - Returns: `Self`
     @discardableResult
-    func dy_canOverlapSourceViewRect(_ canOverlap: Bool) -> Self {
-        self.canOverlapSourceViewRect = canOverlap
+    func canOverlapSourceViewRect(_ canOverlap: Bool) -> Self {
+        base.canOverlapSourceViewRect = canOverlap
         return self
     }
 
@@ -52,8 +52,8 @@ public extension UIPopoverPresentationController {
     /// - Returns: `Self`
     @available(iOS 16.0, *)
     @discardableResult
-    func dy_sourceItem(_ sourceItem: (any UIPopoverPresentationControllerSourceItem)?) -> Self {
-        self.sourceItem = sourceItem
+    func sourceItem(_ sourceItem: (any UIPopoverPresentationControllerSourceItem)?) -> Self {
+        base.sourceItem = sourceItem
         return self
     }
 
@@ -61,8 +61,8 @@ public extension UIPopoverPresentationController {
     /// - Parameter passthroughViews: 视图数组
     /// - Returns: `Self`
     @discardableResult
-    func dy_passthroughViews(_ views: [UIView]?) -> Self {
-        self.passthroughViews = views
+    func passthroughViews(_ views: [UIView]?) -> Self {
+        base.passthroughViews = views
         return self
     }
 
@@ -70,8 +70,8 @@ public extension UIPopoverPresentationController {
     /// - Parameter color: 背景颜色
     /// - Returns: `Self`
     @discardableResult
-    func dy_backgroundColor(_ color: UIColor?) -> Self {
-        self.backgroundColor = color
+    func backgroundColor(_ color: UIColor?) -> Self {
+        base.backgroundColor = color
         return self
     }
 
@@ -79,8 +79,8 @@ public extension UIPopoverPresentationController {
     /// - Parameter margins: 内边距
     /// - Returns: `Self`
     @discardableResult
-    func dy_popoverLayoutMargins(_ margins: UIEdgeInsets) -> Self {
-        self.popoverLayoutMargins = margins
+    func popoverLayoutMargins(_ margins: UIEdgeInsets) -> Self {
+        base.popoverLayoutMargins = margins
         return self
     }
 
@@ -88,8 +88,8 @@ public extension UIPopoverPresentationController {
     /// - Parameter backgroundClass: 继承自 `UIPopoverBackgroundView` 的类
     /// - Returns: `Self`
     @discardableResult
-    func dy_popoverBackgroundViewClass(_ backgroundClass: (any UIPopoverBackgroundViewMethods.Type)?) -> Self {
-        self.popoverBackgroundViewClass = backgroundClass
+    func popoverBackgroundViewClass(_ backgroundClass: (any UIPopoverBackgroundViewMethods.Type)?) -> Self {
+        base.popoverBackgroundViewClass = backgroundClass
         return self
     }
 }

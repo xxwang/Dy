@@ -1,15 +1,15 @@
 import UIKit
 
 // MARK: - 链式设置属性
-public extension UIRefreshControl {
+public extension DyWrapper where Base: UIRefreshControl {
     /// 设置富文本标题
     /// - Parameters:
     ///   - title: 标题文本
     ///   - attributes: 富文本属性(如字体、颜色)
     /// - Returns: `Self`
     @discardableResult
-    func dy_title(_ title: String, attributes: [NSAttributedString.Key: Any] = [:]) -> Self {
-        self.attributedTitle = NSAttributedString(string: title, attributes: attributes)
+    func title(_ title: String, attributes: [NSAttributedString.Key: Any] = [:]) -> Self {
+        base.attributedTitle = NSAttributedString(string: title, attributes: attributes)
         return self
     }
 
@@ -17,8 +17,8 @@ public extension UIRefreshControl {
     /// - Parameter color: 主色调
     /// - Returns: `Self`
     @discardableResult
-    override func dy_tintColor(_ color: UIColor?) -> Self {
-        self.tintColor = color
+    func tintColor(_ color: UIColor?) -> Self {
+        base.tintColor = color
         return self
     }
 
@@ -28,19 +28,19 @@ public extension UIRefreshControl {
     ///   - action: 回调方法(需带 `@objc` 标记)
     /// - Returns: `Self`
     @discardableResult
-    func dy_addTarget(_ target: Any?, action: Selector) -> Self {
-        self.addTarget(target, action: action, for: .valueChanged)
+    func addTarget(_ target: Any?, action: Selector) -> Self {
+        base.addTarget(target, action: action, for: .valueChanged)
         return self
     }
 }
 
 // MARK: - 链式方法(自定义)
-public extension UIRefreshControl {
+public extension DyWrapper where Base: UIRefreshControl {
     /// 将刷新控件添加到滚动视图或者其子类
     /// - Parameter scrollView: 滚动视图或者其子类
     /// - Returns: `Self`
     @discardableResult
-    func dy_add2(_ scrollView: UIScrollView) -> Self {
+    func add2(_ scrollView: UIScrollView) -> Self {
         return self
     }
 
@@ -51,22 +51,22 @@ public extension UIRefreshControl {
     ///   - triggerRefreshHandler: 是否立即触发 `.valueChanged` 事件(默认 false)
     /// - Returns: `Self`
     @discardableResult
-    func dy_startRefreshing(in scrollView: UIScrollView, animated: Bool, triggerRefreshHandler: Bool = false) -> Self {
-        if self.superview == nil || self.superview !== scrollView {
-            scrollView.refreshControl = self
+    func startRefreshing(in scrollView: UIScrollView, animated: Bool, triggerRefreshHandler: Bool = false) -> Self {
+        if base.superview == nil || base.superview !== scrollView {
+            scrollView.refreshControl = base
         }
 
-        self.beginRefreshing()
+        base.beginRefreshing()
 
         // 仅当当前未处于刷新偏移状态时,才调整 contentOffset
-        let refreshOffset = -self.frame.height
+        let refreshOffset = -base.frame.height
         if scrollView.contentOffset.y > refreshOffset {
             let newOffset = CGPoint(x: scrollView.contentOffset.x, y: refreshOffset)
             scrollView.setContentOffset(newOffset, animated: animated)
         }
 
         if triggerRefreshHandler {
-            self.sendActions(for: .valueChanged)
+            base.sendActions(for: .valueChanged)
         }
         return self
     }
@@ -75,13 +75,13 @@ public extension UIRefreshControl {
     /// - Parameter animated: 是否以动画方式恢复原始滚动位置
     /// - Returns: `Self`
     @discardableResult
-    func dy_stopRefreshing(animated: Bool = true) -> Self {
-        self.endRefreshing()
+    func stopRefreshing(animated: Bool = true) -> Self {
+        base.endRefreshing()
 
-        guard let scrollView = self.superview as? UIScrollView else { return self }
+        guard let scrollView = base.superview as? UIScrollView else { return self }
 
         // 仅当当前处于“被拉下”状态时才重置 contentOffset
-        let refreshOffset = -self.frame.height
+        let refreshOffset = -base.frame.height
         if scrollView.contentOffset.y <= refreshOffset {
             if animated {
                 UIView.animate(withDuration: 0.25) {

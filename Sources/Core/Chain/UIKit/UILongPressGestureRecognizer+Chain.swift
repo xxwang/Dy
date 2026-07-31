@@ -1,13 +1,13 @@
 import UIKit
 
 // MARK: - 链式设置属性
-public extension UILongPressGestureRecognizer {
+public extension DyWrapper where Base: UILongPressGestureRecognizer {
     /// 设置触发长按所需的手指点击次数（轻点后长按）
     /// - Parameter count: 点击次数，默认为 0（即无需点击，直接长按）
     /// - Returns: `Self`
     @discardableResult
-    func dy_numberOfTapsRequired(_ count: Int) -> Self {
-        self.numberOfTapsRequired = count
+    func numberOfTapsRequired(_ count: Int) -> Self {
+        base.numberOfTapsRequired = count
         return self
     }
 
@@ -15,8 +15,8 @@ public extension UILongPressGestureRecognizer {
     /// - Parameter count: 触摸点数量（如 1 指、2 指），默认为 1
     /// - Returns: `Self`
     @discardableResult
-    func dy_numberOfTouchesRequired(_ count: Int) -> Self {
-        self.numberOfTouchesRequired = count
+    func numberOfTouchesRequired(_ count: Int) -> Self {
+        base.numberOfTouchesRequired = count
         return self
     }
 
@@ -24,8 +24,8 @@ public extension UILongPressGestureRecognizer {
     /// - Parameter duration: 时间间隔（秒），默认为 0.5 秒
     /// - Returns: `Self`
     @discardableResult
-    func dy_minimumPressDuration(_ duration: TimeInterval) -> Self {
-        self.minimumPressDuration = duration
+    func minimumPressDuration(_ duration: TimeInterval) -> Self {
+        base.minimumPressDuration = duration
         return self
     }
 
@@ -33,8 +33,8 @@ public extension UILongPressGestureRecognizer {
     /// - Parameter distance: 允许的移动半径（点），默认为 10.0
     /// - Returns: `Self`
     @discardableResult
-    func dy_allowableMovement(_ distance: CGFloat) -> Self {
-        self.allowableMovement = distance
+    func allowableMovement(_ distance: CGFloat) -> Self {
+        base.allowableMovement = distance
         return self
     }
 }

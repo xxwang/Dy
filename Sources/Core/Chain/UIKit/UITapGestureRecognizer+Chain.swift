@@ -1,13 +1,13 @@
 import UIKit
 
 // MARK: - 链式设置属性
-public extension UITapGestureRecognizer {
+public extension DyWrapper where Base: UITapGestureRecognizer {
     /// 设置触发点击手势所需的点击次数
     /// - Parameter count: 点击次数（如单击=1，双击=2），默认为 1
     /// - Returns: `Self`
     @discardableResult
-    func dy_numberOfTapsRequired(_ count: Int) -> Self {
-        self.numberOfTapsRequired = count
+    func numberOfTapsRequired(_ count: Int) -> Self {
+        base.numberOfTapsRequired = count
         return self
     }
 
@@ -15,8 +15,8 @@ public extension UITapGestureRecognizer {
     /// - Parameter count: 触摸点数量（如 1 指、2 指点击），默认为 1
     /// - Returns: `Self`
     @discardableResult
-    func dy_numberOfTouchesRequired(_ count: Int) -> Self {
-        self.numberOfTouchesRequired = count
+    func numberOfTouchesRequired(_ count: Int) -> Self {
+        base.numberOfTouchesRequired = count
         return self
     }
 
@@ -25,8 +25,8 @@ public extension UITapGestureRecognizer {
     /// - Returns: `Self`
     @available(iOS 13.4, *)
     @discardableResult
-    func dy_buttonMaskRequired(_ mask: UIEvent.ButtonMask) -> Self {
-        self.buttonMaskRequired = mask
+    func buttonMaskRequired(_ mask: UIEvent.ButtonMask) -> Self {
+        base.buttonMaskRequired = mask
         return self
     }
 }

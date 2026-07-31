@@ -1,13 +1,13 @@
 import UIKit
 
 // MARK: - 链式设置属性
-public extension UICollectionViewFlowLayout {
+public extension DyWrapper where Base: UICollectionViewFlowLayout {
     /// 设置`滚动方向上`相邻行(或列)之间的最小间距
     /// - Parameter spacing: 间距
     /// - Returns: `Self`
     @discardableResult
-    func dy_minimumLineSpacing(_ spacing: CGFloat) -> Self {
-        self.minimumLineSpacing = spacing
+    func minimumLineSpacing(_ spacing: CGFloat) -> Self {
+        base.minimumLineSpacing = spacing
         return self
     }
 
@@ -15,8 +15,8 @@ public extension UICollectionViewFlowLayout {
     /// - Parameter spacing: 间距
     /// - Returns: `Self`
     @discardableResult
-    func dy_minimumInteritemSpacing(_ spacing: CGFloat) -> Self {
-        self.minimumInteritemSpacing = spacing
+    func minimumInteritemSpacing(_ spacing: CGFloat) -> Self {
+        base.minimumInteritemSpacing = spacing
         return self
     }
 
@@ -24,8 +24,8 @@ public extension UICollectionViewFlowLayout {
     /// - Parameter size: `item` 尺寸若需自动计算高度,请使用 `.automaticSize` 并配合 `estimatedItemSize`
     /// - Returns: `Self`
     @discardableResult
-    func dy_itemSize(_ size: CGSize) -> Self {
-        self.itemSize = size
+    func itemSize(_ size: CGSize) -> Self {
+        base.itemSize = size
         return self
     }
 
@@ -34,8 +34,8 @@ public extension UICollectionViewFlowLayout {
     /// - Parameter size: 预估尺寸
     /// - Returns: `Self`
     @discardableResult
-    func dy_estimatedItemSize(_ size: CGSize) -> Self {
-        self.estimatedItemSize = size
+    func estimatedItemSize(_ size: CGSize) -> Self {
+        base.estimatedItemSize = size
         return self
     }
 
@@ -43,8 +43,8 @@ public extension UICollectionViewFlowLayout {
     /// - Parameter scrollDirection: 滚动方向(`.vertical` 或 `.horizontal`)
     /// - Returns: `Self`
     @discardableResult
-    func dy_scrollDirection(_ scrollDirection: UICollectionView.ScrollDirection) -> Self {
-        self.scrollDirection = scrollDirection
+    func scrollDirection(_ scrollDirection: UICollectionView.ScrollDirection) -> Self {
+        base.scrollDirection = scrollDirection
         return self
     }
 
@@ -52,8 +52,8 @@ public extension UICollectionViewFlowLayout {
     /// - Parameter size: `header` 尺寸(设为 `.zero` 可隐藏)
     /// - Returns: `Self`
     @discardableResult
-    func dy_headerReferenceSize(_ size: CGSize) -> Self {
-        self.headerReferenceSize = size
+    func headerReferenceSize(_ size: CGSize) -> Self {
+        base.headerReferenceSize = size
         return self
     }
 
@@ -61,8 +61,8 @@ public extension UICollectionViewFlowLayout {
     /// - Parameter size: `footer` 尺寸(设为 `.zero` 可隐藏)
     /// - Returns: `Self`
     @discardableResult
-    func dy_footerReferenceSize(_ size: CGSize) -> Self {
-        self.footerReferenceSize = size
+    func footerReferenceSize(_ size: CGSize) -> Self {
+        base.footerReferenceSize = size
         return self
     }
 
@@ -70,8 +70,8 @@ public extension UICollectionViewFlowLayout {
     /// - Parameter sectionInset: 内边距(`top`, `left`, `bottom`, `right`)
     /// - Returns: `Self`
     @discardableResult
-    func dy_sectionInset(_ sectionInset: UIEdgeInsets) -> Self {
-        self.sectionInset = sectionInset
+    func sectionInset(_ sectionInset: UIEdgeInsets) -> Self {
+        base.sectionInset = sectionInset
         return self
     }
 
@@ -79,8 +79,8 @@ public extension UICollectionViewFlowLayout {
     /// - Parameter reference: 参考系(如 `.fromSafeArea`, `.fromContentInsets` 等)
     /// - Returns: `Self`
     @discardableResult
-    func dy_sectionInsetReference(_ reference: UICollectionViewFlowLayout.SectionInsetReference) -> Self {
-        self.sectionInsetReference = reference
+    func sectionInsetReference(_ reference: UICollectionViewFlowLayout.SectionInsetReference) -> Self {
+        base.sectionInsetReference = reference
         return self
     }
 
@@ -88,8 +88,8 @@ public extension UICollectionViewFlowLayout {
     /// - Parameter pinned: 是否悬停(默认 `false`)
     /// - Returns: `Self`
     @discardableResult
-    func dy_sectionHeadersPinToVisibleBounds(_ pinned: Bool) -> Self {
-        self.sectionHeadersPinToVisibleBounds = pinned
+    func sectionHeadersPinToVisibleBounds(_ pinned: Bool) -> Self {
+        base.sectionHeadersPinToVisibleBounds = pinned
         return self
     }
 
@@ -97,8 +97,8 @@ public extension UICollectionViewFlowLayout {
     /// - Parameter pinned: 是否悬停(默认 `false`)
     /// - Returns: `Self`
     @discardableResult
-    func dy_sectionFootersPinToVisibleBounds(_ pinned: Bool) -> Self {
-        self.sectionFootersPinToVisibleBounds = pinned
+    func sectionFootersPinToVisibleBounds(_ pinned: Bool) -> Self {
+        base.sectionFootersPinToVisibleBounds = pinned
         return self
     }
 }

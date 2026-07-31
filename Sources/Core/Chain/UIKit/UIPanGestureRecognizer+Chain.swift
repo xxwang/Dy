@@ -1,13 +1,13 @@
 import UIKit
 
 // MARK: - 链式设置属性
-public extension UIPanGestureRecognizer {
+public extension DyWrapper where Base: UIPanGestureRecognizer {
     /// 设置触发平移手势所需的最少触摸点数
     /// - Parameter count: 最小触摸数量，默认为 1
     /// - Returns: `Self`
     @discardableResult
-    func dy_minimumNumberOfTouches(_ count: Int) -> Self {
-        self.minimumNumberOfTouches = count
+    func minimumNumberOfTouches(_ count: Int) -> Self {
+        base.minimumNumberOfTouches = count
         return self
     }
 
@@ -15,8 +15,8 @@ public extension UIPanGestureRecognizer {
     /// - Parameter count: 最大触摸数量，默认为 UINT_MAX（即无上限）
     /// - Returns: `Self`
     @discardableResult
-    func dy_maximumNumberOfTouches(_ count: Int) -> Self {
-        self.maximumNumberOfTouches = count
+    func maximumNumberOfTouches(_ count: Int) -> Self {
+        base.maximumNumberOfTouches = count
         return self
     }
 
@@ -25,22 +25,22 @@ public extension UIPanGestureRecognizer {
     /// - Returns: `Self`
     @available(iOS 13.4, *)
     @discardableResult
-    func dy_allowedScrollTypesMask(_ mask: UIScrollTypeMask) -> Self {
-        self.allowedScrollTypesMask = mask
+    func allowedScrollTypesMask(_ mask: UIScrollTypeMask) -> Self {
+        base.allowedScrollTypesMask = mask
         return self
     }
 }
 
 // MARK: - 链式方法
-public extension UIPanGestureRecognizer {
+public extension DyWrapper where Base: UIPanGestureRecognizer {
     /// 设置当前平移偏移量（通常用于重置手势状态）
     /// - Parameters:
     ///   - translation: 平移向量（相对于起始点）
     ///   - view: 参考坐标系的视图，传 nil 表示使用窗口坐标系
     /// - Returns: `Self`
     @discardableResult
-    func dy_setTranslation(_ translation: CGPoint, in view: UIView?) -> Self {
-        self.setTranslation(translation, in: view)
+    func setTranslation(_ translation: CGPoint, in view: UIView?) -> Self {
+        base.setTranslation(translation, in: view)
         return self
     }
 }

@@ -1,13 +1,13 @@
 import UIKit
 
 // MARK: - 链式设置属性
-public extension UIControl {
+public extension DyWrapper where Base: UIControl {
     /// 设置控件启用状态
     /// - Parameter isEnabled: 是否启用
     /// - Returns: 当前实例,支持链式调用
     @discardableResult
-    @objc func dy_isEnabled(_ isEnabled: Bool) -> Self {
-        self.isEnabled = isEnabled
+    func isEnabled(_ isEnabled: Bool) -> Self {
+        base.isEnabled = isEnabled
         return self
     }
 
@@ -15,8 +15,8 @@ public extension UIControl {
     /// - Parameter isSelected: 是否选中
     /// - Returns: 当前实例,支持链式调用
     @discardableResult
-    @objc func dy_isSelected(_ isSelected: Bool) -> Self {
-        self.isSelected = isSelected
+    func isSelected(_ isSelected: Bool) -> Self {
+        base.isSelected = isSelected
         return self
     }
 
@@ -24,8 +24,8 @@ public extension UIControl {
     /// - Parameter isHighlighted: 是否高亮
     /// - Returns: 当前实例,支持链式调用
     @discardableResult
-    @objc func dy_isHighlighted(_ isHighlighted: Bool) -> Self {
-        self.isHighlighted = isHighlighted
+    func isHighlighted(_ isHighlighted: Bool) -> Self {
+        base.isHighlighted = isHighlighted
         return self
     }
 
@@ -33,8 +33,8 @@ public extension UIControl {
     /// - Parameter alignment: 对齐方式
     /// - Returns: 当前实例,支持链式调用
     @discardableResult
-    func dy_contentVerticalAlignment(_ contentVerticalAlignment: UIControl.ContentVerticalAlignment) -> Self {
-        self.contentVerticalAlignment = contentVerticalAlignment
+    func contentVerticalAlignment(_ contentVerticalAlignment: UIControl.ContentVerticalAlignment) -> Self {
+        base.contentVerticalAlignment = contentVerticalAlignment
         return self
     }
 
@@ -42,14 +42,14 @@ public extension UIControl {
     /// - Parameter alignment: 对齐方式
     /// - Returns: 当前实例,支持链式调用
     @discardableResult
-    func dy_contentHorizontalAlignment(_ alignment: UIControl.ContentHorizontalAlignment) -> Self {
-        self.contentHorizontalAlignment = alignment
+    func contentHorizontalAlignment(_ alignment: UIControl.ContentHorizontalAlignment) -> Self {
+        base.contentHorizontalAlignment = alignment
         return self
     }
 }
 
 // MARK: - 链式方法
-public extension UIControl {
+public extension DyWrapper where Base: UIControl {
     /// 链式添加 `target-action`
     /// - Parameters:
     ///   - target: 目标对象
@@ -57,8 +57,8 @@ public extension UIControl {
     ///   - event: 事件类型,默认为 `.touchUpInside`
     /// - Returns: 当前实例
     @discardableResult
-    func dy_addTarget(_ target: Any?, action: Selector, for event: UIControl.Event = .touchUpInside) -> Self {
-        self.addTarget(target, action: action, for: event)
+    func addTarget(_ target: Any?, action: Selector, for event: UIControl.Event = .touchUpInside) -> Self {
+        base.addTarget(target, action: action, for: event)
         return self
     }
 
@@ -69,8 +69,8 @@ public extension UIControl {
     ///   - event: 事件类型,默认为 `.touchUpInside`
     /// - Returns: 当前实例
     @discardableResult
-    func dy_removeTarget(_ target: Any?, action: Selector?, for event: UIControl.Event = .touchUpInside) -> Self {
-        self.removeTarget(target, action: action, for: event)
+    func removeTarget(_ target: Any?, action: Selector?, for event: UIControl.Event = .touchUpInside) -> Self {
+        base.removeTarget(target, action: action, for: event)
         return self
     }
 }

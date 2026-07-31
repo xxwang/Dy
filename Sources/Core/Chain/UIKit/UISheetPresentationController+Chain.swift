@@ -2,12 +2,12 @@ import UIKit
 
 // MARK: - 链式设置属性
 @available(iOS 15.0, *)
-public extension UISheetPresentationController {
+public extension DyWrapper where Base: UISheetPresentationController {
     /// 设置代理
     /// - Parameter delegate: 代理对象
     /// - Returns: `Self`
-    func dy_delegate(_ delegate: (any UISheetPresentationControllerDelegate)?) -> Self {
-        self.delegate = delegate
+    func delegate(_ delegate: (any UISheetPresentationControllerDelegate)?) -> Self {
+        base.delegate = delegate
         return self
     }
 
@@ -15,8 +15,8 @@ public extension UISheetPresentationController {
     /// - Parameter detents: 抽屉支持的高度档位（如 .medium(), .large()）
     /// - Returns: `Self`
     @discardableResult
-    func dy_detents(_ detents: [UISheetPresentationController.Detent]) -> Self {
-        self.detents = detents
+    func detents(_ detents: [UISheetPresentationController.Detent]) -> Self {
+        base.detents = detents
         return self
     }
 
@@ -24,8 +24,8 @@ public extension UISheetPresentationController {
     /// - Parameter prefersGrabberVisible: 是否显示小横条
     /// - Returns: `Self`
     @discardableResult
-    func dy_prefersGrabberVisible(_ prefersGrabberVisible: Bool) -> Self {
-        self.prefersGrabberVisible = prefersGrabberVisible
+    func prefersGrabberVisible(_ prefersGrabberVisible: Bool) -> Self {
+        base.prefersGrabberVisible = prefersGrabberVisible
         return self
     }
 
@@ -33,8 +33,8 @@ public extension UISheetPresentationController {
     /// - Parameter sourceView: 来源视图
     /// - Returns: `Self`
     @discardableResult
-    func dy_sourceView(_ sourceView: UIView?) -> Self {
-        self.sourceView = sourceView
+    func sourceView(_ sourceView: UIView?) -> Self {
+        base.sourceView = sourceView
         return self
     }
 
@@ -43,8 +43,8 @@ public extension UISheetPresentationController {
     /// - Returns: `Self`
     @available(iOS 17.0, *)
     @discardableResult
-    func dy_prefersPageSizing(_ prefersPageSizing: Bool) -> Self {
-        self.prefersPageSizing = prefersPageSizing
+    func prefersPageSizing(_ prefersPageSizing: Bool) -> Self {
+        base.prefersPageSizing = prefersPageSizing
         return self
     }
 
@@ -52,8 +52,8 @@ public extension UISheetPresentationController {
     /// - Parameter prefersEdgeAttachedInCompactHeight: 是否底部附着
     /// - Returns: `Self`
     @discardableResult
-    func dy_prefersEdgeAttachedInCompactHeight(_ prefersEdgeAttachedInCompactHeight: Bool) -> Self {
-        self.prefersEdgeAttachedInCompactHeight = prefersEdgeAttachedInCompactHeight
+    func prefersEdgeAttachedInCompactHeight(_ prefersEdgeAttachedInCompactHeight: Bool) -> Self {
+        base.prefersEdgeAttachedInCompactHeight = prefersEdgeAttachedInCompactHeight
         return self
     }
 
@@ -61,8 +61,8 @@ public extension UISheetPresentationController {
     /// - Parameter widthFollowsPreferredContentSizeWhenEdgeAttached: 是否使用内容宽度
     /// - Returns: `Self`
     @discardableResult
-    func dy_widthFollowsPreferredContentSizeWhenEdgeAttached(_ widthFollowsPreferredContentSizeWhenEdgeAttached: Bool) -> Self {
-        self.widthFollowsPreferredContentSizeWhenEdgeAttached = widthFollowsPreferredContentSizeWhenEdgeAttached
+    func widthFollowsPreferredContentSizeWhenEdgeAttached(_ widthFollowsPreferredContentSizeWhenEdgeAttached: Bool) -> Self {
+        base.widthFollowsPreferredContentSizeWhenEdgeAttached = widthFollowsPreferredContentSizeWhenEdgeAttached
         return self
     }
 
@@ -70,8 +70,8 @@ public extension UISheetPresentationController {
     /// - Returns: `Self`
     @available(iOS 16.0, *)
     @discardableResult
-    func dy_invalidateDetents() -> Self {
-        self.invalidateDetents()
+    func invalidateDetents() -> Self {
+        base.invalidateDetents()
         return self
     }
 
@@ -79,8 +79,8 @@ public extension UISheetPresentationController {
     /// - Parameter identifier: 档位标识符（如 .medium）
     /// - Returns: `Self`
     @discardableResult
-    func dy_largestUndimmedDetentIdentifier(_ largestUndimmedDetentIdentifier: UISheetPresentationController.Detent.Identifier) -> Self {
-        self.largestUndimmedDetentIdentifier = largestUndimmedDetentIdentifier
+    func largestUndimmedDetentIdentifier(_ largestUndimmedDetentIdentifier: UISheetPresentationController.Detent.Identifier) -> Self {
+        base.largestUndimmedDetentIdentifier = largestUndimmedDetentIdentifier
         return self
     }
 
@@ -88,8 +88,8 @@ public extension UISheetPresentationController {
     /// - Parameter prefersScrollingExpandsWhenScrolledToEdge: 是否自动展开
     /// - Returns: `Self`
     @discardableResult
-    func dy_prefersScrollingExpandsWhenScrolledToEdge(_ prefersScrollingExpandsWhenScrolledToEdge: Bool) -> Self {
-        self.prefersScrollingExpandsWhenScrolledToEdge = prefersScrollingExpandsWhenScrolledToEdge
+    func prefersScrollingExpandsWhenScrolledToEdge(_ prefersScrollingExpandsWhenScrolledToEdge: Bool) -> Self {
+        base.prefersScrollingExpandsWhenScrolledToEdge = prefersScrollingExpandsWhenScrolledToEdge
         return self
     }
 }

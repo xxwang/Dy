@@ -1,13 +1,13 @@
 import UIKit
 
 // MARK: - 链式设置属性
-public extension UIDatePicker {
+public extension DyWrapper where Base: UIDatePicker {
     /// 设置时区
     /// - Parameter timeZone: 时区
     /// - Returns: `Self`
     @discardableResult
-    func dy_timeZone(_ timeZone: TimeZone) -> Self {
-        self.timeZone = timeZone
+    func timeZone(_ timeZone: TimeZone) -> Self {
+        base.timeZone = timeZone
         return self
     }
 
@@ -15,8 +15,8 @@ public extension UIDatePicker {
     /// - Parameter mode: 模式
     /// - Returns: `Self`
     @discardableResult
-    func dy_datePickerMode(_ mode: UIDatePicker.Mode) -> Self {
-        self.datePickerMode = mode
+    func datePickerMode(_ mode: UIDatePicker.Mode) -> Self {
+        base.datePickerMode = mode
         return self
     }
 
@@ -25,8 +25,8 @@ public extension UIDatePicker {
     /// - Returns: `Self`
     @available(iOS 13.4, *)
     @discardableResult
-    func dy_preferredDatePickerStyle(_ style: UIDatePickerStyle) -> Self {
-        self.preferredDatePickerStyle = style
+    func preferredDatePickerStyle(_ style: UIDatePickerStyle) -> Self {
+        base.preferredDatePickerStyle = style
         return self
     }
 
@@ -36,11 +36,11 @@ public extension UIDatePicker {
     ///   - animated: 是否动画
     /// - Returns: `Self`
     @discardableResult
-    func dy_date(_ date: Date, animated: Bool = false) -> Self {
+    func date(_ date: Date, animated: Bool = false) -> Self {
         if animated {
-            self.setDate(date, animated: animated)
+            base.setDate(date, animated: animated)
         } else {
-            self.date = date
+            base.date = date
         }
         return self
     }
@@ -49,8 +49,8 @@ public extension UIDatePicker {
     /// - Parameter date: 最小日期
     /// - Returns: `Self`
     @discardableResult
-    func dy_minimumDate(_ date: Date?) -> Self {
-        self.minimumDate = date
+    func minimumDate(_ date: Date?) -> Self {
+        base.minimumDate = date
         return self
     }
 
@@ -58,8 +58,8 @@ public extension UIDatePicker {
     /// - Parameter date: 最大日期
     /// - Returns: `Self`
     @discardableResult
-    func dy_maximumDate(_ date: Date?) -> Self {
-        self.maximumDate = date
+    func maximumDate(_ date: Date?) -> Self {
+        base.maximumDate = date
         return self
     }
 
@@ -68,8 +68,8 @@ public extension UIDatePicker {
     /// - Parameter interval: 间隔时间
     /// - Returns: `Self`
     @discardableResult
-    func dy_minuteInterval(_ interval: Int) -> Self {
-        self.minuteInterval = interval
+    func minuteInterval(_ interval: Int) -> Self {
+        base.minuteInterval = interval
         return self
     }
 
@@ -77,8 +77,8 @@ public extension UIDatePicker {
     /// - Parameter locale: 区域
     /// - Returns: `Self`
     @discardableResult
-    func dy_locale(_ locale: Locale) -> Self {
-        self.locale = locale
+    func locale(_ locale: Locale) -> Self {
+        base.locale = locale
         return self
     }
 
@@ -86,8 +86,8 @@ public extension UIDatePicker {
     /// - Parameter calendar: 日历对象
     /// - Returns: `Self`
     @discardableResult
-    func dy_calendar(_ calendar: Calendar) -> Self {
-        self.calendar = calendar
+    func calendar(_ calendar: Calendar) -> Self {
+        base.calendar = calendar
         return self
     }
 
@@ -96,8 +96,8 @@ public extension UIDatePicker {
     /// - Parameter duration: 时长
     /// - Returns: `Self`
     @discardableResult
-    func dy_countDownDuration(_ duration: TimeInterval) -> Self {
-        self.countDownDuration = duration
+    func countDownDuration(_ duration: TimeInterval) -> Self {
+        base.countDownDuration = duration
         return self
     }
 
@@ -106,8 +106,8 @@ public extension UIDatePicker {
     /// - Returns: `Self`
     @available(iOS 15.0, *)
     @discardableResult
-    func dy_roundsToMinuteInterval(_ rounds: Bool) -> Self {
-        self.roundsToMinuteInterval = rounds
+    func roundsToMinuteInterval(_ rounds: Bool) -> Self {
+        base.roundsToMinuteInterval = rounds
         return self
     }
 }

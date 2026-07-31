@@ -1,13 +1,13 @@
 import UIKit
 
 // MARK: - 链式设置属性
-public extension UISearchBar {
+public extension DyWrapper where Base: UISearchBar {
     /// 设置占位符文本
     /// - Parameter placeholder: 占位文本
     /// - Returns: `Self`
     @discardableResult
-    func dy_placeholder(_ placeholder: String?) -> Self {
-        self.placeholder = placeholder
+    func placeholder(_ placeholder: String?) -> Self {
+        base.placeholder = placeholder
         return self
     }
 
@@ -15,8 +15,8 @@ public extension UISearchBar {
     /// - Parameter style: 样式
     /// - Returns: `Self`
     @discardableResult
-    func dy_searchBarStyle(_ style: UISearchBar.Style) -> Self {
-        self.searchBarStyle = style
+    func searchBarStyle(_ style: UISearchBar.Style) -> Self {
+        base.searchBarStyle = style
         return self
     }
 
@@ -24,8 +24,8 @@ public extension UISearchBar {
     /// - Parameter color: 颜色
     /// - Returns: `Self`
     @discardableResult
-    func dy_searchTextFieldBackgroundColor(_ color: UIColor?) -> Self {
-        self.searchTextField.backgroundColor = color
+    func searchTextFieldBackgroundColor(_ color: UIColor?) -> Self {
+        base.searchTextField.backgroundColor = color
         return self
     }
 
@@ -33,8 +33,8 @@ public extension UISearchBar {
     /// - Parameter color: 颜色
     /// - Returns: `Self`
     @discardableResult
-    override func dy_tintColor(_ color: UIColor?) -> Self {
-        self.tintColor = color
+    override func tintColor(_ color: UIColor?) -> Self {
+        base.tintColor = color
         return self
     }
 
@@ -42,9 +42,9 @@ public extension UISearchBar {
     /// - Parameter attributes: 属性
     /// - Returns: `Self`
     @discardableResult
-    func dy_textAttributes(_ attributes: [NSAttributedString.Key: Any]?) -> Self {
-        self.searchTextField.attributedPlaceholder = attributes.map {
-            NSAttributedString(string: self.placeholder ?? "", attributes: $0)
+    func textAttributes(_ attributes: [NSAttributedString.Key: Any]?) -> Self {
+        base.searchTextField.attributedPlaceholder = attributes.map {
+            NSAttributedString(string: base.placeholder ?? "", attributes: $0)
         }
         return self
     }
@@ -53,21 +53,21 @@ public extension UISearchBar {
     /// - Parameter delegate: 代理对象
     /// - Returns: `Self`
     @discardableResult
-    func dy_delegate(_ delegate: (any UISearchBarDelegate)?) -> Self {
-        self.delegate = delegate
+    func delegate(_ delegate: (any UISearchBarDelegate)?) -> Self {
+        base.delegate = delegate
         return self
     }
 }
 
 // MARK: - 链式方法(自定义)
-public extension UISearchBar {
+public extension DyWrapper where Base: UISearchBar {
     /// 清空搜索文本
     /// - Returns: `Self`
     @discardableResult
-    func dy_clear() -> Self {
-        self.text = ""
-        self.searchTextField.text = ""
-        self.searchTextField.attributedText = nil
+    func clear() -> Self {
+        base.text = ""
+        base.searchTextField.text = ""
+        base.searchTextField.attributedText = nil
         return self
     }
 
@@ -75,9 +75,9 @@ public extension UISearchBar {
     /// - Parameter isEnabled: 是否启用
     /// - Returns: `Self`
     @discardableResult
-    func dy_isEnabled(_ isEnabled: Bool) -> Self {
-        self.isUserInteractionEnabled = isEnabled
-        self.alpha = isEnabled ? 1.0 : 0.5
+    func isEnabled(_ isEnabled: Bool) -> Self {
+        base.isUserInteractionEnabled = isEnabled
+        base.alpha = isEnabled ? 1.0 : 0.5
         return self
     }
 }

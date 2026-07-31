@@ -1,14 +1,14 @@
 import UIKit
 
 // MARK: - 链式设置属性
-public extension UIProgressView {
+public extension DyWrapper where Base: UIProgressView {
     /// 设置当前进度值
     ///
     /// - Parameter progress: 进度值,建议范围 `0.0` ～ `1.0`
     /// - Returns: `Self`
     @discardableResult
-    func dy_progress(_ progress: Float) -> Self {
-        self.progress = progress
+    func progress(_ progress: Float) -> Self {
+        base.progress = progress
         return self
     }
 
@@ -17,8 +17,8 @@ public extension UIProgressView {
     /// - Parameter style: 样式类型(如 `.default`, `.bar`)
     /// - Returns: `Self`
     @discardableResult
-    func dy_progressViewStyle(_ style: UIProgressView.Style) -> Self {
-        self.progressViewStyle = style
+    func progressViewStyle(_ style: UIProgressView.Style) -> Self {
+        base.progressViewStyle = style
         return self
     }
 
@@ -27,8 +27,8 @@ public extension UIProgressView {
     /// - Parameter color: 进度条颜色,传入 `nil` 使用系统默认色
     /// - Returns: `Self`
     @discardableResult
-    func dy_progressTintColor(_ color: UIColor?) -> Self {
-        self.progressTintColor = color
+    func progressTintColor(_ color: UIColor?) -> Self {
+        base.progressTintColor = color
         return self
     }
 
@@ -37,8 +37,8 @@ public extension UIProgressView {
     /// - Parameter color: 轨道颜色,传入 `nil` 使用系统默认色
     /// - Returns: `Self`
     @discardableResult
-    func dy_trackTintColor(_ color: UIColor?) -> Self {
-        self.trackTintColor = color
+    func trackTintColor(_ color: UIColor?) -> Self {
+        base.trackTintColor = color
         return self
     }
 
@@ -47,8 +47,8 @@ public extension UIProgressView {
     /// - Parameter image: 自定义图像,传入 `nil` 恢复默认样式
     /// - Returns: `Self`
     @discardableResult
-    func dy_progressImage(_ image: UIImage?) -> Self {
-        self.progressImage = image
+    func progressImage(_ image: UIImage?) -> Self {
+        base.progressImage = image
         return self
     }
 
@@ -57,8 +57,8 @@ public extension UIProgressView {
     /// - Parameter image: 自定义轨道图像,传入 `nil` 恢复默认样式
     /// - Returns: `Self`
     @discardableResult
-    func dy_trackImage(_ image: UIImage?) -> Self {
-        self.trackImage = image
+    func trackImage(_ image: UIImage?) -> Self {
+        base.trackImage = image
         return self
     }
 }

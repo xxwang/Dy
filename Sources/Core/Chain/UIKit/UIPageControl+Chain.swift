@@ -1,14 +1,14 @@
 import UIKit
 
 // MARK: - 链式设置属性
-public extension UIPageControl {
+public extension DyWrapper where Base: UIPageControl {
     /// 设置当前选中指示器的颜色
     ///
     /// - Parameter color: 当前页指示器的颜色,传入 `nil` 将恢复默认颜色
     /// - Returns: 当前实例(支持链式调用)
     @discardableResult
-    func dy_currentPageIndicatorTintColor(_ color: UIColor?) -> Self {
-        self.currentPageIndicatorTintColor = color
+    func currentPageIndicatorTintColor(_ color: UIColor?) -> Self {
+        base.currentPageIndicatorTintColor = color
         return self
     }
 
@@ -17,8 +17,8 @@ public extension UIPageControl {
     /// - Parameter color: 未选中指示器的颜色,传入 `nil` 将恢复默认颜色
     /// - Returns: 当前实例(支持链式调用)
     @discardableResult
-    func dy_pageIndicatorTintColor(_ color: UIColor?) -> Self {
-        self.pageIndicatorTintColor = color
+    func pageIndicatorTintColor(_ color: UIColor?) -> Self {
+        base.pageIndicatorTintColor = color
         return self
     }
 
@@ -27,8 +27,8 @@ public extension UIPageControl {
     /// - Parameter isHidden: 是否隐藏分页指示器
     /// - Returns: 当前实例(支持链式调用)
     @discardableResult
-    func dy_hidesForSinglePage(_ isHidden: Bool) -> Self {
-        self.hidesForSinglePage = isHidden
+    func hidesForSinglePage(_ isHidden: Bool) -> Self {
+        base.hidesForSinglePage = isHidden
         return self
     }
 
@@ -37,8 +37,8 @@ public extension UIPageControl {
     /// - Parameter current: 当前页码,必须在 `[0, numberOfPages - 1]` 范围内
     /// - Returns: 当前实例(支持链式调用)
     @discardableResult
-    func dy_currentPage(_ current: Int) -> Self {
-        self.currentPage = current
+    func currentPage(_ current: Int) -> Self {
+        base.currentPage = current
         return self
     }
 
@@ -47,8 +47,8 @@ public extension UIPageControl {
     /// - Parameter count: 总页数
     /// - Returns: 当前实例(支持链式调用)
     @discardableResult
-    func dy_numberOfPages(_ count: Int) -> Self {
-        self.numberOfPages = count
+    func numberOfPages(_ count: Int) -> Self {
+        base.numberOfPages = count
         return self
     }
 
@@ -58,8 +58,8 @@ public extension UIPageControl {
     /// - Returns: 当前实例(支持链式调用)
     @available(iOS 14.0, *)
     @discardableResult
-    func dy_backgroundStyle(_ style: UIPageControl.BackgroundStyle) -> Self {
-        self.backgroundStyle = style
+    func backgroundStyle(_ style: UIPageControl.BackgroundStyle) -> Self {
+        base.backgroundStyle = style
         return self
     }
 
@@ -69,8 +69,8 @@ public extension UIPageControl {
     /// - Returns: 当前实例(支持链式调用)
     @available(iOS 14.0, *)
     @discardableResult
-    func dy_allowsContinuousInteraction(_ allows: Bool) -> Self {
-        self.allowsContinuousInteraction = allows
+    func allowsContinuousInteraction(_ allows: Bool) -> Self {
+        base.allowsContinuousInteraction = allows
         return self
     }
 
@@ -80,8 +80,8 @@ public extension UIPageControl {
     /// - Returns: 当前实例(支持链式调用)
     @available(iOS 14.0, *)
     @discardableResult
-    func dy_preferredIndicatorImage(_ image: UIImage?) -> Self {
-        self.preferredIndicatorImage = image
+    func preferredIndicatorImage(_ image: UIImage?) -> Self {
+        base.preferredIndicatorImage = image
         return self
     }
 
@@ -91,8 +91,8 @@ public extension UIPageControl {
     /// - Returns: 当前实例(支持链式调用)
     @available(iOS 16.0, *)
     @discardableResult
-    func dy_direction(_ direction: UIPageControl.Direction) -> Self {
-        self.direction = direction
+    func direction(_ direction: UIPageControl.Direction) -> Self {
+        base.direction = direction
         return self
     }
 
@@ -102,14 +102,14 @@ public extension UIPageControl {
     /// - Returns: 当前实例(支持链式调用)
     @available(iOS 16.0, *)
     @discardableResult
-    func dy_preferredCurrentPageIndicatorImage(_ image: UIImage?) -> Self {
-        self.preferredCurrentPageIndicatorImage = image
+    func preferredCurrentPageIndicatorImage(_ image: UIImage?) -> Self {
+        base.preferredCurrentPageIndicatorImage = image
         return self
     }
 }
 
 // MARK: - 链式方法
-public extension UIPageControl {
+public extension DyWrapper where Base: UIPageControl {
     /// 设置某一页的自定义指示器图像
     ///
     /// - Parameters:
@@ -118,9 +118,9 @@ public extension UIPageControl {
     /// - Returns: 当前实例(支持链式调用)
     @available(iOS 14.0, *)
     @discardableResult
-    func dy_indicatorImage(_ image: UIImage?, forPage page: Int) -> Self {
-        guard (0 ..< self.numberOfPages).contains(page) else { return self }
-        self.setIndicatorImage(image, forPage: page)
+    func indicatorImage(_ image: UIImage?, forPage page: Int) -> Self {
+        guard (0 ..< base.numberOfPages).contains(page) else { return self }
+        base.setIndicatorImage(image, forPage: page)
         return self
     }
 
@@ -132,9 +132,9 @@ public extension UIPageControl {
     /// - Returns: 当前实例(支持链式调用)
     @available(iOS 16.0, *)
     @discardableResult
-    func dy_currentPageIndicatorImage(_ image: UIImage?, forPage page: Int) -> Self {
-        guard (0 ..< self.numberOfPages).contains(page) else { return self }
-        self.setCurrentPageIndicatorImage(image, forPage: page)
+    func currentPageIndicatorImage(_ image: UIImage?, forPage page: Int) -> Self {
+        guard (0 ..< base.numberOfPages).contains(page) else { return self }
+        base.setCurrentPageIndicatorImage(image, forPage: page)
         return self
     }
 }

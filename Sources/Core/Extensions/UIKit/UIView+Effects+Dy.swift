@@ -278,34 +278,6 @@ public extension UIView {
     }
 }
 
-// MARK: - 圆角
-public extension UIView {
-    /// 设置圆角(⚠️前提: 需要视图的`frame`已经确定)
-    /// - Parameters:
-    ///   - radius: 圆角的半径
-    ///   - corners: 需要设置圆角的角(例如`.topLeft`,`.topRight`,`.allCorners`等)
-    /// - Returns: 当前视图`self`
-    @discardableResult
-    func dy_roundedCorner(radius: CGFloat, corners: UIRectCorner) -> Self {
-        guard !self.bounds.isEmpty else {
-            os_log(.error, "⚠️ Warning: roundedCorner called with zero bounds. Call after layout.")
-            return self
-        }
-
-        let maskPath = UIBezierPath(
-            roundedRect: bounds,
-            byRoundingCorners: corners,
-            cornerRadii: CGSize(width: radius, height: radius)
-        )
-
-        let shapeLayer = CAShapeLayer()
-        shapeLayer.path = maskPath.cgPath
-        self.layer.mask = shapeLayer
-
-        return self
-    }
-}
-
 // MARK: - 角标 (徽章)
 public extension UIView {
     /// 添加或更新角标

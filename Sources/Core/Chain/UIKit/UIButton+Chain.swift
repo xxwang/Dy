@@ -86,24 +86,15 @@ public extension DyWrapper where Base: UIButton {
         return self
     }
 
-    /// 添加一个`UIAction`(重复调用同一事件会先移除旧 action,避免多次触发)
+    /// 添加一个`UIAction`
     /// - Parameters:
-    ///   - action: `UIAction`中实际执行的闭包代码
+    ///   - action: `UIAction`对象
     ///   - controlEvents: 事件类型
     /// - Returns: `Self`
     @available(iOS 14.0, *)
     @discardableResult
-    func addAction(_ action: @escaping DyAction1<UIAction>, for controlEvents: UIControl.Event = .touchUpInside) -> Self {
-        var registry = base.dy_getAssociatedObject(forKey: &dy_registeredActionsKey) as? [UInt: UIAction] ?? [:]
-        if let existing = registry[controlEvents.rawValue] {
-            base.removeAction(existing, for: controlEvents)
-        }
-        let newAction = UIAction { a in
-            action(a)
-        }
-        registry[controlEvents.rawValue] = newAction
-        base.dy_setAssociatedObject(registry, forKey: &dy_registeredActionsKey)
-        base.addAction(newAction, for: controlEvents)
+    func addAction(_ action: UIAction, for controlEvents: UIControl.Event = .touchUpInside) -> Self {
+        base.addAction(action, for: controlEvents)
         return self
     }
 

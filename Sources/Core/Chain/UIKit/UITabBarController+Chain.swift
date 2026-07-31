@@ -1,13 +1,13 @@
 import UIKit
 
 // MARK: - 链式设置属性
-public extension UITabBarController {
+public extension DyWrapper where Base: UITabBarController {
     /// 设置代理
     /// - Parameter delegate: 代理对象
     /// - Returns: `Self`
     @discardableResult
-    func dy_delegate(_ delegate: UITabBarControllerDelegate) -> Self {
-        self.delegate = delegate
+    func delegate(_ delegate: UITabBarControllerDelegate) -> Self {
+        base.delegate = delegate
         return self
     }
 
@@ -15,11 +15,11 @@ public extension UITabBarController {
     /// - Parameter viewControllers: 控制器数组
     /// - Returns: `Self`
     @discardableResult
-    func dy_viewControllers(_ viewControllers: [UIViewController]?, animated: Bool = false) -> Self {
+    func viewControllers(_ viewControllers: [UIViewController]?, animated: Bool = false) -> Self {
         if animated {
-            self.setViewControllers(viewControllers, animated: true)
+            base.setViewControllers(viewControllers, animated: true)
         } else {
-            self.viewControllers = viewControllers
+            base.viewControllers = viewControllers
         }
         return self
     }
@@ -28,8 +28,8 @@ public extension UITabBarController {
     /// - Parameter index: 需要选中的索引
     /// - Returns: `Self`
     @discardableResult
-    func dy_selectedIndex(_ index: Int) -> Self {
-        self.selectedIndex = index
+    func selectedIndex(_ index: Int) -> Self {
+        base.selectedIndex = index
         return self
     }
 }

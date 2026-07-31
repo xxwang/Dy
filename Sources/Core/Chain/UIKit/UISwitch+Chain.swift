@@ -1,14 +1,14 @@
 import UIKit
 
 // MARK: - 链式设置属性
-public extension UISwitch {
+public extension DyWrapper where Base: UISwitch {
     /// 设置开关的开启/关闭状态
     ///
     /// - Parameter isOn: `true` 表示开启,`false` 表示关闭
     /// - Returns: 当前实例(支持链式调用)
     @discardableResult
-    func dy_isOn(_ isOn: Bool) -> Self {
-        self.isOn = isOn
+    func isOn(_ isOn: Bool) -> Self {
+        base.isOn = isOn
         return self
     }
 
@@ -17,8 +17,8 @@ public extension UISwitch {
     /// - Parameter color: 开启时的颜色,传入 `nil` 将使用系统默认色
     /// - Returns: 当前实例(支持链式调用)
     @discardableResult
-    func dy_onTintColor(_ color: UIColor?) -> Self {
-        self.onTintColor = color
+    func onTintColor(_ color: UIColor?) -> Self {
+        base.onTintColor = color
         return self
     }
 
@@ -28,8 +28,8 @@ public extension UISwitch {
     /// - Parameter color: 关闭时的颜色,传入 `nil` 将使用系统默认色
     /// - Returns: 当前实例(支持链式调用)
     @discardableResult
-    override func dy_tintColor(_ color: UIColor?) -> Self {
-        self.tintColor = color
+    func tintColor(_ color: UIColor?) -> Self {
+        base.tintColor = color
         return self
     }
 
@@ -38,21 +38,21 @@ public extension UISwitch {
     /// - Parameter color: 滑块颜色,传入 `nil` 将使用系统默认色
     /// - Returns: 当前实例(支持链式调用)
     @discardableResult
-    func dy_thumbTintColor(_ color: UIColor?) -> Self {
-        self.thumbTintColor = color
+    func thumbTintColor(_ color: UIColor?) -> Self {
+        base.thumbTintColor = color
         return self
     }
 }
 
 // MARK: - 链式方法(自定义)
-public extension UISwitch {
+public extension DyWrapper where Base: UISwitch {
     /// 切换当前开关状态(开 ↔ 关),可选带动画
     ///
     /// - Parameter animated: 是否启用切换动画默认为 `true`
     /// - Returns: 当前实例(支持链式调用)
     @discardableResult
-    func dy_toggle(_ animated: Bool = true) -> Self {
-        self.setOn(!self.isOn, animated: animated)
+    func toggle(_ animated: Bool = true) -> Self {
+        base.setOn(!base.isOn, animated: animated)
         return self
     }
 }

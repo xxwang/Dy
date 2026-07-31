@@ -1,15 +1,15 @@
 import UIKit
 
 // MARK: - 链式设置属性
-public extension UISlider {
+public extension DyWrapper where Base: UISlider {
     /// 设置滑块的当前值
     ///
     /// - Parameter value: 要设置的值若超出 `[minimumValue, maximumValue]` 范围,
     ///   系统会自动将其限制在有效区间内
     /// - Returns: `Self`
     @discardableResult
-    func dy_value(_ value: Float) -> Self {
-        self.value = value
+    func value(_ value: Float) -> Self {
+        base.value = value
         return self
     }
 
@@ -18,8 +18,8 @@ public extension UISlider {
     /// - Parameter minimumValue: 最小值(默认为 `0.0`)
     /// - Returns: `Self`
     @discardableResult
-    func dy_minimumValue(_ minimumValue: Float) -> Self {
-        self.minimumValue = minimumValue
+    func minimumValue(_ minimumValue: Float) -> Self {
+        base.minimumValue = minimumValue
         return self
     }
 
@@ -28,8 +28,8 @@ public extension UISlider {
     /// - Parameter maximumValue: 最大值(默认为 `1.0`)
     /// - Returns: `Self`
     @discardableResult
-    func dy_maximumValue(_ maximumValue: Float) -> Self {
-        self.maximumValue = maximumValue
+    func maximumValue(_ maximumValue: Float) -> Self {
+        base.maximumValue = maximumValue
         return self
     }
 
@@ -38,8 +38,8 @@ public extension UISlider {
     /// - Parameter image: 要显示的图像,传入 `nil` 可移除
     /// - Returns: `Self`
     @discardableResult
-    func dy_minimumValueImage(_ image: UIImage?) -> Self {
-        self.minimumValueImage = image
+    func minimumValueImage(_ image: UIImage?) -> Self {
+        base.minimumValueImage = image
         return self
     }
 
@@ -48,8 +48,8 @@ public extension UISlider {
     /// - Parameter image: 要显示的图像,传入 `nil` 可移除
     /// - Returns: `Self`
     @discardableResult
-    func dy_maximumValueImage(_ image: UIImage?) -> Self {
-        self.maximumValueImage = image
+    func maximumValueImage(_ image: UIImage?) -> Self {
+        base.maximumValueImage = image
         return self
     }
 
@@ -60,8 +60,8 @@ public extension UISlider {
     ///   - `false`：仅在拖动结束时触发一次事件
     /// - Returns: `Self`
     @discardableResult
-    func dy_isContinuous(_ isContinuous: Bool) -> Self {
-        self.isContinuous = isContinuous
+    func isContinuous(_ isContinuous: Bool) -> Self {
+        base.isContinuous = isContinuous
         return self
     }
 
@@ -70,8 +70,8 @@ public extension UISlider {
     /// - Parameter color: 轨道颜色,传入 `nil` 使用系统默认色
     /// - Returns: `Self`
     @discardableResult
-    func dy_minimumTrackTintColor(_ color: UIColor?) -> Self {
-        self.minimumTrackTintColor = color
+    func minimumTrackTintColor(_ color: UIColor?) -> Self {
+        base.minimumTrackTintColor = color
         return self
     }
 
@@ -80,8 +80,8 @@ public extension UISlider {
     /// - Parameter color: 轨道颜色,传入 `nil` 使用系统默认色
     /// - Returns: `Self`
     @discardableResult
-    func dy_maximumTrackTintColor(_ color: UIColor?) -> Self {
-        self.maximumTrackTintColor = color
+    func maximumTrackTintColor(_ color: UIColor?) -> Self {
+        base.maximumTrackTintColor = color
         return self
     }
 
@@ -90,8 +90,8 @@ public extension UISlider {
     /// - Parameter color: 手柄颜色,传入 `nil` 使用系统默认色
     /// - Returns: `Self`
     @discardableResult
-    func dy_thumbTintColor(_ color: UIColor?) -> Self {
-        self.thumbTintColor = color
+    func thumbTintColor(_ color: UIColor?) -> Self {
+        base.thumbTintColor = color
         return self
     }
 }
