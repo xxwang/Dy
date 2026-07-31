@@ -1,9 +1,8 @@
 import Combine
 import UIKit
 
-// MARK: - UITextField
-
-public extension UITextField {
+// MARK: - UITextView
+public extension UITextView {
     /// 文本内容（用户编辑与代码赋值均会发出，订阅时立即重放当前值）。
     var dy_textPublisher: ControlProperty<String?> {
         ControlProperty(

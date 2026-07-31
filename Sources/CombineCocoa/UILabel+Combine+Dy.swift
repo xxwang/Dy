@@ -2,7 +2,6 @@ import Combine
 import UIKit
 
 // MARK: - UILabel
-
 public extension UILabel {
     /// 文本内容（代码赋值会发出，订阅时立即重放当前值）。
     var dy_textPublisher: ControlProperty<String?> {

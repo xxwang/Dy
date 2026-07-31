@@ -2,7 +2,6 @@ import Combine
 import UIKit
 
 // MARK: - 绑定运算符
-
 precedencegroup BindingPrecedence {
     associativity: right
     higherThan: AssignmentPrecedence
