@@ -83,12 +83,7 @@ open class DyWebViewController: DyViewController {
             belowSubview: self.naview
         )
 
-        self.webView.dy_frame(CGRect(
-            x: 0,
-            y: self.naview.isHidden ? 0 : DyScreen.navBarTotalHeight,
-            width: self.view.dy_width,
-            height: self.view.dy_height - DyScreen.navBarTotalHeight
-        ))
+        self.updateNaview()
     }
 }
 
@@ -98,11 +93,12 @@ open class DyWebViewController: DyViewController {
     override open func updateNaview() {
         super.updateNaview()
 
+        let topMargin = self.naview.isHidden ? 0 : DyScreen.navBarTotalHeight
         self.webView.dy_frame(CGRect(
             x: 0,
-            y: self.naview.isHidden ? 0 : DyScreen.navBarTotalHeight,
+            y: topMargin,
             width: self.view.dy_width,
-            height: self.view.dy_height - DyScreen.navBarTotalHeight
+            height: self.view.dy_height - topMargin
         ))
     }
 }
