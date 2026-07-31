@@ -25,12 +25,12 @@ open class DyScrollViewController: DyViewController {
             self.scrollView,
             belowSubview: self.naview
         )
-        self.updateNaview()
 
         // 内容容器
         self.contentView
-            .dy_size(self.scrollView.dy_size)
             .dy_add2(self.scrollView)
+
+        self.updateNaview()
     }
 }
 
@@ -41,12 +41,18 @@ open class DyScrollViewController: DyViewController {
         super.updateNaview()
 
         let topMargin = self.naview.isHidden ? 0 : DyScreen.navBarTotalHeight
-        self.scrollView.dy_frame(CGRect(
-            x: 0,
-            y: topMargin,
-            width: self.view.dy_width,
-            height: self.view.dy_height - topMargin
-        ))
+        self.scrollView
+            .dy_frame(CGRect(
+                x: 0,
+                y: topMargin,
+                width: self.view.dy_width,
+                height: self.view.dy_height - topMargin
+            ))
+
+        // 内容容器
+        self.contentView
+            .dy_width(self.scrollView.contentSize.width)
+            .dy_height(max(self.scrollView.contentSize.height, self.contentView.dy_height))
     }
 }
 
