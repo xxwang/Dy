@@ -3,11 +3,11 @@ import DyCore
 
 open class DyScrollViewController: DyViewController {
     /// `UIScrollView`
-    open lazy var scrollView = UIScrollView.dy_scrollView()
+    open lazy var scrollView = UIScrollView.scrollView()
         .dy_delegate(self)
 
     /// 内容视图
-    open lazy var contentView = UIView.dy_view()
+    open lazy var contentView = UIView.view()
 
     override open func viewDidLoad() {
         super.viewDidLoad()

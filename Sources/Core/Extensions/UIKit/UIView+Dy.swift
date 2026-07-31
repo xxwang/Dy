@@ -1249,7 +1249,7 @@ public extension UIView {
     /// - Returns: `Self`
     @discardableResult
     func dy_onLongPressGestureRecognizer(minimumDuration: TimeInterval = 0.5, _ block: @escaping DyAction1<UILongPressGestureRecognizer>) -> Self {
-        let longPress = UILongPressGestureRecognizer.dy_longPressGestureRecognizer()
+        let longPress = UILongPressGestureRecognizer.longPressGestureRecognizer()
             .dy_minimumPressDuration(minimumDuration)
             .dy_onRecognized { recognizer in
                 if let longPress = recognizer as? UILongPressGestureRecognizer {
@@ -1266,7 +1266,7 @@ public extension UIView {
     /// - Returns: `Self`
     @discardableResult
     func dy_onPanGestureRecognizer(_ block: @escaping DyAction1<UIPanGestureRecognizer>) -> Self {
-        let pan = UIPanGestureRecognizer.dy_panGestureRecognizer()
+        let pan = UIPanGestureRecognizer.panGestureRecognizer()
         pan.dy_onStateChanged { [weak pan] _ in
             guard let pan else { return }
             block(pan)
@@ -1283,7 +1283,7 @@ public extension UIView {
     /// - Returns: `Self`
     @discardableResult
     func dy_onScreenEdgePanGestureRecognizer(edges: UIRectEdge, _ block: @escaping DyAction1<UIScreenEdgePanGestureRecognizer>) -> Self {
-        let screenEdgePan = UIScreenEdgePanGestureRecognizer.dy_screenEdgePanGestureRecognizer()
+        let screenEdgePan = UIScreenEdgePanGestureRecognizer.screenEdgePanGestureRecognizer()
             .dy_edges(edges)
             .dy_onRecognized { recognizer in
                 if let screenEdgePan = recognizer as? UIScreenEdgePanGestureRecognizer {
@@ -1304,7 +1304,7 @@ public extension UIView {
     func dy_onSwipeGestureRecognizer(direction: UISwipeGestureRecognizer.Direction = .right,
                                      _ block: @escaping DyAction1<UISwipeGestureRecognizer>) -> Self
     {
-        let swipeGesture = UISwipeGestureRecognizer.dy_swipeGestureRecognizer()
+        let swipeGesture = UISwipeGestureRecognizer.swipeGestureRecognizer()
             .dy_direction(direction)
             .dy_onRecognized { recognizer in
                 if let swipe = recognizer as? UISwipeGestureRecognizer {
@@ -1321,7 +1321,7 @@ public extension UIView {
     /// - Returns: `Self`
     @discardableResult
     func dy_onPinchGestureRecognizer(_ block: @escaping DyAction1<UIPinchGestureRecognizer>) -> Self {
-        let pinch = UIPinchGestureRecognizer.dy_pinchGestureRecognizer()
+        let pinch = UIPinchGestureRecognizer.pinchGestureRecognizer()
         pinch.dy_onStateChanged { [weak pinch] _ in
             guard let pinch else { return }
             block(pinch)
@@ -1336,7 +1336,7 @@ public extension UIView {
     /// - Returns: `Self`
     @discardableResult
     func dy_onRotationGestureRecognizer(_ block: @escaping DyAction1<UIRotationGestureRecognizer>) -> Self {
-        let rotation = UIRotationGestureRecognizer.dy_rotationGestureRecognizer()
+        let rotation = UIRotationGestureRecognizer.rotationGestureRecognizer()
         rotation.dy_onStateChanged { [weak rotation] _ in
             guard let rotation else { return }
             block(rotation)

@@ -3,7 +3,7 @@ import DyCore
 
 open class DyTableViewController: DyViewController {
     /// `UITableView`
-    open lazy var tableView = UITableView.dy_tableView()
+    open lazy var tableView = UITableView.tableView()
         .dy_dataSource(self)
         .dy_delegate(self)
 

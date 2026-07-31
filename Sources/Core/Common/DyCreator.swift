@@ -4,7 +4,7 @@ import WebKit
 // MARK: - UIView
 @objc extension UIView {
     /// 创建一个默认配置的 `UIView` 实例
-    open class func dy_view() -> UIView {
+    open class func view() -> UIView {
         return UIView()
     }
 }
@@ -12,7 +12,7 @@ import WebKit
 // MARK: - UIStackView
 @objc extension UIStackView {
     /// 创建一个水平布局的 `UIStackView`,默认对齐方式为 `.fill`,分布方式为 `.equalSpacing`
-    open class func dy_hStackView() -> UIStackView {
+    open class func hStackView() -> UIStackView {
         return UIStackView()
             .dy_axis(.horizontal)
             .dy_alignment(.fill)
@@ -20,7 +20,7 @@ import WebKit
     }
 
     /// 创建一个垂直布局的 `UIStackView`,默认对齐方式为 `.fill`,分布方式为 `.equalSpacing`
-    open class func dy_vStackView() -> UIStackView {
+    open class func vStackView() -> UIStackView {
         return UIStackView()
             .dy_axis(.vertical)
             .dy_alignment(.fill)
@@ -31,7 +31,7 @@ import WebKit
 // MARK: - UIWindow
 @objc extension UIWindow {
     /// 创建一个默认 `UIWindow` 实例(frame 为 `.zero`)
-    open class func dy_window() -> UIWindow {
+    open class func window() -> UIWindow {
         return UIWindow(frame: .zero)
     }
 }
@@ -39,7 +39,7 @@ import WebKit
 // MARK: - UIScrollView
 @objc extension UIScrollView {
     /// 创建一个默认 `UIScrollView`,隐藏滚动指示器
-    open class func dy_scrollView() -> UIScrollView {
+    open class func scrollView() -> UIScrollView {
         return UIScrollView()
             .dy_showsHorizontalScrollIndicator(false)
             .dy_showsVerticalScrollIndicator(false)
@@ -49,7 +49,7 @@ import WebKit
 // MARK: - UITableView
 @objc extension UITableView {
     /// 创建一个默认配置的 `UITableView`(`grouped` 样式),启用自动尺寸、透明背景、无分隔线等
-    open class func dy_tableView() -> UITableView {
+    open class func tableView() -> UITableView {
         let tableView = UITableView(frame: .zero, style: .grouped)
             .dy_rowHeight(UITableView.automaticDimension)
             .dy_sectionHeaderHeight(UITableView.automaticDimension)
@@ -72,8 +72,8 @@ import WebKit
 // MARK: - UICollectionView
 @objc extension UICollectionView {
     /// 创建一个水平滚动的 `UICollectionView`,使用 `UICollectionViewFlowLayout`
-    open class func dy_hCollectionView() -> UICollectionView {
-        let layout = UICollectionViewFlowLayout.dy_layout()
+    open class func hCollectionView() -> UICollectionView {
+        let layout = UICollectionViewFlowLayout.layout()
             .dy_scrollDirection(.horizontal)
 
         return UICollectionView(frame: .zero, collectionViewLayout: layout)
@@ -83,8 +83,8 @@ import WebKit
     }
 
     /// 创建一个垂直滚动的 `UICollectionView`,使用 `UICollectionViewFlowLayout`
-    open class func dy_vCollectionView() -> UICollectionView {
-        let layout = UICollectionViewFlowLayout.dy_layout()
+    open class func vCollectionView() -> UICollectionView {
+        let layout = UICollectionViewFlowLayout.layout()
             .dy_scrollDirection(.vertical)
 
         return UICollectionView(frame: .zero, collectionViewLayout: layout)
@@ -96,7 +96,7 @@ import WebKit
 
 // MARK: - UICollectionReusableView
 @objc extension UICollectionReusableView {
-    open class func dy_collectionReusableView() -> UICollectionReusableView {
+    open class func collectionReusableView() -> UICollectionReusableView {
         UICollectionReusableView()
     }
 }
@@ -104,7 +104,7 @@ import WebKit
 // MARK: - UICollectionViewFlowLayout
 @objc extension UICollectionViewFlowLayout {
     /// 创建一个默认的 `UICollectionViewFlowLayout` 实例
-    open class func dy_layout() -> UICollectionViewFlowLayout {
+    open class func layout() -> UICollectionViewFlowLayout {
         return UICollectionViewFlowLayout()
     }
 }
@@ -112,7 +112,7 @@ import WebKit
 // MARK: - UIControl
 @objc extension UIControl {
     /// 创建一个默认 `UIControl` 实例
-    open class func dy_control() -> UIControl {
+    open class func control() -> UIControl {
         return UIControl()
     }
 }
@@ -120,63 +120,63 @@ import WebKit
 // MARK: - UIButton
 @objc extension UIButton {
     /// 创建一个自定义类型的 `UIButton`
-    open class func dy_button() -> UIButton {
+    open class func button() -> UIButton {
         return UIButton(type: .custom)
             .dy_isHighlighted(false)
     }
 
     /// 创建一个纯文本样式的 `UIButton`
     @available(iOS 15.0, *)
-    open class func dy_plain() -> UIButton {
+    open class func plain() -> UIButton {
         let configuration = UIButton.Configuration.plain()
         return UIButton(configuration: configuration)
     }
 
     /// 创建一个着色样式的 `UIButton`
     @available(iOS 15.0, *)
-    open class func dy_tinted() -> UIButton {
+    open class func tinted() -> UIButton {
         let configuration = UIButton.Configuration.tinted()
         return UIButton(configuration: configuration)
     }
 
     /// 创建一个灰色样式的 `UIButton`
     @available(iOS 15.0, *)
-    open class func dy_gray() -> UIButton {
+    open class func gray() -> UIButton {
         let configuration = UIButton.Configuration.gray()
         return UIButton(configuration: configuration)
     }
 
     /// 创建一个填充样式的 `UIButton`
     @available(iOS 15.0, *)
-    open class func dy_filled() -> UIButton {
+    open class func filled() -> UIButton {
         let configuration = UIButton.Configuration.filled()
         return UIButton(configuration: configuration)
     }
 
     /// 创建一个无边框样式的 `UIButton`
     @available(iOS 15.0, *)
-    open class func dy_borderless() -> UIButton {
+    open class func borderless() -> UIButton {
         let configuration = UIButton.Configuration.borderless()
         return UIButton(configuration: configuration)
     }
 
     /// 创建一个边框样式的 `UIButton`
     @available(iOS 15.0, *)
-    open class func dy_bordered() -> UIButton {
+    open class func bordered() -> UIButton {
         let configuration = UIButton.Configuration.bordered()
         return UIButton(configuration: configuration)
     }
 
     /// 创建一个着色边框样式的 `UIButton`
     @available(iOS 15.0, *)
-    open class func dy_borderedTinted() -> UIButton {
+    open class func borderedTinted() -> UIButton {
         let configuration = UIButton.Configuration.borderedTinted()
         return UIButton(configuration: configuration)
     }
 
     /// 创建一个突出边框样式的 `UIButton`
     @available(iOS 15.0, *)
-    open class func dy_borderedProminent() -> UIButton {
+    open class func borderedProminent() -> UIButton {
         let configuration = UIButton.Configuration.borderedProminent()
         return UIButton(configuration: configuration)
     }
@@ -185,7 +185,7 @@ import WebKit
 // MARK: - UISwitch
 @objc extension UISwitch {
     /// 创建一个默认 `UISwitch` 实例
-    open class func dy_switch() -> UISwitch {
+    open class func `switch`() -> UISwitch {
         return UISwitch()
     }
 }
@@ -193,7 +193,7 @@ import WebKit
 // MARK: - UITabBar
 @objc extension UITabBar {
     /// 创建一个默认 `UITabBar` 实例
-    open class func dy_tabBar() -> UITabBar {
+    open class func tabBar() -> UITabBar {
         return UITabBar()
     }
 }
@@ -201,7 +201,7 @@ import WebKit
 // MARK: - UITabBarItem
 @objc extension UITabBarItem {
     /// 创建一个默认 `UITabBarItem` 实例
-    open class func dy_tabBarItem() -> UITabBarItem {
+    open class func tabBarItem() -> UITabBarItem {
         return UITabBarItem()
     }
 }
@@ -209,7 +209,7 @@ import WebKit
 // MARK: - UIBarButtonItem
 @objc extension UIBarButtonItem {
     /// 创建一个默认 `UIBarButtonItem` 实例
-    open class func dy_barButtonItem() -> UIBarButtonItem {
+    open class func barButtonItem() -> UIBarButtonItem {
         return UIBarButtonItem()
     }
 }
@@ -217,7 +217,7 @@ import WebKit
 // MARK: - UINavigationBar
 @objc extension UINavigationBar {
     /// 创建一个默认 `UINavigationBar` 实例
-    open class func dy_navigationBar() -> UINavigationBar {
+    open class func navigationBar() -> UINavigationBar {
         return UINavigationBar()
     }
 }
@@ -225,7 +225,7 @@ import WebKit
 // MARK: - UINavigationItem
 @objc extension UINavigationItem {
     /// 创建一个默认 `UINavigationItem` 实例
-    open class func dy_navigationItem() -> UINavigationItem {
+    open class func navigationItem() -> UINavigationItem {
         return UINavigationItem()
     }
 }
@@ -233,7 +233,7 @@ import WebKit
 // MARK: - UIDatePicker
 @objc extension UIDatePicker {
     /// 创建一个默认 `UIDatePicker` 实例(`frame` 为 `.zero`)
-    open class func dy_datePicker() -> UIDatePicker {
+    open class func datePicker() -> UIDatePicker {
         return UIDatePicker(frame: .zero)
     }
 }
@@ -241,7 +241,7 @@ import WebKit
 // MARK: - UIPickerView
 @objc extension UIPickerView {
     /// 创建一个默认 `UIPickerView` 实例
-    open class func dy_pickerView() -> UIPickerView {
+    open class func pickerView() -> UIPickerView {
         return UIPickerView()
     }
 }
@@ -249,7 +249,7 @@ import WebKit
 // MARK: - UIImageView
 @objc extension UIImageView {
     /// 创建一个默认 `UIImageView` 实例
-    open class func dy_imageView() -> UIImageView {
+    open class func imageView() -> UIImageView {
         return UIImageView()
     }
 }
@@ -257,7 +257,7 @@ import WebKit
 // MARK: - UILabel
 @objc extension UILabel {
     /// 创建一个默认 `UILabel` 实例
-    open class func dy_label() -> UILabel {
+    open class func label() -> UILabel {
         return UILabel()
     }
 }
@@ -265,7 +265,7 @@ import WebKit
 // MARK: - UIPageControl
 @objc extension UIPageControl {
     /// 创建一个默认 `UIPageControl` 实例
-    open class func dy_pageControl() -> UIPageControl {
+    open class func pageControl() -> UIPageControl {
         return UIPageControl()
     }
 }
@@ -273,7 +273,7 @@ import WebKit
 // MARK: - UIRefreshControl
 @objc extension UIRefreshControl {
     /// 创建一个默认 `UIRefreshControl` 实例
-    open class func dy_refreshControl() -> UIRefreshControl {
+    open class func refreshControl() -> UIRefreshControl {
         return UIRefreshControl()
     }
 }
@@ -281,7 +281,7 @@ import WebKit
 // MARK: - UISegmentedControl
 @objc extension UISegmentedControl {
     /// 创建一个默认 `UISegmentedControl` 实例
-    open class func dy_segmentedControl() -> UISegmentedControl {
+    open class func segmentedControl() -> UISegmentedControl {
         return UISegmentedControl()
     }
 }
@@ -289,7 +289,7 @@ import WebKit
 // MARK: - UIActivityIndicatorView
 @objc extension UIActivityIndicatorView {
     /// 创建一个默认 `UIActivityIndicatorView` 实例
-    open class func dy_activityIndicatorView() -> UIActivityIndicatorView {
+    open class func activityIndicatorView() -> UIActivityIndicatorView {
         return UIActivityIndicatorView()
     }
 }
@@ -297,7 +297,7 @@ import WebKit
 // MARK: - UIProgressView
 @objc extension UIProgressView {
     /// 创建一个默认 `UIProgressView` 实例
-    open class func dy_progressView() -> UIProgressView {
+    open class func progressView() -> UIProgressView {
         return UIProgressView()
     }
 }
@@ -305,7 +305,7 @@ import WebKit
 // MARK: - UISlider
 @objc extension UISlider {
     /// 创建一个默认 `UISlider` 实例
-    open class func dy_slider() -> UISlider {
+    open class func slider() -> UISlider {
         return UISlider()
     }
 }
@@ -313,7 +313,7 @@ import WebKit
 // MARK: - UISearchBar
 @objc extension UISearchBar {
     /// 创建一个默认 `UISearchBar` 实例
-    open class func dy_searchBar() -> UISearchBar {
+    open class func searchBar() -> UISearchBar {
         return UISearchBar()
     }
 }
@@ -321,7 +321,7 @@ import WebKit
 // MARK: - UITextField
 @objc extension UITextField {
     /// 创建一个默认 `UITextField` 实例
-    open class func dy_textField() -> UITextField {
+    open class func textField() -> UITextField {
         return UITextField()
     }
 }
@@ -329,7 +329,7 @@ import WebKit
 // MARK: - UITextView
 @objc extension UITextView {
     /// 创建一个默认 `UITextView` 实例,隐藏滚动指示器
-    open class func dy_textView() -> UITextView {
+    open class func textView() -> UITextView {
         return UITextView()
             .dy_showsHorizontalScrollIndicator(false)
             .dy_showsVerticalScrollIndicator(false)
@@ -339,7 +339,7 @@ import WebKit
 // MARK: - WKWebView
 @objc extension WKWebView {
     /// 创建一个默认 `WKWebView` 实例
-    open class func dy_webView() -> WKWebView {
+    open class func webView() -> WKWebView {
         return WKWebView()
     }
 }
@@ -347,7 +347,7 @@ import WebKit
 // MARK: - CAShapeLayer
 @objc extension CAShapeLayer {
     /// 创建一个默认 `CAShapeLayer` 实例
-    open class func dy_shapeLayer() -> CAShapeLayer {
+    open class func shapeLayer() -> CAShapeLayer {
         return CAShapeLayer()
     }
 }
@@ -355,12 +355,12 @@ import WebKit
 // MARK: - UIAlertController
 @objc extension UIAlertController {
     /// 创建一个 `alert` 样式的 `UIAlertController`
-    open class func dy_alertController() -> UIAlertController {
+    open class func alertController() -> UIAlertController {
         return UIAlertController(title: nil, message: nil, preferredStyle: .alert)
     }
 
     /// 创建一个 `actionSheet` 样式的 `UIAlertController`
-    open class func dy_sheetController() -> UIAlertController {
+    open class func sheetController() -> UIAlertController {
         return UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
     }
 }
@@ -368,7 +368,7 @@ import WebKit
 // MARK: - UITabBarController
 @objc extension UITabBarController {
     /// 创建一个默认 `UITabBarController` 实例
-    open class func dy_tabBarController() -> UITabBarController {
+    open class func tabBarController() -> UITabBarController {
         return UITabBarController()
     }
 }
@@ -376,7 +376,7 @@ import WebKit
 // MARK: - UINavigationController
 @objc extension UINavigationController {
     /// 创建一个默认 `UINavigationController` 实例
-    open class func dy_navigationController() -> UINavigationController {
+    open class func navigationController() -> UINavigationController {
         return UINavigationController()
     }
 }
@@ -384,7 +384,7 @@ import WebKit
 // MARK: - UIViewController
 @objc extension UIViewController {
     /// 创建一个默认 `UIViewController` 实例
-    open class func dy_viewController() -> UIViewController {
+    open class func viewController() -> UIViewController {
         return UIViewController()
     }
 }
@@ -392,7 +392,7 @@ import WebKit
 // MARK: - NSMutableParagraphStyle
 @objc extension NSMutableParagraphStyle {
     /// 创建一个默认 `NSMutableParagraphStyle`,预设常用文本属性
-    open class func dy_mutableParagraphStyle() -> NSMutableParagraphStyle {
+    open class func mutableParagraphStyle() -> NSMutableParagraphStyle {
         return NSMutableParagraphStyle()
             .dy_hyphenationFactor(1.0)
             .dy_firstLineHeadIndent(0.0)
@@ -405,7 +405,7 @@ import WebKit
 // MARK: - UIGestureRecognizer
 @objc extension UIGestureRecognizer {
     /// 创建一个基础手势识别器实例
-    open class func dy_gestureRecognizer() -> UIGestureRecognizer {
+    open class func gestureRecognizer() -> UIGestureRecognizer {
         return UIGestureRecognizer()
     }
 }
@@ -413,7 +413,7 @@ import WebKit
 // MARK: - UIScreenEdgePanGestureRecognizer
 @objc extension UIScreenEdgePanGestureRecognizer {
     /// 创建一个屏幕边缘平移手势识别器(常用于侧滑返回等交互)
-    open class func dy_screenEdgePanGestureRecognizer() -> UIScreenEdgePanGestureRecognizer {
+    open class func screenEdgePanGestureRecognizer() -> UIScreenEdgePanGestureRecognizer {
         return UIScreenEdgePanGestureRecognizer()
     }
 }
@@ -421,7 +421,7 @@ import WebKit
 // MARK: - UIHoverGestureRecognizer
 @objc extension UIHoverGestureRecognizer {
     /// 创建一个悬停手势识别器(适用于支持指针的设备,如 iPad 外接鼠标)
-    open class func dy_hoverGestureRecognizer() -> UIHoverGestureRecognizer {
+    open class func hoverGestureRecognizer() -> UIHoverGestureRecognizer {
         return UIHoverGestureRecognizer()
     }
 }
@@ -429,7 +429,7 @@ import WebKit
 // MARK: - UILongPressGestureRecognizer
 @objc extension UILongPressGestureRecognizer {
     /// 创建一个长按手势识别器,默认触发时长为 0.5 秒
-    open class func dy_longPressGestureRecognizer() -> UILongPressGestureRecognizer {
+    open class func longPressGestureRecognizer() -> UILongPressGestureRecognizer {
         return UILongPressGestureRecognizer()
     }
 }
@@ -437,7 +437,7 @@ import WebKit
 // MARK: - UIPanGestureRecognizer
 @objc extension UIPanGestureRecognizer {
     /// 创建一个平移(拖拽)手势识别器,可检测任意方向的移动
-    open class func dy_panGestureRecognizer() -> UIPanGestureRecognizer {
+    open class func panGestureRecognizer() -> UIPanGestureRecognizer {
         return UIPanGestureRecognizer()
     }
 }
@@ -445,7 +445,7 @@ import WebKit
 // MARK: - UIPinchGestureRecognizer
 @objc extension UIPinchGestureRecognizer {
     /// 创建一个捏合(缩放)手势识别器,常用于图片或地图的缩放操作
-    open class func dy_pinchGestureRecognizer() -> UIPinchGestureRecognizer {
+    open class func pinchGestureRecognizer() -> UIPinchGestureRecognizer {
         return UIPinchGestureRecognizer()
     }
 }
@@ -453,7 +453,7 @@ import WebKit
 // MARK: - UIRotationGestureRecognizer
 @objc extension UIRotationGestureRecognizer {
     /// 创建一个旋转手势识别器,通过两指旋转触发
-    open class func dy_rotationGestureRecognizer() -> UIRotationGestureRecognizer {
+    open class func rotationGestureRecognizer() -> UIRotationGestureRecognizer {
         return UIRotationGestureRecognizer()
     }
 }
@@ -461,7 +461,7 @@ import WebKit
 // MARK: - UISwipeGestureRecognizer
 @objc extension UISwipeGestureRecognizer {
     /// 创建一个轻扫(滑动)手势识别器,默认方向为右,需根据需要设置方向
-    open class func dy_swipeGestureRecognizer() -> UISwipeGestureRecognizer {
+    open class func swipeGestureRecognizer() -> UISwipeGestureRecognizer {
         return UISwipeGestureRecognizer()
     }
 }
@@ -469,7 +469,7 @@ import WebKit
 // MARK: - UITapGestureRecognizer
 @objc extension UITapGestureRecognizer {
     /// 创建一个点击(轻触)手势识别器,默认单击、单点触发
-    open class func dy_tapGestureRecognizer() -> UITapGestureRecognizer {
+    open class func tapGestureRecognizer() -> UITapGestureRecognizer {
         return UITapGestureRecognizer()
     }
 }

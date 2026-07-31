@@ -6,23 +6,23 @@ open class DyNaView: UIView {
     open var backBlock: DyAction?
 
     /// 状态栏占位区域(不可交互,仅用于布局)
-    open lazy var statusBar = UIView.dy_view()
+    open lazy var statusBar = UIView.view()
         .dy_backgroundColor(.clear)
 
     /// 标题容器(包含返回按钮和标题)
-    open lazy var naview = UIView.dy_view()
+    open lazy var naview = UIView.view()
         .dy_backgroundColor(.clear)
 
     /// 底部分割线(默认半透明黑线)
-    open lazy var lineView = UIView.dy_view()
+    open lazy var lineView = UIView.view()
         .dy_backgroundColor(.black.dy_alpha(0.25))
 
     /// 返回按钮(UIButton)
-    open lazy var backButton = UIButton.dy_button()
+    open lazy var backButton = UIButton.button()
         .dy_addTarget(self, action: #selector(onBackAction))
 
     /// 标题标签
-    open lazy var titleLabel = UILabel.dy_label()
+    open lazy var titleLabel = UILabel.label()
         .dy_textAlignment(.center)
         .dy_lineBreakMode(.byTruncatingTail)
 

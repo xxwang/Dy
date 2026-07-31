@@ -7,10 +7,10 @@ open class DyAlertView: UIView {
     public var cancellables = Set<AnyCancellable>()
 
     /// 遮罩层
-    private lazy var shadeView = UIView.dy_view()
+    private lazy var shadeView = UIView.view()
 
     /// 内容容器
-    lazy var contentContainer = UIView.dy_view()
+    lazy var contentContainer = UIView.view()
 
     override public init(frame: CGRect) {
         super.init(frame: frame)

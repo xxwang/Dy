@@ -6,10 +6,10 @@ import DyCore
 open class DySheetView: UIView {
     public var cancellables = Set<AnyCancellable>()
     /// 遮罩层
-    private lazy var shadeView = UIView.dy_view()
+    private lazy var shadeView = UIView.view()
 
     /// 内容容器（从底部弹出的部分）
-    public lazy var contentContainer = UIView.dy_view()
+    public lazy var contentContainer = UIView.view()
 
     override public init(frame: CGRect) {
         super.init(frame: frame)

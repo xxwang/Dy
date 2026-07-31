@@ -3,7 +3,7 @@ import DyCore
 
 open class DyCollectionViewController: DyViewController {
     /// `UICollectionView`
-    open lazy var collectionView = UICollectionView.dy_vCollectionView()
+    open lazy var collectionView = UICollectionView.vCollectionView()
         .dy_dataSource(self)
         .dy_delegate(self)
 
