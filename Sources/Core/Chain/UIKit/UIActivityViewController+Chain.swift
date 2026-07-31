@@ -1,14 +1,14 @@
 import UIKit
 
 // MARK: - 链式属性
-public extension UIActivityViewController {
+public extension DyWrapper where Base: UIActivityViewController {
     /// 设置完整的排除类型列表(覆盖原有值)
     ///
     /// - Parameter types: 要排除的类型数组
     /// - Returns: `Self`
     @discardableResult
-    func dy_excludedActivityTypes(_ types: [UIActivity.ActivityType]) -> Self {
-        self.excludedActivityTypes = types
+    func excludedActivityTypes(_ types: [UIActivity.ActivityType]) -> Self {
+        base.excludedActivityTypes = types
         return self
     }
 
@@ -17,10 +17,10 @@ public extension UIActivityViewController {
     /// - Parameter handler: 完整的 `CompletionWithItemsHandler`
     /// - Returns: `Self`
     @discardableResult
-    func dy_completionWithItemsHandler(
+    func completionWithItemsHandler(
         _ handler: @escaping UIActivityViewController.CompletionWithItemsHandler
     ) -> Self {
-        self.completionWithItemsHandler = handler
+        base.completionWithItemsHandler = handler
         return self
     }
 
@@ -31,8 +31,8 @@ public extension UIActivityViewController {
     /// - Returns: `Self`
     @available(iOS 15.4, *)
     @discardableResult
-    func dy_allowsProminentActivity(_ allows: Bool) -> Self {
-        self.allowsProminentActivity = allows
+    func allowsProminentActivity(_ allows: Bool) -> Self {
+        base.allowsProminentActivity = allows
         return self
     }
 
@@ -42,8 +42,8 @@ public extension UIActivityViewController {
     /// - Returns: `Self`
     @available(iOS 18.0, *)
     @discardableResult
-    func dy_excludedActivitySectionTypes(_ sections: UIActivitySectionTypes) -> Self {
-        self.excludedActivitySectionTypes = sections
+    func excludedActivitySectionTypes(_ sections: UIActivitySectionTypes) -> Self {
+        base.excludedActivitySectionTypes = sections
         return self
     }
 }

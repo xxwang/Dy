@@ -1,14 +1,14 @@
 import QuartzCore
 
 // MARK: - 属性
-public extension CASpringAnimation {
+public extension DyWrapper where Base: CASpringAnimation {
     /// 设置弹簧系统的质量(Mass)
     /// - Parameter mass: 质量(单位：任意)值越大,惯性越大,动画越“迟钝”
     ///   默认值：`1.0`典型范围：`0.1 ～ 10.0`
     /// - Returns: `Self`
     @discardableResult
-    func dy_mass(_ mass: CGFloat) -> Self {
-        self.mass = mass
+    func mass(_ mass: CGFloat) -> Self {
+        base.mass = mass
         return self
     }
 
@@ -17,8 +17,8 @@ public extension CASpringAnimation {
     ///   默认值：`100.0`典型范围：`10.0 ～ 1000.0`
     /// - Returns: `Self`
     @discardableResult
-    func dy_stiffness(_ stiffness: CGFloat) -> Self {
-        self.stiffness = stiffness
+    func stiffness(_ stiffness: CGFloat) -> Self {
+        base.stiffness = stiffness
         return self
     }
 
@@ -30,8 +30,8 @@ public extension CASpringAnimation {
     ///   - `damping > 2√(mass × stiffness)`：过阻尼(缓慢无振荡)
     /// - Returns: `Self`
     @discardableResult
-    func dy_damping(_ damping: CGFloat) -> Self {
-        self.damping = damping
+    func damping(_ damping: CGFloat) -> Self {
+        base.damping = damping
         return self
     }
 
@@ -40,8 +40,8 @@ public extension CASpringAnimation {
     ///   默认值：`0.0`正值表示朝目标方向运动,负值表示反向
     /// - Returns: `Self`
     @discardableResult
-    func dy_initialVelocity(_ velocity: CGFloat) -> Self {
-        self.initialVelocity = velocity
+    func initialVelocity(_ velocity: CGFloat) -> Self {
+        base.initialVelocity = velocity
         return self
     }
 }

@@ -1,13 +1,13 @@
 import UIKit
 
 // MARK: - 链式设置属性
-public extension NSTextAttachment {
+public extension DyWrapper where Base: NSTextAttachment {
     /// 设置附件的图片
     /// - Parameter image: 要显示的图片(可为 `nil`)
     /// - Returns: `Self`
     @discardableResult
-    func dy_image(_ image: UIImage?) -> Self {
-        self.image = image
+    func image(_ image: UIImage?) -> Self {
+        base.image = image
         return self
     }
 
@@ -16,8 +16,8 @@ public extension NSTextAttachment {
     /// - Parameter bounds: 附件的矩形区域
     /// - Returns: `Self`
     @discardableResult
-    func dy_bounds(_ bounds: CGRect) -> Self {
-        self.bounds = bounds
+    func bounds(_ bounds: CGRect) -> Self {
+        base.bounds = bounds
         return self
     }
 }

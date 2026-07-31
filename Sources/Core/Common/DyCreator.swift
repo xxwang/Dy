@@ -394,11 +394,13 @@ import WebKit
     /// 创建一个默认 `NSMutableParagraphStyle`,预设常用文本属性
     open class func mutableParagraphStyle() -> NSMutableParagraphStyle {
         return NSMutableParagraphStyle()
-            .dy_hyphenationFactor(1.0)
-            .dy_firstLineHeadIndent(0.0)
-            .dy_paragraphSpacingBefore(0.0)
-            .dy_headIndent(0)
-            .dy_tailIndent(0)
+            .dy
+            .hyphenationFactor(1.0)
+            .firstLineHeadIndent(0.0)
+            .paragraphSpacingBefore(0.0)
+            .headIndent(0)
+            .tailIndent(0)
+            .build()
     }
 }
 

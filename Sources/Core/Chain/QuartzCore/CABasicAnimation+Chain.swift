@@ -1,14 +1,14 @@
 import QuartzCore
 
 // MARK: - 链式设置属性
-public extension CABasicAnimation {
+public extension DyWrapper where Base: CABasicAnimation {
     /// 设置动画的起始值
     /// - Parameter value: 动画开始时的值(如 `CGFloat`, `CGColor`, `CGPoint`, `CGSize` 等)
     ///   若为 `nil`,则使用图层当前值作为起点
     /// - Returns: `Self`
     @discardableResult
-    func dy_fromValue(_ value: Any?) -> Self {
-        self.fromValue = value
+    func fromValue(_ value: Any?) -> Self {
+        base.fromValue = value
         return self
     }
 
@@ -17,8 +17,8 @@ public extension CABasicAnimation {
     ///   若为 `nil` 且未设置 `byValue`,动画可能无效果
     /// - Returns: `Self`
     @discardableResult
-    func dy_toValue(_ value: Any?) -> Self {
-        self.toValue = value
+    func toValue(_ value: Any?) -> Self {
+        base.toValue = value
         return self
     }
 
@@ -29,8 +29,8 @@ public extension CABasicAnimation {
     ///   - 适用于“在当前位置基础上移动/旋转/缩放”的场景
     /// - Returns: `Self`
     @discardableResult
-    func dy_byValue(_ byValue: Any?) -> Self {
-        self.byValue = byValue
+    func byValue(_ byValue: Any?) -> Self {
+        base.byValue = byValue
         return self
     }
 
@@ -43,8 +43,8 @@ public extension CABasicAnimation {
     ///   仅建议用于存储元数据(如动画标识),`不要用于核心动画参数`
     /// - Returns: `Self`
     @discardableResult
-    func dy_setValue(_ value: Any?, forKeyPath keyPath: String) -> Self {
-        self.setValue(value, forKeyPath: keyPath)
+    func setValue(_ value: Any?, forKeyPath keyPath: String) -> Self {
+        base.setValue(value, forKeyPath: keyPath)
         return self
     }
 }

@@ -22,7 +22,7 @@ public extension DyExtension {
 // MARK: - 配置包装器
 public final class DyWrapper<Base> {
     /// 被包装的原始实例（只读，防止意外替换）
-    public let base: Base
+    public var base: Base
 
     init(_ base: Base) {
         self.base = base

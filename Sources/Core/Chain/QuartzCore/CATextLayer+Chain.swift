@@ -2,13 +2,13 @@ import QuartzCore
 import UIKit
 
 // MARK: - 属性
-public extension CATextLayer {
+public extension DyWrapper where Base: CATextLayer {
     /// 设置显示的文本内容
     /// - Parameter string: 要显示的字符串(支持 `NSAttributedString`,但此处仅设为 `String`)
     /// - Returns: `Self`
     @discardableResult
-    func dy_string(_ string: String) -> Self {
-        self.string = string
+    func string(_ string: String) -> Self {
+        base.string = string
         return self
     }
 
@@ -17,8 +17,8 @@ public extension CATextLayer {
     /// - Note: 当 `isWrapped = false` 时,`truncationMode` 才会生效
     /// - Returns: `Self`
     @discardableResult
-    func dy_isWrapped(_ isWrapped: Bool) -> Self {
-        self.isWrapped = isWrapped
+    func isWrapped(_ isWrapped: Bool) -> Self {
+        base.isWrapped = isWrapped
         return self
     }
 
@@ -26,8 +26,8 @@ public extension CATextLayer {
     /// - Parameter truncationMode: 截断方式,如 `.end`(末尾...)、`.middle` 等
     /// - Returns: `Self`
     @discardableResult
-    func dy_truncationMode(_ truncationMode: CATextLayerTruncationMode) -> Self {
-        self.truncationMode = truncationMode
+    func truncationMode(_ truncationMode: CATextLayerTruncationMode) -> Self {
+        base.truncationMode = truncationMode
         return self
     }
 
@@ -38,8 +38,8 @@ public extension CATextLayer {
     ///   - `.justified`: 两端对齐(需多行)
     /// - Returns: `Self`
     @discardableResult
-    func dy_alignmentMode(_ alignmentMode: CATextLayerAlignmentMode) -> Self {
-        self.alignmentMode = alignmentMode
+    func alignmentMode(_ alignmentMode: CATextLayerAlignmentMode) -> Self {
+        base.alignmentMode = alignmentMode
         return self
     }
 
@@ -47,8 +47,8 @@ public extension CATextLayer {
     /// - Parameter foregroundColor: 文字颜色
     /// - Returns: `Self`
     @discardableResult
-    func dy_foregroundColor(_ foregroundColor: UIColor) -> Self {
-        self.foregroundColor = foregroundColor.cgColor
+    func foregroundColor(_ foregroundColor: UIColor) -> Self {
+        base.foregroundColor = foregroundColor.cgColor
         return self
     }
 
@@ -56,8 +56,8 @@ public extension CATextLayer {
     /// - Parameter foregroundColor: 文字颜色
     /// - Returns: `Self`
     @discardableResult
-    func dy_foregroundColor(_ foregroundColor: CGColor) -> Self {
-        self.foregroundColor = foregroundColor
+    func foregroundColor(_ foregroundColor: CGColor) -> Self {
+        base.foregroundColor = foregroundColor
         return self
     }
 
@@ -66,8 +66,8 @@ public extension CATextLayer {
     /// - Important: 若不设置,高分辨率屏幕可能出现模糊
     /// - Returns: `Self`
     @discardableResult
-    func dy_contentsScale(_ scale: CGFloat = DyScreen.screenScale) -> Self {
-        self.contentsScale = scale
+    func contentsScale(_ scale: CGFloat = DyScreen.screenScale) -> Self {
+        base.contentsScale = scale
         return self
     }
 
@@ -76,8 +76,8 @@ public extension CATextLayer {
     /// - Note: 内部转换为 `CTFont`若字体名无效,将 fallback 到系统默认字体
     /// - Returns: `Self`
     @discardableResult
-    func dy_font(_ font: UIFont) -> Self {
-        self.font = CTFontCreateWithName(font.fontName as CFString, font.pointSize, nil)
+    func font(_ font: UIFont) -> Self {
+        base.font = CTFontCreateWithName(font.fontName as CFString, font.pointSize, nil)
         return self
     }
 
@@ -85,8 +85,8 @@ public extension CATextLayer {
     /// - Parameter fontSize: 字号(单位：point)
     /// - Returns: `Self`
     @discardableResult
-    func dy_fontSize(_ fontSize: CGFloat) -> Self {
-        self.fontSize = fontSize
+    func fontSize(_ fontSize: CGFloat) -> Self {
+        base.fontSize = fontSize
         return self
     }
 
@@ -98,11 +98,11 @@ public extension CATextLayer {
     ///   - radius: 模糊半径(越大越模糊)
     /// - Returns: `Self`
     @discardableResult
-    func dy_shadow(color: UIColor, opacity: Float, offset: CGSize, radius: CGFloat) -> Self {
-        self.shadowColor = color.cgColor
-        self.shadowOpacity = min(max(opacity, 0.0), 1.0)
-        self.shadowOffset = offset
-        self.shadowRadius = max(radius, 0)
+    func shadow(color: UIColor, opacity: Float, offset: CGSize, radius: CGFloat) -> Self {
+        base.shadowColor = color.cgColor
+        base.shadowOpacity = min(max(opacity, 0.0), 1.0)
+        base.shadowOffset = offset
+        base.shadowRadius = max(radius, 0)
         return self
     }
 
@@ -113,15 +113,15 @@ public extension CATextLayer {
     ///   会导致 `frame` 扩大 20pt(宽高各 +20)
     /// - Returns: `Self`
     @discardableResult
-    func dy_padding(by insets: UIEdgeInsets) -> Self {
+    func padding(by insets: UIEdgeInsets) -> Self {
         // 扩大 frame 以容纳 padding
         let newFrame = CGRect(
-            x: self.frame.origin.x - insets.left,
-            y: self.frame.origin.y - insets.top,
-            width: self.frame.width + insets.left + insets.right,
-            height: self.frame.height + insets.top + insets.bottom
+            x: base.frame.origin.x - insets.left,
+            y: base.frame.origin.y - insets.top,
+            width: base.frame.width + insets.left + insets.right,
+            height: base.frame.height + insets.top + insets.bottom
         )
-        self.frame = newFrame
+        base.frame = newFrame
         return self
     }
 }

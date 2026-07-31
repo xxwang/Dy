@@ -107,23 +107,3 @@ public extension Timer {
         fireDate = Date().addingTimeInterval(delay)
     }
 }
-
-// MARK: - 链式方法
-public extension Timer {
-    /// 设置运行模式
-    /// - Parameter mode: 运行模式
-    /// - Returns: `Self`
-    @discardableResult
-    func dy_mode(_ mode: RunLoop.Mode) -> Self {
-        RunLoop.current.add(self, forMode: mode)
-        return self
-    }
-
-    /// 立即启动
-    /// - Returns: `Self`
-    @discardableResult
-    func dy_fire() -> Self {
-        self.fire()
-        return self
-    }
-}

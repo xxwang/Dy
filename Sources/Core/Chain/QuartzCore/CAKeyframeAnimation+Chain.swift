@@ -1,7 +1,7 @@
 import QuartzCore
 
 // MARK: - 属性
-public extension CAKeyframeAnimation {
+public extension DyWrapper where Base: CAKeyframeAnimation {
     /// 设置动画的关键帧值数组
     /// - Parameter values: 动画在各关键帧的值(如 `[0.0, 1.0]`、`[red, green, blue]`、`[point1, point2]`)
     ///   类型需与 `keyPath` 对应(如 `position` 需 `NSValue(cgPoint:)`)
@@ -10,8 +10,8 @@ public extension CAKeyframeAnimation {
     ///   - 传 `nil` 可清空值数组
     /// - Returns: `Self`
     @discardableResult
-    func dy_values(_ values: [Any]?) -> Self {
-        self.values = values
+    func values(_ values: [Any]?) -> Self {
+        base.values = values
         return self
     }
 
@@ -21,8 +21,8 @@ public extension CAKeyframeAnimation {
     /// - Warning: 长度不匹配会导致动画行为未定义或崩溃
     /// - Returns: `Self`
     @discardableResult
-    func dy_keyTimes(_ keyTimes: [Double]) -> Self {
-        self.keyTimes = keyTimes.map { $0 as NSNumber }
+    func keyTimes(_ keyTimes: [Double]) -> Self {
+        base.keyTimes = keyTimes.map { $0 as NSNumber }
         return self
     }
 
@@ -31,8 +31,8 @@ public extension CAKeyframeAnimation {
     ///   - `.cubic`: 启用三次样条插值,可配合 `tensionValues`/`continuityValues`/`biasValues` 使用
     /// - Returns: `Self`
     @discardableResult
-    func dy_calculationMode(_ mode: CAAnimationCalculationMode) -> Self {
-        self.calculationMode = mode
+    func calculationMode(_ mode: CAAnimationCalculationMode) -> Self {
+        base.calculationMode = mode
         return self
     }
 
@@ -43,8 +43,8 @@ public extension CAKeyframeAnimation {
     ///   - 需配合 `rotationMode` 实现“沿路径旋转”效果
     /// - Returns: `Self`
     @discardableResult
-    func dy_path(_ path: CGPath) -> Self {
-        self.path = path
+    func path(_ path: CGPath) -> Self {
+        base.path = path
         return self
     }
 
@@ -53,8 +53,8 @@ public extension CAKeyframeAnimation {
     ///   例如：3 个关键帧 → 2 个时间函数
     /// - Returns: `Self`
     @discardableResult
-    func dy_timingFunctions(_ timingFunctions: [CAMediaTimingFunction]) -> Self {
-        self.timingFunctions = timingFunctions
+    func timingFunctions(_ timingFunctions: [CAMediaTimingFunction]) -> Self {
+        base.timingFunctions = timingFunctions
         return self
     }
 
@@ -66,8 +66,8 @@ public extension CAKeyframeAnimation {
     /// - Note: 仅在 `calculationMode = .cubic` 时有效
     /// - Returns: `Self`
     @discardableResult
-    func dy_tensionValues(_ tensionValues: [Double]) -> Self {
-        self.tensionValues = tensionValues.map { $0 as NSNumber }
+    func tensionValues(_ tensionValues: [Double]) -> Self {
+        base.tensionValues = tensionValues.map { $0 as NSNumber }
         return self
     }
 
@@ -78,8 +78,8 @@ public extension CAKeyframeAnimation {
     /// - Note: 仅在 `calculationMode = .cubic` 时有效
     /// - Returns: `Self`
     @discardableResult
-    func dy_continuityValues(_ continuityValues: [Double]) -> Self {
-        self.continuityValues = continuityValues.map { $0 as NSNumber }
+    func continuityValues(_ continuityValues: [Double]) -> Self {
+        base.continuityValues = continuityValues.map { $0 as NSNumber }
         return self
     }
 
@@ -90,8 +90,8 @@ public extension CAKeyframeAnimation {
     /// - Note: 仅在 `calculationMode = .cubic` 时有效
     /// - Returns: `Self`
     @discardableResult
-    func dy_biasValues(_ biasValues: [Double]) -> Self {
-        self.biasValues = biasValues.map { $0 as NSNumber }
+    func biasValues(_ biasValues: [Double]) -> Self {
+        base.biasValues = biasValues.map { $0 as NSNumber }
         return self
     }
 
@@ -103,8 +103,8 @@ public extension CAKeyframeAnimation {
     /// - Warning: 仅在设置了 `path` 时有效
     /// - Returns: `Self`
     @discardableResult
-    func dy_rotationMode(_ rotationMode: CAAnimationRotationMode?) -> Self {
-        self.rotationMode = rotationMode
+    func rotationMode(_ rotationMode: CAAnimationRotationMode?) -> Self {
+        base.rotationMode = rotationMode
         return self
     }
 }

@@ -1,15 +1,15 @@
 import QuartzCore
 
 // MARK: - 属性
-public extension CATransition {
+public extension DyWrapper where Base: CATransition {
     /// 设置转场动画的类型
     /// - Parameter type: 动画类型(如 `.fade`, `.push`, `.moveIn`, `.reveal`)
     ///   - `.fade`: 淡入淡出(最常用,兼容性最好)
     ///   - `.push` / `.moveIn` / `.reveal`: 带方向的滑动效果(需配合 `subtype`)
     /// - Returns: `Self`
     @discardableResult
-    func dy_type(_ type: CATransitionType) -> Self {
-        self.type = type
+    func type(_ type: CATransitionType) -> Self {
+        base.type = type
         return self
     }
 
@@ -20,8 +20,8 @@ public extension CATransition {
     ///   - 若 `type = .fade`,此设置将被忽略
     /// - Returns: `Self`
     @discardableResult
-    func dy_subtype(_ subtype: CATransitionSubtype) -> Self {
-        self.subtype = subtype
+    func subtype(_ subtype: CATransitionSubtype) -> Self {
+        base.subtype = subtype
         return self
     }
 
@@ -33,8 +33,8 @@ public extension CATransition {
     /// - Warning: 值超出 `[0.0, 1.0]` 可能导致未定义行为
     /// - Returns: `Self`
     @discardableResult
-    func dy_startProgress(_ startProgress: Float) -> Self {
-        self.startProgress = startProgress
+    func startProgress(_ startProgress: Float) -> Self {
+        base.startProgress = startProgress
         return self
     }
 
@@ -46,8 +46,8 @@ public extension CATransition {
     /// - Warning: 值超出 `[0.0, 1.0]` 可能导致未定义行为
     /// - Returns: `Self`
     @discardableResult
-    func dy_endProgress(_ endProgress: Float) -> Self {
-        self.endProgress = endProgress
+    func endProgress(_ endProgress: Float) -> Self {
+        base.endProgress = endProgress
         return self
     }
 }

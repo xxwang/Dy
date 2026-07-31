@@ -1,14 +1,14 @@
 import QuartzCore
 import UIKit
 
-// MARK: - 属性
-public extension CAShapeLayer {
+// MARK: - 链式设置属性
+public extension DyWrapper where Base: CAShapeLayer {
     /// 设置绘制路径
     /// - Parameter path: 要绘制的 `CGPath`(可由 `UIBezierPath` 转换而来)
     /// - Returns: `Self`
     @discardableResult
-    func dy_path(_ path: CGPath) -> Self {
-        self.path = path
+    func path(_ path: CGPath) -> Self {
+        base.path = path
         return self
     }
 
@@ -17,8 +17,8 @@ public extension CAShapeLayer {
     /// - Important: 若不设置,高分辨率设备上路径可能模糊
     /// - Returns: `Self`
     @discardableResult
-    func dy_contentsScale(_ scale: CGFloat = DyScreen.screenScale) -> Self {
-        self.contentsScale = scale
+    func contentsScale(_ scale: CGFloat = DyScreen.screenScale) -> Self {
+        base.contentsScale = scale
         return self
     }
 
@@ -26,8 +26,8 @@ public extension CAShapeLayer {
     /// - Parameter color: 填充色;传 `nil` 可清除填充
     /// - Returns: `Self`
     @discardableResult
-    func dy_fillColor(_ color: UIColor?) -> Self {
-        self.fillColor = color?.cgColor
+    func fillColor(_ color: UIColor?) -> Self {
+        base.fillColor = color?.cgColor
         return self
     }
 
@@ -35,8 +35,8 @@ public extension CAShapeLayer {
     /// - Parameter color: 填充色;传 `nil` 可清除填充
     /// - Returns: `Self`
     @discardableResult
-    func dy_fillColor(_ color: CGColor?) -> Self {
-        self.fillColor = color
+    func fillColor(_ color: CGColor?) -> Self {
+        base.fillColor = color
         return self
     }
 
@@ -44,8 +44,8 @@ public extension CAShapeLayer {
     /// - Parameter color: 描边色;传 `nil` 可清除描边
     /// - Returns: `Self`
     @discardableResult
-    func dy_strokeColor(_ color: UIColor?) -> Self {
-        self.strokeColor = color?.cgColor
+    func strokeColor(_ color: UIColor?) -> Self {
+        base.strokeColor = color?.cgColor
         return self
     }
 
@@ -53,8 +53,8 @@ public extension CAShapeLayer {
     /// - Parameter color: 描边色;传 `nil` 可清除描边
     /// - Returns: `Self`
     @discardableResult
-    func dy_strokeColor(_ color: CGColor?) -> Self {
-        self.strokeColor = color
+    func strokeColor(_ color: CGColor?) -> Self {
+        base.strokeColor = color
         return self
     }
 
@@ -62,8 +62,8 @@ public extension CAShapeLayer {
     /// - Parameter width: 线宽(必须 ≥ 0,默认 `1.0`)
     /// - Returns: `Self`
     @discardableResult
-    func dy_lineWidth(_ width: CGFloat) -> Self {
-        self.lineWidth = max(width, 0)
+    func lineWidth(_ width: CGFloat) -> Self {
+        base.lineWidth = max(width, 0)
         return self
     }
 
@@ -72,8 +72,8 @@ public extension CAShapeLayer {
     ///   当斜接长度超过此值时,会转为 `bevel` 连接
     /// - Returns: `Self`
     @discardableResult
-    func dy_miterLimit(_ miterLimit: CGFloat) -> Self {
-        self.miterLimit = max(miterLimit, 0)
+    func miterLimit(_ miterLimit: CGFloat) -> Self {
+        base.miterLimit = max(miterLimit, 0)
         return self
     }
 
@@ -84,8 +84,8 @@ public extension CAShapeLayer {
     ///   - `.square`：方头(延伸半个线宽)
     /// - Returns: `Self`
     @discardableResult
-    func dy_lineCap(_ lineCap: CAShapeLayerLineCap) -> Self {
-        self.lineCap = lineCap
+    func lineCap(_ lineCap: CAShapeLayerLineCap) -> Self {
+        base.lineCap = lineCap
         return self
     }
 
@@ -96,8 +96,8 @@ public extension CAShapeLayer {
     ///   - `.bevel`：斜切
     /// - Returns: `Self`
     @discardableResult
-    func dy_lineJoin(_ lineJoin: CAShapeLayerLineJoin) -> Self {
-        self.lineJoin = lineJoin
+    func lineJoin(_ lineJoin: CAShapeLayerLineJoin) -> Self {
+        base.lineJoin = lineJoin
         return self
     }
 
@@ -107,8 +107,8 @@ public extension CAShapeLayer {
     /// - Note: 数组长度应为偶数,且所有值 ≥ 0
     /// - Returns: `Self`
     @discardableResult
-    func dy_lineDashPattern(_ pattern: [CGFloat]) -> Self {
-        self.lineDashPattern = pattern.map { NSNumber(value: $0) }
+    func lineDashPattern(_ pattern: [CGFloat]) -> Self {
+        base.lineDashPattern = pattern.map { NSNumber(value: $0) }
         return self
     }
 
@@ -116,8 +116,8 @@ public extension CAShapeLayer {
     /// - Parameter phase: 虚线起始偏移量(单位：point)
     /// - Returns: `Self`
     @discardableResult
-    func dy_lineDashPhase(_ phase: CGFloat) -> Self {
-        self.lineDashPhase = phase
+    func lineDashPhase(_ phase: CGFloat) -> Self {
+        base.lineDashPhase = phase
         return self
     }
 
@@ -127,8 +127,8 @@ public extension CAShapeLayer {
     ///   - `.evenOdd`：奇偶规则(适用于镂空图形)
     /// - Returns: `Self`
     @discardableResult
-    func dy_fillRule(_ fillRule: CAShapeLayerFillRule) -> Self {
-        self.fillRule = fillRule
+    func fillRule(_ fillRule: CAShapeLayerFillRule) -> Self {
+        base.fillRule = fillRule
         return self
     }
 
@@ -137,8 +137,8 @@ public extension CAShapeLayer {
     ///   `0.0` = 路径起点,`1.0` = 路径终点
     /// - Returns: `Self`
     @discardableResult
-    func dy_strokeStart(_ start: CGFloat) -> Self {
-        self.strokeStart = min(max(start, 0), 1)
+    func strokeStart(_ start: CGFloat) -> Self {
+        base.strokeStart = min(max(start, 0), 1)
         return self
     }
 
@@ -146,8 +146,8 @@ public extension CAShapeLayer {
     /// - Parameter end: 结束比例,范围 `[0.0, 1.0]`(默认 `1.0`)
     /// - Returns: `Self`
     @discardableResult
-    func dy_strokeEnd(_ end: CGFloat) -> Self {
-        self.strokeEnd = min(max(end, 0), 1)
+    func strokeEnd(_ end: CGFloat) -> Self {
+        base.strokeEnd = min(max(end, 0), 1)
         return self
     }
 
@@ -156,8 +156,8 @@ public extension CAShapeLayer {
     /// - Note: 大多数情况下应保持 `true` 以匹配 UIKit
     /// - Returns: `Self`
     @discardableResult
-    func dy_isGeometryFlipped(_ isFlipped: Bool) -> Self {
-        self.isGeometryFlipped = isFlipped
+    func isGeometryFlipped(_ isFlipped: Bool) -> Self {
+        base.isGeometryFlipped = isFlipped
         return self
     }
 }

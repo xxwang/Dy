@@ -2,16 +2,16 @@ import UIKit
 
 // MARK: - 链式设置属性
 @available(iOS 15.0, *)
-public extension UIButton.Configuration {
+public extension DyWrapper where Base == UIButton.Configuration {
     /// 设置按钮在指定状态下的普通文本标题
     /// - Parameters:
     ///   - title: 标题字符串
     /// - Returns: `Self`
     @discardableResult
-    mutating func dy_title(_ title: String) -> Self {
-        var configuration = self
+    func title(_ title: String) -> Self {
+        var configuration = base
         configuration.title = title
-        self = configuration
+        base = configuration
         return self
     }
 
@@ -19,10 +19,10 @@ public extension UIButton.Configuration {
     /// - Parameter subtitle: 副标题
     /// - Returns: `Self`
     @discardableResult
-    mutating func dy_subtitle(_ subtitle: String) -> Self {
-        var configuration = self
+    func subtitle(_ subtitle: String) -> Self {
+        var configuration = base
         configuration.subtitle = subtitle
-        self = configuration
+        base = configuration
         return self
     }
 
@@ -32,11 +32,11 @@ public extension UIButton.Configuration {
     ///   - placement: 位置
     /// - Returns: `Self`
     @discardableResult
-    mutating func dy_image(_ image: UIImage?, placement: NSDirectionalRectEdge = .leading) -> Self {
-        var configuration = self
+    func image(_ image: UIImage?, placement: NSDirectionalRectEdge = .leading) -> Self {
+        var configuration = base
         configuration.image = image
         configuration.imagePlacement = placement
-        self = configuration
+        base = configuration
         return self
     }
 
@@ -44,10 +44,10 @@ public extension UIButton.Configuration {
     /// - Parameter backgroundImage: 背景图片
     /// - Returns: `Self`
     @discardableResult
-    mutating func dy_backgroundImage(_ backgroundImage: UIImage?) -> Self {
-        var configuration = self
+    func backgroundImage(_ backgroundImage: UIImage?) -> Self {
+        var configuration = base
         configuration.background.image = backgroundImage
-        self = configuration
+        base = configuration
         return self
     }
 
@@ -55,10 +55,10 @@ public extension UIButton.Configuration {
     /// - Parameter loading: 是否加载
     /// - Returns: `Self`
     @discardableResult
-    mutating func dy_isLoading(_ loading: Bool) -> Self {
-        var configuration = self
+    func isLoading(_ loading: Bool) -> Self {
+        var configuration = base
         configuration.showsActivityIndicator = loading
-        self = configuration
+        base = configuration
         return self
     }
 
@@ -66,10 +66,10 @@ public extension UIButton.Configuration {
     /// - Parameter padding: 间距
     /// - Returns: `Self`
     @discardableResult
-    mutating func dy_imagePadding(_ padding: CGFloat) -> Self {
-        var configuration = self
+    func imagePadding(_ padding: CGFloat) -> Self {
+        var configuration = base
         configuration.imagePadding = padding
-        self = configuration
+        base = configuration
         return self
     }
 
@@ -77,10 +77,10 @@ public extension UIButton.Configuration {
     /// - Parameter padding: 间距
     /// - Returns: `Self`
     @discardableResult
-    mutating func dy_titlePadding(_ padding: CGFloat) -> Self {
-        var configuration = self
+    func titlePadding(_ padding: CGFloat) -> Self {
+        var configuration = base
         configuration.titlePadding = padding
-        self = configuration
+        base = configuration
         return self
     }
 
@@ -88,10 +88,10 @@ public extension UIButton.Configuration {
     /// - Parameter color: 背景色
     /// - Returns: `Self`
     @discardableResult
-    mutating func dy_baseBackgroundColor(_ color: UIColor?) -> Self {
-        var configuration = self
+    func baseBackgroundColor(_ color: UIColor?) -> Self {
+        var configuration = base
         configuration.baseBackgroundColor = color
-        self = configuration
+        base = configuration
         return self
     }
 
@@ -99,10 +99,10 @@ public extension UIButton.Configuration {
     /// - Parameter color: 前景色
     /// - Returns: `Self`
     @discardableResult
-    mutating func dy_baseForegroundColor(_ color: UIColor?) -> Self {
-        var configuration = self
+    func baseForegroundColor(_ color: UIColor?) -> Self {
+        var configuration = base
         configuration.baseForegroundColor = color
-        self = configuration
+        base = configuration
         return self
     }
 
@@ -110,10 +110,10 @@ public extension UIButton.Configuration {
     /// - Parameter attributedTitle: 属性标题
     /// - Returns: `Self`
     @discardableResult
-    mutating func dy_attributedTitle(_ attributedTitle: AttributedString?) -> Self {
-        var configuration = self
+    func attributedTitle(_ attributedTitle: AttributedString?) -> Self {
+        var configuration = base
         configuration.attributedTitle = attributedTitle
-        self = configuration
+        base = configuration
         return self
     }
 
@@ -121,10 +121,10 @@ public extension UIButton.Configuration {
     /// - Parameter attributedSubtitle: 属性副标题
     /// - Returns: `Self`
     @discardableResult
-    mutating func dy_attributedSubtitle(_ attributedSubtitle: AttributedString?) -> Self {
-        var configuration = self
+    func attributedSubtitle(_ attributedSubtitle: AttributedString?) -> Self {
+        var configuration = base
         configuration.attributedSubtitle = attributedSubtitle
-        self = configuration
+        base = configuration
         return self
     }
 
@@ -132,10 +132,10 @@ public extension UIButton.Configuration {
     /// - Parameter imagePlacement: 图标位置
     /// - Returns: `Self`
     @discardableResult
-    mutating func dy_imagePlacement(_ imagePlacement: NSDirectionalRectEdge) -> Self {
-        var configuration = self
+    func imagePlacement(_ imagePlacement: NSDirectionalRectEdge) -> Self {
+        var configuration = base
         configuration.imagePlacement = imagePlacement
-        self = configuration
+        base = configuration
         return self
     }
 
@@ -143,10 +143,10 @@ public extension UIButton.Configuration {
     /// - Parameter contentInsets: 间距
     /// - Returns: `Self`
     @discardableResult
-    mutating func dy_contentInsets(_ contentInsets: NSDirectionalEdgeInsets) -> Self {
-        var configuration = self
+    func contentInsets(_ contentInsets: NSDirectionalEdgeInsets) -> Self {
+        var configuration = base
         configuration.contentInsets = contentInsets
-        self = configuration
+        base = configuration
         return self
     }
 
@@ -154,10 +154,10 @@ public extension UIButton.Configuration {
     /// - Parameter cornerStyle: 圆角样式
     /// - Returns: `Self`
     @discardableResult
-    mutating func dy_cornerStyle(_ cornerStyle: UIButton.Configuration.CornerStyle) -> Self {
-        var configuration = self
+    func cornerStyle(_ cornerStyle: UIButton.Configuration.CornerStyle) -> Self {
+        var configuration = base
         configuration.cornerStyle = cornerStyle
-        self = configuration
+        base = configuration
         return self
     }
 
@@ -165,10 +165,10 @@ public extension UIButton.Configuration {
     /// - Parameter strokeColor: 边框颜色
     /// - Returns: `Self`
     @discardableResult
-    mutating func dy_backgroundStrokeColor(_ strokeColor: UIColor?) -> Self {
-        var configuration = self
+    func backgroundStrokeColor(_ strokeColor: UIColor?) -> Self {
+        var configuration = base
         configuration.background.strokeColor = strokeColor
-        self = configuration
+        base = configuration
         return self
     }
 
@@ -176,10 +176,10 @@ public extension UIButton.Configuration {
     /// - Parameter strokeWidth: 边框宽度
     /// - Returns: `Self`
     @discardableResult
-    mutating func dy_backgroundStrokeWidth(_ strokeWidth: CGFloat) -> Self {
-        var configuration = self
+    func backgroundStrokeWidth(_ strokeWidth: CGFloat) -> Self {
+        var configuration = base
         configuration.background.strokeWidth = strokeWidth
-        self = configuration
+        base = configuration
         return self
     }
 }

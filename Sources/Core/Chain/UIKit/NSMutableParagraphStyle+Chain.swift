@@ -1,14 +1,14 @@
 import UIKit
 
 // MARK: - 链式设置属性
-public extension NSMutableParagraphStyle {
+public extension DyWrapper where Base: NSMutableParagraphStyle {
     /// 设置文本对齐方式
     ///
     /// - Parameter alignment: 对齐方式(如 `.left`, `.center`, `.right`)
     /// - Returns: `Self`
     @discardableResult
-    func dy_alignment(_ alignment: NSTextAlignment) -> Self {
-        self.alignment = alignment
+    func alignment(_ alignment: NSTextAlignment) -> Self {
+        base.alignment = alignment
         return self
     }
 
@@ -17,8 +17,8 @@ public extension NSMutableParagraphStyle {
     /// - Parameter lineBreakMode: 换行方式(如 `.byWordWrapping`, `.byTruncatingTail`)
     /// - Returns: `Self`
     @discardableResult
-    func dy_lineBreakMode(_ lineBreakMode: NSLineBreakMode) -> Self {
-        self.lineBreakMode = lineBreakMode
+    func lineBreakMode(_ lineBreakMode: NSLineBreakMode) -> Self {
+        base.lineBreakMode = lineBreakMode
         return self
     }
 
@@ -27,8 +27,8 @@ public extension NSMutableParagraphStyle {
     /// - Parameter lineSpacing: 行间距(单位：点),应 ≥ 0
     /// - Returns: `Self`
     @discardableResult
-    func dy_lineSpacing(_ lineSpacing: CGFloat) -> Self {
-        self.lineSpacing = max(0, lineSpacing)
+    func lineSpacing(_ lineSpacing: CGFloat) -> Self {
+        base.lineSpacing = max(0, lineSpacing)
         return self
     }
 
@@ -37,8 +37,8 @@ public extension NSMutableParagraphStyle {
     /// - Parameter paragraphSpacing: 段落间距(单位：点),应 ≥ 0
     /// - Returns: `Self`
     @discardableResult
-    func dy_paragraphSpacing(_ paragraphSpacing: CGFloat) -> Self {
-        self.paragraphSpacing = max(0, paragraphSpacing)
+    func paragraphSpacing(_ paragraphSpacing: CGFloat) -> Self {
+        base.paragraphSpacing = max(0, paragraphSpacing)
         return self
     }
 
@@ -47,8 +47,8 @@ public extension NSMutableParagraphStyle {
     /// - Parameter hyphenationFactor: 连字符系数,范围 [0.0, 1.0]
     /// - Returns: `Self`
     @discardableResult
-    func dy_hyphenationFactor(_ hyphenationFactor: Float) -> Self {
-        self.hyphenationFactor = min(max(hyphenationFactor, 0.0), 1.0)
+    func hyphenationFactor(_ hyphenationFactor: Float) -> Self {
+        base.hyphenationFactor = min(max(hyphenationFactor, 0.0), 1.0)
         return self
     }
 
@@ -57,8 +57,8 @@ public extension NSMutableParagraphStyle {
     /// - Parameter firstLineHeadIndent: 缩进值(单位：点),可为负数
     /// - Returns: `Self`
     @discardableResult
-    func dy_firstLineHeadIndent(_ firstLineHeadIndent: CGFloat) -> Self {
-        self.firstLineHeadIndent = firstLineHeadIndent
+    func firstLineHeadIndent(_ firstLineHeadIndent: CGFloat) -> Self {
+        base.firstLineHeadIndent = firstLineHeadIndent
         return self
     }
 
@@ -67,8 +67,8 @@ public extension NSMutableParagraphStyle {
     /// - Parameter paragraphSpacingBefore: 间距值(单位：点),应 ≥ 0
     /// - Returns: `Self`
     @discardableResult
-    func dy_paragraphSpacingBefore(_ paragraphSpacingBefore: CGFloat) -> Self {
-        self.paragraphSpacingBefore = max(0, paragraphSpacingBefore)
+    func paragraphSpacingBefore(_ paragraphSpacingBefore: CGFloat) -> Self {
+        base.paragraphSpacingBefore = max(0, paragraphSpacingBefore)
         return self
     }
 
@@ -82,8 +82,8 @@ public extension NSMutableParagraphStyle {
     ///   let style = NSMutableParagraphStyle().dy_headIndent(10.0)
     ///   ```
     @discardableResult
-    func dy_headIndent(_ headIndent: CGFloat) -> Self {
-        self.headIndent = max(0, headIndent)
+    func headIndent(_ headIndent: CGFloat) -> Self {
+        base.headIndent = max(0, headIndent)
         return self
     }
 
@@ -92,8 +92,8 @@ public extension NSMutableParagraphStyle {
     /// - Parameter tailIndent: 缩进值(单位：点),通常 ≤ 0 表示向左缩进
     /// - Returns: `Self`
     @discardableResult
-    func dy_tailIndent(_ tailIndent: CGFloat) -> Self {
-        self.tailIndent = tailIndent
+    func tailIndent(_ tailIndent: CGFloat) -> Self {
+        base.tailIndent = tailIndent
         return self
     }
 
@@ -102,8 +102,8 @@ public extension NSMutableParagraphStyle {
     /// - Parameter lineHeightMultiple: 倍数(如 1.5 表示 1.5 倍行高),应 > 0
     /// - Returns: `Self`
     @discardableResult
-    func dy_lineHeightMultiple(_ lineHeightMultiple: CGFloat) -> Self {
-        self.lineHeightMultiple = max(0.01, lineHeightMultiple)
+    func lineHeightMultiple(_ lineHeightMultiple: CGFloat) -> Self {
+        base.lineHeightMultiple = max(0.01, lineHeightMultiple)
         return self
     }
 
@@ -112,8 +112,8 @@ public extension NSMutableParagraphStyle {
     /// - Parameter minimumLineHeight: 最小行高(单位：点),应 ≥ 0
     /// - Returns: `Self`
     @discardableResult
-    func dy_minimumLineHeight(_ minimumLineHeight: CGFloat) -> Self {
-        self.minimumLineHeight = max(0, minimumLineHeight)
+    func minimumLineHeight(_ minimumLineHeight: CGFloat) -> Self {
+        base.minimumLineHeight = max(0, minimumLineHeight)
         return self
     }
 
@@ -122,8 +122,8 @@ public extension NSMutableParagraphStyle {
     /// - Parameter maximumLineHeight: 最大行高(单位：点),应 ≥ 0
     /// - Returns: `Self`
     @discardableResult
-    func dy_maximumLineHeight(_ maximumLineHeight: CGFloat) -> Self {
-        self.maximumLineHeight = max(0, maximumLineHeight)
+    func maximumLineHeight(_ maximumLineHeight: CGFloat) -> Self {
+        base.maximumLineHeight = max(0, maximumLineHeight)
         return self
     }
 }

@@ -156,41 +156,41 @@ public extension DyNaView {
 }
 
 // MARK: - 链式设置
-public extension DyNaView {
+public extension DyWrapper where Base: DyNaView {
     /// 设置标题文本
     @discardableResult
-    func dy_title(_ title: String?) -> Self {
-        self.titleLabel.text = title
-        self.setNeedsLayout()
+    func title(_ title: String?) -> Self {
+        base.titleLabel.text = title
+        base.setNeedsLayout()
         return self
     }
 
     /// 设置标题字体
     @discardableResult
-    func dy_titleFont(_ font: UIFont) -> Self {
-        self.titleLabel.font = font
-        self.setNeedsLayout()
+    func titleFont(_ font: UIFont) -> Self {
+        base.titleLabel.font = font
+        base.setNeedsLayout()
         return self
     }
 
     /// 设置标题颜色
     @discardableResult
-    func dy_titleColor(_ color: UIColor) -> Self {
-        self.titleLabel.textColor = color
+    func titleColor(_ color: UIColor) -> Self {
+        base.titleLabel.textColor = color
         return self
     }
 
     /// 设置返回按钮图片(支持不同状态)
     @discardableResult
-    func dy_backImage(_ image: UIImage?, for state: UIControl.State = .normal) -> Self {
-        self.backButton.setImage(image, for: state)
+    func backImage(_ image: UIImage?, for state: UIControl.State = .normal) -> Self {
+        base.backButton.setImage(image, for: state)
         return self
     }
 
     /// 控制返回按钮是否显示
     @discardableResult
-    func dy_showBackButton(_ isShow: Bool) -> Self {
-        self.backButton.isHidden = !isShow
+    func showBackButton(_ isShow: Bool) -> Self {
+        base.backButton.isHidden = !isShow
         return self
     }
 
@@ -198,74 +198,74 @@ public extension DyNaView {
     /// - Warning: 闭包被导航栏**强引用**（存储于 `backBlock`）。若闭包内使用 `self`，
     ///   请使用 `[weak self]` 避免循环引用泄漏。
     @discardableResult
-    func dy_backAction(_ handler: DyAction?) -> Self {
-        self.backBlock = handler
+    func backAction(_ handler: DyAction?) -> Self {
+        base.backBlock = handler
         return self
     }
 
     /// 控制底部分割线是否显示
     @discardableResult
-    func dy_showLine(_ isShow: Bool) -> Self {
-        self.lineView.isHidden = !isShow
+    func showLine(_ isShow: Bool) -> Self {
+        base.lineView.isHidden = !isShow
         return self
     }
 
     /// 控制导航栏阴影(模拟系统导航栏阴影)
     @discardableResult
-    func dy_showShadow(_ isShow: Bool) -> Self {
-        self.layer.shadowColor = UIColor(hex: "#DBDADA").dy_alpha(0.25).cgColor
-        self.layer.shadowRadius = 0
-        self.layer.shadowOffset = CGSize(width: 0, height: 1)
-        self.layer.shadowOpacity = isShow ? 1 : 0
+    func showShadow(_ isShow: Bool) -> Self {
+        base.layer.shadowColor = UIColor(hex: "#DBDADA").dy_alpha(0.25).cgColor
+        base.layer.shadowRadius = 0
+        base.layer.shadowOffset = CGSize(width: 0, height: 1)
+        base.layer.shadowOpacity = isShow ? 1 : 0
         if isShow {
-            self.layer.shadowPath = UIBezierPath(rect: self.bounds).cgPath
+            base.layer.shadowPath = UIBezierPath(rect: base.bounds).cgPath
         }
         return self
     }
 
     /// 设置背景图片(自动插入底层,铺满整个导航栏)
     @discardableResult
-    func dy_backgroundImage(_ image: UIImage?) -> Self {
-        if let imageView = self.backgroundImageView {
+    func backgroundImage(_ image: UIImage?) -> Self {
+        if let imageView = base.backgroundImageView {
             imageView.image = image
             imageView.isHidden = (image == nil)
         } else if let image {
             let imageView = UIImageView(image: image)
             imageView.contentMode = .scaleToFill
-            self.insertSubview(imageView, at: 0)
-            self.backgroundImageView = imageView
-            self.setNeedsLayout()
+            base.insertSubview(imageView, at: 0)
+            base.backgroundImageView = imageView
+            base.setNeedsLayout()
         }
         return self
     }
 
     /// 设置渐变背景(覆盖纯色和图片)
     @discardableResult
-    func dy_backgroundGradient(_ colors: [UIColor]) -> Self {
+    func backgroundGradient(_ colors: [UIColor]) -> Self {
         let gradient = CAGradientLayer()
-        gradient.colors = colors.map(\.cgColor)
-        gradient.startPoint = CGPoint(x: 0, y: 0)
-        gradient.endPoint = CGPoint(x: 0, y: 1)
-        gradient.frame = self.bounds
-        gradient.zPosition = -1
+            .dy_frame(base.bounds)
+            .dy_colors(colors)
+            .dy_startPoint(.zero)
+            .dy_endPoint(.init(x: 0, y: 1))
+            .dy_zPosition(-1)
 
-        self.gradientLayer?.removeFromSuperlayer()
-        self.layer.insertSublayer(gradient, at: 0)
-        self.gradientLayer = gradient
+        base.gradientLayer?.removeFromSuperlayer()
+        base.layer.insertSublayer(gradient, at: 0)
+        base.gradientLayer = gradient
 
         // 清除其他背景
-        self.backgroundColor = .clear
-        self.backgroundImageView?.removeFromSuperview()
-        self.backgroundImageView = nil
+        base.backgroundColor = .clear
+        base.backgroundImageView?.removeFromSuperview()
+        base.backgroundImageView = nil
 
         return self
     }
 
     /// 隐藏状态栏占位(例如在 modal 页面中)
     @discardableResult
-    func dy_isHideStatusBar(_ hidden: Bool) -> Self {
-        self.statusBar.isHidden = hidden
-        self.setNeedsLayout()
+    func isHideStatusBar(_ isHidden: Bool) -> Self {
+        base.statusBar.isHidden = isHidden
+        base.setNeedsLayout()
         return self
     }
 }
