@@ -23,15 +23,15 @@ open class DyCollectionViewController: DyViewController {
             self.collectionView,
             belowSubview: self.naview
         )
-        self.updateNaview()
+        self.updateUI()
     }
 }
 
 // MARK: - 支持子类重写的方法
 @objc extension DyCollectionViewController {
-    /// 更新导航栏及受影响的其它view
-    override open func updateNaview() {
-        super.updateNaview()
+    /// 更新会受影响的UI
+    override open func updateUI() {
+        super.updateUI()
 
         let topMargin = self.naview.isHidden ? 0 : DyScreen.navBarTotalHeight
         self.collectionView.dy_frame(CGRect(

@@ -67,7 +67,7 @@ open class DyViewController: UIViewController {
 
 // MARK: - 支持子类重写的方法
 @objc extension DyViewController {
-    /// 更新导航栏及受影响的其它view
+    /// 更新导航栏位置(由于有可能会在进入控制器时获取不到导航栏高度)
     open func updateNaview() {
         self.naview.dy_frame(CGRect(
             x: 0,
