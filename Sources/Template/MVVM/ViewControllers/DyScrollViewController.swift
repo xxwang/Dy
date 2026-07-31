@@ -52,7 +52,7 @@ open class DyScrollViewController: DyViewController {
         // 内容容器
         self.contentView
             .dy_width(self.scrollView.contentSize.width)
-            .dy_height(max(self.scrollView.contentSize.height, self.contentView.dy_height))
+            .dy_height(max(self.scrollView.contentSize.height, self.scrollView.dy_height))
     }
 }
 
