@@ -9,7 +9,7 @@ public extension DyWrapper where Base == String {
     ///     `"some variable name".dy.camelCase` → `"someVariableName"`
     ///
     var camelCase: String {
-        let words = self.dy_words
+        let words = self.words
         guard !words.isEmpty else { return "" }
         let first = words[0].lowercased()
         let rest = words.dropFirst().map(\.capitalized).joined()

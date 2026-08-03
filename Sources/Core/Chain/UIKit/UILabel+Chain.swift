@@ -210,7 +210,7 @@ public extension DyWrapper where Base: UILabel {
         base.attributedText = base.attributedText?
             .dy
             .toMutable()
-            .lineSpacing(spacing, for: (base.text ?? "").dy_fullNSRange)
+            .lineSpacing(spacing, for: (base.text ?? "").dy.fullNSRange)
             .build()
         return self
     }
@@ -228,7 +228,7 @@ public extension DyWrapper where Base: UILabel {
         base.attributedText = base.attributedText?
             .dy
             .toMutable()
-            .characterSpacing(spacing, for: base.text?.dy_fullNSRange)
+            .characterSpacing(spacing, for: base.text?.dy.fullNSRange)
             .build()
         return self
     }

@@ -47,7 +47,7 @@ public extension URLRequest {
                     cookies.append(value)
                 } else {
                     let header = "\(key):\(value)"
-                    parts.append("-H \(header.dy_shellEscaped)")
+                    parts.append("-H \(header.dy.shellEscaped)")
                 }
             }
         }
@@ -55,7 +55,7 @@ public extension URLRequest {
         // Cookies
         if !cookies.isEmpty {
             let cookieString = cookies.joined(separator: "; ")
-            parts.append("-b \(cookieString.dy_shellEscaped)")
+            parts.append("-b \(cookieString.dy.shellEscaped)")
         }
 
         // HTTP Body
@@ -69,10 +69,10 @@ public extension URLRequest {
 
                 if isForm {
                     // 表单数据：使用 --data-urlencode 不合适,直接 -d(已转义)
-                    parts.append("--data-raw \(bodyString.dy_shellEscaped)")
+                    parts.append("--data-raw \(bodyString.dy.shellEscaped)")
                 } else {
                     // 普通文本/JSON：使用 --data-raw 避免 cURL 自动设置 Content-Type
-                    parts.append("--data-raw \(bodyString.dy_shellEscaped)")
+                    parts.append("--data-raw \(bodyString.dy.shellEscaped)")
                 }
             } else {
                 // 二进制数据：无法安全表示,提示警告

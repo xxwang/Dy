@@ -292,7 +292,7 @@ public extension DyWrapper where Base: UIScrollView {
         let minY = -this.contentInset.top
         var targetY = this.contentOffset.y - this.bounds.height
         if this.isPagingEnabled, this.bounds.height > 0 {
-            let page = floor((targetY + this.contentInset.top) / this.bounds.height)
+            let page = Darwin.floor((targetY + this.contentInset.top) / this.bounds.height)
             targetY = max(minY, page * this.bounds.height - this.contentInset.top)
         } else {
             targetY = max(minY, targetY)
@@ -311,7 +311,7 @@ public extension DyWrapper where Base: UIScrollView {
         let maxY = max(0, this.contentSize.height - this.bounds.height) + this.contentInset.bottom
         var targetY = this.contentOffset.y + this.bounds.height
         if this.isPagingEnabled, this.bounds.height > 0 {
-            let page = floor((targetY + this.contentInset.top) / this.bounds.height)
+            let page = Darwin.floor((targetY + this.contentInset.top) / this.bounds.height)
             targetY = min(maxY, page * this.bounds.height - this.contentInset.top)
         } else {
             targetY = min(maxY, targetY)
@@ -330,7 +330,7 @@ public extension DyWrapper where Base: UIScrollView {
         let minX = -this.contentInset.left
         var targetX = this.contentOffset.x - this.bounds.width
         if this.isPagingEnabled, this.bounds.width > 0 {
-            let page = floor((targetX + this.contentInset.left) / this.bounds.width)
+            let page = Darwin.floor((targetX + this.contentInset.left) / this.bounds.width)
             targetX = max(minX, page * this.bounds.width - this.contentInset.left)
         } else {
             targetX = max(minX, targetX)
@@ -349,7 +349,7 @@ public extension DyWrapper where Base: UIScrollView {
         let maxX = max(0, this.contentSize.width - this.bounds.width) + this.contentInset.right
         var targetX = this.contentOffset.x + this.bounds.width
         if this.isPagingEnabled, this.bounds.width > 0 {
-            let page = floor((targetX + this.contentInset.left) / this.bounds.width)
+            let page = Darwin.floor((targetX + this.contentInset.left) / this.bounds.width)
             targetX = min(maxX, page * this.bounds.width - this.contentInset.left)
         } else {
             targetX = min(maxX, targetX)

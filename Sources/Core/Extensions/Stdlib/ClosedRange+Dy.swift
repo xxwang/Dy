@@ -1,7 +1,7 @@
 import Foundation
 
 // MARK: - 整数闭区间 (Int) 的随机值扩展
-public extension ClosedRange where Bound == Int {
+    public extension DyWrapper where Base == ClosedRange<Int> {
     /// 返回区间内的一个随机整数
     ///
     /// - Returns: 区间 `[lowerBound, upperBound]` 内的随机值
@@ -9,15 +9,15 @@ public extension ClosedRange where Bound == Int {
     /// - Example:
     ///   ```swift
     ///   let range = 1...10
-    ///   let randomValue = range.dy_randomElement()
+    ///   let randomValue = range.dy.randomElement()
     ///   ```
-    func dy_randomElement() -> Int {
-        .random(in: self)
+    func randomElement() -> Int {
+        return .random(in: base)
     }
 }
 
 // MARK: - 整数闭区间的偏移操作扩展
-public extension ClosedRange where Bound == Int {
+public extension DyWrapper where Base == ClosedRange<Int> {
     /// 返回偏移后的区间
     ///
     /// - Parameter offset: 要偏移的整数值(正数向右,负数向左)
@@ -26,10 +26,10 @@ public extension ClosedRange where Bound == Int {
     /// - Example:
     ///   ```swift
     ///   let range = 1...5
-    ///   print(range.dy_offset(by: 2)) // 3...7
+    ///   print(range.dy.offset(by: 2)) // 3...7
     ///   ```
-    func dy_offset(by offset: Int) -> ClosedRange<Int> {
-        return (lowerBound + offset) ... (upperBound + offset)
+    func offset(by offset: Int) -> Base {
+        return (base.lowerBound + offset) ... (base.upperBound + offset)
     }
 }
 

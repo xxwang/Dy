@@ -338,7 +338,7 @@ public extension DyWrapper where Base: NSMutableAttributedString {
     /// - Returns: `Self`
     @discardableResult
     func string(_ string: String) -> Self {
-        base.setAttributedString(string.dy_toNSAttributedString())
+        base.setAttributedString(string.dy.toNSAttributedString())
         return self
     }
 

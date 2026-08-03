@@ -33,8 +33,8 @@ public extension DyWrapper where Base == MKMapRect {
         // 构造 MKMapRect
         let origin = MKMapPoint(x: min(topLeft.x, bottomRight.x), y: min(topLeft.y, bottomRight.y))
         let size = MKMapSize(
-            width: abs(bottomRight.x - topLeft.x),
-            height: abs(bottomRight.y - topLeft.y)
+            width: (bottomRight.x - topLeft.x).dy.abs(),
+            height: (bottomRight.y - topLeft.y).dy.abs()
         )
 
         return MKMapRect(origin: origin, size: size)

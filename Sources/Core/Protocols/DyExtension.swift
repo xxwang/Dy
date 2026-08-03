@@ -131,3 +131,25 @@ extension CGVector: DyExtension {}
 extension UIEdgeInsets: DyExtension {}
 extension UIOffset: DyExtension {}
 extension UIRectEdge: DyExtension {}
+
+extension Range: DyExtension {}
+extension ClosedRange: DyExtension {}
+
+// MARK: - DyBoundedRange
+public protocol DyBoundedRange: RangeExpression where Bound: Comparable {
+    var lowerBound: Bound { get }
+    var upperBound: Bound { get }
+}
+
+extension Range: DyBoundedRange {}
+extension ClosedRange: DyBoundedRange {}
+
+// MARK: - DyDictionaryProtocol
+protocol DyDictionaryProtocol: Sequence {
+    associatedtype Key: Hashable
+    associatedtype Value
+    subscript(key: Key) -> Value? { get set }
+    mutating func removeValue(forKey key: Key) -> Value?
+}
+
+extension Dictionary: DyDictionaryProtocol {}

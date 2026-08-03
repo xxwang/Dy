@@ -47,7 +47,7 @@ public extension URL {
 
     /// 返回一个将路径中 `～` 展开后的 `URL`
     var dy_expandingTildeInUrl: URL {
-        URL(fileURLWithPath: self.path.dy_expandingTildeInPath)
+        URL(fileURLWithPath: self.path.dy.expandingTildeInPath)
     }
 
     /// 获取 MIME 类型(支持 iOS 14+ 和降级方案)

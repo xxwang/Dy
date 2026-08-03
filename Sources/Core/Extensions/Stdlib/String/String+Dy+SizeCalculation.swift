@@ -34,7 +34,7 @@ public extension DyWrapper where Base == String {
             context: nil
         )
         let size = rect.size
-        return ceilResult ? CGSize(width: ceil(size.width), height: ceil(size.height)) : size
+        return ceilResult ? CGSize(width: Darwin.ceil(size.width), height: Darwin.ceil(size.height)) : size
     }
 
     /// 使用富文本属性计算字符串尺寸(支持行间距、字间距等)
@@ -90,6 +90,6 @@ public extension DyWrapper where Base == String {
             context: nil
         )
         let size = rect.size
-        return ceilResult ? CGSize(width: ceil(size.width), height: ceil(size.height)) : size
+        return ceilResult ? CGSize(width: Darwin.ceil(size.width), height: Darwin.ceil(size.height)) : size
     }
 }
