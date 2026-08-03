@@ -4,13 +4,13 @@ extension CGVector: DyExtension {}
 
 // MARK: - 构造方法
 public extension CGVector {
-/// 根据角度(弧度)和长度创建一个向量
-/// - Parameters:
-///   - angle: 从正 X 轴逆时针旋转的角度(单位：弧度)
-///   - magnitude: 向量的长度
-init(angle: CGFloat, magnitude: CGFloat) {
-    self.init(dx: magnitude * cos(angle), dy: magnitude * sin(angle))
-}
+    /// 根据角度(弧度)和长度创建一个向量
+    /// - Parameters:
+    ///   - angle: 从正 X 轴逆时针旋转的角度(单位：弧度)
+    ///   - magnitude: 向量的长度
+    init(angle: CGFloat, magnitude: CGFloat) {
+        self.init(dx: magnitude * cos(angle), dy: magnitude * sin(angle))
+    }
 }
 
 // MARK: - 属性
