@@ -1,7 +1,7 @@
 import MapKit
 
 // MARK: - 属性
-public extension MKMultiPoint {
+public extension DyWrapper where Base: MKMultiPoint {
     /// 获取多点对象(如 `MKPolyline`、`MKPolygon`)中包含的所有地理坐标
     ///
     /// 此属性将底层 C 数组安全地转换为 Swift 的 `[CLLocationCoordinate2D]` 数组,
@@ -16,11 +16,11 @@ public extension MKMultiPoint {
     /// - Example:
     ///   ```swift
     ///   let polyline = MKPolyline(coordinates: myCoords)
-    ///   let allCoords = polyline.dy_coordinates
+    ///   let allCoords = polyline.dy.coordinates
     ///   print("共有 \(allCoords.count) 个点")
     ///   ```
-    var dy_coordinates: [CLLocationCoordinate2D] {
-        let count = self.pointCount
+    var coordinates: [CLLocationCoordinate2D] {
+        let count = base.pointCount
         guard count > 0 else { return [] }
 
         // 创建一个可变数组,用无效坐标占位(会被完全覆盖)
@@ -31,7 +31,7 @@ public extension MKMultiPoint {
 
         // ⚠️ 注意：这里必须使用 NSRange,因为 getCoordinates 只接受 NSRange(在 iOS <14)
         let range = NSRange(location: 0, length: count)
-        self.getCoordinates(&coordinates, range: range)
+        base.getCoordinates(&coordinates, range: range)
 
         return coordinates
     }
