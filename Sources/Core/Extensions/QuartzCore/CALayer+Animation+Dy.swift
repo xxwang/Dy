@@ -2,7 +2,13 @@ import QuartzCore
 import UIKit
 
 // MARK: - CABasicAnimation
-public extension CALayer {
+public extension DyWrapper where Base: CALayer {
+    /// 表示平移动画的方向轴
+    enum Axis {
+        case x
+        case y
+    }
+
     /// 使用基本动画将图层移动到指定位置
     ///
     /// 此方法通过修改 `position` 属性实现平滑位移动画
@@ -17,9 +23,9 @@ public extension CALayer {
     ///
     /// - Example:
     ///   ```swift
-    ///   layer.dy_basicAnimationMove(to: CGPoint(x: 100, y: 100), duration: 1.5)
+    ///   layer.dy.basicAnimationMove(to: CGPoint(x: 100, y: 100), duration: 1.5)
     ///   ```
-    func dy_basicAnimationMove(
+    func basicAnimationMove(
         to point: CGPoint,
         duration: TimeInterval = 2.0,
         delay: TimeInterval = 0,
@@ -27,9 +33,9 @@ public extension CALayer {
         removedOnCompletion: Bool = false,
         timingFunction: CAMediaTimingFunctionName = .default
     ) {
-        dy_addBasicAnimation(
+        self.addBasicAnimation(
             keyPath: "position",
-            fromValue: position,
+            fromValue: base.position,
             toValue: point,
             duration: duration,
             delay: delay,
@@ -52,9 +58,9 @@ public extension CALayer {
     ///
     /// - Example:
     ///   ```swift
-    ///   layer.dy_basicAnimationTranslation(axis: .x, to: 100, duration: 1.0)
+    ///   layer.dy.basicAnimationTranslation(axis: .x, to: 100, duration: 1.0)
     ///   ```
-    func dy_basicAnimationTranslation(
+    func basicAnimationTranslation(
         axis: Axis,
         to value: CGFloat,
         duration: TimeInterval = 2.0,
@@ -69,7 +75,7 @@ public extension CALayer {
         case .y:
             "transform.translation.y"
         }
-        dy_addBasicAnimation(
+        self.addBasicAnimation(
             keyPath: keyPath,
             fromValue: nil, // Core Animation 自动使用当前值
             toValue: value,
@@ -79,12 +85,6 @@ public extension CALayer {
             removedOnCompletion: removedOnCompletion,
             timingFunction: timingFunction
         )
-    }
-
-    /// 表示平移动画的方向轴
-    enum Axis {
-        case x
-        case y
     }
 
     /// 使用基本动画改变图层的圆角半径
@@ -99,9 +99,9 @@ public extension CALayer {
     ///
     /// - Example:
     ///   ```swift
-    ///   layer.dy_basicAnimationCornerRadius(to: 20, duration: 0.5)
+    ///   layer.dy.basicAnimationCornerRadius(to: 20, duration: 0.5)
     ///   ```
-    func dy_basicAnimationCornerRadius(
+    func basicAnimationCornerRadius(
         to radius: CGFloat,
         duration: TimeInterval = 2.0,
         delay: TimeInterval = 0,
@@ -109,7 +109,7 @@ public extension CALayer {
         removedOnCompletion: Bool = false,
         timingFunction: CAMediaTimingFunctionName = .default
     ) {
-        dy_addBasicAnimation(
+        self.addBasicAnimation(
             keyPath: "cornerRadius",
             fromValue: cornerRadius,
             toValue: radius,
@@ -133,9 +133,9 @@ public extension CALayer {
     ///
     /// - Example:
     ///   ```swift
-    ///   layer.dy_basicAnimationScale(to: 1.5, duration: 0.3)
+    ///   layer.dy.basicAnimationScale(to: 1.5, duration: 0.3)
     ///   ```
-    func dy_basicAnimationScale(
+    func basicAnimationScale(
         to scale: CGFloat,
         duration: TimeInterval = 2.0,
         delay: TimeInterval = 0,
@@ -143,7 +143,7 @@ public extension CALayer {
         removedOnCompletion: Bool = true,
         timingFunction: CAMediaTimingFunctionName = .default
     ) {
-        dy_addBasicAnimation(
+        self.addBasicAnimation(
             keyPath: "transform.scale",
             fromValue: nil,
             toValue: scale,
@@ -167,9 +167,9 @@ public extension CALayer {
     ///
     /// - Example:
     ///   ```swift
-    ///   layer.dy_basicAnimationRotation(to: .pi, duration: 1.0)
+    ///   layer.dy.basicAnimationRotation(to: .pi, duration: 1.0)
     ///   ```
-    func dy_basicAnimationRotation(
+    func basicAnimationRotation(
         to angle: CGFloat,
         duration: TimeInterval = 2.0,
         delay: TimeInterval = 0,
@@ -177,7 +177,7 @@ public extension CALayer {
         removedOnCompletion: Bool = true,
         timingFunction: CAMediaTimingFunctionName = .default
     ) {
-        dy_addBasicAnimation(
+        self.addBasicAnimation(
             keyPath: "transform.rotation",
             fromValue: nil,
             toValue: angle,
@@ -192,7 +192,7 @@ public extension CALayer {
     /// 内部通用方法：应用 `CABasicAnimation`
     ///
     /// - Note: 不建议外部直接调用
-    private func dy_addBasicAnimation(
+    private func addBasicAnimation(
         keyPath: String,
         fromValue: Any?,
         toValue: Any?,
@@ -211,12 +211,12 @@ public extension CALayer {
         animation.isRemovedOnCompletion = removedOnCompletion
         animation.fillMode = removedOnCompletion ? .removed : .forwards
         animation.timingFunction = CAMediaTimingFunction(name: timingFunction)
-        add(animation, forKey: animation.keyPath)
+        base.add(animation, forKey: animation.keyPath)
     }
 }
 
 // MARK: - CAKeyframeAnimation
-public extension CALayer {
+public extension DyWrapper where Base: CALayer {
     /// 使用关键帧动画沿一系列点移动图层
     ///
     /// - Parameters:
@@ -229,7 +229,7 @@ public extension CALayer {
     ///   - timingFunction: 缓动函数,默认为 `.default`
     ///
     /// - Precondition: `positions` 非空
-    func dy_keyframeAnimationMove(
+    func keyframeAnimationMove(
         positions: [CGPoint],
         keyTimes: [NSNumber]? = nil,
         duration: TimeInterval = 2.0,
@@ -239,7 +239,7 @@ public extension CALayer {
         timingFunction: CAMediaTimingFunctionName = .default
     ) {
         guard !positions.isEmpty else { return }
-        dy_addKeyframeAnimation(
+        self.addKeyframeAnimation(
             keyPath: "position",
             values: positions,
             keyTimes: keyTimes,
@@ -264,11 +264,11 @@ public extension CALayer {
     ///   - repeatCount: 重复次数,默认为 1
     ///   - removedOnCompletion: 是否在完成后移除动画,默认为 `true`
     ///   - timingFunction: 缓动函数,默认为 `.linear`(更自然的抖动)
-    func dy_keyframeAnimationShake(
+    func keyframeAnimationShake(
         angles: [CGFloat] = [
-            (-5).dy_toRadians(),
-            5.dy_toRadians(),
-            (-5).dy_toRadians(),
+            (-5).dy.toRadians(),
+            5.dy.toRadians(),
+            (-5).dy.toRadians(),
         ],
         keyTimes: [NSNumber]? = nil,
         duration: TimeInterval = 0.3,
@@ -278,7 +278,7 @@ public extension CALayer {
         timingFunction: CAMediaTimingFunctionName = .linear
     ) {
         guard !angles.isEmpty else { return }
-        dy_addKeyframeAnimation(
+        self.addKeyframeAnimation(
             keyPath: "transform.rotation",
             values: angles,
             keyTimes: keyTimes,
@@ -302,7 +302,7 @@ public extension CALayer {
     ///   - timingFunction: 缓动函数,默认为 `.default`
     ///
     /// - Precondition: `path` 非空
-    func dy_keyframeAnimationAlongPath(
+    func keyframeAnimationAlongPath(
         _ path: CGPath,
         duration: TimeInterval = 2.0,
         delay: TimeInterval = 0,
@@ -310,7 +310,7 @@ public extension CALayer {
         removedOnCompletion: Bool = false,
         timingFunction: CAMediaTimingFunctionName = .default
     ) {
-        dy_addKeyframeAnimation(
+        self.addKeyframeAnimation(
             keyPath: "position",
             values: nil,
             keyTimes: nil,
@@ -324,7 +324,7 @@ public extension CALayer {
     }
 
     /// 内部通用方法：应用 `CAKeyframeAnimation`
-    private func dy_addKeyframeAnimation(
+    private func addKeyframeAnimation(
         keyPath: String,
         values: [Any]? = nil,
         keyTimes: [NSNumber]? = nil,
@@ -357,12 +357,12 @@ public extension CALayer {
             animation.rotationMode = .rotateAuto
         }
 
-        add(animation, forKey: animation.keyPath)
+        base.add(animation, forKey: animation.keyPath)
     }
 }
 
 // MARK: - CASpringAnimation
-public extension CALayer {
+public extension DyWrapper where Base: CALayer {
     /// 使用弹簧动画改变图层的 bounds
     ///
     /// - Parameters:
@@ -375,7 +375,7 @@ public extension CALayer {
     ///   - repeatCount: 重复次数,默认为 1
     ///   - removedOnCompletion: 是否在完成后移除动画,默认为 `false`
     ///   - timingFunction: 缓动函数,默认为 `.default`
-    func dy_springAnimationBounds(
+    func springAnimationBounds(
         to bounds: CGRect,
         delay: TimeInterval = 0,
         mass: CGFloat = 10.0,
@@ -386,7 +386,7 @@ public extension CALayer {
         removedOnCompletion: Bool = false,
         timingFunction: CAMediaTimingFunctionName = .default
     ) {
-        dy_addSpringAnimation(
+        self.addSpringAnimation(
             keyPath: "bounds",
             toValue: bounds,
             delay: delay,
@@ -401,7 +401,7 @@ public extension CALayer {
     }
 
     /// 内部通用方法：应用 `CASpringAnimation`
-    private func dy_addSpringAnimation(
+    private func addSpringAnimation(
         keyPath: String,
         toValue: Any?,
         delay: TimeInterval,
@@ -424,12 +424,12 @@ public extension CALayer {
         animation.isRemovedOnCompletion = removedOnCompletion
         animation.fillMode = removedOnCompletion ? .removed : .forwards
         animation.timingFunction = CAMediaTimingFunction(name: timingFunction)
-        add(animation, forKey: animation.keyPath)
+        base.add(animation, forKey: animation.keyPath)
     }
 }
 
 // MARK: - CAAnimationGroup
-public extension CALayer {
+public extension DyWrapper where Base: CALayer {
     /// 同时执行一组动画
     ///
     /// - Parameters:
@@ -441,7 +441,7 @@ public extension CALayer {
     ///   - timingFunction: 缓动函数,默认为 `.default`
     ///
     /// - Precondition: `animations` 非空
-    func dy_addAnimationGroup(
+    func addAnimationGroup(
         _ animations: [CAAnimation],
         duration: TimeInterval = 2.0,
         delay: TimeInterval = 0,
@@ -458,12 +458,12 @@ public extension CALayer {
         group.isRemovedOnCompletion = removedOnCompletion
         group.fillMode = removedOnCompletion ? .removed : .forwards
         group.timingFunction = CAMediaTimingFunction(name: timingFunction)
-        add(group, forKey: "animationGroup")
+        base.add(group, forKey: "animationGroup")
     }
 }
 
 // MARK: - CATransition
-public extension CALayer {
+public extension DyWrapper where Base: CALayer {
     /// 添加过渡动画(常用于视图切换)
     ///
     /// - Parameters:
@@ -471,7 +471,7 @@ public extension CALayer {
     ///   - subtype: 方向(如 `.fromLeft`),可选
     ///   - duration: 动画时长(秒),默认为 0.35
     ///   - delay: 延迟时间(秒),默认为 0
-    func dy_addTransition(
+    func addTransition(
         type: CATransitionType,
         subtype: CATransitionSubtype? = nil,
         duration: CFTimeInterval = 0.35,
@@ -482,6 +482,6 @@ public extension CALayer {
         transition.subtype = subtype
         transition.duration = max(0, duration)
         transition.beginTime = CACurrentMediaTime() + max(0, delay)
-        add(transition, forKey: "transition")
+        base.add(transition, forKey: "transition")
     }
 }
