@@ -25,7 +25,7 @@ public enum DyDecimalNumberHandlerOperator {
     ///   )
     ///   print(result) // 输出: 15
     ///   ```
-    func dy_calculate(
+    func calculate(
         numberA: NSDecimalNumber,
         numberB: NSDecimalNumber,
         behavior: NSDecimalNumberBehaviors
@@ -45,7 +45,7 @@ public enum DyDecimalNumberHandlerOperator {
 ///
 /// 所有公共方法均使用泛型约束 `LosslessStringConvertible`,确保输入类型(如 `Int`, `Double`, `String` 等)
 /// 能无损转换为字符串并正确解析为 `NSDecimalNumber`,避免因非法输入导致静默错误
-public extension NSDecimalNumberHandler {
+public extension DyWrapper where Base: NSDecimalNumberHandler {
     /// 执行基本数值计算
     ///
     /// 支持任意符合 `LosslessStringConvertible` 协议的类型作为输入(如 `Int`, `Float`, `Double`, `String`, `NSDecimalNumber`)
@@ -65,7 +65,7 @@ public extension NSDecimalNumberHandler {
     ///
     /// - Example:
     ///   ```swift
-    ///   let result = NSDecimalNumberHandler.dy_calculate(
+    ///   let result = NSDecimalNumberHandler.dy.calculate(
     ///       operator: .add,
     ///       valueA: 10.5,
     ///       valueB: "2.3",
@@ -74,7 +74,7 @@ public extension NSDecimalNumberHandler {
     ///   )
     ///   print(result) // 输出: 12.80
     ///   ```
-    static func dy_calculate(
+    static func calculate(
         operator: DyDecimalNumberHandlerOperator,
         valueA: some LosslessStringConvertible,
         valueB: some LosslessStringConvertible,
@@ -95,12 +95,12 @@ public extension NSDecimalNumberHandler {
             raiseOnUnderflow: underflow,
             raiseOnDivideByZero: divideByZero
         )
-        return `operator`.dy_calculate(numberA: numberA, numberB: numberB, behavior: handler)
+        return `operator`.calculate(numberA: numberA, numberB: numberB, behavior: handler)
     }
 }
 
 // MARK: - 实用工具方法
-public extension NSDecimalNumberHandler {
+public extension DyWrapper where Base: NSDecimalNumberHandler {
     /// 判断两个数是否可以整除(即 `valueA ÷ valueB` 的结果为整数)
     ///
     /// - Parameters:
@@ -110,10 +110,10 @@ public extension NSDecimalNumberHandler {
     ///
     /// - Example:
     ///   ```swift
-    ///   let divisible = NSDecimalNumberHandler.dy_isDivisible(valueA: 10, valueB: 2)
+    ///   let divisible = NSDecimalNumberHandler.dy.isDivisible(valueA: 10, valueB: 2)
     ///   print(divisible) // true
     ///   ```
-    static func dy_isDivisible(
+    static func isDivisible(
         valueA: some LosslessStringConvertible,
         valueB: some LosslessStringConvertible
     ) -> Bool {
@@ -121,7 +121,7 @@ public extension NSDecimalNumberHandler {
         if divisor == .zero {
             return false
         }
-        let result = dy_calculate(operator: .divide, valueA: valueA, valueB: valueB, roundingMode: .down, scale: 10)
+        let result = self.calculate(operator: .divide, valueA: valueA, valueB: valueB, roundingMode: .down, scale: 10)
         return result.dy_isInteger
     }
 
@@ -134,16 +134,16 @@ public extension NSDecimalNumberHandler {
     ///
     /// - Example:
     ///   ```swift
-    ///   let quotient = NSDecimalNumberHandler.dy_intFloor(valueA: 10, valueB: 3)
+    ///   let quotient = NSDecimalNumberHandler.dy.intFloor(valueA: 10, valueB: 3)
     ///   print(quotient) // 3
     ///   ```
-    static func dy_intFloor(
+    static func intFloor(
         valueA: some LosslessStringConvertible,
         valueB: some LosslessStringConvertible
     ) -> Int {
         let divisor = NSDecimalNumber(string: String(valueB))
         guard divisor != .zero else { return 0 }
-        let result = dy_calculate(operator: .divide, valueA: valueA, valueB: valueB, roundingMode: .down, scale: 0)
+        let result = self.calculate(operator: .divide, valueA: valueA, valueB: valueB, roundingMode: .down, scale: 0)
         return result.intValue
     }
 
@@ -156,14 +156,14 @@ public extension NSDecimalNumberHandler {
     ///
     /// - Example:
     ///   ```swift
-    ///   let tax = NSDecimalNumberHandler.dy_calculatePercentage(value: 200, percentage: 15)
+    ///   let tax = NSDecimalNumberHandler.dy.calculatePercentage(value: 200, percentage: 15)
     ///   print(tax) // 30
     ///   ```
-    static func dy_calculatePercentage(
+    static func calculatePercentage(
         value: some LosslessStringConvertible,
         percentage: some LosslessStringConvertible
     ) -> NSDecimalNumber {
-        let product = dy_calculate(operator: .multiply, valueA: value, valueB: percentage)
+        let product = self.calculate(operator: .multiply, valueA: value, valueB: percentage)
         return product.dividing(by: NSDecimalNumber(100))
     }
 
@@ -176,10 +176,10 @@ public extension NSDecimalNumberHandler {
     ///
     /// - Example:
     ///   ```swift
-    ///   let price = NSDecimalNumberHandler.dy_floorToNearest(value: 7.5, multiple: 2)
+    ///   let price = NSDecimalNumberHandler.dy.floorToNearest(value: 7.5, multiple: 2)
     ///   print(price) // 6
     ///   ```
-    static func dy_floorToNearest(
+    static func floorToNearest(
         value: some LosslessStringConvertible,
         multiple: some LosslessStringConvertible
     ) -> NSDecimalNumber {
@@ -202,10 +202,10 @@ public extension NSDecimalNumberHandler {
     ///
     /// - Example:
     ///   ```swift
-    ///   let clamped = NSDecimalNumberHandler.dy_clamp(value: 25, lowerBound: 10, upperBound: 20)
+    ///   let clamped = NSDecimalNumberHandler.dy.clamp(value: 25, lowerBound: 10, upperBound: 20)
     ///   print(clamped) // 20
     ///   ```
-    static func dy_clamp(
+    static func clamp(
         value: some LosslessStringConvertible,
         lowerBound: some LosslessStringConvertible,
         upperBound: some LosslessStringConvertible
@@ -229,12 +229,12 @@ public extension NSDecimalNumberHandler {
     ///
     /// - Example:
     ///   ```swift
-    ///   let pos = NSDecimalNumberHandler.dy_positive(-42)
+    ///   let pos = NSDecimalNumberHandler.dy.positive(-42)
     ///   print(pos) // 42
     ///   ```
-    static func dy_positive(_ value: some LosslessStringConvertible) -> NSDecimalNumber {
+    static func positive(_ value: some LosslessStringConvertible) -> NSDecimalNumber {
         let number = NSDecimalNumber(string: String(value))
-        return number.dy_absoluteValue
+        return number.dy.absoluteValue
     }
 
     /// 获取数值的相反数(符号取反)
@@ -244,12 +244,12 @@ public extension NSDecimalNumberHandler {
     ///
     /// - Example:
     ///   ```swift
-    ///   let neg = NSDecimalNumberHandler.dy_negative(5)
+    ///   let neg = NSDecimalNumberHandler.dy.negative(5)
     ///   print(neg) // -5
     ///   ```
-    static func dy_negative(_ value: some LosslessStringConvertible) -> NSDecimalNumber {
+    static func negative(_ value: some LosslessStringConvertible) -> NSDecimalNumber {
         let number = NSDecimalNumber(string: String(value))
-        return number.dy_negated
+        return number.dy.negated
     }
 
     /// 计算数值数组的总和
@@ -259,10 +259,10 @@ public extension NSDecimalNumberHandler {
     ///
     /// - Example:
     ///   ```swift
-    ///   let total = NSDecimalNumberHandler.dy_sum(of: [1, 2.5, "3"])
+    ///   let total = NSDecimalNumberHandler.dy.sum(of: [1, 2.5, "3"])
     ///   print(total) // 6.5
     ///   ```
-    static func dy_sum(of values: [some LosslessStringConvertible]) -> NSDecimalNumber {
+    static func sum(of values: [some LosslessStringConvertible]) -> NSDecimalNumber {
         return values.reduce(.zero) { acc, val in
             acc.adding(NSDecimalNumber(string: String(val)))
         }
@@ -275,10 +275,10 @@ public extension NSDecimalNumberHandler {
     ///
     /// - Example:
     ///   ```swift
-    ///   let product = NSDecimalNumberHandler.dy_product(of: [2, 3, 4])
+    ///   let product = NSDecimalNumberHandler.dy.product(of: [2, 3, 4])
     ///   print(product) // 24
     ///   ```
-    static func dy_product(of values: [some LosslessStringConvertible]) -> NSDecimalNumber {
+    static func product(of values: [some LosslessStringConvertible]) -> NSDecimalNumber {
         return values.reduce(.one) { acc, val in
             acc.multiplying(by: NSDecimalNumber(string: String(val)))
         }
@@ -296,12 +296,12 @@ public extension NSDecimalNumberHandler {
     ///   let parts = NSDecimalNumberHandler.dy_splitByRatios(total: 100, ratios: [1, 2, 3])
     ///   // 相当于按 1:2:3 分配 → [16.66..., 33.33..., 50]
     ///   ```
-    static func dy_splitByRatios(
+    static func splitByRatios(
         total: some LosslessStringConvertible,
         ratios: [some LosslessStringConvertible]
     ) -> [NSDecimalNumber] {
         let totalNum = NSDecimalNumber(string: String(total))
-        let ratioSum = dy_sum(of: ratios)
+        let ratioSum = self.sum(of: ratios)
         guard ratioSum != .zero else { return Array(repeating: .zero, count: ratios.count) }
         return ratios.map { ratio in
             let r = NSDecimalNumber(string: String(ratio))
@@ -320,10 +320,10 @@ public extension NSDecimalNumberHandler {
     ///
     /// - Example:
     ///   ```swift
-    ///   let randomPrice = NSDecimalNumberHandler.dy_random(min: 10, max: 20)
+    ///   let randomPrice = NSDecimalNumberHandler.dy.random(min: 10, max: 20)
     ///   print(randomPrice) // 如: 14.728...
     ///   ```
-    static func dy_random(
+    static func random(
         min: some LosslessStringConvertible,
         max: some LosslessStringConvertible
     ) -> NSDecimalNumber {

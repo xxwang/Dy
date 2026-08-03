@@ -1,5 +1,12 @@
 import Foundation
 
+public protocol DyBoundedRange: RangeExpression where Bound: Comparable {
+    var lowerBound: Bound { get }
+    var upperBound: Bound { get }
+}
+
+extension Range: DyBoundedRange {}
+
 // MARK: - 类型转换
 public extension DyWrapper where Base == Range<String.Index> {
     /// 将 `Range<String.Index>` 转换为 `NSRange`

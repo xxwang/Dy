@@ -1,7 +1,9 @@
 import Foundation
 
+extension IndexPath: DyExtension {}
+
 // MARK: - 方法
-public extension IndexPath {
+public extension DyWrapper where Base == IndexPath {
     /// 返回适合日志打印的可读字符串(仅适用于二维结构,如 UITableView / UICollectionView)
     ///
     /// - Returns: 格式如 `"[section: 0, row: 5]"`;若为多维 IndexPath,则返回标准描述
@@ -11,14 +13,14 @@ public extension IndexPath {
     /// - Example:
     ///   ```swift
     ///   let ip = IndexPath(row: 2, section: 1)
-    ///   print(ip.dy_toString()) // [section: 1, row: 2]
+    ///   print(ip.dy.toString()) // [section: 1, row: 2]
     ///   ```
-    func dy_toString() -> String {
-        if self.count == 2 {
-            return "[section: \(self.section), row: \(self.row)]"
+    func toString() -> String {
+        if base.count == 2 {
+            return "[section: \(base.section), row: \(base.row)]"
         } else {
             // 多维情况：如 (0, 1, 2) 表示 section=0, row=1, item=2
-            let components = self.map(String.init).joined(separator: ", ")
+            let components = base.map(String.init).joined(separator: ", ")
             return "IndexPath(\(components))"
         }
     }
@@ -36,9 +38,9 @@ public extension IndexPath {
     ///   ```swift
     ///   let current = IndexPath(row: 3, section: 1)
     ///   let next = current.dy_offset(row: 1)          // (row: 4, section: 1)
-    ///   let prevSection = current.dy_offset(section: -1) // (row: 3, section: 0)
+    ///   let prevSection = current.dy.offset(section: -1) // (row: 3, section: 0)
     ///   ```
-    func dy_offset(row: Int = 0, section: Int = 0) -> IndexPath {
-        return IndexPath(row: self.row + row, section: self.section + section)
+    func offset(row: Int = 0, section: Int = 0) -> IndexPath {
+        return IndexPath(row: base.row + row, section: base.section + section)
     }
 }

@@ -1,42 +1,5 @@
 import Foundation
 
-// MARK: - 共享实例
-public extension DateFormatter {
-    /// `ISO 8601`格式的共享 `DateFormatter`（`UTC 时区` + `en_US_POSIX区域`）
-    ///
-    /// 格式：`yyyy-MM-dd'T'HH:mm:ssZ`
-    /// 适用于网络 API、日志记录等需要确定性解析/格式化的场景
-    ///
-    /// ⚠️ 注意：此 `formatter` 是只读共享实例，`不可修改其属性`
-    /// `DateFormatter` 本身非线程安全，但此静态常量通过 `let` 惰性初始化保证线程安全
-    static let dy_iso8601: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "en_US_POSIX")
-        formatter.timeZone = TimeZone(secondsFromGMT: 0) // 强制UTC
-        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
-        return formatter
-    }()
-
-    /// 创建一个自定义配置的 `DateFormatter` 实例
-    ///
-    /// - Parameters:
-    ///   - format: 日期格式字符串，默认为 `"yyyy-MM-dd HH:mm:ss"`
-    ///   - locale: 区域设置，默认为 `.current`
-    ///   - timeZone: 时区，默认为 `.current`（而非 `.autoupdatingCurrent`，避免隐式更新）
-    /// - Returns: `DateFormatter` 实例
-    static func dy_formatter(
-        format: String = "yyyy-MM-dd HH:mm:ss",
-        locale: Locale = .current,
-        timeZone: TimeZone = .current
-    ) -> DateFormatter {
-        let formatter = DateFormatter()
-        formatter.dateFormat = format
-        formatter.locale = locale
-        formatter.timeZone = timeZone
-        return formatter
-    }
-}
-
 // MARK: - 构造方法
 public extension DateFormatter {
     /// 创建自定义格式的 `DateFormatter`
@@ -53,5 +16,38 @@ public extension DateFormatter {
         self.dateFormat = format
         self.locale = locale
         self.timeZone = timeZone
+    }
+}
+
+// MARK: - 共享实例
+public extension DyWrapper where Base: DateFormatter {
+    /// `ISO 8601`格式的 `DateFormatter`（`UTC 时区` + `en_US_POSIX区域`）
+    ///
+    /// 格式：`yyyy-MM-dd'T'HH:mm:ssZ`
+    static func iso8601() -> DateFormatter {
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.timeZone = TimeZone(secondsFromGMT: 0) // 强制UTC
+        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+        return formatter
+    }
+
+    /// 创建一个自定义配置的 `DateFormatter` 实例
+    ///
+    /// - Parameters:
+    ///   - format: 日期格式字符串，默认为 `"yyyy-MM-dd HH:mm:ss"`
+    ///   - locale: 区域设置，默认为 `.current`
+    ///   - timeZone: 时区，默认为 `.current`（而非 `.autoupdatingCurrent`，避免隐式更新）
+    /// - Returns: `DateFormatter` 实例
+    static func formatter(
+        format: String = "yyyy-MM-dd HH:mm:ss",
+        locale: Locale = .current,
+        timeZone: TimeZone = .current
+    ) -> DateFormatter {
+        let formatter = DateFormatter()
+        formatter.dateFormat = format
+        formatter.locale = locale
+        formatter.timeZone = timeZone
+        return formatter
     }
 }

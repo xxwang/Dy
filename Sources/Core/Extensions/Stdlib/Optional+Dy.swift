@@ -87,8 +87,6 @@ public extension Optional where Wrapped: RawRepresentable, Wrapped.RawValue: Equ
     }
 }
 
-extension Optional: DyExtension {}
-
 // MARK: - 可选值安全操作方法
 public extension Optional {
     /// 判断可选值是否为 `nil`

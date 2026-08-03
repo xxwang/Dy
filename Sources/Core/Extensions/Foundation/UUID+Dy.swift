@@ -1,9 +1,11 @@
 import Foundation
 
+extension UUID: DyExtension {}
+
 // MARK: - 自定义
-public extension UUID {
+public extension DyWrapper where Base == UUID {
     /// 返回一个`UUID`字符串
-    func dy_toString() -> String {
-        return self.uuidString
+    func toString() -> String {
+        return base.uuidString
     }
 }

@@ -1,7 +1,7 @@
 import Foundation
 
 // MARK: - 类型转换
-public extension NSRange {
+public extension DyWrapper where Base == NSRange {
     /// 将 `NSRange`(基于 UTF-16)安全转换为 Swift 原生的 `Range<String.Index>`
     ///
     /// - Parameter in: 要转换的字符串(必须与生成该 `NSRange` 的字符串相同)
@@ -15,29 +15,29 @@ public extension NSRange {
     ///   ```swift
     ///   let string = "Hello, 世界!"
     ///   let nsRange = NSRange(location: 7, length: 2) // 指向 "世界"
-    ///   if let range = nsRange.dy_toRange(in: string) {
+    ///   if let range = nsRange.dy.toRange(in: string) {
     ///       print(string[range]) // "世界"
     ///   }
     ///   ```
     ///
     /// - Note: 此方法已处理代理对(surrogate pairs)和组合字符等复杂 Unicode 情况
     ///
-    func dy_toRange(in string: String) -> Range<String.Index>? {
+    func toRange(in string: String) -> Range<String.Index>? {
         // 提前排除无效输入
-        guard location >= 0, length >= 0 else { return nil }
+        guard base.location >= 0, base.length >= 0 else { return nil }
 
         let utf16 = string.utf16
 
         // 检查 location 是否超出字符串 UTF-16 范围
-        guard location <= utf16.count else { return nil }
+        guard base.location <= utf16.count else { return nil }
 
         // 计算 end = location + length,防止溢出
-        let endLocation = location + length
-        guard endLocation >= location, endLocation <= utf16.count else { return nil } // 溢出或越界
+        let endLocation = base.location + base.length
+        guard endLocation >= base.location, endLocation <= utf16.count else { return nil } // 溢出或越界
 
         // 获取 UTF-16 索引
-        let from16 = utf16.index(utf16.startIndex, offsetBy: location)
-        let to16 = utf16.index(from16, offsetBy: length)
+        let from16 = utf16.index(utf16.startIndex, offsetBy: base.location)
+        let to16 = utf16.index(from16, offsetBy: base.length)
 
         // 转换为 String.Index(可能失败,如落在代理对中间)
         guard let from = String.Index(from16, within: string),

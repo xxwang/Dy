@@ -1,7 +1,9 @@
 import Foundation
 
+extension Measurement: DyExtension {}
+
 // MARK: - 方法
-public extension Measurement where UnitType == UnitAngle {
+public extension DyWrapper where Base == Measurement<UnitAngle> {
     /// 创建一个以`角度(degrees)` 为单位的角度测量值
     ///
     /// 角度是平面几何中最常用的角单位,一圈为 360°
@@ -11,10 +13,10 @@ public extension Measurement where UnitType == UnitAngle {
     ///
     /// - Example:
     ///   ```swift
-    ///   let angle = Measurement<UnitAngle>.dy_degrees(45.0)
+    ///   let angle = Measurement<UnitAngle>.dy.degrees(45.0)
     ///   print(angle) // 45.0 degrees
     ///   ```
-    static func dy_degrees(_ value: Double) -> Measurement<UnitAngle> {
+    static func degrees(_ value: Double) -> Measurement<UnitAngle> {
         return Measurement(value: value, unit: .degrees)
     }
 
@@ -27,10 +29,10 @@ public extension Measurement where UnitType == UnitAngle {
     ///
     /// - Example:
     ///   ```swift
-    ///   let angle = Measurement<UnitAngle>.dy_radians(Double.pi)
+    ///   let angle = Measurement<UnitAngle>.dy.radians(Double.pi)
     ///   print(angle) // 3.141592653589793 radians
     ///   ```
-    static func dy_radians(_ value: Double) -> Measurement<UnitAngle> {
+    static func radians(_ value: Double) -> Measurement<UnitAngle> {
         return Measurement(value: value, unit: .radians)
     }
 
@@ -43,10 +45,10 @@ public extension Measurement where UnitType == UnitAngle {
     ///
     /// - Example:
     ///   ```swift
-    ///   let angle = Measurement<UnitAngle>.dy_arcMinutes(30.0)
+    ///   let angle = Measurement<UnitAngle>.dy.arcMinutes(30.0)
     ///   print(angle) // 30.0 arc minutes
     ///   ```
-    static func dy_arcMinutes(_ value: Double) -> Measurement<UnitAngle> {
+    static func arcMinutes(_ value: Double) -> Measurement<UnitAngle> {
         return Measurement(value: value, unit: .arcMinutes)
     }
 
@@ -59,10 +61,10 @@ public extension Measurement where UnitType == UnitAngle {
     ///
     /// - Example:
     ///   ```swift
-    ///   let angle = Measurement<UnitAngle>.dy_arcSeconds(1800.0)
+    ///   let angle = Measurement<UnitAngle>.dy.arcSeconds(1800.0)
     ///   print(angle) // 1800.0 arc seconds (等于 0.5 度)
     ///   ```
-    static func dy_arcSeconds(_ value: Double) -> Measurement<UnitAngle> {
+    static func arcSeconds(_ value: Double) -> Measurement<UnitAngle> {
         return Measurement(value: value, unit: .arcSeconds)
     }
 
@@ -75,10 +77,10 @@ public extension Measurement where UnitType == UnitAngle {
     ///
     /// - Example:
     ///   ```swift
-    ///   let angle = Measurement<UnitAngle>.dy_gradians(100.0)
+    ///   let angle = Measurement<UnitAngle>.dy.gradians(100.0)
     ///   print(angle) // 100.0 gradians (等于 90 度)
     ///   ```
-    static func dy_gradians(_ value: Double) -> Measurement<UnitAngle> {
+    static func gradians(_ value: Double) -> Measurement<UnitAngle> {
         return Measurement(value: value, unit: .gradians)
     }
 
@@ -91,10 +93,10 @@ public extension Measurement where UnitType == UnitAngle {
     ///
     /// - Example:
     ///   ```swift
-    ///   let angle = Measurement<UnitAngle>.dy_revolutions(2.5)
+    ///   let angle = Measurement<UnitAngle>.dy.revolutions(2.5)
     ///   print(angle) // 2.5 revolutions (等于 900 度)
     ///   ```
-    static func dy_revolutions(_ value: Double) -> Measurement<UnitAngle> {
+    static func revolutions(_ value: Double) -> Measurement<UnitAngle> {
         return Measurement(value: value, unit: .revolutions)
     }
 }
