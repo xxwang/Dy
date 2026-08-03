@@ -1,10 +1,12 @@
 import CoreGraphics
 import UIKit
 
+extension CGColor: DyExtension {}
+
 // MARK: - 类型转换
-public extension CGColor {
+public extension DyWrapper where Base == CGColor {
     /// 将 `CGColor` 转换为 `UIColor`
-    func dy_toUIColor() -> UIColor {
-        return UIColor(cgColor: self)
+    func toUIColor() -> UIColor {
+        return UIColor(cgColor: base)
     }
 }

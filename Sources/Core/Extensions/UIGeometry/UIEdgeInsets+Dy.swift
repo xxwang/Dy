@@ -1,28 +1,5 @@
 import UIKit
 
-// MARK: - 属性
-public extension UIEdgeInsets {
-    /// 水平方向的总边距(`left` + `right`)
-    ///
-    /// - Example:
-    ///
-    ///     let inset = UIEdgeInsets(top: 10, left: 5, bottom: 5, right: 5)
-    ///     let horizontal = inset.dy_horizontal // 10
-    var dy_horizontal: CGFloat {
-        left + right
-    }
-
-    /// 垂直方向的总边距(`top` + `bottom`)
-    ///
-    /// - Example:
-    ///
-    ///     let inset = UIEdgeInsets(top: 10, left: 5, bottom: 5, right: 5)
-    ///     let vertical = inset.dy_vertical // 20
-    var dy_vertical: CGFloat {
-        top + bottom
-    }
-}
-
 // MARK: - 构造方法
 public extension UIEdgeInsets {
     /// 创建四个方向相等的 `UIEdgeInsets`
@@ -86,5 +63,28 @@ public extension UIEdgeInsets {
     ///     a == top:12, left:7, bottom:7, right:7
     static func += (lhs: inout UIEdgeInsets, rhs: UIEdgeInsets) {
         lhs = lhs + rhs
+    }
+}
+
+// MARK: - 属性
+public extension DyWrapper where Base == UIEdgeInsets {
+    /// 水平方向的总边距(`left` + `right`)
+    ///
+    /// - Example:
+    ///
+    ///     let inset = UIEdgeInsets(top: 10, left: 5, bottom: 5, right: 5)
+    ///     let horizontal = inset.dy.horizontal // 10
+    var horizontal: CGFloat {
+        base.left + base.right
+    }
+
+    /// 垂直方向的总边距(`top` + `bottom`)
+    ///
+    /// - Example:
+    ///
+    ///     let inset = UIEdgeInsets(top: 10, left: 5, bottom: 5, right: 5)
+    ///     let vertical = inset.dy.vertical // 20
+    var vertical: CGFloat {
+        base.top + base.bottom
     }
 }
