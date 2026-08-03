@@ -1,7 +1,5 @@
 import CoreGraphics
 
-extension CGVector: DyExtension {}
-
 // MARK: - 构造方法
 public extension CGVector {
     /// 根据角度(弧度)和长度创建一个向量

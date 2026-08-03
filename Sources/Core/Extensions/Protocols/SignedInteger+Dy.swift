@@ -1,7 +1,7 @@
 import Foundation
 
 // MARK: - 判断
-public extension SignedInteger {
+public extension DyWrapper where Base: SignedInteger {
     /// 判断当前整数是否为质数(素数)
     ///
     /// - Returns: 若数值 > 1 且仅能被 1 和自身整除,则返回 `true`;否则返回 `false`
@@ -10,24 +10,24 @@ public extension SignedInteger {
     ///
     /// - Example:
     ///     ```swift
-    ///     print((7).dy_isPrime)   // true
-    ///     print((8).dy_isPrime)   // false
-    ///     print((1).dy_isPrime)   // false
+    ///     print((7).dy.isPrime)   // true
+    ///     print((8).dy.isPrime)   // false
+    ///     print((1).dy.isPrime)   // false
     ///     ```
-    var dy_isPrime: Bool {
-        guard self > 1 else { return false }
-        if self == 2 {
+    var isPrime: Bool {
+        guard base > 1 else { return false }
+        if base == 2 {
             return true
         }
-        if self.isMultiple(of: 2) {
+        if base.isMultiple(of: 2) {
             return false
         }
 
         // 使用 Self 类型进行安全计算,避免 Int 强制转换
-        let limit = Self(Double(self).squareRoot().rounded(.up))
-        var divisor: Self = 3
+        let limit = Base(Double(base).squareRoot().rounded(.up))
+        var divisor: Base = 3
         while divisor <= limit {
-            if self.isMultiple(of: divisor) {
+            if base.isMultiple(of: divisor) {
                 return false
             }
             divisor += 2 // 只检查奇数
@@ -37,7 +37,7 @@ public extension SignedInteger {
 }
 
 // MARK: - 数值操作
-public extension SignedInteger {
+public extension DyWrapper where Base: SignedInteger {
     /// 将正整数转换为罗马数字表示
     ///
     /// - Returns: 罗马数字字符串(如 `"MCMXCIV"`);若数值 ≤ 0,返回 `nil`
@@ -45,20 +45,20 @@ public extension SignedInteger {
     ///
     /// - Example:
     ///     ```swift
-    ///     print((1994).dy_toRomanNumeral() as Any) // "MCMXCIV"
-    ///     print((0).dy_toRomanNumeral() as Any)    // nil
+    ///     print((1994).dy.toRomanNumeral() as Any) // "MCMXCIV"
+    ///     print((0).dy.toRomanNumeral() as Any)    // nil
     ///     ```
-    func dy_toRomanNumeral() -> String? {
-        guard self > 0, self <= 3999 else { return nil } // 罗马数字通常不超过 3999
+    func toRomanNumeral() -> String? {
+        guard base > 0, base <= 3999 else { return nil } // 罗马数字通常不超过 3999
 
         // 使用 (value, symbol) 元组数组,避免索引错位
-        let mappings: [(value: Self, symbol: String)] = [
+        let mappings: [(value: Base, symbol: String)] = [
             (1000, "M"), (900, "CM"), (500, "D"), (400, "CD"),
             (100, "C"), (90, "XC"), (50, "L"), (40, "XL"),
             (10, "X"), (9, "IX"), (5, "V"), (4, "IV"), (1, "I"),
         ]
 
-        var value = self
+        var value = base
         var result = ""
 
         for mapping in mappings {
@@ -76,10 +76,10 @@ public extension SignedInteger {
     /// - Example:
     ///
     ///     let value = -42
-    ///     print(value.dy_abs()) // 42
+    ///     print(value.dy.abs()) // 42
     ///
-    func dy_abs() -> Self {
-        return Swift.abs(self)
+    func abs() -> Base {
+        return Swift.abs(base)
     }
 
     /// 计算两个整数的最大公约数(GCD)
@@ -89,11 +89,11 @@ public extension SignedInteger {
     ///
     /// - Example:
     ///     ```swift
-    ///     print((12).dy_gcd(with: 15)) // 3
-    ///     print((-8).dy_gcd(with: 12)) // 4
+    ///     print((12).dy.gcd(with: 15)) // 3
+    ///     print((-8).dy.gcd(with: 12)) // 4
     ///     ```
-    func dy_gcd(with other: Self) -> Self {
-        var a = Swift.abs(self)
+    func gcd(with other: Base) -> Base {
+        var a = Swift.abs(base)
         var b = Swift.abs(other)
         while b != 0 {
             (a, b) = (b, a % b)
@@ -109,12 +109,12 @@ public extension SignedInteger {
     ///
     /// - Example:
     ///     ```swift
-    ///     print((12).dy_lcm(with: 15)) // 60
-    ///     print((0).dy_lcm(with: 5))   // 0
+    ///     print((12).dy.lcm(with: 15)) // 60
+    ///     print((0).dy.lcm(with: 5))   // 0
     ///     ```
-    func dy_lcm(with other: Self) -> Self {
-        guard self != 0, other != 0 else { return 0 }
-        return (Swift.abs(self) / self.dy_gcd(with: other)) * Swift.abs(other)
+    func lcm(with other: Base) -> Base {
+        guard base != 0, other != 0 else { return 0 }
+        return (Swift.abs(base) / self.gcd(with: other)) * Swift.abs(other)
     }
 
     /// 计算当前非负整数的阶乘
@@ -125,20 +125,20 @@ public extension SignedInteger {
     ///
     /// - Example:
     ///     ```swift
-    ///     print((5).dy_factorial() as Any)  // Optional(120)
-    ///     print((-1).dy_factorial() as Any) // nil
+    ///     print((5).dy.factorial() as Any)  // Optional(120)
+    ///     print((-1).dy.factorial() as Any) // nil
     ///     ```
-    func dy_factorial() -> Self? {
-        guard self >= 0 else { return nil }
+    func factorial() -> Base? {
+        guard base >= 0 else { return nil }
 
         // 将 20 转为 Self 类型进行安全比较
-        let maxSafe: Self = 20
-        guard self <= maxSafe else { return nil }
+        let maxSafe: Base = 20
+        guard base <= maxSafe else { return nil }
 
-        var result: Self = 1
+        var result: Base = 1
         // 将 2 转为 Self,并使用 stride 或循环
-        var i: Self = 2
-        while i <= self {
+        var i: Base = 2
+        while i <= base {
             result *= i
             i += 1
         }
@@ -152,15 +152,15 @@ public extension SignedInteger {
     ///
     /// - Example:
     ///     ```swift
-    ///     (3).dy_times {
+    ///     (3).dy.times {
     ///         print("Hello!")
     ///     }
     ///     // 输出三次 "Hello!"
     ///     ```
-    func dy_times(_ body: DyAction) {
-        guard self > 0 else { return }
-        var count: Self = 0
-        while count < self {
+    func times(_ body: DyAction) {
+        guard base > 0 else { return }
+        var count: Base = 0
+        while count < base {
             body()
             count += 1
         }

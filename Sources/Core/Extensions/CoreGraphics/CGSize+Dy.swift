@@ -1,8 +1,6 @@
 import CoreGraphics
 import UIKit
 
-extension CGSize: DyExtension {}
-
 // MARK: - 属性
 public extension DyWrapper where Base == CGSize {
     /// 宽高比(width / height)
@@ -26,7 +24,7 @@ public extension DyWrapper where Base == CGSize {
 public extension DyWrapper where Base == CGSize {
     /// 对宽高进行四舍五入
     func rounded() -> CGSize {
-        CGSize(width: round(base.width), height: round(base.height))
+        CGSize(width: Darwin.round(base.width), height: Darwin.round(base.height))
     }
 
     /// 将尺寸限制在最大尺寸内

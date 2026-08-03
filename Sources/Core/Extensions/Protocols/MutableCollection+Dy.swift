@@ -1,7 +1,7 @@
 import Foundation
 
 // MARK: - 方法
-public extension MutableCollection {
+public extension DyWrapper where Base: MutableCollection {
     /// 将集合中所有元素的指定属性设置为同一值
     ///
     /// - Parameters:
@@ -14,18 +14,18 @@ public extension MutableCollection {
     ///         var name: String
     ///     }
     ///     var items = [Item(name: "A"), Item(name: "B")]
-    ///     items.dy_setAll("Default", for: \.name)
+    ///     items.dy.setAll("Default", for: \.name)
     ///     print(items) // [Item(name: "Default"), Item(name: "Default")]
     ///     ```
-    mutating func dy_setAll<Value>(_ value: Value, for keyPath: WritableKeyPath<Element, Value>) {
-        for index in indices {
-            self[index][keyPath: keyPath] = value
+    func setAll<Value>(_ value: Value, for keyPath: WritableKeyPath<Base.Element, Value>) {
+        for index in base.indices {
+            base[index][keyPath: keyPath] = value
         }
     }
 }
 
 // MARK: - RandomAccessCollection相关方法
-public extension MutableCollection where Self: RandomAccessCollection {
+public extension DyWrapper where Base: MutableCollection, Base: RandomAccessCollection {
     /// 根据指定属性和自定义比较规则对集合进行原地排序
     ///
     /// - Parameters:
@@ -36,11 +36,11 @@ public extension MutableCollection where Self: RandomAccessCollection {
     ///     ```swift
     ///     struct Item { var score: Int }
     ///     var items = [Item(score: 30), Item(score: 10), Item(score: 20)]
-    ///     items.dy_sort(by: \.score, with: >)
+    ///     items.dy.sort(by: \.score, with: >)
     ///     // 结果: [30, 20, 10]
     ///     ```
-    mutating func dy_sort<T>(by keyPath: KeyPath<Element, T>, with compare: (T, T) -> Bool) {
-        sort { compare($0[keyPath: keyPath], $1[keyPath: keyPath]) }
+    func sort<T>(by keyPath: KeyPath<Base.Element, T>, with compare: (T, T) -> Bool) {
+        base.sort { compare($0[keyPath: keyPath], $1[keyPath: keyPath]) }
     }
 
     /// 根据指定属性对集合进行升序排序(要求属性符合 `Comparable`)
@@ -51,11 +51,11 @@ public extension MutableCollection where Self: RandomAccessCollection {
     ///     ```swift
     ///     struct Person { var age: Int }
     ///     var people = [Person(age: 30), Person(age: 20)]
-    ///     people.dy_sort(by: \.age)
+    ///     people.dy.sort(by: \.age)
     ///     // 结果: [Person(age: 20), Person(age: 30)]
     ///     ```
-    mutating func dy_sort(by keyPath: KeyPath<Element, some Comparable>) {
-        sort { $0[keyPath: keyPath] < $1[keyPath: keyPath] }
+    func sort(by keyPath: KeyPath<Base.Element, some Comparable>) {
+        base.sort { $0[keyPath: keyPath] < $1[keyPath: keyPath] }
     }
 
     /// 根据两个属性对集合进行多级升序排序
@@ -77,14 +77,14 @@ public extension MutableCollection where Self: RandomAccessCollection {
     ///         Task(priority: 1, name: "A"),
     ///         Task(priority: 2, name: "A")
     ///     ]
-    ///     tasks.dy_sort(by: \.priority, and: \.name)
+    ///     tasks.dy.sort(by: \.priority, and: \.name)
     ///     // 结果: [Task(1,"A"), Task(2,"A"), Task(2,"B")]
     ///     ```
-    mutating func dy_sort(
-        by primary: KeyPath<Element, some Comparable>,
-        and secondary: KeyPath<Element, some Comparable>
+    func sort(
+        by primary: KeyPath<Base.Element, some Comparable>,
+        and secondary: KeyPath<Base.Element, some Comparable>
     ) {
-        sort {
+        base.sort {
             let a1 = $0[keyPath: primary], b1 = $1[keyPath: primary]
             if a1 != b1 {
                 return a1 < b1
@@ -111,14 +111,14 @@ public extension MutableCollection where Self: RandomAccessCollection {
     ///         var id: Int
     ///     }
     ///     var records = [...]
-    ///     records.dy_sort(by: \.group, and: \.name, and: \.id)
+    ///     records.dy.sort(by: \.group, and: \.name, and: \.id)
     ///     ```
-    mutating func dy_sort(
-        by k1: KeyPath<Element, some Comparable>,
-        and k2: KeyPath<Element, some Comparable>,
-        and k3: KeyPath<Element, some Comparable>
+    func sort(
+        by k1: KeyPath<Base.Element, some Comparable>,
+        and k2: KeyPath<Base.Element, some Comparable>,
+        and k3: KeyPath<Base.Element, some Comparable>
     ) {
-        sort {
+        base.sort {
             if $0[keyPath: k1] != $1[keyPath: k1] {
                 return $0[keyPath: k1] < $1[keyPath: k1]
             }
