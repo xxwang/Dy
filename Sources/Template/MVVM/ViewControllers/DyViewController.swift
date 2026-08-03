@@ -10,10 +10,12 @@ open class DyViewController: UIViewController {
 
     /// 导航栏
     open lazy var naview = DyNaView.naview()
-        .dy_backAction { [weak self] in
+        .dy
+        .backAction { [weak self] in
             guard let self else { return }
             self.onBackActionHandler()
         }
+        .build()
 
     public init() {
         super.init(nibName: nil, bundle: nil)
@@ -38,23 +40,26 @@ open class DyViewController: UIViewController {
     /// 配置UI
     open func setupUI() {
         self
+            .dy
             // 设置界面样式
-            .dy_overrideUserInterfaceStyle(.light)
+            .overrideUserInterfaceStyle(.light)
 
         self.view
+            .dy
             // 控制器背景色
-            .dy_backgroundColor(.white)
+            .backgroundColor(.white)
 
         // 添加导航条
         self.naview
-            .dy_frame(CGRect(
+            .dy
+            .frame(CGRect(
                 x: 0,
                 y: 0,
                 width: DyScreen.screenWidth,
                 height: DyScreen.navBarTotalHeight
             ))
-            .dy_isHidden(true)
-            .dy_add2(self.view)
+            .isHidden(true)
+            .add2(self.view)
     }
 
     /// 绑定事件
@@ -74,12 +79,14 @@ open class DyViewController: UIViewController {
 @objc extension DyViewController {
     /// 更新导航栏位置及受影响的视图
     open func updateNaview() {
-        self.naview.dy_frame(CGRect(
-            x: 0,
-            y: 0,
-            width: DyScreen.screenWidth,
-            height: DyScreen.navBarTotalHeight
-        ))
+        self.naview
+            .dy
+            .frame(CGRect(
+                x: 0,
+                y: 0,
+                width: DyScreen.screenWidth,
+                height: DyScreen.navBarTotalHeight
+            ))
     }
 
     /// 返回方法

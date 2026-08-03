@@ -15,14 +15,23 @@ public extension DySheetViewController {
     /// 显示底部抽屉
     /// - Parameter parent: 父视图控制器
     func show(from parent: UIViewController) {
-        self.dy_modalPresentationStyle(.pageSheet) // 设置模态样式为底部抽屉
-            .dy_isModalInPresentation(shouldPreventDismissal()) // 设置是否禁止通过手势或点击背景关闭抽屉
+        self
+            .dy
+            // 设置模态样式为底部抽屉
+            .modalPresentationStyle(.pageSheet)
+            // 设置是否禁止通过手势或点击背景关闭抽屉
+            .isModalInPresentation(shouldPreventDismissal())
 
         self.sheetPresentationController?
-            .dy_detents(sheetDetents()) // 抽屉档位
-            .dy_prefersGrabberVisible(prefersGrabberVisible()) // 是否显示顶部小横条
-            .dy_largestUndimmedDetentIdentifier(largestUndimmedDetentIdentifier() ?? .medium) // 设置最大不暗化档位（小于此档位背景变暗）
-            .dy_prefersEdgeAttachedInCompactHeight(prefersEdgeAttachedInCompactHeight()) // 紧凑高度下是否从底部边缘附着
+            .dy
+            // 抽屉档位
+            .detents(sheetDetents())
+            // 是否显示顶部小横条
+            .prefersGrabberVisible(prefersGrabberVisible())
+            // 设置最大不暗化档位（小于此档位背景变暗）
+            .largestUndimmedDetentIdentifier(largestUndimmedDetentIdentifier() ?? .medium)
+            // 紧凑高度下是否从底部边缘附着
+            .prefersEdgeAttachedInCompactHeight(prefersEdgeAttachedInCompactHeight())
 
         parent.present(self, animated: true)
     }

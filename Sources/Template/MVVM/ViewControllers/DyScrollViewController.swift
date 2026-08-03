@@ -4,7 +4,9 @@ import DyCore
 open class DyScrollViewController: DyViewController {
     /// `UIScrollView`
     open lazy var scrollView = UIScrollView.scrollView()
-        .dy_delegate(self)
+        .dy
+        .delegate(self)
+        .build()
 
     /// 内容视图
     open lazy var contentView = UIView.view()
@@ -28,7 +30,8 @@ open class DyScrollViewController: DyViewController {
 
         // 内容容器
         self.contentView
-            .dy_add2(self.scrollView)
+            .dy
+            .add2(self.scrollView)
 
         self.updateNaview()
     }
@@ -42,7 +45,8 @@ open class DyScrollViewController: DyViewController {
 
         let topMargin = self.naview.isHidden ? 0 : DyScreen.navBarTotalHeight
         self.scrollView
-            .dy_frame(CGRect(
+            .dy
+            .frame(CGRect(
                 x: 0,
                 y: topMargin,
                 width: self.view.dy_width,
@@ -51,8 +55,9 @@ open class DyScrollViewController: DyViewController {
 
         // 内容容器
         self.contentView
-            .dy_width(self.scrollView.dy_width)
-            .dy_height(max(self.scrollView.contentSize.height, self.scrollView.dy_height))
+            .dy
+            .width(self.scrollView.dy_width)
+            .height(max(self.scrollView.contentSize.height, self.scrollView.dy_height))
     }
 }
 

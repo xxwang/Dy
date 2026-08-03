@@ -8,15 +8,17 @@ open class DyWebViewController: DyViewController {
 
     /// `WKWebView`配置文件
     open lazy var configuration: WKWebViewConfiguration = {
-        let configuration = WKWebViewConfiguration.dy_default()
+        let configuration = WKWebViewConfiguration.dy.default()
         configuration.userContentController = self.userContentController
         return configuration
     }()
 
     /// `WKWebView`浏览器视图
     open lazy var webView = WKWebView.init(frame: .zero, configuration: self.configuration)
-        .dy_uiDelegate(self)
-        .dy_navigationDelegate(self)
+        .dy
+        .uiDelegate(self)
+        .navigationDelegate(self)
+        .build()
 
     override open func viewDidLoad() {
         super.viewDidLoad()
@@ -94,12 +96,14 @@ open class DyWebViewController: DyViewController {
         super.updateNaview()
 
         let topMargin = self.naview.isHidden ? 0 : DyScreen.navBarTotalHeight
-        self.webView.dy_frame(CGRect(
-            x: 0,
-            y: topMargin,
-            width: self.view.dy_width,
-            height: self.view.dy_height - topMargin
-        ))
+        self.webView
+            .dy
+            .frame(CGRect(
+                x: 0,
+                y: topMargin,
+                width: self.view.dy_width,
+                height: self.view.dy_height - topMargin
+            ))
     }
 }
 

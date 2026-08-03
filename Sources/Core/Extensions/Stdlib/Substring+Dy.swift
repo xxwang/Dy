@@ -1,9 +1,9 @@
 import Foundation
 
 // MARK: - 类型转换
-public extension Substring {
+public extension DyWrapper where Base == Substring {
     /// 将当前子字符串转换为 `String`
-    func dy_toString() -> String {
-        return String(self)
+    func toString() -> String {
+        return String(base)
     }
 }

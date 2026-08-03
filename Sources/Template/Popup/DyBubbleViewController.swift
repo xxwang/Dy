@@ -19,15 +19,27 @@ public extension DyBubbleViewController {
     func show(from parent: UIViewController, sourceView: UIView) {
         self.sourceView = sourceView
 
-        self.dy_modalPresentationStyle(.popover) // 设置模态样式为气泡弹窗
-            .dy_isModalInPresentation(shouldPreventDismissal()) // 设置是否禁止通过手势或点击背景关闭气泡弹窗
+        self
+            .dy
+            // 设置模态样式为气泡弹窗
+            .modalPresentationStyle(.popover)
+            // 设置是否禁止通过手势或点击背景关闭气泡弹窗
+            .isModalInPresentation(shouldPreventDismissal())
 
-        self.popoverPresentationController?.dy_delegate(self) // 代理
-            .dy_permittedArrowDirections(permittedArrowDirections()) // 允许的箭头方向
-            .dy_canOverlapSourceViewRect(canOverlapSourceViewRect()) // 是否允许气泡覆盖源视图区域
-            .dy_sourceView(sourceView) // 气泡箭头指向的源视图
-            .dy_sourceRect(sourceRect(for: sourceView)) // 源视图内的定位矩形
-            .dy_popoverBackgroundViewClass(popoverBackgroundViewClass()) // 自定义背景类
+        self.popoverPresentationController?
+            .dy
+            // 代理
+            .delegate(self)
+            // 允许的箭头方向
+            .permittedArrowDirections(permittedArrowDirections())
+            // 是否允许气泡覆盖源视图区域
+            .canOverlapSourceViewRect(canOverlapSourceViewRect())
+            // 气泡箭头指向的源视图
+            .sourceView(sourceView)
+            // 源视图内的定位矩形
+            .sourceRect(sourceRect(for: sourceView))
+            // 自定义背景类
+            .popoverBackgroundViewClass(popoverBackgroundViewClass())
 
         parent.present(self, animated: true)
     }
