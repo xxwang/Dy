@@ -23,21 +23,21 @@ public extension String {
     ///   "abc" =～ "^\\d+$"   // false
     ///   ```
     static func =~ (lhs: String, rhs: String) -> Bool {
-        lhs.dy_isMatch(pattern: rhs)
+        lhs.dy.isMatch(pattern: rhs)
     }
 }
 
 // MARK: - 正则扩展
-public extension String {
+public extension DyWrapper where Base == String {
     /// 将字符串中的正则元字符转义为字面量
     /// - Returns: 转义后的安全正则字符串
     ///
     /// - Example:
     ///   ```swift
-    ///   "hello ^$ there".dy_regexEscaped() // "hello \\^\\$ there"
+    ///   "hello ^$ there".dy.regexEscaped() // "hello \\^\\$ there"
     ///   ```
-    func dy_regexEscaped() -> String {
-        NSRegularExpression.escapedPattern(for: self)
+    func regexEscaped() -> String {
+        NSRegularExpression.escapedPattern(for: base)
     }
 
     /// 检查字符串是否`包含`匹配指定正则表达式的内容
@@ -46,20 +46,20 @@ public extension String {
     ///   - options: 匹配选项(如 `.caseInsensitive`),默认为空
     /// - Returns: 若存在匹配则返回 `true`,否则 `false`;若正则无效,返回 `false`
     ///
-    /// - Note: 此方��使用 `NSRegularExpression`,性能优于 `NSPredicate`
+    /// - Note: 此方法使用 `NSRegularExpression`,性能优于 `NSPredicate`
     ///
     /// - Example:
     ///   ```swift
-    ///   "123abc".dy_isMatch(pattern: "\\d+")                          // true
-    ///   "example@example.com".dy_isMatch(pattern: "^[\\w.-]+@")       // true
-    ///   "invalid-email".dy_isMatch(pattern: "invalid[", options: [])  // false(无效正则)
+    ///   "123abc".dy.isMatch(pattern: "\\d+")                          // true
+    ///   "example@example.com".dy.isMatch(pattern: "^[\\w.-]+@")       // true
+    ///   "invalid-email".dy.isMatch(pattern: "invalid[", options: [])  // false(无效正则)
     ///   ```
-    func dy_isMatch(pattern: String, options: NSRegularExpression.Options = []) -> Bool {
+    func isMatch(pattern: String, options: NSRegularExpression.Options = []) -> Bool {
         guard let regex = try? NSRegularExpression(pattern: pattern, options: options) else {
             return false // 无效正则视为不匹配(安全策略)
         }
-        let range = NSRange(location: 0, length: utf16.count)
-        return regex.firstMatch(in: self, options: [], range: range) != nil
+        let range = NSRange(location: 0, length: base.utf16.count)
+        return regex.firstMatch(in: base, options: [], range: range) != nil
     }
 
     /// 获取正则表达式的`所有捕获组内容`
@@ -70,18 +70,18 @@ public extension String {
     ///
     /// - Example:
     ///   ```swift
-    ///   "abc123xyz".dy_captures(pattern: "(\\d+)")               // ["123"]
-    ///   "John Doe, age 30".dy_captures(pattern: "(\\w+) (\\w+), age (\\d+)") // ["John", "Doe", "30"]
+    ///   "abc123xyz".dy.captures(pattern: "(\\d+)")               // ["123"]
+    ///   "John Doe, age 30".dy.captures(pattern: "(\\w+) (\\w+), age (\\d+)") // ["John", "Doe", "30"]
     ///   ```
-    func dy_captures(pattern: String, options: NSRegularExpression.Options = []) -> [String]? {
+    func captures(pattern: String, options: NSRegularExpression.Options = []) -> [String]? {
         guard let regex = try? NSRegularExpression(pattern: pattern, options: options),
-              let match = regex.firstMatch(in: self, range: NSRange(location: 0, length: utf16.count))
+              let match = regex.firstMatch(in: base, range: NSRange(location: 0, length: base.utf16.count))
         else {
             return nil
         }
         // 跳过第 0 个(完整匹配),从 1 开始取捕获组
         return (1 ..< match.numberOfRanges).compactMap { index in
-            Range(match.range(at: index), in: self).map { String(self[$0]) }
+            Range(match.range(at: index), in: base).map { String(base[$0]) }
         }
     }
 
@@ -93,13 +93,13 @@ public extension String {
     ///
     /// - Example:
     ///   ```swift
-    ///   "a1b2c3".dy_matchRanges(pattern: "\\d") // [NSRange(1,1), NSRange(3,1), NSRange(5,1)]
+    ///   "a1b2c3".dy.matchRanges(pattern: "\\d") // [NSRange(1,1), NSRange(3,1), NSRange(5,1)]
     ///   ```
-    func dy_matchRanges(pattern: String, options: NSRegularExpression.Options = []) -> [NSRange] {
+    func matchRanges(pattern: String, options: NSRegularExpression.Options = []) -> [NSRange] {
         guard let regex = try? NSRegularExpression(pattern: pattern, options: options) else {
             return []
         }
-        let range = NSRange(location: 0, length: utf16.count)
-        return regex.matches(in: self, options: [], range: range).map(\.range)
+        let range = NSRange(location: 0, length: base.utf16.count)
+        return regex.matches(in: base, options: [], range: range).map(\.range)
     }
 }

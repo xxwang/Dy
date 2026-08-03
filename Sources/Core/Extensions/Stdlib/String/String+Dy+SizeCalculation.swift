@@ -2,7 +2,7 @@ import Foundation
 import CoreGraphics
 
 // MARK: - 字符串尺寸计算
-public extension String {
+public extension DyWrapper where Base == String {
     /// 计算普通字符串在指定宽度和字体下的实际尺寸
     ///
     /// - Parameters:
@@ -14,9 +14,9 @@ public extension String {
     ///
     /// - Example:
     ///   ```swift
-    ///   let size = "Hello".dy_size(maxWidth: 200, font: .systemFont(ofSize: 16))
+    ///   let size = "Hello".dy.size(maxWidth: 200, font: .systemFont(ofSize: 16))
     ///   ```
-    func dy_size(
+    func size(
         maxWidth: CGFloat = .greatestFiniteMagnitude,
         font: DyFont,
         usesLineFragmentOrigin: Bool = true,
@@ -27,7 +27,7 @@ public extension String {
             : [.usesFontLeading]
 
         let constraint = CGSize(width: maxWidth, height: .greatestFiniteMagnitude)
-        let rect = self.boundingRect(
+        let rect = base.boundingRect(
             with: constraint,
             options: options,
             attributes: [.font: font],
@@ -52,14 +52,14 @@ public extension String {
     ///
     /// - Example:
     ///   ```swift
-    ///   let size = "Multi-line text".dy_sizeWithAttributes(
+    ///   let size = "Multi-line text".dy.sizeWithAttributes(
     ///       maxWidth: 150,
     ///       font: .systemFont(ofSize: 14),
     ///       lineSpacing: 4,
     ///       wordSpacing: 0.5
     ///   )
     ///   ```
-    func dy_sizeWithAttributes(
+    func sizeWithAttributes(
         maxWidth: CGFloat = .greatestFiniteMagnitude,
         font: DyFont,
         lineSpacing: CGFloat = 0,
@@ -81,7 +81,7 @@ public extension String {
             .paragraphStyle: paragraphStyle,
         ]
 
-        let attributedString = NSAttributedString(string: self, attributes: attributes)
+        let attributedString = NSAttributedString(string: base, attributes: attributes)
         let constraint = CGSize(width: maxWidth, height: .greatestFiniteMagnitude)
 
         let rect = attributedString.boundingRect(

@@ -1,50 +1,32 @@
 import Foundation
 
-// MARK: - 可选值状态判断属性
+extension Optional: DyExtension {}
+
+// MARK: - 可选值安全操作方法
 public extension Optional {
     /// 判断可选值是否为 `nil`
     ///
     /// - Returns: 若为 `nil` 返回 `true`,否则 `false`
-    var dy_isNil: Bool {
-        self == nil
+    var isNil: Bool {
+        base == nil
     }
 
     /// 判断可选值是否不为 `nil`
     ///
     /// - Returns: 若有值返回 `true`,否则 `false`
-    var dy_isNotNil: Bool {
-        self != nil
+    var isNotNil: Bool {
+        base != nil
     }
-}
 
-// MARK: - 可选集合的空值判断扩展
-public extension Optional where Wrapped: Collection {
-    /// 判断可选集合是否为 `nil` 或内容为空
-    ///
-    /// - Returns: 若值为 `nil` 或调用 `isEmpty` 返回 `true`,则结果为 `true`
-    /// - Example:
-    ///   ```swift
-    ///   let arr1: [Int]? = nil
-    ///   let arr2: [Int]? = []
-    ///   print(arr1.dy_isNilOrEmpty) // true
-    ///   print(arr2.dy_isNilOrEmpty) // true
-    ///   ```
-    var dy_isNilOrEmpty: Bool {
-        self?.isEmpty ?? true
-    }
-}
-
-// MARK: - 可选值安全操作方法
-public extension Optional {
     /// 如果可选值存在,则对其执行指定操作
     ///
     /// - Parameter body: 接收解包后值的闭包,仅在值非 `nil` 时调用
     /// - Example:
     ///   ```swift
     ///   let name: String? = "Alice"
-    ///   name.dy_run { print("Hello, $0)") } // Hello, Alice
+    ///   name.dy.run { print("Hello, $0)") } // Hello, Alice
     ///   ```
-    func dy_run(_ body: DyAction1<Wrapped>) {
+    func run(_ body: DyAction1<Wrapped>) {
         if let value = self {
             body(value)
         }
@@ -58,9 +40,9 @@ public extension Optional {
     /// - Example:
     ///   ```swift
     ///   let value: Int? = nil
-    ///   let unwrapped = value.dy_unwrap(orFail: "Value must not be nil!") // 触发 fatalError
+    ///   let unwrapped = value.dy.unwrap(orFail: "Value must not be nil!") // 触发 fatalError
     ///   ```
-    func dy_unwrap(orFail message: @autoclosure DyFunc<String> = "Unexpected nil") -> Wrapped {
+    func unwrap(orFail message: @autoclosure DyFunc<String> = "Unexpected nil") -> Wrapped {
         guard let value = self else { fatalError(message()) }
         return value
     }
@@ -72,9 +54,9 @@ public extension Optional {
     /// - Example:
     ///   ```swift
     ///   let name: String? = nil
-    ///   let displayName = name.dy_or("Guest") // "Guest"
+    ///   let displayName = name.dy.or("Guest") // "Guest"
     ///   ```
-    func dy_or(_ defaultValue: Wrapped) -> Wrapped {
+    func or(_ defaultValue: Wrapped) -> Wrapped {
         self ?? defaultValue
     }
 
@@ -85,9 +67,9 @@ public extension Optional {
     /// - Example:
     ///   ```swift
     ///   let config: String? = nil
-    ///   let setting = config.dy_or { loadDefaultConfig() } // 仅当 config 为 nil 时调用 loadDefaultConfig()
+    ///   let setting = config.dy.or { loadDefaultConfig() } // 仅当 config 为 nil 时调用 loadDefaultConfig()
     ///   ```
-    func dy_or(fallback: DyFunc<Wrapped>) -> Wrapped {
+    func or(fallback: DyFunc<Wrapped>) -> Wrapped {
         self ?? fallback()
     }
 
@@ -100,9 +82,9 @@ public extension Optional {
     ///   ```swift
     ///   enum AppError: Error { case missingValue }
     ///   let input: String? = nil
-    ///   let result = try input.dy_or(throw: AppError.missingValue) // 抛出 AppError.missingValue
+    ///   let result = try input.dy.or(throw: AppError.missingValue) // 抛出 AppError.missingValue
     ///   ```
-    func dy_or(throw error: Error) throws -> Wrapped {
+    func or(throw error: Error) throws -> Wrapped {
         guard let value = self else { throw error }
         return value
     }
@@ -114,12 +96,29 @@ public extension Optional {
     /// - Example:
     ///   ```swift
     ///   let number: Int? = 5
-    ///   let positive = number.dy_takeIf { $0 > 0 } // Optional(5)
-    ///   let negative = number.dy_takeIf { $0 < 0 } // nil
+    ///   let positive = number.dy.takeIf { $0 > 0 } // Optional(5)
+    ///   let negative = number.dy.takeIf { $0 < 0 } // nil
     ///   ```
-    func dy_takeIf(_ predicate: DyFunc1<Wrapped, Bool>) -> Wrapped? {
+    func takeIf(_ predicate: DyFunc1<Wrapped, Bool>) -> Wrapped? {
         guard let value = self, predicate(value) else { return nil }
         return value
+    }
+}
+
+// MARK: - 可选集合的空值判断扩展
+public extension DyWrapper where Base == (any Collection)? {
+    /// 判断可选集合是否为 `nil` 或内容为空
+    ///
+    /// - Returns: 若值为 `nil` 或调用 `isEmpty` 返回 `true`,则结果为 `true`
+    /// - Example:
+    ///   ```swift
+    ///   let arr1: [Int]? = nil
+    ///   let arr2: [Int]? = []
+    ///   print(arr1.dy.isNilOrEmpty) // true
+    ///   print(arr2.dy.isNilOrEmpty) // true
+    ///   ```
+    var isNilOrEmpty: Bool {
+        base?.isEmpty ?? true
     }
 }
 

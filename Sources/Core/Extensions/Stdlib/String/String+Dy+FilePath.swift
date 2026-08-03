@@ -3,60 +3,60 @@ import Foundation
 // MARK: - 文件路径基础操作(基于 NSString 的 POSIX 路径处理)
 /// 提供与 `NSString` 路径 API 对应的 Swift 风格扩展
 /// 这些方法适用于标准 POSIX 路径(如 "/a/b/c.txt"),不适用于 URL 字符串
-public extension String {
+public extension DyWrapper where Base == String {
     /// 返回路径的最后一个组件
     ///
     /// - Example:
     ///   ```swift
-    ///   "/user/docs/file.txt".dy_lastPathComponent // "file.txt"
-    ///   "/".dy_lastPathComponent                     // "/"
+    ///   "/user/docs/file.txt".dy.lastPathComponent // "file.txt"
+    ///   "/".dy.lastPathComponent                     // "/"
     ///   ```
-    var dy_lastPathComponent: String {
-        (self as NSString).lastPathComponent
+    var lastPathComponent: String {
+        (base as NSString).lastPathComponent
     }
 
     /// 返回路径的扩展名(不含前导点)
     ///
     /// - Example:
     ///   ```swift
-    ///   "/file.txt".dy_pathExtension     // "txt"
-    ///   "/file.tar.gz".dy_pathExtension  // "gz"
-    ///   "/file".dy_pathExtension         // ""
+    ///   "/file.txt".dy.pathExtension     // "txt"
+    ///   "/file.tar.gz".dy.pathExtension  // "gz"
+    ///   "/file".dy.pathExtension         // ""
     ///   ```
-    var dy_pathExtension: String {
-        (self as NSString).pathExtension
+    var pathExtension: String {
+        (base as NSString).pathExtension
     }
 
     /// 返回删除最后一个路径组件后的路径
     ///
     /// - Example:
     ///   ```swift
-    ///   "/a/b/c".dy_deletingLastPathComponent // "/a/b"
-    ///   "/a".dy_deletingLastPathComponent     // "/"
+    ///   "/a/b/c".dy.deletingLastPathComponent // "/a/b"
+    ///   "/a".dy.deletingLastPathComponent     // "/"
     ///   ```
-    var dy_deletingLastPathComponent: String {
-        (self as NSString).deletingLastPathComponent
+    var deletingLastPathComponent: String {
+        (base as NSString).deletingLastPathComponent
     }
 
     /// 返回删除路径扩展名后的路径
     ///
     /// - Example:
     ///   ```swift
-    ///   "/file.txt".dy_deletingPathExtension // "/file"
-    ///   "/file".dy_deletingPathExtension     // "/file"
+    ///   "/file.txt".dy.deletingPathExtension // "/file"
+    ///   "/file".dy.deletingPathExtension     // "/file"
     ///   ```
-    var dy_deletingPathExtension: String {
-        (self as NSString).deletingPathExtension
+    var deletingPathExtension: String {
+        (base as NSString).deletingPathExtension
     }
 
     /// 返回路径的所有组件数组(包含根目录 "/")
     ///
     /// - Example:
     ///   ```swift
-    ///   "/a/b/c.txt".dy_pathComponents // ["/", "a", "b", "c.txt"]
+    ///   "/a/b/c.txt".dy.pathComponents // ["/", "a", "b", "c.txt"]
     ///   ```
-    var dy_pathComponents: [String] {
-        (self as NSString).pathComponents
+    var pathComponents: [String] {
+        (base as NSString).pathComponents
     }
 
     /// 在当前路径后追加一个路径组件,自动处理路径分隔符
@@ -66,10 +66,10 @@ public extension String {
     ///
     /// - Example:
     ///   ```swift
-    ///   "/a/b".dy_appendingPathComponent("c.txt") // "/a/b/c.txt"
+    ///   "/a/b".dy.appendingPathComponent("c.txt") // "/a/b/c.txt"
     ///   ```
-    func dy_appendingPathComponent(_ component: String) -> String {
-        (self as NSString).appendingPathComponent(component)
+    func appendingPathComponent(_ component: String) -> String {
+        (base as NSString).appendingPathComponent(component)
     }
 
     /// 为当前路径添加扩展名(自动添加前导点)
@@ -79,14 +79,14 @@ public extension String {
     ///
     /// - Example:
     ///   ```swift
-    ///   "file".dy_appendingPathExtension("txt") // "file.txt"
+    ///   "file".dy.appendingPathExtension("txt") // "file.txt"
     ///   ```
-    func dy_appendingPathExtension(_ ext: String) -> String? {
-        (self as NSString).appendingPathExtension(ext)
+    func appendingPathExtension(_ ext: String) -> String? {
+        (base as NSString).appendingPathExtension(ext)
     }
 
     /// 返回将 `~` 展开为用户主目录后的路径字符串
-    var dy_expandingTildeInPath: String {
-        (self as NSString).expandingTildeInPath
+    var expandingTildeInPath: String {
+        (base as NSString).expandingTildeInPath
     }
 }

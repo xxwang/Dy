@@ -7,10 +7,10 @@ public extension String {
     ///
     /// - Example:
     ///   ```swift
-    ///   "Hello <world> & \"everyone\"".dy_htmlEncoded()
+    ///   "Hello <world> & \"everyone\"".dy.htmlEncoded()
     ///   // → "&#x0048;&#x0065;&#x006c;&#x006c;&#x006f;&#x0020;&#x003c;&#x0077;&#x006f;&#x0072;&#x006c;&#x0064;&#x003e;&#x0020;&#x0026;&#x0020;&#x0022;&#x0065;&#x0076;&#x0065;&#x0072;&#x0079;&#x006f;&#x006e;&#x0065;&#x0022;"
     ///   ```
-    func dy_htmlEncoded() -> String {
+    func htmlEncoded() -> String {
         unicodeScalars.map { scalar in
             let hex = String(scalar.value, radix: 16, uppercase: false)
             let paddedHex = String(repeating: "0", count: max(0, 4 - hex.count)) + hex
@@ -27,10 +27,10 @@ public extension String {
     ///
     /// - Example:
     ///   ```swift
-    ///   "&#x0048;&#x0065;&#x006c;&#x006c;&#x006f;".dy_htmlDecoded()
+    ///   "&#x0048;&#x0065;&#x006c;&#x006c;&#x006f;".dy.htmlDecoded()
     ///   // → Optional("Hello")
     ///   ```
-    func dy_htmlDecoded() -> String? {
+    func htmlDecoded() -> String? {
         // 匹配 &#x[hex]; (十六进制)和 &#[dec]; (十进制),不区分大小写
         let pattern = "(?i)&#(?:x([0-9a-f]+)|([0-9]+));"
         guard let regex = try? NSRegularExpression(pattern: pattern, options: []) else {

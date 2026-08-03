@@ -1,14 +1,14 @@
 import Foundation
 
 // MARK: - 命名与格式转换
-public extension String {
+public extension DyWrapper where Base == String {
     /// 转换为驼峰命名法(首单词小写,其余首字母大写)
     /// - 返回值: 驼峰格式字符串
     ///
     /// - Example:
-    ///     `"some variable name".dy_camelCase` → `"someVariableName"`
+    ///     `"some variable name".dy.camelCase` → `"someVariableName"`
     ///
-    var dy_camelCase: String {
+    var camelCase: String {
         let words = self.dy_words
         guard !words.isEmpty else { return "" }
         let first = words[0].lowercased()
@@ -16,15 +16,15 @@ public extension String {
         return first + rest
     }
 
-    /// 将汉字转��为拼音(可选���否保留声调)
+    /// 将汉字转为拼音(可选择是否保留声调)
     /// - 参数 withTone: 是否保留声调符号,默认 `false`
     /// - 返回值: 拼音字符串(空格分隔);若无可转换字符,返回原串
     ///
     /// - Example:
-    ///     `"汉字".dy_pinyin(withTone: false)` → `"han zi"`
+    ///     `"汉字".dy.pinyin(withTone: false)` → `"han zi"`
     ///
-    func dy_pinyin(withTone: Bool = false) -> String {
-        let mutable = NSMutableString(string: self) as CFMutableString
+    func pinyin(withTone: Bool = false) -> String {
+        let mutable = NSMutableString(string: base) as CFMutableString
         // 转为拉丁字母(带声调)
         CFStringTransform(mutable, nil, kCFStringTransformMandarinLatin, false)
         // 去声调
@@ -39,10 +39,10 @@ public extension String {
     /// - 返回值: 首字母字符串;非汉字部分会被忽略
     ///
     /// - Example:
-    ///     `"爱国".dy_pinyinInitials()` → `"AG"`
+    ///     `"爱国".dy.pinyinInitials()` → `"AG"`
     ///
-    func dy_pinyinInitials(uppercase: Bool = true) -> String {
-        let pinyin = self.dy_pinyin(withTone: false)
+    func pinyinInitials(uppercase: Bool = true) -> String {
+        let pinyin = self.pinyin(withTone: false)
         let initials = pinyin
             .components(separatedBy: .whitespaces)
             .compactMap { word in
@@ -57,21 +57,21 @@ public extension String {
     /// - 返回值: 本地化后的字符串
     ///
     /// - Example:
-    ///     `"Hello".dy_localized(comment: "Greeting")`
+    ///     `"Hello".dy.localized(comment: "Greeting")`
     ///
-    func dy_localized(comment: String = "") -> String {
-        NSLocalizedString(self, comment: comment)
+    func localized(comment: String = "") -> String {
+        NSLocalizedString(base, comment: comment)
     }
 
     /// 转换为 URL 友好的 slug 格式(小写、短横线分隔)
     /// - 返回值: 清理后的 slug 字符串
     ///
     /// - Example:
-    ///     `"Swift is amazing!".dy_slug()` → `"swift-is-amazing"`
+    ///     `"Swift is amazing!".dy.slug()` → `"swift-is-amazing"`
     ///
-    func dy_slug() -> String {
+    func slug() -> String {
         // 转小写并去除重音
-        let normalized = folding(options: [.diacriticInsensitive, .caseInsensitive], locale: Locale.current)
+        let normalized = base.folding(options: [.diacriticInsensitive, .caseInsensitive], locale: Locale.current)
         // 替换空白符为短横线
         let dashed = normalized.replacingOccurrences(of: "\\s+", with: "-", options: .regularExpression)
         // 仅保留字母、数字、短横线
@@ -85,34 +85,34 @@ public extension String {
 }
 
 // MARK: - 空白符处理
-public extension String {
+public extension DyWrapper where Base == String {
     /// 移除首尾的空白符和换行符
-    func dy_trim() -> String {
-        trimmingCharacters(in: .whitespacesAndNewlines)
+    func trim() -> String {
+        base.trimmingCharacters(in: .whitespacesAndNewlines)
     }
 
     /// 仅移除首尾空白符(不含换行)
-    func dy_trimWhitespaces() -> String {
-        trimmingCharacters(in: .whitespaces)
+    func trimWhitespaces() -> String {
+        base.trimmingCharacters(in: .whitespaces)
     }
 
     /// 仅移除首尾换行符
-    func dy_trimNewlines() -> String {
-        trimmingCharacters(in: .newlines)
+    func trimNewlines() -> String {
+        base.trimmingCharacters(in: .newlines)
     }
 
     /// 移除所有空格
-    func dy_removeSpaces() -> String {
-        replacingOccurrences(of: " ", with: "")
+    func removeSpaces() -> String {
+        base.replacingOccurrences(of: " ", with: "")
     }
 
     /// 移除所有换行符
-    func dy_removeNewlines() -> String {
-        replacingOccurrences(of: "\n", with: "")
+    func removeNewlines() -> String {
+        base.replacingOccurrences(of: "\n", with: "")
     }
 
     /// 移除所有空白符和换行符
-    func dy_removeAllWhitespace() -> String {
-        components(separatedBy: .whitespacesAndNewlines).joined()
+    func removeAllWhitespace() -> String {
+        base.components(separatedBy: .whitespacesAndNewlines).joined()
     }
 }

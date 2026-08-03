@@ -1,18 +1,18 @@
 import Foundation
 
 // MARK: - URL 百分号编解码扩展
-public extension String {
+public extension DyWrapper where Base == String {
     /// 对字符串进行 URL 百分号编码（适用于查询参数、路径片段等通用场景）
     ///
     /// - Returns: 编码后的字符串;若编码失败（理论上不会）,返回原字符串
     /// - Note: 使用 `.urlQueryAllowed` 字符集,保留字母、数字及 `-._～!*'()` 等安全字符
     /// - Example:
     ///   ```swift
-    ///   "it's easy".dy_urlEncoded() // "it's%20easy"
-    ///   "hello world!".dy_urlEncoded() // "hello%20world!"
+    ///   "it's easy".dy.urlEncoded() // "it's%20easy"
+    ///   "hello world!".dy.urlEncoded() // "hello%20world!"
     ///   ```
-    func dy_urlEncoded() -> String {
-        addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? self
+    func urlEncoded() -> String {
+        base.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? base
     }
 
     /// 对已 URL 编码的字符串进行解码
@@ -20,15 +20,15 @@ public extension String {
     /// - Returns: 解码后的字符串;若解码失败（如非法 `%` 序列）,返回原字符串
     /// - Example:
     ///   ```swift
-    ///   "it's%20easy".dy_urlDecoded() // "it's easy"
+    ///   "it's%20easy".dy.urlDecoded() // "it's easy"
     ///   ```
-    func dy_urlDecoded() -> String {
-        removingPercentEncoding ?? self
+    func urlDecoded() -> String {
+        base.removingPercentEncoding ?? base
     }
 }
 
 // MARK: - 随机与假文字符串生成扩展
-public extension String {
+public extension DyWrapper where Base == String {
     /// 生成指定长度的随机字符串（包含大小写字母和数字）
     ///
     /// - Parameter length: 目标长度（必须 > 0）
@@ -37,9 +37,9 @@ public extension String {
     ///         如需密码学安全随机,请使用 `CryptoKit` 或 `SecRandomCopyBytes`
     /// - Example:
     ///   ```swift
-    ///   String.dy_random(length: 8) // e.g. "aB3xK9Lm"
+    ///   String.dy.random(length: 8) // e.g. "aB3xK9Lm"
     ///   ```
-    static func dy_random(length: Int) -> String {
+    static func random(length: Int) -> String {
         guard length > 0 else { return "" }
         let charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
         return String((0 ..< length).compactMap { _ in charset.randomElement() })
@@ -52,9 +52,9 @@ public extension String {
     /// - Note: 内容为标准 Lorem Ipsum 段落,不含敏感信息
     /// - Example:
     ///   ```swift
-    ///   String.dy_loremIpsum(length: 20) // "Lorem ipsum dolor si"
+    ///   String.dy.loremIpsum(length: 20) // "Lorem ipsum dolor si"
     ///   ```
-    static func dy_loremIpsum(length: Int = 445) -> String {
+    static func loremIpsum(length: Int = 445) -> String {
         guard length > 0 else { return "" }
 
         let lorem = """

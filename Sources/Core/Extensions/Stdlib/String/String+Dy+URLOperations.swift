@@ -1,12 +1,12 @@
 import Foundation
 
 // MARK: - URL 操作扩展
-public extension String {
+public extension DyWrapper where Base == String {
     /// 将字符串转义为 POSIX shell 安全的单引号形式
     /// 规则：用单引号包裹,内部单引号用 '\'' 转义
-    var dy_shellEscaped: String {
+    var shellEscaped: String {
         // 替换每个 ' 为 '\''
-        let escaped = self.replacingOccurrences(of: "'", with: "'\\''")
+        let escaped = base.replacingOccurrences(of: "'", with: "'\\''")
         return "'\(escaped)'"
     }
 
@@ -23,14 +23,14 @@ public extension String {
     ///   let urls = text.dy_urls
     ///   print(urls.map { $0.absoluteString }) // ["https://apple.com", "mailto:support@example.com"]
     ///   ```
-    var dy_urls: [URL] {
+    var urls: [URL] {
         // NSDataDetector 是轻量级的,每次创建开销小,且线程安全
         guard let detector = try? NSDataDetector(types: NSTextCheckingResult.CheckingType.link.rawValue) else {
             return [] // 极罕见情况,返回空数组比崩溃更安全
         }
 
-        let range = NSRange(location: 0, length: utf16.count)
-        let matches = detector.matches(in: self, options: [], range: range)
+        let range = NSRange(location: 0, length: base.utf16.count)
+        let matches = detector.matches(in: base, options: [], range: range)
 
         return matches.compactMap { result in
             result.url // 自动过滤 nil
@@ -48,12 +48,12 @@ public extension String {
     /// - Example:
     ///   ```swift
     ///   let url = "https://example.com?name=John%20Doe&hobby=reading&hobby=coding"
-    ///   let params = url.dy_queryParameters
+    ///   let params = url.dy.queryParameters
     ///   print(params["name"] ?? [])      // ["John Doe"]
     ///   print(params["hobby"] ?? [])     // ["reading", "coding"]
     ///   ```
-    var dy_queryParameters: [String: [String]] {
-        guard let components = URLComponents(string: self),
+    var queryParameters: [String: [String]] {
+        guard let components = URLComponents(string: base),
               let queryItems = components.queryItems,
               !queryItems.isEmpty
         else {
@@ -88,11 +88,11 @@ public extension String {
     /// - Example:
     ///   ```swift
     ///   let url = "https://example.com?name=Alice&name=Bob"
-    ///   let firstParams = url.dy_firstQueryParameters
+    ///   let firstParams = url.dy.firstQueryParameters
     ///   print(firstParams["name"] ?? "") // "Alice"
     ///   ```
-    var dy_firstQueryParameters: [String: String] {
-        let multiParams = dy_queryParameters
+    var firstQueryParameters: [String: String] {
+        let multiParams = self.queryParameters
         var singleParams: [String: String] = [:]
         for (key, values) in multiParams {
             singleParams[key] = values.first ?? ""
