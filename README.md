@@ -1,15 +1,17 @@
 # Dy
 
-轻量级 Swift 扩展工具库 — 为 UIKit、Foundation、CoreGraphics 等提供 `dy_` 前缀的扩展方法，不污染原生类型。
+轻量级 Swift 扩展工具库 — 基于 `DyWrapper` 命名空间模式，为 UIKit、Foundation、CoreGraphics 等提供 `.dy.` 链式 API，不污染原生类型。
 
 ```swift
 import DyTemplate  // 一行引入全部模块（DyCore + DyComponent + DyLogger）
 
 // 链式配置 UIView
-view
-    .dy_backgroundColor(.white)
-    .dy_cornerRadius(8)
-    .dy_masksToBounds(true)
+let view = UIView()
+    .dy
+    .backgroundColor(.white)
+    .cornerRadius(8)
+    .masksToBounds(true)
+    .build()
 
 // UIColor 便捷初始化
 let color = UIColor(hex: "#FF5722")
@@ -47,26 +49,34 @@ DyTemplate 会自动重导出 DyCore + DyComponent + DyLogger，是推荐的一�
 
 ### 链式 API 核心
 
-所有扩展方法使用 `dy_` 前缀，每个 setter 返回 `Self`，支持 `.` 链式调用。
+所有扩展方法通过 `.dy` 命名空间访问，每个 setter 返回 `DyWrapper` 实例，支持链式调用。引用类型（UIView 等）可省略 `.build()`。
 
 ```swift
 // UIView 链式配置
-view
-    .dy_backgroundColor(.white)
-    .dy_cornerRadius(8)
-    .dy_masksToBounds(true)
+let view = UIView()
+    .dy
+    .backgroundColor(.white)
+    .cornerRadius(8)
+    .masksToBounds(true)
+    .build()
 
 // UIButton
-button
-    .dy_title("提交", for: .normal)
-    .dy_titleColor(.white, for: .normal)
+let button = UIButton(type: .system)
+    .dy
+    .title("提交", for: .normal)
+    .titleColor(.white, for: .normal)
+    .build()
 
 // UILabel
-label
-    .dy_text("标题")
-    .dy_font(.boldSystemFont(ofSize: 18))
-    .dy_textAlignment(.center)
+let label = UILabel()
+    .dy
+    .text("标题")
+    .font(.boldSystemFont(ofSize: 18))
+    .textAlignment(.center)
+    .build()
 ```
+
+`dy_` 前缀保留于非链式工具方法（如 `.dy_jsonData()`、`.dy_toData()`）。
 
 ### 工厂方法
 
@@ -87,10 +97,14 @@ let webView = WKWebView.dy_webView()              // 默认配置
 ```swift
 let container = UIView {
     UILabel()
-        .dy_text("你好")
-        .dy_font(.systemFont(ofSize: 16))
+        .dy
+        .text("你好")
+        .font(.systemFont(ofSize: 16))
+        .build()
     UIButton(type: .system)
-        .dy_title("点击", for: .normal)
+        .dy
+        .title("点击", for: .normal)
+        .build()
     if showImage {
         UIImageView(image: UIImage(systemName: "star"))
     }
@@ -347,8 +361,8 @@ let vc = MyViewController.loadViewController(from: "Main")
 
 ## 设计原则
 
-- **不污染原生类型** — 扩展方法统一 `dy_` 前缀
-- **链式调用** — setter 返回 `Self`，支持连续配置
+- **不污染原生类型** — 实例扩展通过 `.dy` 命名空间（`DyWrapper`）隔离，工具方法使用 `dy_` 前缀
+- **链式调用** — setter 返回 `DyWrapper`，支持连续配置，引用类型可省略 `.build()`
 - **明确错误** — Debug 用 `assertionFailure`，Release 可控 crash
 - **iOS 13+** — 兼容旧设备，同时适配 iOS 16+ Scene API
 

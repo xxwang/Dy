@@ -1,7 +1,7 @@
 import Foundation
 
-open class DyModel {
-    public nonisolated init() {}
+open nonisolated class DyModel {
+    public init() {}
 
     open class func model() -> DyModel {
         DyModel()
