@@ -107,7 +107,6 @@ public extension DyWrapper where Base: AnyObject {
 
 // MARK: - 支持.dy.
 extension NSObject: DyExtension {}
-
 extension Int: DyExtension {}
 extension Float: DyExtension {}
 extension Double: DyExtension {}
@@ -115,23 +114,16 @@ extension Bool: DyExtension {}
 extension Character: DyExtension {}
 extension String: DyExtension {}
 extension Substring: DyExtension {}
-
 extension Array: DyExtension {}
 extension Dictionary: DyExtension {}
 extension Set: DyExtension {}
-
-extension JSONDecoder: DyExtension {}
-extension JSONEncoder: DyExtension {}
-
 extension CGFloat: DyExtension {}
 extension CGPoint: DyExtension {}
 extension CGRect: DyExtension {}
 extension CGSize: DyExtension {}
 extension CGVector: DyExtension {}
-
 extension UIEdgeInsets: DyExtension {}
 extension UIOffset: DyExtension {}
 extension UIRectEdge: DyExtension {}
-
 extension Range: DyExtension {}
 extension ClosedRange: DyExtension {}

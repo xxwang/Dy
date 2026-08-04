@@ -37,7 +37,7 @@ public extension DyWrapper where Base == IndexPath {
     /// - Example:
     ///   ```swift
     ///   let current = IndexPath(row: 3, section: 1)
-    ///   let next = current.dy_offset(row: 1)          // (row: 4, section: 1)
+    ///   let next = current.dy.offset(row: 1)          // (row: 4, section: 1)
     ///   let prevSection = current.dy.offset(section: -1) // (row: 3, section: 0)
     ///   ```
     func offset(row: Int = 0, section: Int = 0) -> IndexPath {

@@ -20,6 +20,9 @@ open class DyWebViewController: DyViewController {
         .navigationDelegate(self)
         .build()
 
+    /// 已注册脚本消息处理器名称,用于在 deinit 时(尤其 iOS 13)逐个移除,避免 WKWebView 强引用导致的内存泄漏
+    private var scriptMessageHandlerNames: Set<String> = []
+
     override open func viewDidLoad() {
         super.viewDidLoad()
     }
@@ -40,23 +43,20 @@ open class DyWebViewController: DyViewController {
         }
     }
 
-    /// 已注册脚本消息处理器名称,用于在 deinit 时(尤其 iOS 13)逐个移除,避免 WKWebView 强引用导致的内存泄漏
-    private var dy_scriptMessageHandlerNames: Set<String> = []
-
     /// 注册脚本消息处理器(自动记录名称,deinit 时统一清理)
     /// - Parameters:
     ///   - handler: 消息处理器(通常为 `self`);内部以弱引用包装,不会因此持有 `self`
     ///   - name: 处理器名称
-    open func dy_addScriptMessageHandler(_ handler: WKScriptMessageHandler, name: String) {
-        userContentController.add(WeakScriptMessageHandler(handler), name: name)
-        dy_scriptMessageHandlerNames.insert(name)
+    open func addScriptMessageHandler(_ handler: WKScriptMessageHandler, name: String) {
+        self.userContentController.add(WeakScriptMessageHandler(handler), name: name)
+        self.scriptMessageHandlerNames.insert(name)
     }
 
     /// 移除指定名称的脚本消息处理器(iOS 13 / 14+ 均安全)
     /// - Parameter name: 处理器名称
-    open func dy_removeScriptMessageHandler(forName name: String) {
-        userContentController.removeScriptMessageHandler(forName: name)
-        dy_scriptMessageHandlerNames.remove(name)
+    open func removeScriptMessageHandler(forName name: String) {
+        self.userContentController.removeScriptMessageHandler(forName: name)
+        self.scriptMessageHandlerNames.remove(name)
     }
 
     deinit {
@@ -65,11 +65,11 @@ open class DyWebViewController: DyViewController {
             self.userContentController.removeAllScriptMessageHandlers()
         } else {
             // iOS 13 无 removeAllScriptMessageHandlers,逐个移除
-            for name in dy_scriptMessageHandlerNames {
+            for name in self.scriptMessageHandlerNames {
                 self.userContentController.removeScriptMessageHandler(forName: name)
             }
         }
-        dy_scriptMessageHandlerNames.removeAll()
+        self.scriptMessageHandlerNames.removeAll()
     }
 }
 
@@ -101,8 +101,8 @@ open class DyWebViewController: DyViewController {
             .frame(CGRect(
                 x: 0,
                 y: topMargin,
-                width: self.view.dy_width,
-                height: self.view.dy_height - topMargin
+                width: self.view.dy.width,
+                height: self.view.dy.height - topMargin
             ))
     }
 }

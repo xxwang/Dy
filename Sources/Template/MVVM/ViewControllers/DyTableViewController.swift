@@ -41,8 +41,8 @@ open class DyTableViewController: DyViewController {
             .frame(CGRect(
                 x: 0,
                 y: topMargin,
-                width: self.view.dy_width,
-                height: self.view.dy_height - topMargin
+                width: self.view.dy.width,
+                height: self.view.dy.height - topMargin
             ))
     }
 }

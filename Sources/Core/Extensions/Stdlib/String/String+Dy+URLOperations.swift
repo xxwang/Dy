@@ -20,7 +20,7 @@ public extension DyWrapper where Base == String {
     /// - Example:
     ///   ```swift
     ///   let text = "Visit https://apple.com or mailto:support@example.com"
-    ///   let urls = text.dy_urls
+    ///   let urls = text.dy.urls
     ///   print(urls.map { $0.absoluteString }) // ["https://apple.com", "mailto:support@example.com"]
     ///   ```
     var urls: [URL] {

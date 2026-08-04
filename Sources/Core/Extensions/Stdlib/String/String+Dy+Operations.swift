@@ -21,7 +21,7 @@ public extension DyWrapper where Base == String {
     /// - 返回值: 反转结果
     ///
     /// - Example:
-    ///     `"Hello".dy_reverse()` → `"olleH"`
+    ///     `"Hello".dy.reverse()` → `"olleH"`
     ///
     func reverse() -> String {
         String(base.reversed())

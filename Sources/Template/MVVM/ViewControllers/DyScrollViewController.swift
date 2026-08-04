@@ -49,15 +49,15 @@ open class DyScrollViewController: DyViewController {
             .frame(CGRect(
                 x: 0,
                 y: topMargin,
-                width: self.view.dy_width,
-                height: self.view.dy_height - topMargin
+                width: self.view.dy.width,
+                height: self.view.dy.height - topMargin
             ))
 
         // 内容容器
         self.contentView
             .dy
-            .width(self.scrollView.dy_width)
-            .height(max(self.scrollView.contentSize.height, self.scrollView.dy_height))
+            .width(self.scrollView.dy.width)
+            .height(max(self.scrollView.contentSize.height, self.scrollView.dy.height))
     }
 }
 

@@ -12,7 +12,7 @@ public extension DyWrapper where Base == DateComponents {
     ///   ```swift
     ///   let date = DateComponents().dy.toDate()
     ///   ```
-    func dy_toDate(using calendar: Calendar = .current) -> Date? {
+    func toDate(using calendar: Calendar = .current) -> Date? {
         return calendar.date(from: base)
     }
 }

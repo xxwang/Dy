@@ -35,7 +35,7 @@ public extension DyAlertView {
         self.shadeView.frame = self.bounds
 
         // 设置内容容器中心点
-        self.contentContainer.center = self.dy_middle
+        self.contentContainer.center = self.dy.middle
     }
 }
 
@@ -43,12 +43,12 @@ public extension DyAlertView {
 @objc extension DyAlertView {
     /// 显示弹窗
     open func show(in container: UIView? = nil) {
-        let container = container ?? UIWindow.dy_keyWindow ?? UIWindow.dy_windows.first
+        let container = container ?? UIWindow.dy.keyWindow ?? UIWindow.dy.windows.first
         guard let container else { return }
         container.addSubview(self)
 
         // 设置约束填充父视图
-        self.dy_fillSuperview()
+        self.dy.fillSuperview()
 
         // 设置初始化状态
         self.shadeView.alpha = 0.01
@@ -99,7 +99,7 @@ public extension DyAlertView {
         self.contentContainer
             .dy
             .backgroundColor(self.contentContainerBackgroundColor())
-            .maskedCorners(.dy_all)
+            .maskedCorners(.dy.all)
             .cornerRadius(self.contentContainerCornerRadius())
             .masksToBounds(true)
 

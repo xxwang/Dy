@@ -17,7 +17,7 @@ open class DyNaView: UIView {
 
     /// 底部分割线(默认半透明黑线)
     open lazy var lineView = UIView.view().dy
-        .backgroundColor(.black.dy_alpha(0.25))
+        .backgroundColor(.black.dy.alpha(0.25))
         .build()
 
     /// 返回按钮(UIButton)
@@ -225,7 +225,7 @@ public extension DyWrapper where Base: DyNaView {
     /// 控制导航栏阴影(模拟系统导航栏阴影)
     @discardableResult
     func showShadow(_ isShow: Bool) -> Self {
-        base.layer.shadowColor = UIColor(hex: "#DBDADA").dy_alpha(0.25).cgColor
+        base.layer.shadowColor = UIColor(hex: "#DBDADA").dy.alpha(0.25).cgColor
         base.layer.shadowRadius = 0
         base.layer.shadowOffset = CGSize(width: 0, height: 1)
         base.layer.shadowOpacity = isShow ? 1 : 0

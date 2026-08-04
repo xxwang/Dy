@@ -93,9 +93,9 @@ open class DyViewController: UIViewController {
     open func onBackActionHandler() {
         let count = self.navigationController?.children.count ?? 0
         if count > 1 {
-            self.dy_pop()
+            self.dy.pop()
         } else {
-            self.dy_dismiss()
+            self.dy.dismiss()
         }
     }
 }
@@ -135,17 +135,17 @@ extension DyViewController {
         static var originalPopDelegate: UInt8 = 0
     }
 
-    private var dy_originalPopDelegate: UIGestureRecognizerDelegate? {
-        get { self.dy_getAssociatedObject(forKey: &Keys.originalPopDelegate) as? UIGestureRecognizerDelegate }
-        set { self.dy_setAssociatedObject(newValue, forKey: &Keys.originalPopDelegate) }
+    private var originalPopDelegate: UIGestureRecognizerDelegate? {
+        get { self.dy.GetAO(forKey: &Keys.originalPopDelegate) as? UIGestureRecognizerDelegate }
+        set { self.dy.SetAO(newValue, forKey: &Keys.originalPopDelegate) }
     }
 
     override open func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         // 接管侧滑手势代理,但先记录原始代理以便退出时还原
         if let gesture = self.navigationController?.interactivePopGestureRecognizer, gesture.delegate !== self {
-            if dy_originalPopDelegate == nil {
-                dy_originalPopDelegate = gesture.delegate
+            if self.originalPopDelegate == nil {
+                self.originalPopDelegate = gesture.delegate
             }
             gesture.delegate = self
         }
@@ -155,7 +155,7 @@ extension DyViewController {
         super.viewWillDisappear(animated)
         // 仅当代理仍指向自身时才还原为原始代理,避免误清空其它控制器设置的代理
         if let gesture = self.navigationController?.interactivePopGestureRecognizer, gesture.delegate === self {
-            gesture.delegate = dy_originalPopDelegate
+            gesture.delegate = self.originalPopDelegate
         }
     }
 

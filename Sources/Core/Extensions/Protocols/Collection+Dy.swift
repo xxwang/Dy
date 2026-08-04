@@ -135,7 +135,7 @@ public extension DyWrapper where Base: Collection, Base.Element: BinaryInteger {
     /// - Example:
     ///     ```swift
     ///     let scores = [80, 90, 100]
-    ///     print(scores.dy_average) // 90.0
+    ///     print(scores.dy.average) // 90.0
     ///     ```
     var average: Double {
         guard !base.isEmpty else { return 0.0 }

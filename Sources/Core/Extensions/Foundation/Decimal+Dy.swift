@@ -198,7 +198,7 @@ public extension DyWrapper where Base == Decimal {
     ///
     /// - Example:
     ///   ```swift
-    ///   Decimal(100).dy_percentage(15) // 15.0
+    ///   Decimal(100).dy.percentage(15) // 15.0
     ///   ```
     func percentage(_ percentage: Decimal) -> Decimal {
         return (percentage * base) / 100
@@ -220,9 +220,9 @@ public extension DyWrapper where Base == Decimal {
     ///
     /// - Example:
     ///   ```swift
-    ///   Decimal(10.5).dy_remainder(dividingBy: 3) // 1.5
-    ///   Decimal(-10).dy_remainder(dividingBy: 3)  // -1
-    ///   Decimal("0.3")!.dy_remainder(dividingBy: Decimal("0.1")!) // 0.0
+    ///   Decimal(10.5).dy.remainder(dividingBy: 3) // 1.5
+    ///   Decimal(-10).dy.remainder(dividingBy: 3)  // -1
+    ///   Decimal("0.3")!.dy.remainder(dividingBy: Decimal("0.1")!) // 0.0
     ///   ```
     func remainder(dividingBy divisor: Decimal) -> Decimal? {
         guard !divisor.isZero else { return nil }

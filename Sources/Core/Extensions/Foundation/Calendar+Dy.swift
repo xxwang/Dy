@@ -269,7 +269,7 @@ public extension DyWrapper where Base == Calendar {
     ///
     /// - Example:
     ///   ```swift
-    ///   let months = Calendar.current.dy_next12Months()
+    ///   let months = Calendar.current.dy.next12Months()
     ///   months.forEach { print("\($0.year)-\($0.month)") }
     ///   ```
     func next12Months(from date: Date = Date()) -> [(year: Int, month: Int)] {

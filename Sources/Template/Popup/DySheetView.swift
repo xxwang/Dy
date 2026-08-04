@@ -37,7 +37,7 @@ public extension DySheetView {
 @objc extension DySheetView {
     /// 显示底部弹窗
     open func show(in container: UIView? = nil) {
-        let container = container ?? UIWindow.dy_keyWindow ?? UIWindow.dy_windows.first
+        let container = container ?? UIWindow.dy.keyWindow ?? UIWindow.dy.windows.first
         guard let container else { return }
         container.addSubview(self)
 
@@ -54,13 +54,13 @@ public extension DySheetView {
         // 内容容器
         self.contentContainer
             .dy
-            .left((container.dy_width - self.contentContainer.dy_width) / 2)
-            .top(self.dy_height - self.contentContainer.dy_height)
+            .left((container.dy.width - self.contentContainer.dy.width) / 2)
+            .top(self.dy.height - self.contentContainer.dy.height)
 
         // 设置初始化状态
         self.shadeView.alpha = 0.01
         self.contentContainer.alpha = 0.01
-        self.contentContainer.transform = CGAffineTransform(translationX: 0, y: self.contentContainer.dy_height)
+        self.contentContainer.transform = CGAffineTransform(translationX: 0, y: self.contentContainer.dy.height)
 
         // 从底部滑入
         UIView.animate(withDuration: animationDuration(), delay: 0, options: .curveEaseOut) {
@@ -76,7 +76,7 @@ public extension DySheetView {
         UIView.animate(withDuration: animationDuration(), delay: 0, options: .curveEaseIn) {
             self.shadeView.alpha = 0.01
             self.contentContainer.alpha = 0.01
-            self.contentContainer.transform = CGAffineTransform(translationX: 0, y: self.contentContainer.dy_height)
+            self.contentContainer.transform = CGAffineTransform(translationX: 0, y: self.contentContainer.dy.height)
         } completion: { _ in
             self.removeFromSuperview()
         }
@@ -105,7 +105,7 @@ public extension DySheetView {
         self.contentContainer
             .dy
             .backgroundColor(contentContainerBackgroundColor())
-            .maskedCorners([.dy_topLeft, .dy_topRight])
+            .maskedCorners([.dy.topLeft, .dy.topRight])
             .cornerRadius(contentContainerCornerRadius())
             .masksToBounds(true)
 

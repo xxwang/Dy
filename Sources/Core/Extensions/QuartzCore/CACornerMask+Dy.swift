@@ -1,6 +1,8 @@
 import QuartzCore
 import UIKit
 
+extension CACornerMask: DyExtension {}
+
 // MARK: - 属性
 public extension DyWrapper where Base == CACornerMask {
     /// 左上角(等价于 `.layerMinXMinYCorner`)

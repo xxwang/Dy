@@ -176,7 +176,7 @@ public extension DyWrapper where Base == Date {
     /// - Example:
     ///   ```swift
     ///   var date = Date()
-    ///   date.dy_millisecond = 500  // 设置为 500 毫秒
+    ///   date.dy.millisecond = 500  // 设置为 500 毫秒
     ///   ```
     var millisecond: Int {
         get {

@@ -1926,7 +1926,7 @@ public extension DyWrapper where Base: UIImage {
     ///
     /// - Example:
     ///   ```swift
-    ///   let result = image.dy_addImageWatermark(
+    ///   let result = image.dy.addImageWatermark(
     ///       watermarkImage: logo,
     ///       position: .center,
     ///       margin: 0,

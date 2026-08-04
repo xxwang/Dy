@@ -4,7 +4,7 @@ import CoreLocation
 private extension CLGeocoder {
     /// 正在进行的地理编码实例集合,用于在回调结束前保持实例存活(避免提前释放)
     /// 同时避免复用同一实例并发请求(Apple 明确禁止单实例并发地理编码)
-    static var dy_activeGeocoders: Set<CLGeocoder> = []
+    static var activeGeocoders: Set<CLGeocoder> = []
 }
 
 // MARK: - 方法
@@ -33,9 +33,9 @@ public extension DyWrapper where Base == CLGeocoder {
         completionHandler: @escaping CLGeocodeCompletionHandler
     ) {
         let geocoder = CLGeocoder()
-        Base.dy_activeGeocoders.insert(geocoder)
+        Base.activeGeocoders.insert(geocoder)
         geocoder.reverseGeocodeLocation(location) { placemarks, error in
-            defer { Base.dy_activeGeocoders.remove(geocoder) }
+            defer { Base.activeGeocoders.remove(geocoder) }
             completionHandler(placemarks, error)
         }
     }
@@ -59,9 +59,9 @@ public extension DyWrapper where Base == CLGeocoder {
         completionHandler: @escaping CLGeocodeCompletionHandler
     ) {
         let geocoder = CLGeocoder()
-        Base.dy_activeGeocoders.insert(geocoder)
+        Base.activeGeocoders.insert(geocoder)
         geocoder.geocodeAddressString(addressString) { placemarks, error in
-            defer { Base.dy_activeGeocoders.remove(geocoder) }
+            defer { Base.activeGeocoders.remove(geocoder) }
             completionHandler(placemarks, error)
         }
     }

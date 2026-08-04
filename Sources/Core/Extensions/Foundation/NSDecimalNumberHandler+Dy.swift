@@ -293,7 +293,7 @@ public extension DyWrapper where Base: NSDecimalNumberHandler {
     ///
     /// - Example:
     ///   ```swift
-    ///   let parts = NSDecimalNumberHandler.dy_splitByRatios(total: 100, ratios: [1, 2, 3])
+    ///   let parts = NSDecimalNumberHandler.dy.splitByRatios(total: 100, ratios: [1, 2, 3])
     ///   // 相当于按 1:2:3 分配 → [16.66..., 33.33..., 50]
     ///   ```
     static func splitByRatios(

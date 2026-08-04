@@ -41,10 +41,10 @@ public extension DyWrapper where Base: CLLocation {
     ///   print("中点: \(midpoint.coordinate.latitude), \(midpoint.coordinate.longitude)")
     ///   ```
     func midPoint(to destination: CLLocation) -> CLLocation {
-        let lat1 = base.coordinate.latitude.dy_toRadians()
-        let lon1 = base.coordinate.longitude.dy_toRadians()
-        let lat2 = destination.coordinate.latitude.dy_toRadians()
-        let lon2 = destination.coordinate.longitude.dy_toRadians()
+        let lat1 = base.coordinate.latitude.dy.toRadians()
+        let lon1 = base.coordinate.longitude.dy.toRadians()
+        let lat2 = destination.coordinate.latitude.dy.toRadians()
+        let lon2 = destination.coordinate.longitude.dy.toRadians()
 
         let deltaLon = lon2 - lon1
 
@@ -55,8 +55,8 @@ public extension DyWrapper where Base: CLLocation {
         let lon3 = lon1 + atan2(by, cos(lat1) + bx)
 
         return CLLocation(
-            latitude: lat3.dy_toDegrees(),
-            longitude: lon3.dy_toDegrees()
+            latitude: lat3.dy.toDegrees(),
+            longitude: lon3.dy.toDegrees()
         )
     }
 
@@ -74,17 +74,17 @@ public extension DyWrapper where Base: CLLocation {
     ///   print("方位角: \(bearing)°")
     ///   ```
     func bearing(to target: CLLocation) -> Double {
-        let lat1 = base.coordinate.latitude.dy_toRadians()
-        let lon1 = base.coordinate.longitude.dy_toRadians()
-        let lat2 = target.coordinate.latitude.dy_toRadians()
-        let lon2 = target.coordinate.longitude.dy_toRadians()
+        let lat1 = base.coordinate.latitude.dy.toRadians()
+        let lon1 = base.coordinate.longitude.dy.toRadians()
+        let lat2 = target.coordinate.latitude.dy.toRadians()
+        let lon2 = target.coordinate.longitude.dy.toRadians()
 
         let deltaLon = lon2 - lon1
 
         let y = sin(deltaLon) * cos(lat2)
         let x = cos(lat1) * sin(lat2) - sin(lat1) * cos(lat2) * cos(deltaLon)
 
-        var bearing = atan2(y, x).dy_toDegrees()
+        var bearing = atan2(y, x).dy.toDegrees()
         bearing = (bearing + 360).truncatingRemainder(dividingBy: 360)
         return bearing
     }
@@ -129,7 +129,7 @@ public extension DyWrapper where Base: CLLocation {
 
         // 防止极地附近 cos(lat) ≈ 0 导致除零或过大 deltaLon
         let clampedLat = min(max(lat, -85.0), 85.0)
-        let latRad = clampedLat.dy_toRadians()
+        let latRad = clampedLat.dy.toRadians()
 
         let earthRadiusMeters = 6371000.0
         let deltaLat = radius / earthRadiusMeters * (180 / .pi)

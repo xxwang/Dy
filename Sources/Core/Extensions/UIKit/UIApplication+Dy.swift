@@ -60,7 +60,7 @@ public extension DyWrapper where Base: UIApplication {
 public extension DyWrapper where Base: UIApplication {
     /// 在应用内打开应用的`App Store评价`弹窗(一年最多3次)
     @MainActor func requestAppReview() {
-        if let windowScene = UIWindow.dy_keyWindow?.windowScene {
+        if let windowScene = UIWindow.dy.keyWindow?.windowScene {
             if #available(iOS 16.0, *) {
                 AppStore.requestReview(in: windowScene)
             } else {
@@ -180,7 +180,7 @@ public extension DyWrapper where Base: UIApplication {
     }
 
     /// 是否为首次安装或升级到新版本(只读,不会写回 UserDefaults)
-    /// - Note: 本属性只做判断,不产生任何副作用。处理完新版本引导逻辑后,请调用 `dy_recordCurrentVersion()` 记录当前版本。
+    /// - Note: 本属性只做判断,不产生任何副作用。处理完新版本引导逻辑后,请调用 `recordCurrentVersion()` 记录当前版本。
     var isNewVersion: Bool {
         let current = Bundle.dy.appVersion
         let saved = UserDefaults.standard.string(forKey: "Dy.AppVersion") ?? ""

@@ -19,7 +19,7 @@ public extension DyNet {
         _ endpoint: DyEndpoint,
         completion: @escaping (Result<DyResponse, DyNetError>) -> Void
     ) {
-        if dy_closureStub(endpoint, deliver: completion) {
+        if self.closureStub(endpoint, deliver: completion) {
             return
         }
 
@@ -90,7 +90,7 @@ public extension DyNet {
         progress: ((Double) -> Void)? = nil,
         completion: @escaping (Result<DyResponse, DyNetError>) -> Void
     ) {
-        if dy_closureStub(endpoint, deliver: completion) {
+        if self.closureStub(endpoint, deliver: completion) {
             return
         }
 
@@ -315,7 +315,7 @@ public extension DyNet {
 extension DyNet {
     /// 处理 stub（普通响应 / 上传共用）：命中 stub 时回调样例数据并 `return true`；
     /// `.never` 时返回 `false`，交由真实网络路径。回调统一派发到主线程。
-    private func dy_closureStub(
+    private func closureStub(
         _ endpoint: DyEndpoint,
         deliver: @escaping (Result<DyResponse, DyNetError>) -> Void
     ) -> Bool {

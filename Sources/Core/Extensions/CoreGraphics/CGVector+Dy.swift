@@ -42,7 +42,7 @@ public extension DyWrapper where Base == CGVector {
     /// 点积可用于判断夹角、投影等
     /// - Parameter other: 另一个向量
     /// - Returns: 两个向量的点积(标量)
-    func dy_dot(_ other: CGVector) -> CGFloat {
+    func dot(_ other: CGVector) -> CGFloat {
         base.dx * other.dx + base.dy * other.dy
     }
 }

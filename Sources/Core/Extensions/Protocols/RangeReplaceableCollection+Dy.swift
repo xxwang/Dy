@@ -186,7 +186,7 @@ public extension DyWrapper where Base: RangeReplaceableCollection {
     /// - Example:
     ///     ```swift
     ///     var deck = ["♠️", "♥️", "♦️", "♣️"]
-    ///     let card = deck.dy_removeRandomElement()
+    ///     let card = deck.dy.removeRandomElement()
     ///     ```
     @discardableResult
     func removeRandomElement() -> Base.Element? {

@@ -68,7 +68,7 @@ public extension DyNet {
     ) -> AnyPublisher<(DyResponse, URL), DyNetError> {
         let stub = stubClosure(endpoint)
         guard case .never = stub else {
-            let url = destination ?? FileManager.default.temporaryDirectory.appendingPathComponent("dy_stub")
+            let url = destination ?? FileManager.default.temporaryDirectory.appendingPathComponent("dy.stub")
             let response = DyResponse(statusCode: 200, data: endpoint.sampleData, request: nil, httpResponse: nil)
             return Just((response, url))
                 .setFailureType(to: DyNetError.self)
