@@ -1,7 +1,7 @@
 import Foundation
 
 open class DyDataModel: DyModel, Codable {
-    override public init() {
+    override public nonisolated init() {
         super.init()
     }
 

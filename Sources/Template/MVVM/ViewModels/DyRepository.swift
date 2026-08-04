@@ -1,7 +1,7 @@
 import Foundation
 
 open class DyRepository {
-    public init() {}
+    public nonisolated init() {}
 
     open class func repository() -> DyRepository {
         DyRepository()
