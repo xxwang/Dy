@@ -122,7 +122,7 @@ public extension DyWrapper where Base: NSDecimalNumberHandler {
             return false
         }
         let result = self.calculate(operator: .divide, valueA: valueA, valueB: valueB, roundingMode: .down, scale: 10)
-        return result.dy_isInteger
+        return result.dy.isInteger
     }
 
     /// 执行向下取整的整数除法(即“地板除”)

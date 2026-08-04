@@ -220,8 +220,8 @@ public extension DyWrapper where Base == Date {
     ///   - timeZone: 指定时区,默认使用当前自动更新时区
     /// - Returns: 格式化后的字符串
     func toString(_ format: String = "yyyy-MM-dd HH:mm:ss",
-                     locale: Locale = .current,
-                     timeZone: TimeZone = .autoupdatingCurrent) -> String
+                  locale: Locale = .current,
+                  timeZone: TimeZone = .autoupdatingCurrent) -> String
     {
         let formatter = DateFormatter.dy.formatter(format: format, locale: locale, timeZone: timeZone)
         return formatter.string(from: base)
@@ -381,7 +381,7 @@ public extension DyWrapper where Base == Date {
     /// 判断与另一日期在指定组件上的绝对差值是否 ≤ 给定值
     func isWithin(_ value: Int, of component: Calendar.Component, comparedTo date: Date) -> Bool {
         guard let diff = self.componentDifference(to: date, in: component) else { return false }
-        return abs(diff) <= value
+        return Swift.abs(diff) <= value
     }
 }
 
@@ -455,7 +455,7 @@ public extension DyWrapper where Base == Date {
     /// - 注意：此方法会按当前时区偏移量调整绝对时间点(`timeIntervalSince1970`),并非仅调整显示
     ///   适用于将 API 返回的 UTC 字符串按本地时间展示(如 `"2024-01-01T08:00:00Z"` 显示为本地 16:00)
     /// - Returns: 本地时区下对应的日期对象(绝对时间点已偏移)
-    func asLocal() -> Date {
+    func toLocal() -> Date {
         let offset = base.timeZone.secondsFromGMT(for: base)
         return base.addingTimeInterval(TimeInterval(offset))
     }
@@ -465,7 +465,7 @@ public extension DyWrapper where Base == Date {
     /// - 注意：此方法会按当前时区偏移量调整绝对时间点(`timeIntervalSince1970`)
     ///   适用于将用户选择的本地日历时间(如“今天 10:00”)转换为 UTC 存储
     /// - Returns: UTC 时区下对应的日期对象(绝对时间点已偏移)
-    func asUTC() -> Date {
+    func toUTC() -> Date {
         let offset = base.timeZone.secondsFromGMT(for: base)
         return base.addingTimeInterval(-TimeInterval(offset))
     }
@@ -476,9 +476,9 @@ public extension DyWrapper where Base == Date {
     /// - Returns: 中文相对时间字符串
     func relativeString() -> String {
         let now = Date()
-        let interval = now.timeIntervalSince(self)
+        let interval = now.timeIntervalSince(base)
         let isPast = interval > 0
-        let absInterval = abs(interval)
+        let absInterval = Swift.abs(interval)
 
         if absInterval < 60 {
             return isPast ? "刚刚" : "马上"
@@ -493,13 +493,13 @@ public extension DyWrapper where Base == Date {
         }
 
         // 精确判断“昨天/今天/明天”
-        if dy_isToday() {
+        if self.isToday() {
             return "今天"
         }
-        if dy_isYesterday() {
+        if self.isYesterday() {
             return "昨天"
         }
-        if dy_isTomorrow() {
+        if self.isTomorrow() {
             return "明天"
         }
 
@@ -518,58 +518,58 @@ public extension DyWrapper where Base == Date {
 
     /// 获取星期几(1=星期日, 2=星期一, ..., 7=星期六)
     var weekday: Int {
-        base.calendar.component(.weekday, from: self)
+        base.calendar.component(.weekday, from: base)
     }
 
     /// 获取中文星期名称(如“星期一”)
     var weekdayString: String {
         let weekdays = ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"]
-        let idx = dy_weekday - 1
+        let idx = self.weekday - 1
         guard idx >= 0, idx < weekdays.count else { return "" }
         return weekdays[idx]
     }
 
     /// 获取英文月份全称(如 "January")
     var monthString: String {
-        self.dy_toString("MMMM")
+        self.toString("MMMM")
     }
 
     /// 获取本年第几周(ISO 周数,取决于日历配置)
     var weekOfYear: Int {
-        base.calendar.component(.weekOfYear, from: self)
+        base.calendar.component(.weekOfYear, from: base)
     }
 
     /// 获取本月第几周
     var weekOfMonth: Int {
-        base.calendar.component(.weekOfMonth, from: self)
+        base.calendar.component(.weekOfMonth, from: base)
     }
 
     /// 获取当前日期所属的季度(1–4)
     var quarter: Int {
-        (dy_month - 1) / 3 + 1
+        (self.month - 1) / 3 + 1
     }
 
     /// 获取当前日期所属哪个年代
     var era: Int {
-        return base.calendar.component(.era, from: self)
+        return base.calendar.component(.era, from: base)
     }
 }
 
 // MARK: - 日期计算
-public extension Date {
+public extension DyWrapper where Base == Date {
     /// 返回昨天的日期
     func yesterday() -> Date? {
-        base.calendar.date(byAdding: .day, value: -1, to: self)
+        base.calendar.date(byAdding: .day, value: -1, to: base)
     }
 
     /// 返回明天的日期
     func tomorrow() -> Date? {
-        base.calendar.date(byAdding: .day, value: 1, to: self)
+        base.calendar.date(byAdding: .day, value: 1, to: base)
     }
 
     /// 返回指定天数偏移后的日期
     func adding(days: Int) -> Date? {
-        base.calendar.date(byAdding: .day, value: days, to: self)
+        base.calendar.date(byAdding: .day, value: days, to: base)
     }
 
     /// 返回最接近的 N 分钟整点(向上或向下取整,以更近为准)
@@ -578,7 +578,7 @@ public extension Date {
     /// - Returns: 对齐后的日期(秒和纳秒归零)
     func nearest(minutes: Int) -> Date? {
         guard minutes > 0 else { return nil }
-        var comps = base.calendar.dateComponents([.year, .month, .day, .hour, .minute], from: self)
+        var comps = base.calendar.dateComponents([.year, .month, .day, .hour, .minute], from: base)
         guard let min = comps.minute else { return nil }
         let remainder = min % minutes
         let newMinute = remainder < minutes / 2 ? min - remainder : min + (minutes - remainder)
@@ -590,28 +590,28 @@ public extension Date {
 
     /// 最近的 5 分钟整点
     func nearest5Minutes() -> Date? {
-        dy_nearest(minutes: 5)
+        self.nearest(minutes: 5)
     }
 
     /// 最近的 10 分钟整点
     func nearest10Minutes() -> Date? {
-        dy_nearest(minutes: 10)
+        self.nearest(minutes: 10)
     }
 
     /// 最近的 15 分钟整点(一刻钟)
     func nearest15Minutes() -> Date? {
-        dy_nearest(minutes: 15)
+        self.nearest(minutes: 15)
     }
 
     /// 最近的 30 分钟整点
     func nearest30Minutes() -> Date? {
-        dy_nearest(minutes: 30)
+        self.nearest(minutes: 30)
     }
 
     /// 最近的整点小时(以 30 分钟为界：≤30 分 → 当前小时,>30 分 → 下一小时)
     func nearestHour() -> Date? {
-        let min = dy_minute
-        let base = base.calendar.startOfDay(for: self)
+        let min = self.minute
+        let base = base.calendar.startOfDay(for: base)
         return min < 30 ? base : base.calendar.date(byAdding: .hour, value: 1, to: base)
     }
 
@@ -622,22 +622,22 @@ public extension Date {
 
     /// 昨天
     static var yesterday: Date? {
-        Date().dy_yesterday()
+        Date().dy.yesterday()
     }
 
     /// 明天
     static var tomorrow: Date? {
-        Date().dy_tomorrow()
+        Date().dy.tomorrow()
     }
 
     /// 前天
     static var dayBeforeYesterday: Date? {
-        Date().dy_adding(days: -2)
+        Date().dy.adding(days: -2)
     }
 
     /// 后天
     static var dayAfterTomorrow: Date? {
-        Date().dy_adding(days: 2)
+        Date().dy.adding(days: 2)
     }
 
     /// 获取指定年月的天数
@@ -658,27 +658,27 @@ public extension Date {
     /// 获取当前月份的天数
     static var currentMonthDays: Int {
         let now = Date()
-        return dy_daysInMonth(year: now.dy_year, month: now.dy_month)
+        return self.daysInMonth(year: now.dy.year, month: now.dy.month)
     }
 
     /// 返回与另一日期相差的秒数(可正可负)
     func seconds(since date: Date) -> Double {
-        timeIntervalSince(date)
+        base.timeIntervalSince(date)
     }
 
     /// 返回与另一日期相差的分钟数
     func minutes(since date: Date) -> Double {
-        dy_seconds(since: date) / 60
+        self.seconds(since: date) / 60
     }
 
     /// 返回与另一日期相差的小时数
     func hours(since date: Date) -> Double {
-        dy_seconds(since: date) / 3600
+        self.seconds(since: date) / 3600
     }
 
     /// 返回与另一日期相差的天数
     func days(since date: Date) -> Double {
-        dy_seconds(since: date) / 86400
+        self.seconds(since: date) / 86400
     }
 
     /// 返回两个日期在指定日历单位下的整数差值(如完整天数、月数等)
@@ -688,13 +688,13 @@ public extension Date {
     ///   - unit: 日历单位(如 `.day`, `.month`)
     /// - Returns: 差值(可能为 `nil`,如跨时区异常)
     func componentDifference(to date: Date, in unit: Calendar.Component) -> Int? {
-        let components = base.calendar.dateComponents([unit], from: date, to: self)
+        let components = base.calendar.dateComponents([unit], from: date, to: base)
         return components.value(for: unit)
     }
 }
 
 // MARK: - 常用方法
-public extension Date {
+public extension DyWrapper where Base == Date {
     /// 日期名称的显示样式
     ///
     /// - note: 此枚举用于统一控制月份和星期名称的格式,
@@ -717,10 +717,10 @@ public extension Date {
         let formatter = DateFormatter()
         formatter.locale = Locale.current
         formatter.calendar = base.calendar
-        formatter.timeZone = dy_timeZone
+        formatter.timeZone = base.timeZone
 
         // 提取当前月份(1 = January, ..., 12 = December)
-        let month = base.calendar.component(.month, from: self)
+        let month = base.calendar.component(.month, from: base)
         guard month >= 1, month <= 12 else { return "???" }
         let index = month - 1
 
@@ -756,10 +756,10 @@ public extension Date {
         let formatter = DateFormatter()
         formatter.locale = Locale.current
         formatter.calendar = base.calendar
-        formatter.timeZone = dy_timeZone
+        formatter.timeZone = base.timeZone
 
         // weekday 组件：1=Sunday, 2=Monday, ..., 7=Saturday(由 calendar 决定)
-        let weekday = base.calendar.component(.weekday, from: self)
+        let weekday = base.calendar.component(.weekday, from: base)
         let index = weekday - 1
 
         // 根据样式选择对应的星期符号数组
@@ -781,7 +781,7 @@ public extension Date {
     ///
     /// - Returns: 新日期,若无法计算则返回 `nil`
     func adding(_ component: Calendar.Component, value: Int) -> Date? {
-        base.calendar.date(byAdding: component, value: value, to: self)
+        base.calendar.date(byAdding: component, value: value, to: base)
     }
 
     /// 将当前日期的指定组件设置为给定值(如将分钟设为 30)
@@ -802,20 +802,20 @@ public extension Date {
 
         // 如果有父单位,校验范围
         if let parent,
-           let range = base.calendar.range(of: component, in: parent, for: self),
+           let range = base.calendar.range(of: component, in: parent, for: base),
            !range.contains(value)
         {
             return nil // 提前失败
         }
 
         // 否则直接尝试设置(让系统判断)
-        return base.calendar.date(bySetting: component, value: value, of: self)
+        return base.calendar.date(bySetting: component, value: value, of: base)
     }
 
     /// 获取指定日历组件的起始时刻(如 `.day` → 00:00:00)
     func beginning(of component: Calendar.Component) -> Date? {
         if component == .day {
-            return base.calendar.startOfDay(for: self)
+            return base.calendar.startOfDay(for: base)
         }
 
         var neededComponents: Set<Calendar.Component> = []
@@ -829,14 +829,14 @@ public extension Date {
         default: return nil
         }
 
-        let comps = base.calendar.dateComponents(neededComponents, from: self)
+        let comps = base.calendar.dateComponents(neededComponents, from: base)
         return base.calendar.date(from: comps)
     }
 
     /// 获取指定日历组件的结束时刻(如 `.day` → 23:59:59)
     func end(of component: Calendar.Component) -> Date? {
-        guard let next = dy_adding(component, value: 1) else { return nil }
-        guard let beginningOfNext = next.dy_beginning(of: component) else { return nil }
-        return beginningOfNext.dy_adding(.second, value: -1)
+        guard let next = self.adding(component, value: 1) else { return nil }
+        guard let beginningOfNext = next.dy.beginning(of: component) else { return nil }
+        return beginningOfNext.dy.adding(.second, value: -1)
     }
 }

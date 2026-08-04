@@ -1,7 +1,9 @@
 import UIKit
 
+extension Data: DyExtension {}
+
 // MARK: - 属性
-public extension Data {
+public extension DyWrapper where Base == Data {
     /// 根据文件头(Magic Number)推断资源的文件扩展名
     ///
     /// - Returns: 推断出的扩展名(如 `.png`, `.jpeg`),若无法识别或数据为空则返回 `.default`
@@ -13,21 +15,21 @@ public extension Data {
     /// - Example:
     ///   ```swift
     ///   let pngHeader = Data([0x89, 0x50, 0x4E, 0x47])
-    ///   print(pngHeader.dy_extension)  // ".png"
+    ///   print(pngHeader.dy.extension)  // ".png"
     ///   ```
-    var dy_extension: String {
-        guard !isEmpty else { return ".default" }
+    var `extension`: String {
+        guard !base.isEmpty else { return ".default" }
 
-        switch self[0] {
-        case 0xFF where count >= 2 && self[1] == 0xD8:
+        switch base[0] {
+        case 0xFF where base.count >= 2 && base[1] == 0xD8:
             return ".jpeg"
-        case 0x89 where count >= 4 && self[1] == 0x50 && self[2] == 0x4E && self[3] == 0x47:
+        case 0x89 where base.count >= 4 && base[1] == 0x50 && base[2] == 0x4E && base[3] == 0x47:
             return ".png"
-        case 0x47 where count >= 3 && self[1] == 0x49 && self[2] == 0x46:
+        case 0x47 where base.count >= 3 && base[1] == 0x49 && base[2] == 0x46:
             return ".gif"
-        case 0x49 where count >= 2 && self[1] == 0x49: // "II" - little-endian TIFF
+        case 0x49 where base.count >= 2 && base[1] == 0x49: // "II" - little-endian TIFF
             return ".tiff"
-        case 0x4D where count >= 2 && self[1] == 0x4D: // "MM" - big-endian TIFF
+        case 0x4D where base.count >= 2 && base[1] == 0x4D: // "MM" - big-endian TIFF
             return ".tiff"
         default:
             return ".default"
@@ -36,17 +38,17 @@ public extension Data {
 }
 
 // MARK: - 类型转换
-public extension Data {
+public extension DyWrapper where Base == Data {
     /// 将 `Data` 转换为字节数组 `[UInt8]`
     ///
     /// - Returns: 由 `Data` 中每个字节组成的数组
     /// - Example:
     ///   ```swift
     ///   let data = Data([0x01, 0x02, 0x03])
-    ///   let bytes = data.dy_toBytes()  // [1, 2, 3]
+    ///   let bytes = data.dy.toBytes()  // [1, 2, 3]
     ///   ```
-    func dy_toBytes() -> [UInt8] {
-        return [UInt8](self)
+    func toBytes() -> [UInt8] {
+        return [UInt8](base)
     }
 
     /// 将 `Data` 转换为大写的十六进制字符串(每字节占两位)
@@ -55,33 +57,33 @@ public extension Data {
     /// - Example:
     ///   ```swift
     ///   let data = Data([0xA1, 0xB2])
-    ///   print(data.dy_toHexString())  // "A1B2"
+    ///   print(data.dy.toHexString())  // "A1B2"
     ///   ```
-    func dy_toHexString() -> String {
-        return map { String(format: "%02X", $0) }.joined()
+    func toHexString() -> String {
+        return base.map { String(format: "%02X", $0) }.joined()
     }
 
     /// 尝试将 `Data` 转换为 `UIImage`
     ///
     /// - Returns: 若数据是有效的图像格式(如 PNG、JPEG),则返回 `UIImage`;否则返回 `nil`
     /// - Note: 不包含缓存逻辑,频繁调用建议自行缓存结果
-    func dy_toUIImage() -> UIImage? {
-        return UIImage(data: self)
+    func toUIImage() -> UIImage? {
+        return UIImage(data: base)
     }
 }
 
 // MARK: - Base64 编码与解码
-public extension Data {
+public extension DyWrapper where Base == Data {
     /// 将当前 `Data` 进行 Base64 编码,返回编码后的 `Data`
     ///
     /// - Returns: Base64 编码结果(UTF-8 字符串的二进制形式),失败时返回 `nil`(极少见)
     /// - Example:
     ///   ```swift
     ///   let original = "Hello".data(using: .utf8)!
-    ///   let encoded = original.dy_base64Encoded()  // Data of "SGVsbG8="
+    ///   let encoded = original.dy.encodeBase64()  // Data of "SGVsbG8="
     ///   ```
-    func dy_base64Encoded() -> Data? {
-        return base64EncodedData()
+    func encodeBase64() -> Data? {
+        return base.base64EncodedData()
     }
 
     /// 将当前 `Data` 视为 Base64 编码的原始字节,尝试解码为原始数据
@@ -91,16 +93,16 @@ public extension Data {
     /// - Example(不推荐常规使用):
     ///   ```swift
     ///   let base64Bytes = "SGVsbG8=".data(using: .utf8)!
-    ///   let decoded = base64Bytes.dy_base64Decoded()  // Data of "Hello"
+    ///   let decoded = base64Bytes.dy.decodeBase64()  // Data of "Hello"
     ///   ```
     /// - Recommendation: 更常见的做法是 `Data(base64Encoded: base64String)`
-    func dy_base64Decoded() -> Data? {
-        return Data(base64Encoded: self)
+    func decodeBase64() -> Data? {
+        return Data(base64Encoded: base)
     }
 }
 
 // MARK: - 数据切片
-public extension Data {
+public extension DyWrapper where Base == Data {
     /// 从指定位置截取一段子数据
     ///
     /// - Parameters:
@@ -110,18 +112,18 @@ public extension Data {
     /// - Example:
     ///   ```swift
     ///   let data = Data([1, 2, 3, 4, 5])
-    ///   if let sub = data.dy_subData(start: 1, len: 3) {
+    ///   if let sub = data.dy.subData(start: 1, len: 3) {
     ///       print(sub.bytes)  // [2, 3, 4]
     ///   }
     ///   ```
-    func dy_subData(start: Int, len: Int) -> Data? {
-        guard start >= 0, len >= 0, start + len <= count else { return nil }
-        return subdata(in: start ..< (start + len))
+    func subData(start: Int, len: Int) -> Data? {
+        guard start >= 0, len >= 0, start + len <= base.count else { return nil }
+        return base.subdata(in: start ..< (start + len))
     }
 }
 
 // MARK: - 字符串与JSON转换
-public extension Data {
+public extension DyWrapper where Base == Data {
     /// 将 `Data` 按指定编码转换为字符串
     ///
     /// - Parameter encoding: 字符串编码,默认为 `.utf8`
@@ -129,10 +131,10 @@ public extension Data {
     /// - Example:
     ///   ```swift
     ///   let data = "Swift".data(using: .utf8)!
-    ///   let str = data.dy_toString()  // "Swift"
+    ///   let str = data.dy.toString()  // "Swift"
     ///   ```
-    func dy_toString(encoding: String.Encoding = .utf8) -> String? {
-        return String(data: self, encoding: encoding)
+    func toString(encoding: String.Encoding = .utf8) -> String? {
+        return String(data: base, encoding: encoding)
     }
 
     /// 将 `Data` 解析为 JSON 对象
@@ -148,11 +150,11 @@ public extension Data {
     ///   {"name": "Alice", "age": 30}
     ///   """.data(using: .utf8)!
     ///
-    ///   if let dict: [String: Any] = json.dy_toObject() {
+    ///   if let dict: [String: Any] = json.dy.toObject() {
     ///       print(dict["name"] as? String ?? "")  // "Alice"
     ///   }
     ///   ```
-    func dy_toObject<T>(for type: T.Type = [String: Any].self, options: JSONSerialization.ReadingOptions = []) -> T? {
-        return try? JSONSerialization.jsonObject(with: self, options: options) as? T
+    func toObject<T>(for type: T.Type = [String: Any].self, options: JSONSerialization.ReadingOptions = []) -> T? {
+        return try? JSONSerialization.jsonObject(with: base, options: options) as? T
     }
 }
