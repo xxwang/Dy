@@ -13,9 +13,18 @@ concurrency:
 jobs:
   build:
     name: Build
-    runs-on: macos-14
+    runs-on: macos-15
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
 
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
+
       - name: Build
-        run: swift build --target DyCore --target DyLogger --target DyNetwork --target DyComponent --target DyTemplate
+        run: |
+          xcodebuild build \
+            -scheme Dy-Package \
+            -sdk iphonesimulator \
+            -destination 'platform=iOS Simulator,name=iPhone 16,OS=latest' \
+            CODE_SIGNING_ALLOWED=NO
