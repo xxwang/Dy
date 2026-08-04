@@ -1,7 +1,8 @@
 import Foundation
 
-open nonisolated class DyRepository {
-    public init() {}
+@MainActor
+open class DyRepository {
+    public nonisolated init() {}
 
     open class func repository() -> DyRepository {
         DyRepository()

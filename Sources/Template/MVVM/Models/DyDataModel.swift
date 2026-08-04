@@ -1,7 +1,11 @@
 import Foundation
+import DyCore
 
-open nonisolated class DyDataModel: DyModel, Codable {
-    override public init() {
+extension DyModel: DyExtension {}
+
+@MainActor
+open class DyDataModel: DyModel, Codable {
+    override public nonisolated init() {
         super.init()
     }
 
