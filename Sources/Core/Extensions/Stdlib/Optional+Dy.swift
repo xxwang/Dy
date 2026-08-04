@@ -1,6 +1,5 @@
 import Foundation
 
-// MARK: - DyOptionalProtocol
 public protocol DyOptionalProtocol {
     associatedtype Wrapped
     var wrapped: Wrapped? { get }
@@ -19,6 +18,12 @@ infix operator ?=: AssignmentPrecedence
 infix operator ??=: AssignmentPrecedence
 
 public extension Optional {
+    /// 仅当右侧可选值非 `nil` 时,将其解包并赋值给左侧
+    ///
+    ///     var target: String? = nil
+    ///     let source: String? = "Hello"
+    ///     target ?= source  // target = "Hello"
+    ///     target ?= nil     // 保持不变
     @inlinable
     static func ?= (lhs: inout Self, rhs: Self) {
         if let rhsValue = rhs {
@@ -26,6 +31,11 @@ public extension Optional {
         }
     }
 
+    /// 仅当左侧为 `nil` 时,使用右侧闭包的结果进行赋值（惰性求值）
+    ///
+    ///     var cache: Int? = nil
+    ///     cache ??= expensiveComputation() // 调用
+    ///     cache ??= anotherComputation()   // 跳过,已有值
     @inlinable
     static func ??= (lhs: inout Self, rhs: @autoclosure () -> Self) {
         if lhs == nil {
@@ -36,21 +46,29 @@ public extension Optional {
 
 // MARK: - 可选 RawRepresentable 类型与原始值的比较重载
 public extension Optional where Wrapped: RawRepresentable, Wrapped.RawValue: Equatable {
+    /// 允许直接比较 `Optional<Enum>` 与 `Optional<RawValue>` 是否相等
+    ///
+    ///     enum Status: String { case ok, fail }
+    ///     let s: Status? = .ok
+    ///     s == "ok"  // true
     @inlinable
     static func == (lhs: Self, rhs: Wrapped.RawValue?) -> Bool {
         lhs?.rawValue == rhs
     }
 
+    /// 允许直接比较 `Optional<RawValue>` 与 `Optional<Enum>` 是否相等
     @inlinable
     static func == (lhs: Wrapped.RawValue?, rhs: Self) -> Bool {
         lhs == rhs?.rawValue
     }
 
+    /// 允许直接比较 `Optional<Enum>` 与 `Optional<RawValue>` 是否不相等
     @inlinable
     static func != (lhs: Self, rhs: Wrapped.RawValue?) -> Bool {
         lhs?.rawValue != rhs
     }
 
+    /// 允许直接比较 `Optional<RawValue>` 与 `Optional<Enum>` 是否不相等
     @inlinable
     static func != (lhs: Wrapped.RawValue?, rhs: Self) -> Bool {
         lhs != rhs?.rawValue
@@ -72,6 +90,14 @@ extension DyWrapper where Base: DyOptionalProtocol {
     /// 判断可选值是否不为 nil
     var isNotNil: Bool {
         return !self.isNil
+    }
+}
+
+// MARK: - 可选集合的空值判断
+extension DyWrapper where Base: DyOptionalProtocol, Base.Wrapped: Collection {
+    /// 判断可选集合是否为 nil 或内容为空
+    var isNilOrEmpty: Bool {
+        base.wrapped?.isEmpty ?? true
     }
 }
 
@@ -110,13 +136,5 @@ extension DyWrapper where Base: DyOptionalProtocol {
     func takeIf(_ predicate: (Base.Wrapped) -> Bool) -> Base.Wrapped? {
         guard let value = base.wrapped, predicate(value) else { return nil }
         return value
-    }
-}
-
-// MARK: - 可选集合的空值判断
-extension DyWrapper where Base: DyOptionalProtocol, Base.Wrapped: Collection {
-    /// 判断可选集合是否为 nil 或内容为空
-    var isNilOrEmpty: Bool {
-        base.wrapped?.isEmpty ?? true
     }
 }

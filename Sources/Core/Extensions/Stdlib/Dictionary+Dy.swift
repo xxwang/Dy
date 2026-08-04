@@ -76,17 +76,6 @@ public extension [String: Any] {
     }
 }
 
-// MARK: - Value: Equatable
-public extension Dictionary where Value: Equatable {
-    /// 获取所有等于指定值的键
-    ///
-    /// - Parameter value: 要匹配的值
-    /// - Returns: 所有对应键的数组
-    func dy_keys(forValue value: Value) -> [Key] {
-        compactMap { k, v in v == value ? k : nil }
-    }
-}
-
 // MARK: - 运算符重载
 public extension Dictionary {
     /// 合并两个字典（右侧值优先）
@@ -131,89 +120,15 @@ public extension Dictionary {
 }
 
 // MARK: - 通用字典操作
-public extension Dictionary {
-    /// 判断字典是否包含指定键
-    ///
-    /// - Parameter key: 要检查的键
-    /// - Returns: 若存在该键则返回 `true`,否则 `false`
-    func dy_contains(key: Key) -> Bool {
-        self[key] != nil
-    }
-
-    /// 从字典中移除多个指定的键
-    ///
-    /// - Parameter keys: 要移除的键序列（如数组、Set 等）
-    mutating func dy_remove(keys: some Sequence<Key>) {
-        for key in keys {
-            self.removeValue(forKey: key)
-        }
-    }
-
-    /// 随机移除一个键值对,并返回被移除的值
-    ///
-    /// - Returns: 被移除的值;若字典为空则返回 `nil`
-    @discardableResult
-    mutating func dy_removeRandomValue() -> Value? {
-        guard let key = keys.randomElement() else { return nil }
-        return self.removeValue(forKey: key)
-    }
-
-    /// 将字典的每个键值对映射为新类型的元素,并返回数组
-    ///
-    /// - Parameter transform: 接收 `(Key, Value)` 并返回新元素的转换闭包
-    /// - Returns: 转换后的新数组
-    /// - Throws: 若 `transform` 抛出错误,则本方法也会抛出相同错误
-    func dy_mapToArray<T>(_ transform: (Key, Value) throws -> T) rethrows -> [T] {
-        try map(transform)
-    }
-
-    /// 将字典映射为新类型的字典（键和值均可变）
-    ///
-    /// - Parameter transform: 接收 `(Key, Value)` 并返回 `(K, V)` 元组的闭包
-    /// - Returns: 转换后的新字典
-    /// - Throws: 若 `transform` 抛出错误,则本方法也会抛出相同错误
-    /// - Note: 若转换后存在重复键，后者覆盖前者（类似 `uniquingKeysWith`）
-    func dy_mapToDictionary<K: Hashable, V>(
-        _ transform: (_ key: Key, _ value: Value) throws -> (K, V)
-    ) rethrows -> [K: V] {
-        let pairs: [(K, V)] = try self.map(transform)
-        return Swift.Dictionary(pairs, uniquingKeysWith: { _, latest in latest })
-    }
-
-    /// 过滤并映射字典为新字典,支持跳过某些元素（返回 `nil`）
-    ///
-    /// - Parameter transform: 接收 `(Key, Value)` 并返回可选 `(K, V)?` 的闭包
-    /// - Returns: 转换后的新字典（跳过返回 `nil` 的项）
-    /// - Throws: 若 `transform` 抛出错误,则本方法也会抛出相同错误
-    /// - Note: 结果中不会包含 `nil` 映射项,且要求键唯一
-    func dy_compactMapToDictionary<K: Hashable, V>(
-        _ transform: (_ key: Key, _ value: Value) throws -> (K, V)?
-    ) rethrows -> [K: V] {
-        let pairs: [(K, V)] = try self.compactMap(transform)
-        return Swift.Dictionary(pairs, uniquingKeysWith: { _, new in new })
-    }
-
-    /// 仅保留指定键构成的新字典
-    ///
-    /// - Parameter keys: 要保留的键数组
-    /// - Returns: 仅包含这些键（若存在）的新字典
-    func dy_filter(keys: [Key]) -> [Key: Value] {
-        var result: [Key: Value] = [:]
-        for key in keys {
-            if let value = self[key] {
-                result[key] = value
-            }
-        }
-        return result
-    }
+public extension DyWrapper where Base == Dictionary<String, Any> {
 
     /// 尝试将字典转为 `JSON Data`（要求 `Key == String`）
     ///
     /// - Note: 仅当 `Key` 为 `String` 且所有值均为 JSON 兼容类型（如 `String`, `Number`, `Bool`, `Array`, `Dictionary`, `NSNull`）时有效
     /// - Returns: 成功则返回 `Data`,否则返回 `nil`
     /// - Warning: 若 `Key` 不是 `String`,会触发 `assertionFailure` 并返回 `nil`
-    func dy_toData() -> Data? {
-        guard Key.self == String.self else {
+    func toData() -> Data? {
+        guard Base.Key.self == String.self else {
             assertionFailure("data requires Key == String")
             return nil
         }
