@@ -1,11 +1,14 @@
 import CoreLocation
 
 // MARK: - 方法
-public extension CLGeocoder {
+private extension CLGeocoder {
     /// 正在进行的地理编码实例集合,用于在回调结束前保持实例存活(避免提前释放)
     /// 同时避免复用同一实例并发请求(Apple 明确禁止单实例并发地理编码)
-    private static var dy_activeGeocoders: Set<CLGeocoder> = []
+    static var activeGeocoders: Set<CLGeocoder> = []
+}
 
+// MARK: - 方法
+public extension DyWrapper where Base == CLGeocoder {
     /// 反向地理编码：将经纬度转换为地址信息
     ///
     /// - Parameters:
@@ -19,20 +22,20 @@ public extension CLGeocoder {
     /// - Example:
     ///   ```swift
     ///   let loc = CLLocation(latitude: 39.9042, longitude: 116.4074)
-    ///   CLGeocoder.dy_reverseGeocodeLocation(loc) { marks, error in
+    ///   CLGeocoder.dy.reverseGeocodeLocation(loc) { marks, error in
     ///       if let name = marks?.first?.name {
     ///           print("地点: \(name)")
     ///       }
     ///   }
     ///   ```
-    static func dy_reverseGeocodeLocation(
+    static func reverseGeocodeLocation(
         _ location: CLLocation,
         completionHandler: @escaping CLGeocodeCompletionHandler
     ) {
         let geocoder = CLGeocoder()
-        dy_activeGeocoders.insert(geocoder)
+        Base.activeGeocoders.insert(geocoder)
         geocoder.reverseGeocodeLocation(location) { placemarks, error in
-            defer { Self.dy_activeGeocoders.remove(geocoder) }
+            defer { Base.activeGeocoders.remove(geocoder) }
             completionHandler(placemarks, error)
         }
     }
@@ -45,20 +48,20 @@ public extension CLGeocoder {
     ///
     /// - Example:
     ///   ```swift
-    ///   CLGeocoder.dy_geocodeAddressString("北京市") { marks, error in
+    ///   CLGeocoder.dy.geocodeAddressString("北京市") { marks, error in
     ///       if let coord = marks?.first?.location?.coordinate {
     ///           print("坐标: \(coord.latitude), \(coord.longitude)")
     ///       }
     ///   }
     ///   ```
-    static func dy_geocodeAddressString(
+    static func geocodeAddressString(
         _ addressString: String,
         completionHandler: @escaping CLGeocodeCompletionHandler
     ) {
         let geocoder = CLGeocoder()
-        dy_activeGeocoders.insert(geocoder)
+        Base.activeGeocoders.insert(geocoder)
         geocoder.geocodeAddressString(addressString) { placemarks, error in
-            defer { Self.dy_activeGeocoders.remove(geocoder) }
+            defer { Base.activeGeocoders.remove(geocoder) }
             completionHandler(placemarks, error)
         }
     }

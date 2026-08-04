@@ -7,10 +7,10 @@ open class DyAlertView: UIView {
     public var cancellables = Set<AnyCancellable>()
 
     /// 遮罩层
-    private lazy var shadeView = UIView.dy_view()
+    private lazy var shadeView = UIView.view()
 
     /// 内容容器
-    lazy var contentContainer = UIView.dy_view()
+    lazy var contentContainer = UIView.view()
 
     override public init(frame: CGRect) {
         super.init(frame: frame)
@@ -35,7 +35,7 @@ public extension DyAlertView {
         self.shadeView.frame = self.bounds
 
         // 设置内容容器中心点
-        self.contentContainer.center = self.dy_middle
+        self.contentContainer.center = self.dy.middle
     }
 }
 
@@ -43,12 +43,12 @@ public extension DyAlertView {
 @objc extension DyAlertView {
     /// 显示弹窗
     open func show(in container: UIView? = nil) {
-        let container = container ?? UIWindow.dy_keyWindow ?? UIWindow.dy_windows.first
+        let container = container ?? UIWindow.dy.keyWindow ?? UIWindow.dy.windows.first
         guard let container else { return }
         container.addSubview(self)
 
         // 设置约束填充父视图
-        self.dy_fillSuperview()
+        self.dy.fillSuperview()
 
         // 设置初始化状态
         self.shadeView.alpha = 0.01
@@ -81,27 +81,35 @@ public extension DyAlertView {
     /// 设置UI (子类重写该方法)在子类中应该在该方法中,设置`contentContainer`的`size`
     open func setupUI() {
         // 配置弹窗基础属性
-        self.dy_addSubviews([
-            self.shadeView,
-            self.contentContainer,
-        ])
+        self
+            .dy
+            .addSubviews([
+                self.shadeView,
+                self.contentContainer,
+            ])
 
         // 配置遮罩层初始状态
-        self.shadeView.dy_frame(self.bounds)
-            .dy_backgroundColor(self.shadeBackgroundColor())
-            .dy_isUserInteractionEnabled(self.isTapOutsideToDismiss())
+        self.shadeView
+            .dy
+            .frame(self.bounds)
+            .backgroundColor(self.shadeBackgroundColor())
+            .isUserInteractionEnabled(self.isTapOutsideToDismiss())
 
         // 配置内容容器
-        self.contentContainer.dy_backgroundColor(self.contentContainerBackgroundColor())
-            .dy_maskedCorners(.dy_all)
-            .dy_cornerRadius(self.contentContainerCornerRadius())
-            .dy_masksToBounds(true)
+        self.contentContainer
+            .dy
+            .backgroundColor(self.contentContainerBackgroundColor())
+            .maskedCorners(.dy.all)
+            .cornerRadius(self.contentContainerCornerRadius())
+            .masksToBounds(true)
 
         // 设置遮罩点击手势
-        self.shadeView.dy_onTapGestureRecognizer { [weak self] tap in
-            guard let self, self.isTapOutsideToDismiss() else { return }
-            self.dismiss()
-        }
+        self.shadeView
+            .dy
+            .onTapGestureRecognizer { [weak self] tap in
+                guard let self, self.isTapOutsideToDismiss() else { return }
+                self.dismiss()
+            }
     }
 }
 

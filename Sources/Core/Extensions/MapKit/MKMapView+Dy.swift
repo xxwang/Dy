@@ -1,25 +1,13 @@
 import MapKit
 
-// MARK: - 注册与复用
-public extension MKMapView {
-    /// 注册自定义注解视图类,使用类名作为重用标识符
-    ///
-    /// - Parameter annotationViewClass: 继承自 `MKAnnotationView` 的类型
-    ///
-    /// - Example:
-    ///   ```swift
-    ///   mapView.dy_register(annotationViewWithClass: CustomPinView.self)
-    ///   ```
-    func dy_register<T: MKAnnotationView>(annotationViewWithClass annotationViewClass: T.Type) {
-        self.register(T.self, forAnnotationViewWithReuseIdentifier: String(describing: T.self))
-    }
-
+// MARK: - 复用
+public extension DyWrapper where Base: MKMapView {
     /// 尝试从重用队列中获取指定类型的注解视图(无关联注解)
     ///
     /// - Returns: 可重用视图,若无可重用项则返回 `nil`
     /// - Note: 适用于动态创建视图的场景,但通常应使用带 `for:` 的版本
-    func dy_dequeueReusableAnnotationView<T: MKAnnotationView>(withClass annotationViewClass: T.Type) -> T? {
-        self.dequeueReusableAnnotationView(withIdentifier: String(describing: T.self)) as? T
+    func dequeueReusableAnnotationView<T: MKAnnotationView>(withClass annotationViewClass: T.Type) -> T? {
+        base.dequeueReusableAnnotationView(withIdentifier: String(describing: T.self)) as? T
     }
 
     /// 从重用队列中获取指定类型的注解视图,并绑定到给定注解
@@ -33,15 +21,15 @@ public extension MKMapView {
     ///   ```swift
     ///   func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
     ///       guard !(annotation is MKUserLocation) else { return nil }
-    ///       return mapView.dy_dequeueReusableAnnotationView(withClass: CustomPinView.self, for: annotation)
+    ///       return mapView.dy.dequeueReusableAnnotationView(withClass: CustomPinView.self, for: annotation)
     ///   }
     ///   ```
-    func dy_dequeueReusableAnnotationView<T: MKAnnotationView>(
+    func dequeueReusableAnnotationView<T: MKAnnotationView>(
         withClass annotationViewClass: T.Type,
         for annotation: MKAnnotation
     ) -> T {
         // 强制转换是安全的,前提是已正确注册
-        guard let view = dequeueReusableAnnotationView(
+        guard let view = base.dequeueReusableAnnotationView(
             withIdentifier: String(describing: T.self),
             for: annotation
         ) as? T else {
@@ -53,7 +41,7 @@ public extension MKMapView {
 }
 
 // MARK: - 缩放控制
-public extension MKMapView {
+public extension DyWrapper where Base: MKMapView {
     /// 缩放地图以显示一组坐标,并添加指定边距
     ///
     /// - Parameters:
@@ -66,7 +54,7 @@ public extension MKMapView {
     ///   - 若仅有一个点,使用 `MKCoordinateRegion` 以米为单位设置范围
     ///   - 若有多个点,使用 `MKPolygon.boundingMapRect` 计算包围矩形
     ///   - `不支持跨越国际日期变更线(±180°)的坐标集合`
-    func dy_zoom(
+    func zoom(
         to coordinates: [CLLocationCoordinate2D],
         meter: Double,
         edgePadding: UIEdgeInsets = .zero,
@@ -80,11 +68,11 @@ public extension MKMapView {
                 latitudinalMeters: meter,
                 longitudinalMeters: meter
             )
-            setRegion(region, animated: animated)
+            base.setRegion(region, animated: animated)
         } else {
             // 使用 MKPolygon 自动计算 boundingMapRect
             let polygon = MKPolygon(coordinates: coordinates, count: coordinates.count)
-            setVisibleMapRect(polygon.boundingMapRect, edgePadding: edgePadding, animated: animated)
+            base.setVisibleMapRect(polygon.boundingMapRect, edgePadding: edgePadding, animated: animated)
         }
     }
 
@@ -96,35 +84,35 @@ public extension MKMapView {
     ///   - animated: 是否启用动画
     ///
     /// - Note: 依赖 `MKMapRect.regionToMapRect(_:)` 扩展(需确保已实现)
-    func dy_zoom(to region: MKCoordinateRegion, edgePadding: UIEdgeInsets = .zero, animated: Bool = true) {
-        let mapRect = MKMapRect.dy_regionToMapRect(region)
-        setVisibleMapRect(mapRect, edgePadding: edgePadding, animated: animated)
+    func zoom(to region: MKCoordinateRegion, edgePadding: UIEdgeInsets = .zero, animated: Bool = true) {
+        let mapRect = MKMapRect.dy.regionToMapRect(region)
+        base.setVisibleMapRect(mapRect, edgePadding: edgePadding, animated: animated)
     }
 }
 
 // MARK: - 工具方法
-public extension MKMapView {
+public extension DyWrapper where Base: MKMapView {
     /// 添加多个注解,可选择是否先清除现有注解
-    func dy_addAnnotations(_ annotations: [MKAnnotation], clearExisting: Bool = false) {
+    func addAnnotations(_ annotations: [MKAnnotation], clearExisting: Bool = false) {
         if clearExisting {
-            self.removeAnnotations(self.annotations)
+            base.removeAnnotations(base.annotations)
         }
-        self.addAnnotations(annotations)
+        base.addAnnotations(annotations)
     }
 
     /// 将视图中的点转换为地理坐标
-    func dy_convertPointToCoordinate(_ point: CGPoint) -> CLLocationCoordinate2D {
-        self.convert(point, toCoordinateFrom: self)
+    func convertPointToCoordinate(_ point: CGPoint) -> CLLocationCoordinate2D {
+        base.convert(point, toCoordinateFrom: base)
     }
 
     /// 将地理坐标转换为视图中的点
-    func dy_convertCoordinateToPoint(_ coordinate: CLLocationCoordinate2D) -> CGPoint {
-        self.convert(coordinate, toPointTo: self)
+    func convertCoordinateToPoint(_ coordinate: CLLocationCoordinate2D) -> CGPoint {
+        base.convert(coordinate, toPointTo: base)
     }
 
     /// 判断某坐标是否在当前可见地图区域内
-    func dy_isCoordinateVisible(_ coordinate: CLLocationCoordinate2D) -> Bool {
+    func isCoordinateVisible(_ coordinate: CLLocationCoordinate2D) -> Bool {
         let mapPoint = MKMapPoint(coordinate)
-        return self.visibleMapRect.contains(mapPoint)
+        return base.visibleMapRect.contains(mapPoint)
     }
 }

@@ -1,148 +1,5 @@
 import UIKit
 
-// MARK: - 属性
-public extension UILabel {
-    /// 获取 `UILabel` 在当前约束下实际使用的字体大小(考虑 `adjustsFontSizeToFitWidth`)
-    ///
-    /// - 注意: 此属性应在布局完成后(如 `layoutSubviews` 后)调用,否则 `bounds` 可能为零
-    /// - 原理: 通过比较文本所需宽度与 label 可用宽度,结合 `minimumScaleFactor` 计算缩放比例
-    ///
-    /// - Example:
-    ///   ```swift
-    ///   label.adjustsFontSizeToFitWidth = true
-    ///   label.minimumScaleFactor = 0.5
-    ///   print("实际字号: \(label.dy_actualFontSize)")
-    ///   ```
-    var dy_actualFontSize: CGFloat {
-        // 快速返回：未启用自动缩放、无文本、无字体或容器宽度无效
-        guard adjustsFontSizeToFitWidth,
-              let text = self.text,
-              !text.isEmpty,
-              bounds.width > 0,
-              let font = self.font
-        else {
-            return self.font?.pointSize ?? 0
-        }
-
-        // 计算原始文本在当前字体下的单行宽度
-        let originalWidth = (text as NSString).boundingRect(
-            with: CGSize(width: .greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude),
-            options: [.usesLineFragmentOrigin, .usesFontLeading],
-            attributes: [.font: font],
-            context: nil
-        ).width
-
-        // 若原始宽度未超出容器,使用原始字号
-        guard originalWidth > bounds.width else {
-            return font.pointSize
-        }
-
-        // 计算缩放比例,并受 minimumScaleFactor 限制
-        let scale = bounds.width / originalWidth
-        let clampedScale = max(minimumScaleFactor, scale)
-        return font.pointSize * clampedScale
-    }
-
-    /// 根据当前文本、字体、宽度和行数限制,计算内容所需的高度
-    ///
-    /// - 注意: 此方法考虑了 `numberOfLines`、`lineBreakMode`、`attributedText/text` 优先级
-    /// - 推荐在 label 布局完成后调用(确保 `bounds.width` 有效)
-    ///
-    /// - Example:
-    ///   ```swift
-    ///   label.frame.size.width = 200
-    ///   label.numberOfLines = 0
-    ///   print("所需高度: \(label.dy_requiredHeight)")
-    ///   ```
-    var dy_requiredHeight: CGFloat {
-        guard bounds.width > 0 else { return 0 }
-
-        let textToUse = attributedText ?? (text.map { NSAttributedString(string: $0) })
-        guard let text = textToUse, text.length > 0 else { return 0 }
-
-        let constraintBox = CGSize(width: bounds.width, height: .greatestFiniteMagnitude)
-        let options: NSStringDrawingOptions = [.usesLineFragmentOrigin, .usesFontLeading]
-
-        var boundingRect = text.boundingRect(
-            with: constraintBox,
-            options: options,
-            context: nil
-        )
-
-        // 如果 numberOfLines > 0,限制最大行数
-        if numberOfLines > 0 {
-            let lineHeight = font.lineHeight
-            let maxHeight = CGFloat(numberOfLines) * lineHeight
-            if boundingRect.height > maxHeight {
-                boundingRect.size.height = ceil(maxHeight)
-            }
-        }
-
-        return ceil(boundingRect.height)
-    }
-
-    /// 将 `UILabel` 的文本按当前宽度和字体拆分为多行字符串数组
-    ///
-    /// - 注意: 依赖外部扩展 `String.splitIntoLines1(forWidth:usingFont:)`
-    /// - 若该扩展不存在,此属性将返回空数组
-    ///
-    /// - Example:
-    ///   ```swift
-    ///   label.frame.size.width = 100
-    ///   print("所有行: \(label.dy_allTextLines)")
-    ///   ```
-    var dy_allTextLines: [String] {
-        guard let text = self.text,
-              let font = self.font,
-              bounds.width > 0
-        else {
-            return []
-        }
-        return text.dy_wrappedLines(maxWidth: bounds.width, font: font)
-    }
-
-    /// 获取第一行显示的文本内容(若存在)
-    ///
-    /// - Returns: 第一行字符串,若无内容则返回 `nil`
-    var dy_firstLine: String? {
-        self.dy_allTextLines.first
-    }
-
-    /// 判断当前文本是否因空间不足而被截断(省略号或隐藏)
-    ///
-    /// - 注意: 使用 Core Text 精确检测,适用于单行/多行、任意 `lineBreakMode`
-    /// - 性能开销中等,避免在 `cellForRow` 或动画中高频调用
-    var dy_isTextTruncated: Bool {
-        // 边界检查
-        guard let text = self.text,
-              !text.isEmpty,
-              let font = self.font,
-              bounds.width > 0,
-              bounds.height > 0
-        else {
-            return false
-        }
-
-        // 构建富文本(优先使用 attributedText)
-        let displayText = self.attributedText ?? NSAttributedString(string: text, attributes: [.font: font])
-
-        // 创建 framesetter
-        let framesetter = CTFramesetterCreateWithAttributedString(displayText as CFAttributedString)
-
-        // 创建限制路径(宽高由 label bounds 决定)
-        let path = CGPath(rect: CGRect(x: 0, y: 0, width: bounds.width, height: bounds.height), transform: nil)
-
-        // 创建 frame(注意：range 设为 (0, 0) 表示使用全部文本)
-        let frame = CTFramesetterCreateFrame(framesetter, CFRange(location: 0, length: 0), path, nil)
-
-        // 获取可见范围：直接调用,无额外参数
-        let visibleRange = CTFrameGetVisibleStringRange(frame)
-
-        // 如果可见字符数 < 总字符数,则被截断
-        return visibleRange.length < displayText.length
-    }
-}
-
 // MARK: - 构造方法
 public extension UILabel {
     /// 使用纯文本创建 UILabel
@@ -174,8 +31,151 @@ public extension UILabel {
     }
 }
 
+// MARK: - 属性
+public extension DyWrapper where Base: UILabel {
+    /// 获取 `UILabel` 在当前约束下实际使用的字体大小(考虑 `adjustsFontSizeToFitWidth`)
+    ///
+    /// - 注意: 此属性应在布局完成后(如 `layoutSubviews` 后)调用,否则 `bounds` 可能为零
+    /// - 原理: 通过比较文本所需宽度与 label 可用宽度,结合 `minimumScaleFactor` 计算缩放比例
+    ///
+    /// - Example:
+    ///   ```swift
+    ///   label.adjustsFontSizeToFitWidth = true
+    ///   label.minimumScaleFactor = 0.5
+    ///   print("实际字号: \(label.dy.actualFontSize)")
+    ///   ```
+    var actualFontSize: CGFloat {
+        // 快速返回：未启用自动缩放、无文本、无字体或容器宽度无效
+        guard base.adjustsFontSizeToFitWidth,
+              let text = base.text,
+              !text.isEmpty,
+              base.bounds.width > 0,
+              let font = base.font
+        else {
+            return base.font?.pointSize ?? 0
+        }
+
+        // 计算原始文本在当前字体下的单行宽度
+        let originalWidth = (text as NSString).boundingRect(
+            with: CGSize(width: .greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude),
+            options: [.usesLineFragmentOrigin, .usesFontLeading],
+            attributes: [.font: font],
+            context: nil
+        ).width
+
+        // 若原始宽度未超出容器,使用原始字号
+        guard originalWidth > base.bounds.width else {
+            return font.pointSize
+        }
+
+        // 计算缩放比例,并受 minimumScaleFactor 限制
+        let scale = base.bounds.width / originalWidth
+        let clampedScale = max(base.minimumScaleFactor, scale)
+        return font.pointSize * clampedScale
+    }
+
+    /// 根据当前文本、字体、宽度和行数限制,计算内容所需的高度
+    ///
+    /// - 注意: 此方法考虑了 `numberOfLines`、`lineBreakMode`、`attributedText/text` 优先级
+    /// - 推荐在 label 布局完成后调用(确保 `bounds.width` 有效)
+    ///
+    /// - Example:
+    ///   ```swift
+    ///   label.frame.size.width = 200
+    ///   label.numberOfLines = 0
+    ///   print("所需高度: \(label.dy.requiredHeight)")
+    ///   ```
+    var requiredHeight: CGFloat {
+        guard base.bounds.width > 0 else { return 0 }
+
+        let textToUse = base.attributedText ?? (base.text.map { NSAttributedString(string: $0) })
+        guard let text = textToUse, text.length > 0 else { return 0 }
+
+        let constraintBox = CGSize(width: base.bounds.width, height: .greatestFiniteMagnitude)
+        let options: NSStringDrawingOptions = [.usesLineFragmentOrigin, .usesFontLeading]
+
+        var boundingRect = base.text?.boundingRect(
+            with: constraintBox,
+            options: options,
+            context: nil
+        ) ?? .zero
+
+        // 如果 numberOfLines > 0,限制最大行数
+        if base.numberOfLines > 0 {
+            let lineHeight = base.font.lineHeight
+            let maxHeight = CGFloat(base.numberOfLines) * lineHeight
+            if boundingRect.height > maxHeight {
+                boundingRect.size.height = maxHeight.dy.ceil()
+            }
+        }
+
+        return boundingRect.height.dy.ceil()
+    }
+
+    /// 将 `UILabel` 的文本按当前宽度和字体拆分为多行字符串数组
+    ///
+    /// - 注意: 依赖外部扩展 `String.splitIntoLines1(forWidth:usingFont:)`
+    /// - 若该扩展不存在,此属性将返回空数组
+    ///
+    /// - Example:
+    ///   ```swift
+    ///   label.frame.size.width = 100
+    ///   print("所有行: \(label.dy.allTextLines)")
+    ///   ```
+    var allTextLines: [String] {
+        guard let text = base.text,
+              let font = base.font,
+              base.bounds.width > 0
+        else {
+            return []
+        }
+        return text.dy.wrappedLines(maxWidth: base.bounds.width, font: font)
+    }
+
+    /// 获取第一行显示的文本内容(若存在)
+    ///
+    /// - Returns: 第一行字符串,若无内容则返回 `nil`
+    var firstLine: String? {
+        self.allTextLines.first
+    }
+
+    /// 判断当前文本是否因空间不足而被截断(省略号或隐藏)
+    ///
+    /// - 注意: 使用 Core Text 精确检测,适用于单行/多行、任意 `lineBreakMode`
+    /// - 性能开销中等,避免在 `cellForRow` 或动画中高频调用
+    var isTextTruncated: Bool {
+        // 边界检查
+        guard let text = base.text,
+              !text.isEmpty,
+              let font = base.font,
+              base.bounds.width > 0,
+              base.bounds.height > 0
+        else {
+            return false
+        }
+
+        // 构建富文本(优先使用 attributedText)
+        let displayText = base.attributedText ?? NSAttributedString(string: text, attributes: [.font: font])
+
+        // 创建 framesetter
+        let framesetter = CTFramesetterCreateWithAttributedString(displayText as CFAttributedString)
+
+        // 创建限制路径(宽高由 label bounds 决定)
+        let path = CGPath(rect: CGRect(x: 0, y: 0, width: base.bounds.width, height: base.bounds.height), transform: nil)
+
+        // 创建 frame(注意：range 设为 (0, 0) 表示使用全部文本)
+        let frame = CTFramesetterCreateFrame(framesetter, CFRange(location: 0, length: 0), path, nil)
+
+        // 获取可见范围：直接调用,无额外参数
+        let visibleRange = CTFrameGetVisibleStringRange(frame)
+
+        // 如果可见字符数 < 总字符数,则被截断
+        return visibleRange.length < displayText.length
+    }
+}
+
 // MARK: - UILabel 内容尺寸计算
-public extension UILabel {
+public extension DyWrapper where Base: UILabel {
     /// 根据当前文本内容(普通或富文本)和指定最大宽度,计算所需尺寸
     ///
     /// - Parameter maxWidth: 最大允许宽度,默认为 `.greatestFiniteMagnitude`
@@ -188,26 +188,26 @@ public extension UILabel {
     /// - Example:
     ///   ```swift
     ///   label.text = "Hello World"
-    ///   let size = label.dy_size(maxWidth: 200)
+    ///   let size = label.dy.size(maxWidth: 200)
     ///   ```
-    func dy_size(maxWidth: CGFloat = .greatestFiniteMagnitude) -> CGSize {
-        return if self.attributedText != nil {
-            self.attributedText?.dy_size(maxWidth: maxWidth) ?? .zero
+    func size(maxWidth: CGFloat = .greatestFiniteMagnitude) -> CGSize {
+        return if base.attributedText != nil {
+            base.attributedText?.dy.size(maxWidth: maxWidth) ?? .zero
         } else {
-            self.text?.dy_size(maxWidth: maxWidth, font: self.font) ?? .zero
+            base.text?.dy.size(maxWidth: maxWidth, font: base.font) ?? .zero
         }
     }
 
     /// 根据内容计算`CGSize`
     /// - Parameter maxWidth: 最大宽度
     /// - Returns: `CGSize`
-    func dy_sizeThatFits(maxWidth: CGFloat) -> CGSize {
-        return self.sizeThatFits(CGSize(width: maxWidth, height: CGFloat.greatestFiniteMagnitude))
+    func sizeThatFits(maxWidth: CGFloat) -> CGSize {
+        return base.sizeThatFits(CGSize(width: maxWidth, height: CGFloat.greatestFiniteMagnitude))
     }
 }
 
 // MARK: - UILabel 富文本内容设置
-public extension UILabel {
+public extension DyWrapper where Base: UILabel {
     /// 设置图文混排内容(支持在指定位置插入多张图片)
     ///
     /// - Parameters:
@@ -228,7 +228,7 @@ public extension UILabel {
     ///   ```swift
     ///   let label = UILabel()
     ///   label.font = .systemFont(ofSize: 16)
-    ///   label.dy_blend(
+    ///   label.dy.blend(
     ///       "Swift & UIKit",
     ///       images: [UIImage(systemName: "swift")],
     ///       insertPosition: 5,
@@ -237,7 +237,7 @@ public extension UILabel {
     ///   )
     ///   ```
     @discardableResult
-    func dy_blend(
+    func blend(
         _ text: String? = nil,
         images: [UIImage?] = [],
         insertPosition: Int = 0,
@@ -245,10 +245,10 @@ public extension UILabel {
         spacing: CGFloat = 5,
         useOriginalSize: Bool = false
     ) -> NSMutableAttributedString {
-        guard let font = self.font else {
+        guard let font = base.font else {
             assertionFailure("UILabel.font is nil")
             let result = NSMutableAttributedString(string: text ?? "")
-            self.attributedText = result
+            base.attributedText = result
             return result
         }
 
@@ -296,7 +296,7 @@ public extension UILabel {
         let suffix = String(baseText.dropFirst(actualInsertPos))
         attributedString.append(NSAttributedString(string: suffix))
 
-        self.attributedText = attributedString
+        base.attributedText = attributedString
         return attributedString
     }
 
@@ -311,26 +311,26 @@ public extension UILabel {
     ///
     /// - Example:
     ///   ```swift
-    ///   label.dy_textWithSpacing("多行\n文本", lineSpacing: 8, wordSpacing: 2)
+    ///   label.dy.textWithSpacing("多行\n文本", lineSpacing: 8, wordSpacing: 2)
     ///   ```
     @discardableResult
-    func dy_textWithSpacing(
+    func textWithSpacing(
         _ text: String,
         lineSpacing: CGFloat,
         wordSpacing: CGFloat = 0
     ) -> NSMutableAttributedString {
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineSpacing = lineSpacing
-        paragraphStyle.alignment = self.textAlignment
+        paragraphStyle.alignment = base.textAlignment
 
         let attributes: [NSAttributedString.Key: Any] = [
-            .font: self.font ?? UIFont.systemFont(ofSize: 14),
+            .font: base.font ?? UIFont.systemFont(ofSize: 14),
             .paragraphStyle: paragraphStyle,
             .kern: wordSpacing,
         ]
 
         let attributedString = NSMutableAttributedString(string: text, attributes: attributes)
-        self.attributedText = attributedString
+        base.attributedText = attributedString
         return attributedString
     }
 
@@ -351,16 +351,16 @@ public extension UILabel {
     ///   ```swift
     ///   label.text = "This is a long sentence that wraps."
     ///   label.frame.size.width = 100
-    ///   print(label.dy_renderedLines())
+    ///   print(label.dy.renderedLines())
     ///   ```
-    func dy_renderedLines(
+    func renderedLines(
         maxWidth: CGFloat? = nil,
         lineSpacing: CGFloat = 0,
         wordSpacing: CGFloat = 0
     ) -> [String] {
-        guard let text = self.text, !text.isEmpty, let font = self.font else { return [] }
+        guard let text = base.text, !text.isEmpty, let font = base.font else { return [] }
 
-        let width = maxWidth ?? max(1, self.bounds.width) // 防止 width <= 0
+        let width = maxWidth ?? max(1, base.bounds.width) // 防止 width <= 0
 
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineSpacing = lineSpacing
@@ -388,284 +388,5 @@ public extension UILabel {
             let end = text.utf16.index(start, offsetBy: range.length)
             return String(text.utf16[start ..< end])
         }
-    }
-}
-
-// MARK: - 链式设置属性
-public extension UILabel {
-    /// 设置文字内容
-    /// - Parameter text: 文字内容
-    /// - Returns:`Self`
-    @discardableResult
-    func dy_text(_ text: String?) -> Self {
-        self.text = text
-        return self
-    }
-
-    /// 设置富文本文字
-    /// - Parameter attributedText: 富文本文字
-    /// - Returns:`Self`
-    @discardableResult
-    func dy_attributedText(_ attributedText: NSAttributedString?) -> Self {
-        self.attributedText = attributedText
-        return self
-    }
-
-    /// 设置文字行数
-    /// - Parameter lines: 行数
-    /// - Returns:`Self`
-    @discardableResult
-    func dy_numberOfLines(_ lines: Int) -> Self {
-        self.numberOfLines = lines
-        return self
-    }
-
-    /// 设置换行模式
-    /// - Parameter mode: 换行模式
-    /// - Returns:`Self`
-    @discardableResult
-    func dy_lineBreakMode(_ mode: NSLineBreakMode) -> Self {
-        self.lineBreakMode = mode
-        return self
-    }
-
-    /// 设置文字对齐方式
-    /// - Parameter alignment: 文字对齐方式
-    /// - Returns:`Self`
-    @discardableResult
-    func dy_textAlignment(_ alignment: NSTextAlignment) -> Self {
-        self.textAlignment = alignment
-        return self
-    }
-
-    /// 设置文本颜色
-    /// - Parameter color: 文字颜色
-    /// - Returns:`Self`
-    @discardableResult
-    func dy_textColor(_ color: UIColor) -> Self {
-        self.textColor = color
-        return self
-    }
-
-    /// 设置文本高亮颜色
-    /// - Parameter color: 高亮文字颜色
-    /// - Returns:`Self`
-    @discardableResult
-    func dy_highlightedTextColor(_ color: UIColor) -> Self {
-        self.highlightedTextColor = color
-        return self
-    }
-
-    /// 设置字体的大小
-    /// - Parameter font: 字体大小
-    /// - Returns:`Self`
-    @discardableResult
-    func dy_font(_ font: UIFont) -> Self {
-        self.font = font
-        return self
-    }
-
-    /// 是否调整字体大小以适配宽度
-    /// - Parameter adjusts: 是否调整字体大小
-    /// - Returns:`Self`
-    @discardableResult
-    func dy_adjustsFontSizeToFitWidth(_ adjusts: Bool) -> Self {
-        self.adjustsFontSizeToFitWidth = adjusts
-        return self
-    }
-
-    /// 设置是否响应系统字体大小(动态字体需要开启)
-    /// - Parameter adjustsFontForContentSizeCategory: 是否响应系统字体大小
-    /// - Returns: `Self`
-    @discardableResult
-    func dy_adjustsFontForContentSizeCategory(_ adjustsFontForContentSizeCategory: Bool) -> Self {
-        self.adjustsFontForContentSizeCategory = adjustsFontForContentSizeCategory
-        return self
-    }
-
-    /// 根据内容调整尺寸
-    /// - Returns:`Self`
-    @discardableResult
-    override func dy_sizeToFit() -> Self {
-        self.sizeToFit()
-        return self
-    }
-
-    /// 指定文本布局的最大宽度
-    /// - Parameter width: 宽度
-    /// - Returns: `Self`
-    @discardableResult
-    func dy_preferredMaxLayoutWidth(_ width: CGFloat) -> Self {
-        self.preferredMaxLayoutWidth = width
-        return self
-    }
-}
-
-// MARK: - 链式设置属性(自定义)
-public extension UILabel {
-    /// 设置特定范围的字体
-    /// - Parameters:
-    ///   - font: 字体
-    ///   - range: 设置字体的文本范围
-    /// - Returns:`Self`
-    ///
-    /// - Example:
-    ///
-    ///     label.dy_attributedFont(.boldSystemFont(ofSize: 18), for: NSRange(location: 0, length: 5))
-    ///
-    @discardableResult
-    func dy_attributedFont(_ font: UIFont, for range: NSRange) -> Self {
-        self.attributedText = self.attributedText?
-            .dy_toMutable()
-            .dy_font(font, for: range)
-        return self
-    }
-
-    /// 设置特定区域的文字颜色
-    /// - Parameters:
-    ///   - color: 文字颜色
-    ///   - range: 设置颜色的文本范围
-    /// - Returns:`Self`
-    ///
-    /// - Example:
-    ///
-    ///     label.dy_attributedColor(.red, for: NSRange(location: 0, length: 5))
-    ///
-    @discardableResult
-    func dy_attributedColor(_ color: UIColor, for range: NSRange) -> Self {
-        self.attributedText = self.attributedText?
-            .dy_toMutable()
-            .dy_foregroundColor(color, for: range)
-        return self
-    }
-
-    /// 设置行间距
-    /// - Parameter spacing: 行间距
-    /// - Returns:`Self`
-    ///
-    /// - Example:
-    ///
-    ///     label.dy_lineSpacing(5)
-    ///
-    @discardableResult
-    func dy_lineSpacing(_ spacing: CGFloat) -> Self {
-        self.attributedText = self.attributedText?
-            .dy_toMutable()
-            .dy_lineSpacing(spacing, for: (self.text ?? "").dy_fullNSRange)
-        return self
-    }
-
-    /// 设置字间距
-    /// - Parameter spacing: 字间距
-    /// - Returns:`Self`
-    ///
-    /// - Example:
-    ///
-    ///     label.dy_wordSpacing(2)
-    ///
-    @discardableResult
-    func dy_wordSpacing(_ spacing: CGFloat) -> Self {
-        self.attributedText = self.attributedText?
-            .dy_toMutable()
-            .dy_characterSpacing(spacing, for: self.text?.dy_fullNSRange)
-        return self
-    }
-
-    /// 设置特定范围的下划线
-    /// - Parameters:
-    ///   - color: 下划线颜色
-    ///   - style: 下划线样式(默认`.single`)
-    ///   - range: 设置下划线的文本范围
-    /// - Returns:`Self`
-    ///
-    /// - Example:
-    ///
-    ///     label.dy_attributedUnderLine(.blue, style: .double, for: NSRange(location: 0, length: 5))
-    ///
-    @discardableResult
-    func dy_attributedUnderLine(
-        _ color: UIColor,
-        style: NSUnderlineStyle = .single,
-        for range: NSRange
-    ) -> Self {
-        self.attributedText = self.attributedText?
-            .dy_toMutable()
-            .dy_underline(color: color, style: style, for: range)
-        return self
-    }
-
-    /// 设置特定范围的删除线
-    /// - Parameters:
-    ///   - color: 删除线颜色
-    ///   - range: 设置删除线的文本范围
-    /// - Returns:`Self`
-    ///
-    /// - Example:
-    ///
-    ///     label.dy_attributedDeleteLine(.red, for: NSRange(location: 0, length: 5))
-    ///
-    @discardableResult
-    func dy_attributedDeleteLine(_ color: UIColor, for range: NSRange) -> Self {
-        self.attributedText = self.attributedText?
-            .dy_toMutable()
-            .dy_strikethrough(color: color, for: range)
-        return self
-    }
-
-    /// 设置首行缩进
-    /// - Parameter indent: 首行缩进的宽度
-    /// - Returns:`Self`
-    ///
-    /// - Example:
-    ///
-    ///     label.dy_attributedFirstLineHeadIndent(10)
-    ///
-    @discardableResult
-    func dy_attributedFirstLineHeadIndent(_ indent: CGFloat) -> Self {
-        self.attributedText = self.attributedText?
-            .dy_toMutable()
-            .dy_firstLineHeadIndent(indent)
-        return self
-    }
-
-    /// 设置特定范围的倾斜效果
-    /// - Parameters:
-    ///   - inclination: 倾斜度
-    ///   - range: 设置倾斜效果的文本范围
-    /// - Returns:`Self`
-    ///
-    /// - Example:
-    ///
-    ///     label.dy_attributedObliqueness(0.3, for: NSRange(location: 0, length: 5))
-    ///
-    @discardableResult
-    func dy_attributedObliqueness(_ inclination: Float = 0, for range: NSRange) -> Self {
-        self.attributedText = self.attributedText?
-            .dy_toMutable()
-            .dy_obliqueness(inclination, for: range)
-        return self
-    }
-
-    /// 往字符串中插入图片(属性字符串)
-    /// - Parameters:
-    ///   - image: 要插入的图片对象若为 `nil`,则不执行任何操作
-    ///   - bounds: 图片的显示区域(相对于文本基线)若为 `.zero`,将自动根据字体大小垂直居中对齐
-    ///   - at: 插入位置(UTF-16 索引,默认为 0,即开头)
-    /// - Returns:`Self`
-    ///
-    /// - Example:
-    ///
-    ///     label.dy_attachment("image_name".image, bounds: CGRect(x: 0, y: -5, width: 20, height: 20))
-    ///
-    @discardableResult
-    func dy_attachment(
-        _ image: UIImage?,
-        bounds: CGRect = .zero,
-        at index: Int = 0
-    ) -> Self {
-        self.attributedText = self.attributedText?
-            .dy_toMutable()
-            .dy_attachment(image, bounds: bounds, at: index)
-        return self
     }
 }

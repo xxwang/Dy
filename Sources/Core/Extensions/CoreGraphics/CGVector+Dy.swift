@@ -1,29 +1,6 @@
 import CoreGraphics
 
-// MARK: - 属性
-public extension CGVector {
-    /// 向量相对于正 X 轴的旋转角度(弧度),范围为 [-π, π]
-    var dy_angle: CGFloat {
-        atan2(dy, dx)
-    }
-
-    /// 向量的长度(模长)
-    var dy_magnitude: CGFloat {
-        sqrt(dx * dx + dy * dy)
-    }
-
-    /// 向量长度的平方(避免开方,用于高效比较)
-    var dy_magnitudeSquared: CGFloat {
-        dx * dx + dy * dy
-    }
-
-    /// 返回单位向量(长度为 1 的方向向量)若原向量长度为 0,则返回 `.zero`
-    var dy_normalized: CGVector {
-        let length = dy_magnitude
-        guard length > 0 else { return .zero }
-        return self / length
-    }
-}
+extension CGVector: DyExtension {}
 
 // MARK: - 构造方法
 public extension CGVector {
@@ -36,14 +13,39 @@ public extension CGVector {
     }
 }
 
+// MARK: - 属性
+public extension DyWrapper where Base == CGVector {
+    /// 向量相对于正 X 轴的旋转角度(弧度),范围为 [-π, π]
+    var angle: CGFloat {
+        atan2(base.dy, base.dx)
+    }
+
+    /// 向量的长度(模长)
+    var magnitude: CGFloat {
+        sqrt(base.dx * base.dx + base.dy * base.dy)
+    }
+
+    /// 向量长度的平方(避免开方,用于高效比较)
+    var magnitudeSquared: CGFloat {
+        base.dx * base.dx + base.dy * base.dy
+    }
+
+    /// 返回单位向量(长度为 1 的方向向量)若原向量长度为 0,则返回 `.zero`
+    var normalized: CGVector {
+        let length = self.magnitude
+        guard length > 0 else { return .zero }
+        return base / length
+    }
+}
+
 // MARK: - 向量运算
-public extension CGVector {
+public extension DyWrapper where Base == CGVector {
     /// 计算与另一个向量的点积(Dot Product)
     /// 点积可用于判断夹角、投影等
     /// - Parameter other: 另一个向量
     /// - Returns: 两个向量的点积(标量)
-    func dy_dot(_ other: CGVector) -> CGFloat {
-        dx * other.dx + dy * other.dy
+    func dot(_ other: CGVector) -> CGFloat {
+        base.dx * other.dx + base.dy * other.dy
     }
 }
 

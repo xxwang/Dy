@@ -1,24 +1,24 @@
 import UIKit
 
 // MARK: - 图片加载
-public extension UIImageView {
+public extension DyWrapper where Base: UIImageView {
     /// 从 `URL` 加载网络图片
     /// - Parameters:
     ///   - url: 图片 URL
     ///   - placeholder: 占位图
     ///   - contentMode: 内容模式
     ///   - completion: 完成回调(主线程)
-    func dy_loadImage(
+    func loadImage(
         from url: URL,
         placeholder: UIImage? = nil,
         contentMode: UIView.ContentMode = .scaleAspectFill,
         completion: DyAction2<UIImage?, Error?>? = nil
     ) {
-        self.contentMode = contentMode
-        self.image = placeholder
+        base.contentMode = contentMode
+        base.image = placeholder
 
-        let task = URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
-            guard let self else { return }
+        let task = URLSession.shared.dataTask(with: url) { [weak base] data, response, error in
+            guard let base else { return }
 
             if let error {
                 DispatchQueue.main.async {
@@ -40,72 +40,10 @@ public extension UIImageView {
             }
 
             DispatchQueue.main.async {
-                self.image = image
+                base.image = image
                 completion?(image, nil)
             }
         }
         task.resume()
-    }
-}
-
-// MARK: - 链式设置属性
-public extension UIImageView {
-    /// 设置图像的`tintColor`(自动将图像转为模板模式)
-    /// - Parameter color: 主色调
-    /// - Returns: `Self`
-    @discardableResult
-    override func dy_tintColor(_ color: UIColor?) -> Self {
-        if let image = self.image {
-            self.image = image.withRenderingMode(.alwaysTemplate)
-        }
-        self.tintColor = color
-        return self
-    }
-
-    /// 设置普通图片
-    /// - Parameter image: 要设置的图片
-    /// - Returns: `Self`
-    @discardableResult
-    func dy_image(_ image: UIImage?) -> Self {
-        self.image = image
-        return self
-    }
-
-    /// 设置高亮状态图片
-    /// - Parameter image: 要设置的高亮图片
-    /// - Returns: `Self`
-    @discardableResult
-    func dy_highlightedImage(_ image: UIImage?) -> Self {
-        self.highlightedImage = image
-        return self
-    }
-}
-
-// MARK: - 链式方法(自定义)
-public extension UIImageView {
-    /// 添加模糊背景
-    /// - Parameter style: 模糊样式
-    /// - Returns: `Self`
-    @discardableResult
-    func dy_blur(_ style: UIBlurEffect.Style = .light) -> Self {
-        for subview in self.subviews where subview is UIVisualEffectView {
-            subview.removeFromSuperview()
-        }
-
-        let blurEffect = UIBlurEffect(style: style)
-        let blurView = UIVisualEffectView(effect: blurEffect)
-        blurView.frame = self.bounds
-        blurView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        self.addSubview(blurView)
-        return self
-    }
-
-    /// 移除模糊效果
-    @discardableResult
-    func dy_removeBlur() -> Self {
-        for subview in self.subviews where subview is UIVisualEffectView {
-            subview.removeFromSuperview()
-        }
-        return self
     }
 }

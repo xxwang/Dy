@@ -10,10 +10,12 @@ open class DyViewController: UIViewController {
 
     /// 导航栏
     open lazy var naview = DyNaView.naview()
-        .dy_backAction { [weak self] in
+        .dy
+        .backAction { [weak self] in
             guard let self else { return }
             self.onBackActionHandler()
         }
+        .build()
 
     public init() {
         super.init(nibName: nil, bundle: nil)
@@ -37,19 +39,27 @@ open class DyViewController: UIViewController {
 @objc extension DyViewController: DySetupable {
     /// 配置UI
     open func setupUI() {
-        self.dy_overrideUserInterfaceStyle(.light) // 设置界面样式
+        self
+            .dy
+            // 设置界面样式
+            .overrideUserInterfaceStyle(.light)
 
-        self.view.dy_backgroundColor(.white) // 控制器背景色
+        self.view
+            .dy
+            // 控制器背景色
+            .backgroundColor(.white)
 
         // 添加导航条
-        self.naview.dy_isHidden(self.navigationController == nil)
-            .dy_add2(self.view)
-            .dy_frame(CGRect(
+        self.naview
+            .dy
+            .frame(CGRect(
                 x: 0,
                 y: 0,
                 width: DyScreen.screenWidth,
                 height: DyScreen.navBarTotalHeight
             ))
+            .isHidden(true)
+            .add2(self.view)
     }
 
     /// 绑定事件
@@ -61,29 +71,31 @@ open class DyViewController: UIViewController {
     /// 获取数据
     open func fetchData() {}
 
-    /// 更新UI(绑定)数据
-    open func updateUI() {}
+    /// 绑定数据
+    open func bindData() {}
 }
 
 // MARK: - 支持子类重写的方法
 @objc extension DyViewController {
-    /// 更新导航栏及受影响的其它view
+    /// 更新导航栏位置及受影响的视图
     open func updateNaview() {
-        self.naview.dy_frame(CGRect(
-            x: 0,
-            y: 0,
-            width: DyScreen.screenWidth,
-            height: DyScreen.navBarTotalHeight
-        ))
+        self.naview
+            .dy
+            .frame(CGRect(
+                x: 0,
+                y: 0,
+                width: DyScreen.screenWidth,
+                height: DyScreen.navBarTotalHeight
+            ))
     }
 
     /// 返回方法
     open func onBackActionHandler() {
         let count = self.navigationController?.children.count ?? 0
         if count > 1 {
-            self.dy_pop()
+            self.dy.pop()
         } else {
-            self.dy_dismiss()
+            self.dy.dismiss()
         }
     }
 }
@@ -123,17 +135,17 @@ extension DyViewController {
         static var originalPopDelegate: UInt8 = 0
     }
 
-    private var dy_originalPopDelegate: UIGestureRecognizerDelegate? {
-        get { self.dy_getAssociatedObject(forKey: &Keys.originalPopDelegate) as? UIGestureRecognizerDelegate }
-        set { self.dy_setAssociatedObject(newValue, forKey: &Keys.originalPopDelegate) }
+    private var originalPopDelegate: UIGestureRecognizerDelegate? {
+        get { self.dy.GetAO(forKey: &Keys.originalPopDelegate) as? UIGestureRecognizerDelegate }
+        set { self.dy.SetAO(newValue, forKey: &Keys.originalPopDelegate) }
     }
 
     override open func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         // 接管侧滑手势代理,但先记录原始代理以便退出时还原
         if let gesture = self.navigationController?.interactivePopGestureRecognizer, gesture.delegate !== self {
-            if dy_originalPopDelegate == nil {
-                dy_originalPopDelegate = gesture.delegate
+            if self.originalPopDelegate == nil {
+                self.originalPopDelegate = gesture.delegate
             }
             gesture.delegate = self
         }
@@ -143,7 +155,7 @@ extension DyViewController {
         super.viewWillDisappear(animated)
         // 仅当代理仍指向自身时才还原为原始代理,避免误清空其它控制器设置的代理
         if let gesture = self.navigationController?.interactivePopGestureRecognizer, gesture.delegate === self {
-            gesture.delegate = dy_originalPopDelegate
+            gesture.delegate = self.originalPopDelegate
         }
     }
 

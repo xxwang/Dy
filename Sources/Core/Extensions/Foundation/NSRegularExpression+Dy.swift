@@ -1,7 +1,7 @@
 import Foundation
 
 // MARK: - 方法
-public extension NSRegularExpression {
+public extension DyWrapper where Base: NSRegularExpression {
     /// 为每个匹配项执行闭包
     ///
     /// - Parameters:
@@ -15,20 +15,20 @@ public extension NSRegularExpression {
     ///
     ///     let regex = try! NSRegularExpression(pattern: "\\d+")
     ///     let text = "abc 123 def 456"
-    ///     regex.dy_enumerateMatches(in: text, range: text.startIndex..<text.endIndex) { result, _, stop in
+    ///     regex.dy.enumerateMatches(in: text, range: text.startIndex..<text.endIndex) { result, _, stop in
     ///         if let match = result {
     ///             print("Match: \(text[Range(match.range, in: text)!])")
     ///             stop = true // 只处理第一个匹配
     ///         }
     ///     }
     ///
-    func dy_enumerateMatches(
+    func enumerateMatches(
         in string: String,
-        options: MatchingOptions = [],
+        options: NSRegularExpression.MatchingOptions = [],
         range: Range<String.Index>,
-        using block: (_ result: NSTextCheckingResult?, _ flags: MatchingFlags, _ stop: inout Bool) -> Void
+        using block: (_ result: NSTextCheckingResult?, _ flags: NSRegularExpression.MatchingFlags, _ stop: inout Bool) -> Void
     ) {
-        self.enumerateMatches(in: string, options: options, range: NSRange(range, in: string)) { result, flags, stop in
+        base.enumerateMatches(in: string, options: options, range: NSRange(range, in: string)) { result, flags, stop in
             var shouldStop = false
             block(result, flags, &shouldStop)
             if shouldStop {
@@ -45,12 +45,12 @@ public extension NSRegularExpression {
     ///   - range: 搜索范围
     /// - Returns: 所有匹配的 `NSTextCheckingResult` 数组
     ///
-    func dy_matches(
+    func matches(
         in string: String,
-        options: MatchingOptions = [],
+        options: NSRegularExpression.MatchingOptions = [],
         range: Range<String.Index>
     ) -> [NSTextCheckingResult] {
-        return self.matches(in: string, options: options, range: NSRange(range, in: string))
+        return base.matches(in: string, options: options, range: NSRange(range, in: string))
     }
 
     /// 返回匹配项的数量
@@ -61,12 +61,12 @@ public extension NSRegularExpression {
     ///   - range: 搜索范围
     /// - Returns: 匹配数量
     ///
-    func dy_numberOfMatches(
+    func numberOfMatches(
         in string: String,
-        options: MatchingOptions = [],
+        options: NSRegularExpression.MatchingOptions = [],
         range: Range<String.Index>
     ) -> Int {
-        return self.numberOfMatches(in: string, options: options, range: NSRange(range, in: string))
+        return base.numberOfMatches(in: string, options: options, range: NSRange(range, in: string))
     }
 
     /// 返回第一个匹配项
@@ -77,12 +77,12 @@ public extension NSRegularExpression {
     ///   - range: 搜索范围
     /// - Returns: 第一个匹配结果,若无则返回 `nil`
     ///
-    func dy_firstMatch(
+    func firstMatch(
         in string: String,
-        options: MatchingOptions = [],
+        options: NSRegularExpression.MatchingOptions = [],
         range: Range<String.Index>
     ) -> NSTextCheckingResult? {
-        return self.firstMatch(in: string, options: options, range: NSRange(range, in: string))
+        return base.firstMatch(in: string, options: options, range: NSRange(range, in: string))
     }
 
     /// 返回第一个匹配项的字符串范围
@@ -93,12 +93,12 @@ public extension NSRegularExpression {
     ///   - range: 搜索范围
     /// - Returns: 第一个匹配的 `Range<String.Index>`,若无匹配则返回 `nil`
     ///
-    func dy_firstMatchRange(
+    func firstMatchRange(
         in string: String,
-        options: MatchingOptions = [],
+        options: NSRegularExpression.MatchingOptions = [],
         range: Range<String.Index>
     ) -> Range<String.Index>? {
-        let nsRange = self.rangeOfFirstMatch(in: string, options: options, range: NSRange(range, in: string))
+        let nsRange = base.rangeOfFirstMatch(in: string, options: options, range: NSRange(range, in: string))
         return Range(nsRange, in: string)
     }
 
@@ -113,15 +113,15 @@ public extension NSRegularExpression {
     ///
     /// - Example:
     ///
-    ///     let replaced = regex.dy_replacingMatches(in: "a1b2", range: ..., with: "X")
+    ///     let replaced = regex.dy.replacingMatches(in: "a1b2", range: ..., with: "X")
     ///
-    func dy_replacingMatches(
+    func replacingMatches(
         in string: String,
-        options: MatchingOptions = [],
+        options: NSRegularExpression.MatchingOptions = [],
         range: Range<String.Index>,
         with template: String
     ) -> String {
-        return self.stringByReplacingMatches(
+        return base.stringByReplacingMatches(
             in: string,
             options: options,
             range: NSRange(range, in: string),
@@ -141,17 +141,17 @@ public extension NSRegularExpression {
     /// - Example:
     ///
     ///     var text = "a1b2"
-    ///     let count = regex.dy_replaceMatches(in: &text, range: ..., with: "X")
+    ///     let count = regex.dy.replaceMatches(in: &text, range: ..., with: "X")
     ///
     @discardableResult
-    func dy_replaceMatches(
+    func replaceMatches(
         in string: inout String,
-        options: MatchingOptions = [],
+        options: NSRegularExpression.MatchingOptions = [],
         range: Range<String.Index>,
         with template: String
     ) -> Int {
         let mutableString = NSMutableString(string: string)
-        let count = self.replaceMatches(
+        let count = base.replaceMatches(
             in: mutableString,
             options: options,
             range: NSRange(range, in: string),

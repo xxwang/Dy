@@ -2,7 +2,7 @@ import CoreLocation
 import Foundation
 
 // MARK: - 地理计算
-public extension CLLocation {
+public extension DyWrapper where Base: CLLocation {
     /// 计算当前地点与目标地点之间的大圆距离,并以指定单位返回
     ///
     /// - 使用 `CLLocation.distance(from:)` 内部实现,基于 WGS-84 椭球模型
@@ -17,11 +17,11 @@ public extension CLLocation {
     ///   ```swift
     ///   let sf = CLLocation(latitude: 37.7749, longitude: -122.4194)
     ///   let la = CLLocation(latitude: 34.0522, longitude: -118.2437)
-    ///   let distance = sf.dy_distance(to: la, unit: .kilometers)
+    ///   let distance = sf.dy.distance(to: la, unit: .kilometers)
     ///   print("距离: \(distance.value) \(distance.unit.symbol)") // e.g. "559.23 km"
     ///   ```
-    func dy_distance(to location: CLLocation, unit: UnitLength = .meters) -> Measurement<UnitLength> {
-        let meters = self.distance(from: location)
+    func distance(to location: CLLocation, unit: UnitLength = .meters) -> Measurement<UnitLength> {
+        let meters = base.distance(from: location)
         return Measurement(value: meters, unit: .meters).converted(to: unit)
     }
 
@@ -37,14 +37,14 @@ public extension CLLocation {
     ///
     /// - Example:
     ///   ```swift
-    ///   let midpoint = sf.dy_midPoint(to: la)
+    ///   let midpoint = sf.dy.midPoint(to: la)
     ///   print("中点: \(midpoint.coordinate.latitude), \(midpoint.coordinate.longitude)")
     ///   ```
-    func dy_midPoint(to destination: CLLocation) -> CLLocation {
-        let lat1 = coordinate.latitude.dy_toRadians()
-        let lon1 = coordinate.longitude.dy_toRadians()
-        let lat2 = destination.coordinate.latitude.dy_toRadians()
-        let lon2 = destination.coordinate.longitude.dy_toRadians()
+    func midPoint(to destination: CLLocation) -> CLLocation {
+        let lat1 = base.coordinate.latitude.dy.toRadians()
+        let lon1 = base.coordinate.longitude.dy.toRadians()
+        let lat2 = destination.coordinate.latitude.dy.toRadians()
+        let lon2 = destination.coordinate.longitude.dy.toRadians()
 
         let deltaLon = lon2 - lon1
 
@@ -55,8 +55,8 @@ public extension CLLocation {
         let lon3 = lon1 + atan2(by, cos(lat1) + bx)
 
         return CLLocation(
-            latitude: lat3.dy_toDegrees(),
-            longitude: lon3.dy_toDegrees()
+            latitude: lat3.dy.toDegrees(),
+            longitude: lon3.dy.toDegrees()
         )
     }
 
@@ -70,21 +70,21 @@ public extension CLLocation {
     ///
     /// - Example:
     ///   ```swift
-    ///   let bearing = sf.dy_bearing(to: la) // ≈ 135.0°(东南方向)
+    ///   let bearing = sf.dy.bearing(to: la) // ≈ 135.0°(东南方向)
     ///   print("方位角: \(bearing)°")
     ///   ```
-    func dy_bearing(to target: CLLocation) -> Double {
-        let lat1 = coordinate.latitude.dy_toRadians()
-        let lon1 = coordinate.longitude.dy_toRadians()
-        let lat2 = target.coordinate.latitude.dy_toRadians()
-        let lon2 = target.coordinate.longitude.dy_toRadians()
+    func bearing(to target: CLLocation) -> Double {
+        let lat1 = base.coordinate.latitude.dy.toRadians()
+        let lon1 = base.coordinate.longitude.dy.toRadians()
+        let lat2 = target.coordinate.latitude.dy.toRadians()
+        let lon2 = target.coordinate.longitude.dy.toRadians()
 
         let deltaLon = lon2 - lon1
 
         let y = sin(deltaLon) * cos(lat2)
         let x = cos(lat1) * sin(lat2) - sin(lat1) * cos(lat2) * cos(deltaLon)
 
-        var bearing = atan2(y, x).dy_toDegrees()
+        var bearing = atan2(y, x).dy.toDegrees()
         bearing = (bearing + 360).truncatingRemainder(dividingBy: 360)
         return bearing
     }
@@ -101,10 +101,10 @@ public extension CLLocation {
     ///
     /// - Example:
     ///   ```swift
-    ///   let near = sf.dy_isWithin(radius: 1000, of: la) // false
+    ///   let near = sf.dy.isWithin(radius: 1000, of: la) // false
     ///   ```
-    func dy_isWithin(radius: Double, of location: CLLocation) -> Bool {
-        distance(from: location) <= radius
+    func isWithin(radius: Double, of location: CLLocation) -> Bool {
+        base.distance(from: location) <= radius
     }
 
     /// 获取以当前位置为中心、给定半径(米)的`正方形边界四个角点`
@@ -121,15 +121,15 @@ public extension CLLocation {
     ///
     /// - Example:
     ///   ```swift
-    ///   let bounds = sf.dy_boundaryCoordinates(radius: 1000) // 1km 范围
+    ///   let bounds = sf.dy.boundaryCoordinates(radius: 1000) // 1km 范围
     ///   ```
-    func dy_boundaryCoordinates(radius: Double) -> [CLLocationCoordinate2D] {
-        let lat = coordinate.latitude
-        let lon = coordinate.longitude
+    func boundaryCoordinates(radius: Double) -> [CLLocationCoordinate2D] {
+        let lat = base.coordinate.latitude
+        let lon = base.coordinate.longitude
 
         // 防止极地附近 cos(lat) ≈ 0 导致除零或过大 deltaLon
         let clampedLat = min(max(lat, -85.0), 85.0)
-        let latRad = clampedLat.dy_toRadians()
+        let latRad = clampedLat.dy.toRadians()
 
         let earthRadiusMeters = 6371000.0
         let deltaLat = radius / earthRadiusMeters * (180 / .pi)
@@ -145,7 +145,7 @@ public extension CLLocation {
 }
 
 // MARK: - Array<CLLocation> 轨迹分析
-public extension Array where Element: CLLocation {
+public extension DyWrapper where Base == [CLLocation] {
     /// 计算位置序列的累计路径长度(考虑地球曲率)
     ///
     /// - 依次计算相邻点间的大圆距离并累加
@@ -157,15 +157,15 @@ public extension Array where Element: CLLocation {
     /// - Example:
     ///   ```swift
     ///   let track = [pointA, pointB, pointC]
-    ///   let total = track.dy_distance(unit: .kilometers)
+    ///   let total = track.dy.distance(unit: .kilometers)
     ///   print("总里程: \(total.value) km")
     ///   ```
-    func dy_distance(unit: UnitLength = .meters) -> Measurement<UnitLength> {
-        guard count > 1 else { return Measurement(value: 0, unit: unit) }
+    func distance(unit: UnitLength = .meters) -> Measurement<UnitLength> {
+        guard base.count > 1 else { return Measurement(value: 0, unit: unit) }
 
         var totalMeters: CLLocationDistance = 0
-        for i in 0 ..< count - 1 {
-            totalMeters += self[i].distance(from: self[i + 1])
+        for i in 0 ..< base.count - 1 {
+            totalMeters += base[i].distance(from: base[i + 1])
         }
 
         return Measurement(value: totalMeters, unit: .meters).converted(to: unit)

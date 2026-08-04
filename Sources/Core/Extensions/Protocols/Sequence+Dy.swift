@@ -1,7 +1,9 @@
 import Foundation
 
+extension Set: DyExtension {}
+
 // MARK: - 条件判断
-public extension Sequence {
+public extension DyWrapper where Base: Sequence {
     /// 检查序列中没有任何元素满足指定条件
     ///
     /// - Parameter condition: 判断闭包
@@ -9,10 +11,10 @@ public extension Sequence {
     ///
     /// - Example:
     ///     ```swift
-    ///     [1, 3, 5].dy_noneSatisfy { $0.isMultiple(of: 2) } // true
+    ///     [1, 3, 5].dy.noneSatisfy { $0.isMultiple(of: 2) } // true
     ///     ```
-    func dy_noneSatisfy(_ condition: (Element) throws -> Bool) rethrows -> Bool {
-        return try !contains { try condition($0) }
+    func noneSatisfy(_ condition: (Base.Element) throws -> Bool) rethrows -> Bool {
+        return try !base.contains { try condition($0) }
     }
 
     /// 返回不满足条件的元素(即“排除”满足条件的元素)
@@ -23,10 +25,10 @@ public extension Sequence {
     ///
     /// - Example:
     ///     ```swift
-    ///     [2, 4, 7].dy_reject { $0.isMultiple(of: 2) } // [7]
+    ///     [2, 4, 7].dy.reject { $0.isMultiple(of: 2) } // [7]
     ///     ```
-    func dy_reject(_ condition: (Element) throws -> Bool) rethrows -> [Element] {
-        return try filter { try !condition($0) }
+    func reject(_ condition: (Base.Element) throws -> Bool) rethrows -> [Base.Element] {
+        return try base.filter { try !condition($0) }
     }
 
     /// 统计满足条件的元素个数
@@ -36,11 +38,11 @@ public extension Sequence {
     ///
     /// - Example:
     ///     ```swift
-    ///     [2, 4, 7].dy_count { $0.isMultiple(of: 2) } // 2
+    ///     [2, 4, 7].dy.count { $0.isMultiple(of: 2) } // 2
     ///     ```
-    func dy_count(_ condition: (Element) throws -> Bool) rethrows -> Int {
+    func count(_ condition: (Base.Element) throws -> Bool) rethrows -> Int {
         var count = 0
-        for element in self where try condition(element) {
+        for element in base where try condition(element) {
             count += 1
         }
         return count
@@ -48,17 +50,17 @@ public extension Sequence {
 }
 
 // MARK: - 遍历
-public extension Sequence {
+public extension DyWrapper where Base: Sequence {
     /// 反向遍历序列中的每个元素
     ///
     /// - Parameter body: 对每个元素执行的操作
     ///
     /// - Example:
     ///     ```swift
-    ///     [0, 2, 4].dy_forEachReversed { print($0) } // 4, 2, 0
+    ///     [0, 2, 4].dy.forEachReversed { print($0) } // 4, 2, 0
     ///     ```
-    func dy_forEachReversed(_ body: (Element) throws -> Void) rethrows {
-        try reversed().forEach(body)
+    func forEachReversed(_ body: (Base.Element) throws -> Void) rethrows {
+        try base.reversed().forEach(body)
     }
 
     /// 仅对满足条件的元素执行操作
@@ -69,21 +71,21 @@ public extension Sequence {
     ///
     /// - Example:
     ///     ```swift
-    ///     [0, 2, 4, 7].dy_forEachWhere({ $0.isMultiple(of: 2) }) { print($0) }
+    ///     [0, 2, 4, 7].dy.forEachWhere({ $0.isMultiple(of: 2) }) { print($0) }
     ///     // 输出: 0, 2, 4
     ///     ```
-    func dy_forEachWhere(
-        _ condition: (Element) throws -> Bool,
-        _ body: (Element) throws -> Void
+    func forEachWhere(
+        _ condition: (Base.Element) throws -> Bool,
+        _ body: (Base.Element) throws -> Void
     ) rethrows {
-        for element in self where try condition(element) {
+        for element in base where try condition(element) {
             try body(element)
         }
     }
 }
 
 // MARK: - 转换与聚合
-public extension Sequence {
+public extension DyWrapper where Base: Sequence {
     /// 对序列进行前缀累积(scan),返回每一步的中间结果
     ///
     /// - Parameters:
@@ -94,11 +96,11 @@ public extension Sequence {
     ///
     /// - Example:
     ///     ```swift
-    ///     [1, 2, 3].dy_scan(initial: 0, +) // [1, 3, 6]
+    ///     [1, 2, 3].dy.scan(initial: 0, +) // [1, 3, 6]
     ///     ```
-    func dy_scan<U>(initial: U, _ next: (U, Element) throws -> U) rethrows -> [U] {
+    func scan<U>(initial: U, _ next: (U, Base.Element) throws -> U) rethrows -> [U] {
         var running = initial
-        return try map { element in
+        return try base.map { element in
             running = try next(running, element)
             return running
         }
@@ -111,12 +113,12 @@ public extension Sequence {
     ///
     /// - Example:
     ///     ```swift
-    ///     [1, 3, 4].dy_single { $0.isMultiple(of: 2) } // Optional(4)
-    ///     [2, 4].dy_single { $0.isMultiple(of: 2) }    // nil(多个匹配)
+    ///     [1, 3, 4].dy.single { $0.isMultiple(of: 2) } // Optional(4)
+    ///     [2, 4].dy.single { $0.isMultiple(of: 2) }    // nil(多个匹配)
     ///     ```
-    func dy_single(_ condition: (Element) throws -> Bool) rethrows -> Element? {
-        var found: Element?
-        for element in self where try condition(element) {
+    func single(_ condition: (Base.Element) throws -> Bool) rethrows -> Base.Element? {
+        var found: Base.Element?
+        for element in base where try condition(element) {
             guard found == nil else { return nil } // 多于一个
             found = element
         }
@@ -130,13 +132,13 @@ public extension Sequence {
     ///
     /// - Example:
     ///     ```swift
-    ///     let (evens, odds) = [0, 1, 2, 3].dy_partition { $0.isMultiple(of: 2) }
+    ///     let (evens, odds) = [0, 1, 2, 3].dy.partition { $0.isMultiple(of: 2) }
     ///     // evens = [0, 2], odds = [1, 3]
     ///     ```
-    func dy_partition(_ condition: (Element) throws -> Bool) rethrows -> ([Element], [Element]) {
-        var matching = [Element]()
-        var nonMatching = [Element]()
-        for element in self {
+    func partition(_ condition: (Base.Element) throws -> Bool) rethrows -> ([Base.Element], [Base.Element]) {
+        var matching = [Base.Element]()
+        var nonMatching = [Base.Element]()
+        for element in base {
             if try condition(element) {
                 matching.append(element)
             } else {
@@ -155,15 +157,15 @@ public extension Sequence {
     ///     ```swift
     ///     struct Item { let price: Double }
     ///     let items = [Item(price: 10), Item(price: 20)]
-    ///     items.dy_sum(\.price) // 30.0
+    ///     items.dy.sum(\.price) // 30.0
     ///     ```
-    func dy_sum<T: AdditiveArithmetic>(_ keyPath: KeyPath<Element, T>) -> T {
-        return reduce(.zero) { $0 + $1[keyPath: keyPath] }
+    func sum<T: AdditiveArithmetic>(_ keyPath: KeyPath<Base.Element, T>) -> T {
+        return base.reduce(.zero) { $0 + $1[keyPath: keyPath] }
     }
 }
 
 // MARK: - Element: Hashable
-public extension Sequence where Element: Hashable {
+public extension DyWrapper where Base: Sequence, Base.Element: Hashable {
     /// 检查当前序列是否包含另一个序列中的所有元素
     ///
     /// - Parameter elements: 要检查的元素序列
@@ -172,10 +174,10 @@ public extension Sequence where Element: Hashable {
     ///
     /// - Example:
     ///     ```swift
-    ///     [1, 2, 3].dy_containsAll([1, 3]) // true
+    ///     [1, 2, 3].dy.containsAll([1, 3]) // true
     ///     ```
-    func dy_containsAll(_ elements: some Sequence<Element>) -> Bool {
-        let set = Set(self)
+    func containsAll(_ elements: some Sequence<Base.Element>) -> Bool {
+        let set = Set(base)
         return elements.allSatisfy(set.contains)
     }
 
@@ -185,11 +187,11 @@ public extension Sequence where Element: Hashable {
     ///
     /// - Example:
     ///     ```swift
-    ///     [1, 2, 2, 3].dy_hasDuplicates // true
+    ///     [1, 2, 2, 3].dy.hasDuplicates // true
     ///     ```
-    var dy_hasDuplicates: Bool {
-        var seen = Set<Element>()
-        for element in self {
+    var hasDuplicates: Bool {
+        var seen = Set<Base.Element>()
+        for element in base {
             if !seen.insert(element).inserted {
                 return true
             }
@@ -203,12 +205,12 @@ public extension Sequence where Element: Hashable {
     ///
     /// - Example:
     ///     ```swift
-    ///     [1, 1, 2, 3, 3].dy_duplicates // [1, 3](顺序不定)
+    ///     [1, 1, 2, 3, 3].dy.duplicates // [1, 3](顺序不定)
     ///     ```
-    var dy_duplicates: [Element] {
-        var seen = Set<Element>()
-        var duplicates = Set<Element>()
-        for element in self {
+    var duplicates: [Base.Element] {
+        var seen = Set<Base.Element>()
+        var duplicates = Set<Base.Element>()
+        for element in base {
             if !seen.insert(element).inserted {
                 duplicates.insert(element)
             }
@@ -218,17 +220,17 @@ public extension Sequence where Element: Hashable {
 }
 
 // MARK: - Element: AdditiveArithmetic
-public extension Sequence where Element: AdditiveArithmetic {
+public extension DyWrapper where Base: Sequence, Base.Element: AdditiveArithmetic {
     /// 计算序列中所有元素的总和
     ///
     /// - Returns: 元素总和
     ///
     /// - Example:
     ///     ```swift
-    ///     [1, 2, 3].dy_sum() // 6
-    ///     [1.5, 2.5].dy_sum() // 4.0
+    ///     [1, 2, 3].dy.sum() // 6
+    ///     [1.5, 2.5].dy.sum() // 4.0
     ///     ```
-    func dy_sum() -> Element {
-        return reduce(.zero, +)
+    func sum() -> Base.Element {
+        return base.reduce(.zero, +)
     }
 }

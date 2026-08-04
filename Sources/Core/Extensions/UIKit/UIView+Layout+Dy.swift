@@ -1,68 +1,68 @@
 import UIKit
 
 // MARK: - 约束查找
-public extension UIView {
+public extension DyWrapper where Base: UIView {
     /// 获取当前视图的第一个宽度约束(仅限直接作用于 self 的约束)
-    var dy_widthConstraint: NSLayoutConstraint? {
-        dy_constraint(for: .width)
+    var widthConstraint: NSLayoutConstraint? {
+        self.constraint(for: .width)
     }
 
     /// 获取当前视图的第一个高度约束
-    var dy_heightConstraint: NSLayoutConstraint? {
-        dy_constraint(for: .height)
+    var heightConstraint: NSLayoutConstraint? {
+        self.constraint(for: .height)
     }
 
     /// 获取当前视图的第一个 leading 约束
-    var dy_leadingConstraint: NSLayoutConstraint? {
-        dy_constraint(for: .leading)
+    var leadingConstraint: NSLayoutConstraint? {
+        self.constraint(for: .leading)
     }
 
     /// 获取当前视图的第一个 trailing 约束
-    var dy_trailingConstraint: NSLayoutConstraint? {
-        dy_constraint(for: .trailing)
+    var trailingConstraint: NSLayoutConstraint? {
+        self.constraint(for: .trailing)
     }
 
     /// 获取当前视图的第一个 top 约束
-    var dy_topConstraint: NSLayoutConstraint? {
-        dy_constraint(for: .top)
+    var topConstraint: NSLayoutConstraint? {
+        self.constraint(for: .top)
     }
 
     /// 获取当前视图的第一个 bottom 约束
-    var dy_bottomConstraint: NSLayoutConstraint? {
-        dy_constraint(for: .bottom)
+    var bottomConstraint: NSLayoutConstraint? {
+        self.constraint(for: .bottom)
     }
 
     /// 获取当前视图的第一个 centerX 约束
-    var dy_centerXConstraint: NSLayoutConstraint? {
-        dy_constraint(for: .centerX)
+    var centerXConstraint: NSLayoutConstraint? {
+        self.constraint(for: .centerX)
     }
 
     /// 获取当前视图的第一个 centerY 约束
-    var dy_centerYConstraint: NSLayoutConstraint? {
-        dy_constraint(for: .centerY)
+    var centerYConstraint: NSLayoutConstraint? {
+        self.constraint(for: .centerY)
     }
 
     /// 查找作用于当前视图的、指定布局属性的第一个 NSLayoutConstraint
     /// - Parameter attribute: 布局属性(如 .width, .leading 等)
     /// - Returns: 匹配的约束,若无则返回 nil
-    private func dy_constraint(for attribute: NSLayoutConstraint.Attribute) -> NSLayoutConstraint? {
+    private func constraint(for attribute: NSLayoutConstraint.Attribute) -> NSLayoutConstraint? {
         // 检查自身的 constraints(通常为空,除非用 addConstraint 添加到自己)
-        if let constraint = constraints.first(where: { constraint in
-            dy_isConstraint(constraint, affecting: self, with: attribute)
+        if let constraint = base.constraints.first(where: { constraint in
+            self.isConstraint(constraint, affecting: base, with: attribute)
         }) {
             return constraint
         }
 
         // 检查父视图中的约束(绝大多数约束都在 superview.constraints 中)
-        return superview?.constraints.first(where: { constraint in
-            dy_isConstraint(constraint, affecting: self, with: attribute)
+        return base.superview?.constraints.first(where: { constraint in
+            self.isConstraint(constraint, affecting: base, with: attribute)
         })
     }
 
     /// 判断一个约束是否作用于指定视图的指定属性
-    private func dy_isConstraint(_ constraint: NSLayoutConstraint,
-                                 affecting view: UIView,
-                                 with attribute: NSLayoutConstraint.Attribute) -> Bool
+    private func isConstraint(_ constraint: NSLayoutConstraint,
+                              affecting view: UIView,
+                              with attribute: NSLayoutConstraint.Attribute) -> Bool
     {
         // 检查 firstItem 是否为 view 且属性匹配
         if constraint.firstItem as? NSObject == view, constraint.firstAttribute == attribute {
@@ -77,7 +77,7 @@ public extension UIView {
 }
 
 // MARK: - 约束添加
-public extension UIView {
+public extension DyWrapper where Base: UIView {
     /// 使用视觉格式语言 (VFL) 添加约束
     /// - Parameters:
     ///   - format: VFL 格式字符串(如 "H:|-[v0]-|")
@@ -87,13 +87,13 @@ public extension UIView {
     ///
     /// - Example:
     ///   ```swift
-    ///   view.dy_addConstraints(
+    ///   view.dy.addConstraints(
     ///       withFormat: "H:|-[v0]-|",
     ///       views: [label],
     ///       options: .alignAllCenterY
     ///   )
     ///   ```
-    func dy_addConstraints(
+    func addConstraints(
         withFormat format: String,
         views: [UIView],
         options: NSLayoutConstraint.FormatOptions = [],
@@ -123,20 +123,20 @@ public extension UIView {
     ///
     /// - Example:
     ///   ```swift
-    ///   subview.dy_fillSuperview(insets: .init(top: 10, left: 10, bottom: 10, right: 10))
+    ///   subview.dy.fillSuperview(insets: .init(top: 10, left: 10, bottom: 10, right: 10))
     ///   ```
     @discardableResult
-    func dy_fillSuperview(
+    func fillSuperview(
         insets: UIEdgeInsets = .zero,
         priority: UILayoutPriority = .required
     ) -> [NSLayoutConstraint] {
-        guard let superview = self.superview else { return [] }
-        translatesAutoresizingMaskIntoConstraints = false
+        guard let superview = base.superview else { return [] }
+        base.translatesAutoresizingMaskIntoConstraints = false
 
-        let top = topAnchor.constraint(equalTo: superview.topAnchor, constant: insets.top)
-        let leading = leadingAnchor.constraint(equalTo: superview.leadingAnchor, constant: insets.left)
-        let bottom = bottomAnchor.constraint(equalTo: superview.bottomAnchor, constant: -insets.bottom)
-        let trailing = trailingAnchor.constraint(equalTo: superview.trailingAnchor, constant: -insets.right)
+        let top = base.topAnchor.constraint(equalTo: superview.topAnchor, constant: insets.top)
+        let leading = base.leadingAnchor.constraint(equalTo: superview.leadingAnchor, constant: insets.left)
+        let bottom = base.bottomAnchor.constraint(equalTo: superview.bottomAnchor, constant: -insets.bottom)
+        let trailing = base.trailingAnchor.constraint(equalTo: superview.trailingAnchor, constant: -insets.right)
 
         let constraints = [top, leading, bottom, trailing]
         for constraint in constraints {
@@ -154,18 +154,18 @@ public extension UIView {
     ///
     /// - Example:
     ///   ```swift
-    ///   view.dy_centerInSuperview(offset: CGPoint(x: 0, y: 10))
+    ///   view.dy.centerInSuperview(offset: CGPoint(x: 0, y: 10))
     ///   ```
     @discardableResult
-    func dy_centerInSuperview(
+    func centerInSuperview(
         offset: CGPoint = .zero,
         priority: UILayoutPriority = .required
     ) -> [NSLayoutConstraint] {
-        guard let superview = self.superview else { return [] }
-        translatesAutoresizingMaskIntoConstraints = false
+        guard let superview = base.superview else { return [] }
+        base.translatesAutoresizingMaskIntoConstraints = false
 
-        let centerX = centerXAnchor.constraint(equalTo: superview.centerXAnchor, constant: offset.x)
-        let centerY = centerYAnchor.constraint(equalTo: superview.centerYAnchor, constant: offset.y)
+        let centerX = base.centerXAnchor.constraint(equalTo: superview.centerXAnchor, constant: offset.x)
+        let centerY = base.centerYAnchor.constraint(equalTo: superview.centerYAnchor, constant: offset.y)
 
         let constraints = [centerX, centerY]
         for constraint in constraints {
@@ -181,14 +181,14 @@ public extension UIView {
     ///   - priority: 约束优先级,默认 `.required`
     /// - Returns: 创建的约束
     @discardableResult
-    func dy_centerXInSuperview(
+    func centerXInSuperview(
         offset: CGFloat = 0,
         priority: UILayoutPriority = .required
     ) -> NSLayoutConstraint? {
-        guard let superview = self.superview else { return nil }
-        translatesAutoresizingMaskIntoConstraints = false
+        guard let superview = base.superview else { return nil }
+        base.translatesAutoresizingMaskIntoConstraints = false
 
-        let constraint = centerXAnchor.constraint(equalTo: superview.centerXAnchor, constant: offset)
+        let constraint = base.centerXAnchor.constraint(equalTo: superview.centerXAnchor, constant: offset)
         constraint.priority = priority
         constraint.isActive = true
         return constraint
@@ -200,14 +200,14 @@ public extension UIView {
     ///   - priority: 约束优先级,默认 `.required`
     /// - Returns: 创建的约束
     @discardableResult
-    func dy_centerYInSuperview(
+    func centerYInSuperview(
         offset: CGFloat = 0,
         priority: UILayoutPriority = .required
     ) -> NSLayoutConstraint? {
-        guard let superview = self.superview else { return nil }
-        translatesAutoresizingMaskIntoConstraints = false
+        guard let superview = base.superview else { return nil }
+        base.translatesAutoresizingMaskIntoConstraints = false
 
-        let constraint = centerYAnchor.constraint(equalTo: superview.centerYAnchor, constant: offset)
+        let constraint = base.centerYAnchor.constraint(equalTo: superview.centerYAnchor, constant: offset)
         constraint.priority = priority
         constraint.isActive = true
         return constraint
@@ -219,14 +219,14 @@ public extension UIView {
     ///   - priority: 约束优先级,默认 `.required`
     /// - Returns: 宽度和高度两个约束
     @discardableResult
-    func dy_constraintSize(
+    func constraintSize(
         _ size: CGSize,
         priority: UILayoutPriority = .required
     ) -> [NSLayoutConstraint] {
-        translatesAutoresizingMaskIntoConstraints = false
+        base.translatesAutoresizingMaskIntoConstraints = false
 
-        let width = widthAnchor.constraint(equalToConstant: size.width)
-        let height = heightAnchor.constraint(equalToConstant: size.height)
+        let width = base.widthAnchor.constraint(equalToConstant: size.width)
+        let height = base.heightAnchor.constraint(equalToConstant: size.height)
 
         let constraints = [width, height]
         for constraint in constraints {
@@ -242,12 +242,12 @@ public extension UIView {
     ///   - priority: 约束优先级,默认 `.required`
     /// - Returns: 创建的宽度约束
     @discardableResult
-    func dy_constraintWidth(
+    func constraintWidth(
         _ width: CGFloat,
         priority: UILayoutPriority = .required
     ) -> NSLayoutConstraint? {
-        translatesAutoresizingMaskIntoConstraints = false
-        let constraint = widthAnchor.constraint(equalToConstant: width)
+        base.translatesAutoresizingMaskIntoConstraints = false
+        let constraint = base.widthAnchor.constraint(equalToConstant: width)
         constraint.priority = priority
         constraint.isActive = true
         return constraint
@@ -259,12 +259,12 @@ public extension UIView {
     ///   - priority: 约束优先级,默认 `.required`
     /// - Returns: 创建的高度约束
     @discardableResult
-    func dy_constraintHeight(
+    func constraintHeight(
         _ height: CGFloat,
         priority: UILayoutPriority = .required
     ) -> NSLayoutConstraint? {
-        translatesAutoresizingMaskIntoConstraints = false
-        let constraint = heightAnchor.constraint(equalToConstant: height)
+        base.translatesAutoresizingMaskIntoConstraints = false
+        let constraint = base.heightAnchor.constraint(equalToConstant: height)
         constraint.priority = priority
         constraint.isActive = true
         return constraint
@@ -272,7 +272,7 @@ public extension UIView {
 }
 
 // MARK: - 高级布局
-public extension UIView {
+public extension DyWrapper where Base: UIView {
     /// 灵活锚定视图到任意布局锚点
     /// - Parameters:
     ///   - top: 顶部对齐目标(如 superview.topAnchor)
@@ -287,7 +287,7 @@ public extension UIView {
     ///
     /// - Example:
     ///   ```swift
-    ///   button.dy_anchor(
+    ///   button.dy.anchor(
     ///       top: container.topAnchor,
     ///       leading: container.leadingAnchor,
     ///       width: 100,
@@ -295,7 +295,7 @@ public extension UIView {
     ///   )
     ///   ```
     @discardableResult
-    func dy_anchor(
+    func anchor(
         top: NSLayoutYAxisAnchor? = nil,
         leading: NSLayoutXAxisAnchor? = nil,
         bottom: NSLayoutYAxisAnchor? = nil,
@@ -312,170 +312,52 @@ public extension UIView {
         centerYOffset: CGFloat = 0,
         priority: UILayoutPriority = .required
     ) -> [NSLayoutConstraint] {
-        translatesAutoresizingMaskIntoConstraints = false
+        base.translatesAutoresizingMaskIntoConstraints = false
         var constraints: [NSLayoutConstraint] = []
 
         if let top {
-            let c = topAnchor.constraint(equalTo: top, constant: topOffset)
+            let c = base.topAnchor.constraint(equalTo: top, constant: topOffset)
             c.priority = priority
             constraints.append(c)
         }
         if let leading {
-            let c = leadingAnchor.constraint(equalTo: leading, constant: leadingOffset)
+            let c = base.leadingAnchor.constraint(equalTo: leading, constant: leadingOffset)
             c.priority = priority
             constraints.append(c)
         }
         if let bottom {
             // 注意：bottom 约束是 bottomAnchor = superview.bottomAnchor - offset
-            let c = bottomAnchor.constraint(equalTo: bottom, constant: -bottomOffset)
+            let c = base.bottomAnchor.constraint(equalTo: bottom, constant: -bottomOffset)
             c.priority = priority
             constraints.append(c)
         }
         if let trailing {
-            let c = trailingAnchor.constraint(equalTo: trailing, constant: -trailingOffset)
+            let c = base.trailingAnchor.constraint(equalTo: trailing, constant: -trailingOffset)
             c.priority = priority
             constraints.append(c)
         }
         if let centerX {
-            let c = centerXAnchor.constraint(equalTo: centerX, constant: centerXOffset)
+            let c = base.centerXAnchor.constraint(equalTo: centerX, constant: centerXOffset)
             c.priority = priority
             constraints.append(c)
         }
         if let centerY {
-            let c = centerYAnchor.constraint(equalTo: centerY, constant: centerYOffset)
+            let c = base.centerYAnchor.constraint(equalTo: centerY, constant: centerYOffset)
             c.priority = priority
             constraints.append(c)
         }
         if let width {
-            let c = widthAnchor.constraint(equalToConstant: width)
+            let c = base.widthAnchor.constraint(equalToConstant: width)
             c.priority = priority
             constraints.append(c)
         }
         if let height {
-            let c = heightAnchor.constraint(equalToConstant: height)
+            let c = base.heightAnchor.constraint(equalToConstant: height)
             c.priority = priority
             constraints.append(c)
         }
 
         NSLayoutConstraint.activate(constraints)
         return constraints
-    }
-}
-
-// MARK: - 链式设置属性(布局)
-public extension UIView {
-    /// 设置控件的`frame`
-    /// - Parameter frame: 要设置的值
-    /// - Returns: `Self`
-    @discardableResult
-    func dy_frame(_ frame: CGRect) -> Self {
-        self.frame = frame
-        return self
-    }
-
-    /// 设置控件的`bounds`
-    /// - Parameter bounds: 要设置的值
-    /// - Returns: `Self`
-    @discardableResult
-    func dy_bounds(_ bounds: CGRect) -> Self {
-        self.bounds = bounds
-        return self
-    }
-
-    /// 设置控件的`origin`
-    /// - Parameter origin: 要设置的值
-    /// - Returns: `Self`
-    @discardableResult
-    func dy_origin(_ origin: CGPoint) -> Self {
-        var frame = self.frame
-        frame.origin = origin
-        self.frame = frame
-        return self
-    }
-
-    /// 设置控件的`size`
-    /// - Parameter size: 要设置的值
-    /// - Returns: `Self`
-    @discardableResult
-    func dy_size(_ size: CGSize) -> Self {
-        var frame = self.frame
-        frame.size = size
-        self.frame = frame
-        return self
-    }
-
-    /// 设置控件的`x`坐标
-    /// - Parameter left: 要设置的值
-    /// - Returns: `Self`
-    @discardableResult
-    func dy_left(_ left: CGFloat) -> Self {
-        var frame = self.frame
-        frame.origin.x = left
-        self.frame = frame
-        return self
-    }
-
-    /// 设置控件的顶部`y`坐标
-    /// - Parameter top: 要设置的值
-    /// - Returns: `Self`
-    @discardableResult
-    func dy_top(_ top: CGFloat) -> Self {
-        var frame = self.frame
-        frame.origin.y = top
-        self.frame = frame
-        return self
-    }
-
-    /// 设置控件的`width`
-    /// - Parameter width: 要设置的值
-    /// - Returns: `Self`
-    @discardableResult
-    func dy_width(_ width: CGFloat) -> Self {
-        var frame = self.frame
-        frame.size.width = width
-        self.frame = frame
-        return self
-    }
-
-    /// 设置控件的`height`
-    /// - Parameter height: 要设置的值
-    /// - Returns: `Self`
-    @discardableResult
-    func dy_height(_ height: CGFloat) -> Self {
-        var frame = self.frame
-        frame.size.height = height
-        self.frame = frame
-        return self
-    }
-
-    /// 设置控件的`center`
-    /// - Parameter center: 要设置的值
-    /// - Returns: `Self`
-    @discardableResult
-    func dy_center(_ center: CGPoint) -> Self {
-        self.center = center
-        return self
-    }
-
-    /// 设置控件的中心点`x`坐标
-    /// - Parameter centerX: 要设置的值
-    /// - Returns: `Self`
-    @discardableResult
-    func dy_centerX(_ centerX: CGFloat) -> Self {
-        var center = self.center
-        center.x = centerX
-        self.center = center
-        return self
-    }
-
-    /// 设置控件的中心点`y`坐标
-    /// - Parameter centerY: 要设置的值
-    /// - Returns: `Self`
-    @discardableResult
-    func dy_centerY(_ centerY: CGFloat) -> Self {
-        var center = self.center
-        center.y = centerY
-        self.center = center
-        return self
     }
 }

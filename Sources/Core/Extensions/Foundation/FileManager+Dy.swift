@@ -1,7 +1,7 @@
 import Foundation
 
 // MARK: - 字符串写入
-public extension FileManager {
+public extension DyWrapper where Base: FileManager {
     /// 将字符串以 UTF-8 编码写入指定路径的文件(覆盖原内容)
     ///
     /// 如果目标路径包含 `～`,会自动展开为当前用户的主目录(如 `～/Documents` → `/Users/name/Documents`)
@@ -12,8 +12,8 @@ public extension FileManager {
     ///   - path: 目标文件的路径(支持 `～`)
     /// - Returns: 成功写入返回 `true`,否则返回 `false`
     @discardableResult
-    static func dy_writeString(_ string: String, to path: String) -> Bool {
-        dy_writeString(string, to: URL(fileURLWithPath: path))
+    static func writeString(_ string: String, to path: String) -> Bool {
+        self.writeString(string, to: URL(fileURLWithPath: path))
     }
 
     /// 将字符串以 UTF-8 编码写入指定 URL 的文件(覆盖原内容)
@@ -26,9 +26,9 @@ public extension FileManager {
     ///   - url: 目标文件的 URL
     /// - Returns: 成功写入返回 `true`,否则返回 `false`
     @discardableResult
-    static func dy_writeString(_ string: String, to url: URL) -> Bool {
+    static func writeString(_ string: String, to url: URL) -> Bool {
         do {
-            try string.write(to: url.dy_expandingTildeInUrl, atomically: true, encoding: .utf8)
+            try string.write(to: url.dy.expandingTildeInUrl, atomically: true, encoding: .utf8)
             return true
         } catch {
             return false
@@ -47,11 +47,11 @@ public extension FileManager {
     ///
     /// - Example:
     ///   ```swift
-    ///   _ = FileManager.dy_appendString("New log entry\n", to: "～/Documents/app.log")
+    ///   _ = FileManager.dy.appendString("New log entry\n", to: "～/Documents/app.log")
     ///   ```
     @discardableResult
-    static func dy_appendString(_ string: String, to path: String) -> Bool {
-        dy_appendString(string, to: URL(fileURLWithPath: path))
+    static func appendString(_ string: String, to path: String) -> Bool {
+        self.appendString(string, to: URL(fileURLWithPath: path))
     }
 
     /// 在指定 URL 的文件末尾追加字符串内容(UTF-8 编码)
@@ -64,10 +64,10 @@ public extension FileManager {
     ///   - url: 目标文件 URL
     /// - Returns: 成功追加返回 `true`,否则返回 `false`
     @discardableResult
-    static func dy_appendString(_ string: String, to url: URL) -> Bool {
-        let fullURL = url.dy_expandingTildeInUrl
+    static func appendString(_ string: String, to url: URL) -> Bool {
+        let fullURL = url.dy.expandingTildeInUrl
         if !FileManager.default.fileExists(atPath: fullURL.path) {
-            return dy_writeString(string, to: fullURL)
+            return self.writeString(string, to: fullURL)
         }
 
         guard let data = string.data(using: .utf8) else { return false }
@@ -85,7 +85,7 @@ public extension FileManager {
 }
 
 // MARK: - Data 写入
-public extension FileManager {
+public extension DyWrapper where Base: FileManager {
     /// 将 `Data` 写入指定路径的文件(覆盖原内容)
     ///
     /// 路径中的 `～` 会被自动展开为用户主目录
@@ -96,8 +96,8 @@ public extension FileManager {
     ///   - path: 目标文件路径(支持 `～`)
     /// - Returns: 成功写入返回 `true`,否则返回 `false`
     @discardableResult
-    static func dy_writeData(_ data: Data, to path: String) -> Bool {
-        dy_writeData(data, to: URL(fileURLWithPath: path))
+    static func writeData(_ data: Data, to path: String) -> Bool {
+        self.writeData(data, to: URL(fileURLWithPath: path))
     }
 
     /// 将 `Data` 写入指定 URL 的文件(覆盖原内容)
@@ -109,9 +109,9 @@ public extension FileManager {
     ///   - url: 目标文件 URL
     /// - Returns: 成功写入返回 `true`,否则返回 `false`
     @discardableResult
-    static func dy_writeData(_ data: Data, to url: URL) -> Bool {
+    static func writeData(_ data: Data, to url: URL) -> Bool {
         do {
-            try data.write(to: url.dy_expandingTildeInUrl, options: .atomic)
+            try data.write(to: url.dy.expandingTildeInUrl, options: .atomic)
             return true
         } catch {
             return false
@@ -128,8 +128,8 @@ public extension FileManager {
     ///   - path: 目标文件路径(支持 `～`)
     /// - Returns: 成功追加返回 `true`,否则返回 `false`
     @discardableResult
-    static func dy_appendData(_ data: Data, to path: String) -> Bool {
-        dy_appendData(data, to: URL(fileURLWithPath: path))
+    static func appendData(_ data: Data, to path: String) -> Bool {
+        self.appendData(data, to: URL(fileURLWithPath: path))
     }
 
     /// 在指定 URL 的文件末尾追加 `Data`
@@ -142,10 +142,10 @@ public extension FileManager {
     ///   - url: 目标文件 URL
     /// - Returns: 成功追加返回 `true`,否则返回 `false`
     @discardableResult
-    static func dy_appendData(_ data: Data, to url: URL) -> Bool {
-        let fullURL = url.dy_expandingTildeInUrl
+    static func appendData(_ data: Data, to url: URL) -> Bool {
+        let fullURL = url.dy.expandingTildeInUrl
         if !FileManager.default.fileExists(atPath: fullURL.path) {
-            return dy_writeData(data, to: fullURL)
+            return self.writeData(data, to: fullURL)
         }
 
         do {
@@ -161,7 +161,7 @@ public extension FileManager {
 }
 
 // MARK: - 文件与目录操作
-public extension FileManager {
+public extension DyWrapper where Base: FileManager {
     /// 文件属性结构体,封装常见文件元数据
     struct DyFileAttributes {
         /// 文件字节大小
@@ -192,10 +192,10 @@ public extension FileManager {
     /// - Parameter path: 要创建的目录路径(支持 `～`)
     /// - Returns: 成功创建返回 `true`,若目录已存在也返回 `true`;其他错误返回 `false`
     @discardableResult
-    static func dy_createDirectory(at path: String) -> Bool {
+    static func createDirectory(at path: String) -> Bool {
         do {
             try FileManager.default.createDirectory(
-                atPath: path.dy_expandingTildeInPath,
+                atPath: path.dy.expandingTildeInPath,
                 withIntermediateDirectories: true,
                 attributes: nil
             )
@@ -215,9 +215,9 @@ public extension FileManager {
     ///   - data: 初始文件内容(可为 `nil` 表示空文件)
     /// - Returns: 成功创建返回 `true`,否则返回 `false`
     @discardableResult
-    static func dy_createFile(at path: String, data: Data) -> Bool {
+    static func createFile(at path: String, data: Data) -> Bool {
         FileManager.default.createFile(
-            atPath: path.dy_expandingTildeInPath,
+            atPath: path.dy.expandingTildeInPath,
             contents: data,
             attributes: nil
         )
@@ -233,11 +233,11 @@ public extension FileManager {
     ///   - destinationPath: 目标路径
     /// - Returns: 成功复制返回 `true`,否则返回 `false`
     @discardableResult
-    static func dy_copyItem(from sourcePath: String, to destinationPath: String) -> Bool {
+    static func copyItem(from sourcePath: String, to destinationPath: String) -> Bool {
         do {
             try FileManager.default.copyItem(
-                atPath: sourcePath.dy_expandingTildeInPath,
-                toPath: destinationPath.dy_expandingTildeInPath
+                atPath: sourcePath.dy.expandingTildeInPath,
+                toPath: destinationPath.dy.expandingTildeInPath
             )
             return true
         } catch {
@@ -254,11 +254,11 @@ public extension FileManager {
     ///   - destinationPath: 目标路径
     /// - Returns: 成功移动返回 `true`,否则返回 `false`
     @discardableResult
-    static func dy_moveItem(from sourcePath: String, to destinationPath: String) -> Bool {
+    static func moveItem(from sourcePath: String, to destinationPath: String) -> Bool {
         do {
             try FileManager.default.moveItem(
-                atPath: sourcePath.dy_expandingTildeInPath,
-                toPath: destinationPath.dy_expandingTildeInPath
+                atPath: sourcePath.dy.expandingTildeInPath,
+                toPath: destinationPath.dy.expandingTildeInPath
             )
             return true
         } catch {
@@ -274,9 +274,9 @@ public extension FileManager {
     /// - Parameter path: 要删除的路径
     /// - Returns: 成功删除返回 `true`,否则返回 `false`
     @discardableResult
-    static func dy_removeItem(at path: String) -> Bool {
+    static func removeItem(at path: String) -> Bool {
         do {
-            try FileManager.default.removeItem(atPath: path.dy_expandingTildeInPath)
+            try FileManager.default.removeItem(atPath: path.dy.expandingTildeInPath)
             return true
         } catch {
             return false
@@ -287,17 +287,17 @@ public extension FileManager {
     ///
     /// - Parameter path: 文件路径(支持 `～`)
     /// - Returns: 成功时返回 `Data`,失败或文件不存在时返回 `nil`
-    static func dy_contents(at path: String) -> Data? {
-        FileManager.default.contents(atPath: path.dy_expandingTildeInPath)
+    static func contents(at path: String) -> Data? {
+        FileManager.default.contents(atPath: path.dy.expandingTildeInPath)
     }
 
     /// 获取指定路径文件的属性(大小、创建时间、修改时间)
     ///
     /// - Parameter path: 文件路径(支持 `～`)
     /// - Returns: 成功时返回 `DyFileAttributes` 实例,失败返回 `nil`
-    static func dy_attributes(ofItemAt path: String) -> DyFileAttributes? {
+    static func attributes(ofItemAt path: String) -> DyFileAttributes? {
         do {
-            let attributes = try FileManager.default.attributesOfItem(atPath: path.dy_expandingTildeInPath)
+            let attributes = try FileManager.default.attributesOfItem(atPath: path.dy.expandingTildeInPath)
             return DyFileAttributes(attributes: attributes)
         } catch {
             return nil
@@ -308,17 +308,17 @@ public extension FileManager {
     ///
     /// - Parameter path: 路径(支持 `～`)
     /// - Returns: 存在返回 `true`,否则返回 `false`
-    static func dy_itemExists(at path: String) -> Bool {
-        FileManager.default.fileExists(atPath: path.dy_expandingTildeInPath)
+    static func itemExists(at path: String) -> Bool {
+        FileManager.default.fileExists(atPath: path.dy.expandingTildeInPath)
     }
 
     /// 检查指定路径是否为目录
     ///
     /// - Parameter path: 路径(支持 `～`)
     /// - Returns: 是目录且存在时返回 `true`,否则返回 `false`
-    static func dy_isDirectory(at path: String) -> Bool {
+    static func isDirectory(at path: String) -> Bool {
         var isDirectory: ObjCBool = false
-        let exists = FileManager.default.fileExists(atPath: path.dy_expandingTildeInPath, isDirectory: &isDirectory)
+        let exists = FileManager.default.fileExists(atPath: path.dy.expandingTildeInPath, isDirectory: &isDirectory)
         return exists && isDirectory.boolValue
     }
 
@@ -328,10 +328,10 @@ public extension FileManager {
     ///   - path1: 第一个文件路径
     ///   - path2: 第二个文件路径
     /// - Returns: 内容完全一致返回 `true`,否则返回 `false`
-    static func dy_contentsEqual(atPath path1: String, andPath path2: String) -> Bool {
+    static func contentsEqual(atPath path1: String, andPath path2: String) -> Bool {
         FileManager.default.contentsEqual(
-            atPath: path1.dy_expandingTildeInPath,
-            andPath: path2.dy_expandingTildeInPath
+            atPath: path1.dy.expandingTildeInPath,
+            andPath: path2.dy.expandingTildeInPath
         )
     }
 
@@ -341,10 +341,10 @@ public extension FileManager {
     ///
     /// - Parameter path: 目录路径(支持 `～`)
     /// - Returns: 子项路径列表,失败时返回空数组
-    static func dy_contentsOfDirectory(at path: String) -> [String] {
+    static func contentsOfDirectory(at path: String) -> [String] {
         do {
-            let items = try FileManager.default.contentsOfDirectory(atPath: path.dy_expandingTildeInPath)
-            let baseURL = URL(fileURLWithPath: path.dy_expandingTildeInPath)
+            let items = try FileManager.default.contentsOfDirectory(atPath: path.dy.expandingTildeInPath)
+            let baseURL = URL(fileURLWithPath: path.dy.expandingTildeInPath)
             return items.map { baseURL.appendingPathComponent($0).path }
         } catch {
             return []
@@ -357,10 +357,10 @@ public extension FileManager {
     ///
     /// - Parameter path: 目录路径(支持 `～`)
     /// - Returns: 所有子项路径列表,失败时返回空数组
-    static func dy_recursiveContentsOfDirectory(at path: String) -> [String] {
+    static func recursiveContentsOfDirectory(at path: String) -> [String] {
         do {
-            let subpaths = try FileManager.default.subpathsOfDirectory(atPath: path.dy_expandingTildeInPath)
-            let baseURL = URL(fileURLWithPath: path.dy_expandingTildeInPath)
+            let subpaths = try FileManager.default.subpathsOfDirectory(atPath: path.dy.expandingTildeInPath)
+            let baseURL = URL(fileURLWithPath: path.dy.expandingTildeInPath)
             return subpaths.map { baseURL.appendingPathComponent($0).path }
         } catch {
             return []
@@ -371,23 +371,23 @@ public extension FileManager {
     ///
     /// - Parameter path: 输入路径(如 `"～/Documents"`)
     /// - Returns: 展开后的绝对路径(如 `"/Users/name/Documents"`)
-    static func dy_expandingTilde(in path: String) -> String {
-        path.dy_expandingTildeInPath
+    static func expandingTilde(in path: String) -> String {
+        path.dy.expandingTildeInPath
     }
 
     /// 获取指定文件的字节大小
     ///
     /// - Parameter path: 文件路径(支持 `～`)
     /// - Returns: 文件大小(字节),若文件不存在或无法读取则返回 `0`
-    static func dy_fileSize(at path: String) -> UInt64 {
-        dy_attributes(ofItemAt: path)?.size ?? 0
+    static func fileSize(at path: String) -> UInt64 {
+        self.attributes(ofItemAt: path)?.size ?? 0
     }
 
     /// 获取指定文件的创建日期
     ///
     /// - Parameter path: 文件路径(支持 `～`)
     /// - Returns: 创建日期,若失败返回 `nil`
-    static func dy_fileCreationDate(at path: String) -> Date? {
-        dy_attributes(ofItemAt: path)?.creationDate
+    static func fileCreationDate(at path: String) -> Date? {
+        self.attributes(ofItemAt: path)?.creationDate
     }
 }

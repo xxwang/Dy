@@ -12,12 +12,20 @@ open class DyNavigationController: UINavigationController {
 @objc extension DyNavigationController: DySetupable {
     /// 控制器初始化样式
     open func setupUI() {
-        self.dy_overrideUserInterfaceStyle(self.topViewController?.overrideUserInterfaceStyle ?? .light) // 设置导航控制器样式
-            .dy_navigationBarHidden(true) // 隐藏导航条
-            .dy_delegate(self) // 设置代理
-            .dy_interactivePopGestureRecognizerDelegate(self) // 设置交互手势识别器代理
+        self
+            .dy
+            // 设置导航控制器样式
+            .overrideUserInterfaceStyle(self.topViewController?.overrideUserInterfaceStyle ?? .light)
+            // 隐藏导航条
+            .navigationBarHidden(true)
+            // 设置代理
+            .delegate(self)
+            // 设置交互手势识别器代理
+            .interactivePopGestureRecognizerDelegate(self)
 
-        self.view.dy_backgroundColor(.white)
+        self.view
+            .dy
+            .backgroundColor(.white)
     }
 }
 

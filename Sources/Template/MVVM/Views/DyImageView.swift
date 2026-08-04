@@ -13,8 +13,10 @@ open class DyImageView: UIImageView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override open class func dy_imageView() -> DyImageView {
-        DyImageView(frame: .zero).dy_contentMode(.scaleAspectFit)
+    override open class func imageView() -> DyImageView {
+        DyImageView(frame: .zero).dy
+            .contentMode(.scaleAspectFit)
+            .build()
     }
 
     deinit {

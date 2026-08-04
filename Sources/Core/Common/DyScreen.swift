@@ -22,12 +22,9 @@ public final class DyScreen {
 public extension DyScreen {
     /// 当前主屏幕的边界,会随设备旋转动态变化
     static var screenBounds: CGRect {
-        if #available(iOS 13.0, *) {
-            let scene = UIApplication.shared.connectedScenes
-                .first { $0.activationState == .foregroundActive } as? UIWindowScene
-            return scene?.screen.bounds ?? UIScreen.main.bounds
-        }
-        return UIScreen.main.bounds
+        let scene = UIApplication.shared.connectedScenes
+            .first { $0.activationState == .foregroundActive } as? UIWindowScene
+        return scene?.screen.bounds ?? UIScreen.main.bounds
     }
 
     /// 当前屏幕尺寸
@@ -47,12 +44,9 @@ public extension DyScreen {
 
     /// 屏幕缩放
     static var screenScale: CGFloat {
-        if #available(iOS 13.0, *) {
-            let scene = UIApplication.shared.connectedScenes
-                .first { $0.activationState == .foregroundActive } as? UIWindowScene
-            return scene?.screen.scale ?? UIScreen.main.scale
-        }
-        return UIScreen.main.scale
+        let scene = UIApplication.shared.connectedScenes
+            .first { $0.activationState == .foregroundActive } as? UIWindowScene
+        return scene?.screen.scale ?? UIScreen.main.scale
     }
 }
 
@@ -60,7 +54,7 @@ public extension DyScreen {
 public extension DyScreen {
     /// 当前 `keyWindow` 的安全区域插值
     static var safeAreaInsets: UIEdgeInsets {
-        return UIWindow.dy_keyWindow?.safeAreaInsets ?? .zero
+        return UIWindow.dy.keyWindow?.safeAreaInsets ?? .zero
     }
 
     /// 安全区顶部高度(通常为状态栏 + 导航栏下方留白)
@@ -88,7 +82,7 @@ public extension DyScreen {
 public extension DyScreen {
     /// 状态栏高度
     static var statusBarHeight: CGFloat {
-        UIWindow.dy_keyWindow?.windowScene?.statusBarManager?.statusBarFrame.height ?? 0
+        UIWindow.dy.keyWindow?.windowScene?.statusBarManager?.statusBarFrame.height ?? 0
     }
 
     /// 导航栏高度

@@ -1,10 +1,12 @@
 import CoreGraphics
 
-public extension CGPath {
+extension CGPath: DyExtension {}
+
+public extension DyWrapper where Base == CGPath {
     /// 创建当前路径的可变副本
-    func dy_toCGMutablePath() -> CGMutablePath {
+    func toMutable() -> CGMutablePath {
         let copy = CGMutablePath()
-        copy.addPath(self)
+        copy.addPath(base)
         return copy
     }
 }

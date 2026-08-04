@@ -1,27 +1,6 @@
 import UIKit
 
-// MARK: - 属性
-public extension UIEdgeInsets {
-    /// 水平方向的总边距(`left` + `right`)
-    ///
-    /// - Example:
-    ///
-    ///     let inset = UIEdgeInsets(top: 10, left: 5, bottom: 5, right: 5)
-    ///     let horizontal = inset.dy_horizontal // 10
-    var dy_horizontal: CGFloat {
-        left + right
-    }
-
-    /// 垂直方向的总边距(`top` + `bottom`)
-    ///
-    /// - Example:
-    ///
-    ///     let inset = UIEdgeInsets(top: 10, left: 5, bottom: 5, right: 5)
-    ///     let vertical = inset.dy_vertical // 20
-    var dy_vertical: CGFloat {
-        top + bottom
-    }
-}
+extension UIEdgeInsets: DyExtension {}
 
 // MARK: - 构造方法
 public extension UIEdgeInsets {
@@ -58,59 +37,6 @@ public extension UIEdgeInsets {
     }
 }
 
-// MARK: - 链式修改：基于当前值生成新值
-public extension UIEdgeInsets {
-    /// 在当前边距基础上,向顶部增加指定偏移量
-    @discardableResult
-    func dy_insetBy(top: CGFloat) -> Self {
-        UIEdgeInsets(top: self.top + top, left: self.left, bottom: self.bottom, right: self.right)
-    }
-
-    /// 在当前边距基础上,向左侧增加指定偏移量
-    @discardableResult
-    func dy_insetBy(left: CGFloat) -> Self {
-        UIEdgeInsets(top: self.top, left: self.left + left, bottom: self.bottom, right: self.right)
-    }
-
-    /// 在当前边距基础上,向底部增加指定偏移量
-    @discardableResult
-    func dy_insetBy(bottom: CGFloat) -> Self {
-        UIEdgeInsets(top: self.top, left: self.left, bottom: self.bottom + bottom, right: self.right)
-    }
-
-    /// 在当前边距基础上,向右侧增加指定偏移量
-    @discardableResult
-    func dy_insetBy(right: CGFloat) -> Self {
-        UIEdgeInsets(top: self.top, left: self.left, bottom: self.bottom, right: self.right + right)
-    }
-
-    /// 在当前边距基础上,向水平方向`总共`增加指定边距(均分到 left 和 right)
-    ///
-    /// - Parameter horizontal: 要增加的`水平总边距`(例如 20 → left+10, right+10)
-    @discardableResult
-    func dy_insetBy(horizontal: CGFloat) -> Self {
-        UIEdgeInsets(
-            top: self.top,
-            left: self.left + horizontal / 2,
-            bottom: self.bottom,
-            right: self.right + horizontal / 2
-        )
-    }
-
-    /// 在当前边距基础上,向垂直方向`总共`增加指定边距(均分到 top 和 bottom)
-    ///
-    /// - Parameter vertical: 要增加的`垂直总边距`(例如 30 → top+15, bottom+15)
-    @discardableResult
-    func dy_insetBy(vertical: CGFloat) -> Self {
-        UIEdgeInsets(
-            top: self.top + vertical / 2,
-            left: self.left,
-            bottom: self.bottom + vertical / 2,
-            right: self.right
-        )
-    }
-}
-
 // MARK: - 运算符重载：支持加法与复合赋值
 public extension UIEdgeInsets {
     /// 将两个 `UIEdgeInsets` 对应方向相加
@@ -139,5 +65,28 @@ public extension UIEdgeInsets {
     ///     a == top:12, left:7, bottom:7, right:7
     static func += (lhs: inout UIEdgeInsets, rhs: UIEdgeInsets) {
         lhs = lhs + rhs
+    }
+}
+
+// MARK: - 属性
+public extension DyWrapper where Base == UIEdgeInsets {
+    /// 水平方向的总边距(`left` + `right`)
+    ///
+    /// - Example:
+    ///
+    ///     let inset = UIEdgeInsets(top: 10, left: 5, bottom: 5, right: 5)
+    ///     let horizontal = inset.dy.horizontal // 10
+    var horizontal: CGFloat {
+        base.left + base.right
+    }
+
+    /// 垂直方向的总边距(`top` + `bottom`)
+    ///
+    /// - Example:
+    ///
+    ///     let inset = UIEdgeInsets(top: 10, left: 5, bottom: 5, right: 5)
+    ///     let vertical = inset.dy.vertical // 20
+    var vertical: CGFloat {
+        base.top + base.bottom
     }
 }

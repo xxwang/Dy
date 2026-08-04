@@ -6,10 +6,10 @@ import DyCore
 open class DySheetView: UIView {
     public var cancellables = Set<AnyCancellable>()
     /// 遮罩层
-    private lazy var shadeView = UIView.dy_view()
+    private lazy var shadeView = UIView.view()
 
     /// 内容容器（从底部弹出的部分）
-    public lazy var contentContainer = UIView.dy_view()
+    public lazy var contentContainer = UIView.view()
 
     override public init(frame: CGRect) {
         super.init(frame: frame)
@@ -37,24 +37,30 @@ public extension DySheetView {
 @objc extension DySheetView {
     /// 显示底部弹窗
     open func show(in container: UIView? = nil) {
-        let container = container ?? UIWindow.dy_keyWindow ?? UIWindow.dy_windows.first
+        let container = container ?? UIWindow.dy.keyWindow ?? UIWindow.dy.windows.first
         guard let container else { return }
         container.addSubview(self)
 
-        // 设置弹窗尺寸
-        self.dy_frame(container.bounds)
+        self
+            .dy
+            // 设置弹窗尺寸
+            .frame(container.bounds)
 
         // 遮罩层
-        self.shadeView.dy_frame(container.bounds)
+        self.shadeView
+            .dy
+            .frame(container.bounds)
 
         // 内容容器
-        self.contentContainer.dy_left((container.dy_width - self.contentContainer.dy_width) / 2)
-            .dy_top(self.dy_height - self.contentContainer.dy_height)
+        self.contentContainer
+            .dy
+            .left((container.dy.width - self.contentContainer.dy.width) / 2)
+            .top(self.dy.height - self.contentContainer.dy.height)
 
         // 设置初始化状态
         self.shadeView.alpha = 0.01
         self.contentContainer.alpha = 0.01
-        self.contentContainer.transform = CGAffineTransform(translationX: 0, y: self.contentContainer.dy_height)
+        self.contentContainer.transform = CGAffineTransform(translationX: 0, y: self.contentContainer.dy.height)
 
         // 从底部滑入
         UIView.animate(withDuration: animationDuration(), delay: 0, options: .curveEaseOut) {
@@ -70,7 +76,7 @@ public extension DySheetView {
         UIView.animate(withDuration: animationDuration(), delay: 0, options: .curveEaseIn) {
             self.shadeView.alpha = 0.01
             self.contentContainer.alpha = 0.01
-            self.contentContainer.transform = CGAffineTransform(translationX: 0, y: self.contentContainer.dy_height)
+            self.contentContainer.transform = CGAffineTransform(translationX: 0, y: self.contentContainer.dy.height)
         } completion: { _ in
             self.removeFromSuperview()
         }
@@ -82,26 +88,34 @@ public extension DySheetView {
     /// 设置UI (子类重写该方法)在子类中应该在该方法中,设置contentContainer的size
     open func setupUI() {
         // 添加子视图
-        self.dy_addSubviews([
-            self.shadeView,
-            self.contentContainer,
-        ])
+        self
+            .dy
+            .addSubviews([
+                self.shadeView,
+                self.contentContainer,
+            ])
 
         // 配置遮罩
-        self.shadeView.dy_backgroundColor(shadeBackgroundColor())
-            .dy_isUserInteractionEnabled(isTapOutsideToDismiss())
+        self.shadeView
+            .dy
+            .backgroundColor(shadeBackgroundColor())
+            .isUserInteractionEnabled(isTapOutsideToDismiss())
 
         // 配置内容容器
-        self.contentContainer.dy_backgroundColor(contentContainerBackgroundColor())
-            .dy_maskedCorners([.dy_topLeft, .dy_topRight])
-            .dy_cornerRadius(contentContainerCornerRadius())
-            .dy_masksToBounds(true)
+        self.contentContainer
+            .dy
+            .backgroundColor(contentContainerBackgroundColor())
+            .maskedCorners([.dy.topLeft, .dy.topRight])
+            .cornerRadius(contentContainerCornerRadius())
+            .masksToBounds(true)
 
         // 遮罩点击关闭
-        self.shadeView.dy_onTapGestureRecognizer { [weak self] _ in
-            guard let self, self.isTapOutsideToDismiss() else { return }
-            self.dismiss()
-        }
+        self.shadeView
+            .dy
+            .onTapGestureRecognizer { [weak self] _ in
+                guard let self, self.isTapOutsideToDismiss() else { return }
+                self.dismiss()
+            }
     }
 }
 

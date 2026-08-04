@@ -4,63 +4,6 @@ import CoreImage
 import CoreImage.CIFilterBuiltins
 import ImageIO
 
-// MARK: - UIImage属性
-public extension UIImage {
-    /// 获取图片的大小(单位:字节)
-    var dy_sizeInBytes: Int {
-        return jpegData(compressionQuality: 1)?.count ?? 0
-    }
-
-    /// 获取图片的大小(单位:KB)
-    var dy_sizeInKB: Double {
-        guard let byteCount = jpegData(compressionQuality: 1)?.count else { return 0 }
-        return Double(byteCount) / 1024.0
-    }
-
-    /// 返回使用原始渲染模式的图片实例
-    var dy_withOriginalRenderingMode: UIImage {
-        return withRenderingMode(.alwaysOriginal)
-    }
-
-    /// 返回使用模板渲染模式的图片实例
-    var dy_withTemplateRenderingMode: UIImage {
-        return withRenderingMode(.alwaysTemplate)
-    }
-}
-
-// MARK: - Base64 编码
-public extension UIImage {
-    /// 获取图像的 PNG 格式 Base64 编码字符串
-    ///
-    /// - Returns: Base64 字符串,若 PNG 数据生成失败则返回 `nil`
-    ///
-    /// - Example:
-    ///   ```swift
-    ///   if let base64 = image.dy_pngBase64String {
-    ///       print("data:image/png;base64,\(base64)")
-    ///   }
-    ///   ```
-    var dy_pngBase64String: String? {
-        return pngData()?.base64EncodedString()
-    }
-
-    /// 获取图像的 JPEG 格式 Base64 编码字符串
-    ///
-    /// - Parameter compressionQuality: 压缩质量,范围 `[0.0, 1.0]`值越高质量越高,文件越大
-    /// - Returns: Base64 字符串,若 JPEG 数据生成失败则返回 `nil`
-    ///
-    /// - Example:
-    ///   ```swift
-    ///   if let base64 = image.dy_jpegBase64String(compressionQuality: 0.8) {
-    ///       print("data:image/jpeg;base64,\(base64)")
-    ///   }
-    ///   ```
-    func dy_jpegBase64String(compressionQuality: CGFloat) -> String? {
-        let quality = min(max(compressionQuality, 0), 1)
-        return jpegData(compressionQuality: quality)?.base64EncodedString()
-    }
-}
-
 // MARK: - 构造方法
 public extension UIImage {
     /// 根据颜色和大小创建纯色图片,可选圆角半径
@@ -91,29 +34,24 @@ public extension UIImage {
     ///   - lightImage: 浅色模式下的图片
     ///   - darkImage: 深色模式下的图片(可选)
     convenience init?(lightImage: UIImage, darkImage: UIImage? = nil) {
-        if #available(iOS 13.0, *) {
-            let darkImage = darkImage ?? lightImage
-            let asset = UIImageAsset()
+        let darkImage = darkImage ?? lightImage
+        let asset = UIImageAsset()
 
-            let lightTrait = UITraitCollection(traitsFrom: [
-                .init(userInterfaceStyle: .light),
-                .init(displayScale: lightImage.scale),
-            ])
+        let lightTrait = UITraitCollection(traitsFrom: [
+            .init(userInterfaceStyle: .light),
+            .init(displayScale: lightImage.scale),
+        ])
 
-            let darkTrait = UITraitCollection(traitsFrom: [
-                .init(userInterfaceStyle: .dark),
-                .init(displayScale: darkImage.scale),
-            ])
+        let darkTrait = UITraitCollection(traitsFrom: [
+            .init(userInterfaceStyle: .dark),
+            .init(displayScale: darkImage.scale),
+        ])
 
-            asset.register(lightImage, with: lightTrait)
-            asset.register(darkImage, with: darkTrait)
+        asset.register(lightImage, with: lightTrait)
+        asset.register(darkImage, with: darkTrait)
 
-            guard let cgImage = asset.image(with: .current).cgImage else { return nil }
-            self.init(cgImage: cgImage)
-        } else {
-            guard let cgImage = lightImage.cgImage else { return nil }
-            self.init(cgImage: cgImage)
-        }
+        guard let cgImage = asset.image(with: .current).cgImage else { return nil }
+        self.init(cgImage: cgImage)
     }
 
     /// 通过图片名称创建支持深浅色模式的动态图片
@@ -127,8 +65,70 @@ public extension UIImage {
     }
 }
 
-// MARK: - 动态图片扩展
 public extension UIImage {
+    /// 默认压缩质量范围
+    static let defaultQualityRange: ClosedRange<CGFloat> = 0.6 ... 0.8
+}
+
+// MARK: - UIImage属性
+public extension DyWrapper where Base: UIImage {
+    /// 获取图片的大小(单位:字节)
+    var sizeInBytes: Int {
+        return base.jpegData(compressionQuality: 1)?.count ?? 0
+    }
+
+    /// 获取图片的大小(单位:KB)
+    var sizeInKB: Double {
+        guard let byteCount = base.jpegData(compressionQuality: 1)?.count else { return 0 }
+        return Double(byteCount) / 1024.0
+    }
+
+    /// 返回使用原始渲染模式的图片实例
+    var withOriginalRenderingMode: UIImage {
+        return base.withRenderingMode(.alwaysOriginal)
+    }
+
+    /// 返回使用模板渲染模式的图片实例
+    var withTemplateRenderingMode: UIImage {
+        return base.withRenderingMode(.alwaysTemplate)
+    }
+}
+
+// MARK: - Base64 编码
+public extension DyWrapper where Base: UIImage {
+    /// 获取图像的 PNG 格式 Base64 编码字符串
+    ///
+    /// - Returns: Base64 字符串,若 PNG 数据生成失败则返回 `nil`
+    ///
+    /// - Example:
+    ///   ```swift
+    ///   if let base64 = image.dy.pngBase64String {
+    ///       print("data:image/png;base64,\(base64)")
+    ///   }
+    ///   ```
+    var pngBase64String: String? {
+        return base.pngData()?.base64EncodedString()
+    }
+
+    /// 获取图像的 JPEG 格式 Base64 编码字符串
+    ///
+    /// - Parameter compressionQuality: 压缩质量,范围 `[0.0, 1.0]`值越高质量越高,文件越大
+    /// - Returns: Base64 字符串,若 JPEG 数据生成失败则返回 `nil`
+    ///
+    /// - Example:
+    ///   ```swift
+    ///   if let base64 = image.dy.jpegBase64String(compressionQuality: 0.8) {
+    ///       print("data:image/jpeg;base64,\(base64)")
+    ///   }
+    ///   ```
+    func jpegBase64String(compressionQuality: CGFloat) -> String? {
+        let quality = min(max(compressionQuality, 0), 1)
+        return base.jpegData(compressionQuality: quality)?.base64EncodedString()
+    }
+}
+
+// MARK: - 动态图片扩展
+public extension DyWrapper where Base: UIImage {
     /// 创建适配深色/浅色模式的动态图片(通过图片名称)
     /// - Parameters:
     ///   - lightName: 浅色模式下的图片名称
@@ -137,9 +137,9 @@ public extension UIImage {
     ///
     /// - Example:
     ///
-    ///     let dynamicImage = UIImage.dy_dynamic(lightImageName: "light_icon", darkImageName: "dark_icon")
+    ///     let dynamicImage = UIImage.dy.dynamic(lightImageName: "light_icon", darkImageName: "dark_icon")
     ///
-    static func dy_dynamic(lightImageName: String, darkImageName: String? = nil) -> UIImage? {
+    static func dynamic(lightImageName: String, darkImageName: String? = nil) -> UIImage? {
         return UIImage(lightImageName: lightImageName, darkImageName: darkImageName)
     }
 
@@ -151,9 +151,9 @@ public extension UIImage {
     ///
     /// - Example:
     ///
-    ///     let dynamicImage = UIImage.dy_dynamic(light: lightImage, dark: darkImage)
+    ///     let dynamicImage = UIImage.dy.dynamic(light: lightImage, dark: darkImage)
     ///
-    static func dy_dynamic(light: UIImage, dark: UIImage? = nil) -> UIImage? {
+    static func dynamic(light: UIImage, dark: UIImage? = nil) -> UIImage? {
         return UIImage(lightImage: light, darkImage: dark)
     }
 }
@@ -195,7 +195,7 @@ public enum DyCompressionMode {
         case .medium: return Self.dataSizeRule.default
         case .high: return Self.dataSizeRule.high
         case let .custom(_, fileSize):
-            return fileSize.dy_clamped(to: Self.dataSizeRule.min ... Self.dataSizeRule.max)
+            return fileSize.dy.clamped(to: Self.dataSizeRule.min ... Self.dataSizeRule.max)
         }
     }
 
@@ -206,7 +206,7 @@ public enum DyCompressionMode {
         case .medium: return Self.resolutionRule.default
         case .high: return Self.resolutionRule.high
         case let .custom(resolution, _):
-            return resolution.dy_clamped(to: Self.resolutionRule.min ... Self.resolutionRule.max)
+            return resolution.dy.clamped(to: Self.resolutionRule.min ... Self.resolutionRule.max)
         }
     }
 
@@ -224,26 +224,23 @@ public enum DyCompressionMode {
         guard longestEdge > maxResolution else { return originalSize }
 
         let scale = maxResolution / longestEdge
-        return CGSize(width: originalSize.width * scale, height: originalSize.height * scale).dy_rounded()
+        return CGSize(width: originalSize.width * scale, height: originalSize.height * scale).dy.rounded()
     }
 }
 
 // MARK: - 图像压缩功能扩展
-public extension UIImage {
-    /// 默认压缩质量范围
-    static let defaultQualityRange: ClosedRange<CGFloat> = 0.6 ... 0.8
-
+public extension DyWrapper where Base: UIImage {
     /// 同步压缩图片
     /// - Parameters:
     ///   - mode: 压缩模式(默认为.medium)
     ///   - qualityRange: JPEG压缩质量范围(0.0-1.0,默认为0.6-0.8)
     /// - Returns: 压缩后的JPEG数据
-    func dy_compress(
+    func compress(
         mode: DyCompressionMode = .medium,
-        qualityRange: ClosedRange<CGFloat> = defaultQualityRange
+        qualityRange: ClosedRange<CGFloat> = UIImage.defaultQualityRange
     ) -> UIImage? {
-        guard let resizedImage = dy_resized(to: mode.resizedSize(for: size)) else { return nil }
-        guard let data = resizedImage.dy_compressedData(maxFileSize: mode.maxFileSize, qualityRange: qualityRange) else { return nil }
+        guard let resizedImage = self.resized(to: mode.resizedSize(for: base.size)) else { return nil }
+        guard let data = resizedImage.dy.compressedData(maxFileSize: mode.maxFileSize, qualityRange: qualityRange) else { return nil }
         return UIImage(data: data)
     }
 
@@ -253,14 +250,14 @@ public extension UIImage {
     ///   - qualityRange: 质量范围
     ///   - queue: 执行队列(默认后台队列)
     ///   - completion: 完成后回调(自动返回主线程)
-    func dy_asyncCompress(
+    func asyncCompress(
         mode: DyCompressionMode = .medium,
-        qualityRange: ClosedRange<CGFloat> = defaultQualityRange,
+        qualityRange: ClosedRange<CGFloat> = UIImage.defaultQualityRange,
         queue: DispatchQueue = .global(qos: .userInitiated),
         completion: @escaping DyAction1<UIImage?>
     ) {
         queue.async {
-            guard let result = self.dy_compress(mode: mode, qualityRange: qualityRange) else {
+            guard let result = self.compress(mode: mode, qualityRange: qualityRange) else {
                 DispatchQueue.main.async { completion(nil) }
                 return
             }
@@ -273,15 +270,15 @@ public extension UIImage {
     ///   - maxFileSize: 最大文件大小(字节)
     ///   - qualityRange: 质量范围
     /// - Returns: 压缩后的图片`Data`
-    func dy_compressedData(
+    func compressedData(
         maxFileSize: Int,
-        qualityRange: ClosedRange<CGFloat> = defaultQualityRange
+        qualityRange: ClosedRange<CGFloat> = UIImage.defaultQualityRange
     ) -> Data? {
         var quality = qualityRange.upperBound
         var result: Data?
 
         while quality >= qualityRange.lowerBound {
-            guard let data = jpegData(compressionQuality: quality), data.count <= maxFileSize else {
+            guard let data = base.jpegData(compressionQuality: quality), data.count <= maxFileSize else {
                 quality -= 0.05
                 continue
             }
@@ -289,22 +286,22 @@ public extension UIImage {
             break
         }
 
-        return result ?? jpegData(compressionQuality: qualityRange.lowerBound)
+        return result ?? base.jpegData(compressionQuality: qualityRange.lowerBound)
     }
 
     /// 调整图片尺寸
-    private func dy_resized(to newSize: CGSize) -> UIImage? {
-        if size == newSize {
-            return self
+    private func resized(to newSize: CGSize) -> UIImage? {
+        if base.size == newSize {
+            return base
         }
-        return dy_resizedUsingImageIO(newSize) ?? dy_resizedUsingCoreGraphics(newSize)
+        return self.resizedUsingImageIO(newSize) ?? self.resizedUsingCoreGraphics(newSize)
     }
 
     /// 使用`ImageIO`调整尺寸(最佳性能)
     /// - Parameter newSize: 目标大小
     /// - Returns: `UIImage?`
-    private func dy_resizedUsingImageIO(_ newSize: CGSize) -> UIImage? {
-        guard let data = pngData(), let source = CGImageSourceCreateWithData(data as CFData, nil) else { return nil }
+    private func resizedUsingImageIO(_ newSize: CGSize) -> UIImage? {
+        guard let data = base.pngData(), let source = CGImageSourceCreateWithData(data as CFData, nil) else { return nil }
 
         let options: [CFString: Any] = [
             kCGImageSourceCreateThumbnailWithTransform: true,
@@ -319,96 +316,96 @@ public extension UIImage {
     /// 使用`CoreGraphics`调整尺寸(兼容方案)
     /// - Parameter newSize: 目标大小
     /// - Returns: `UIImage?`
-    private func dy_resizedUsingCoreGraphics(_ newSize: CGSize) -> UIImage? {
+    private func resizedUsingCoreGraphics(_ newSize: CGSize) -> UIImage? {
         let renderer = UIGraphicsImageRenderer(size: newSize)
         return renderer.image { context in
             context.cgContext.interpolationQuality = .high
-            draw(in: CGRect(origin: .zero, size: newSize))
+            base.draw(in: CGRect(origin: .zero, size: newSize))
         }
     }
 }
 
 // MARK: - 裁剪相关
-public extension UIImage {
+public extension DyWrapper where Base: UIImage {
     /// 裁剪图片到指定矩形区域
     /// - Parameter rect: 裁剪区域(基于图片坐标系)
     /// - Returns: 裁剪后的图片,如果区域无效返回nil
-    func dy_crop(to rect: CGRect) -> UIImage? {
-        let scaledRect = rect.applying(CGAffineTransform(scaleX: scale, y: scale))
+    func crop(to rect: CGRect) -> UIImage? {
+        let scaledRect = rect.applying(CGAffineTransform(scaleX: base.scale, y: base.scale))
 
-        guard let cgImage = self.cgImage?.cropping(to: scaledRect) else {
+        guard let cgImage = base.cgImage?.cropping(to: scaledRect) else {
             return nil
         }
 
-        return UIImage(cgImage: cgImage, scale: scale, orientation: imageOrientation)
+        return UIImage(cgImage: cgImage, scale: base.scale, orientation: base.imageOrientation)
     }
 
     /// 限制图片不超过最大尺寸(保持宽高比)
     /// - Parameter maxSize: 最大允许尺寸
     /// - Returns: 调整后的图片(如不需调整则返回原图)
-    func dy_limit(to maxSize: CGSize) -> UIImage {
-        if size.width <= maxSize.width, size.height <= maxSize.height {
-            return self
+    func limit(to maxSize: CGSize) -> UIImage {
+        if base.size.width <= maxSize.width, base.size.height <= maxSize.height {
+            return base
         }
 
-        let aspectRatio = min(maxSize.width / size.width, maxSize.height / size.height)
-        let newSize = CGSize(width: size.width * aspectRatio, height: size.height * aspectRatio)
+        let aspectRatio = min(maxSize.width / base.size.width, maxSize.height / base.size.height)
+        let newSize = CGSize(width: base.size.width * aspectRatio, height: base.size.height * aspectRatio)
 
         return UIGraphicsImageRenderer(size: newSize).image { _ in
-            draw(in: CGRect(origin: .zero, size: newSize))
+            base.draw(in: CGRect(origin: .zero, size: newSize))
         }
     }
 }
 
 // MARK: - 拉伸相关
-public extension UIImage {
+public extension DyWrapper where Base: UIImage {
     /// 创建可拉伸图片(从中心点拉伸)
-    func dy_makeResizableFromCenter() -> UIImage {
+    func makeResizableFromCenter() -> UIImage {
         let insets = UIEdgeInsets(
-            top: floor(size.height / 2),
-            left: floor(size.width / 2),
-            bottom: ceil(size.height / 2),
-            right: ceil(size.width / 2)
+            top: (base.size.height / 2).dy.floor(),
+            left: (base.size.width / 2).dy.floor(),
+            bottom: (base.size.height / 2).dy.ceil(),
+            right: (base.size.width / 2).dy.ceil()
         )
-        return resizableImage(withCapInsets: insets, resizingMode: .stretch)
+        return base.resizableImage(withCapInsets: insets, resizingMode: .stretch)
     }
 
     /// 创建自定义可拉伸图片
     /// - Parameters:
     ///   - insets: 不拉伸的区域
     ///   - mode: 拉伸模式(默认.stretch)
-    func dy_makeResizable(insets: UIEdgeInsets, mode: UIImage.ResizingMode = .stretch) -> UIImage {
-        return resizableImage(withCapInsets: insets, resizingMode: mode)
+    func makeResizable(insets: UIEdgeInsets, mode: UIImage.ResizingMode = .stretch) -> UIImage {
+        return base.resizableImage(withCapInsets: insets, resizingMode: mode)
     }
 }
 
 // MARK: - 缩放相关
-public extension UIImage {
+public extension DyWrapper where Base: UIImage {
     /// 等比缩放图片到指定尺寸(可能留有空白)
     /// - Parameter size: 目标尺寸
-    func dy_scaleAspectFit(to size: CGSize) -> UIImage {
-        let aspectRatio = min(size.width / self.size.width, size.height / self.size.height)
-        let newSize = CGSize(width: self.size.width * aspectRatio, height: self.size.height * aspectRatio)
+    func scaleAspectFit(to size: CGSize) -> UIImage {
+        let aspectRatio = min(size.width / base.size.width, size.height / base.size.height)
+        let newSize = CGSize(width: base.size.width * aspectRatio, height: base.size.height * aspectRatio)
 
         return UIGraphicsImageRenderer(size: size).image { _ in
-            draw(in: CGRect(x: (size.width - newSize.width) / 2,
-                            y: (size.height - newSize.height) / 2,
-                            width: newSize.width,
-                            height: newSize.height))
+            base.draw(in: CGRect(x: (size.width - newSize.width) / 2,
+                                 y: (size.height - newSize.height) / 2,
+                                 width: newSize.width,
+                                 height: newSize.height))
         }
     }
 
     /// 等比填充缩放图片到指定尺寸(可能裁剪)
     /// - Parameter size: 目标尺寸
-    func dy_scaleAspectFill(to size: CGSize) -> UIImage {
-        let aspectRatio = max(size.width / self.size.width, size.height / self.size.height)
-        let scaledSize = CGSize(width: self.size.width * aspectRatio, height: self.size.height * aspectRatio)
+    func scaleAspectFill(to size: CGSize) -> UIImage {
+        let aspectRatio = max(size.width / base.size.width, size.height / base.size.height)
+        let scaledSize = CGSize(width: base.size.width * aspectRatio, height: base.size.height * aspectRatio)
 
         return UIGraphicsImageRenderer(size: size).image { _ in
-            draw(in: CGRect(x: (size.width - scaledSize.width) / 2,
-                            y: (size.height - scaledSize.height) / 2,
-                            width: scaledSize.width,
-                            height: scaledSize.height))
+            base.draw(in: CGRect(x: (size.width - scaledSize.width) / 2,
+                                 y: (size.height - scaledSize.height) / 2,
+                                 width: scaledSize.width,
+                                 height: scaledSize.height))
         }
     }
 
@@ -416,14 +413,14 @@ public extension UIImage {
     /// - Parameters:
     ///   - newWidth: 目标宽度
     ///   - opaque: 是否不透明背景
-    func dy_scale(toWidth newWidth: CGFloat, opaque: Bool = false) -> UIImage? {
-        let scaleFactor = newWidth / size.width
-        let newSize = CGSize(width: newWidth, height: size.height * scaleFactor)
+    func scale(toWidth newWidth: CGFloat, opaque: Bool = false) -> UIImage? {
+        let scaleFactor = newWidth / base.size.width
+        let newSize = CGSize(width: newWidth, height: base.size.height * scaleFactor)
 
-        UIGraphicsBeginImageContextWithOptions(newSize, opaque, scale)
+        UIGraphicsBeginImageContextWithOptions(newSize, opaque, base.scale)
         defer { UIGraphicsEndImageContext() }
 
-        draw(in: CGRect(origin: .zero, size: newSize))
+        base.draw(in: CGRect(origin: .zero, size: newSize))
         return UIGraphicsGetImageFromCurrentImageContext()
     }
 
@@ -431,37 +428,36 @@ public extension UIImage {
     /// - Parameters:
     ///   - newHeight: 目标高度
     ///   - opaque: 是否不透明背景
-    func dy_scale(toHeight newHeight: CGFloat, opaque: Bool = false) -> UIImage? {
-        let scaleFactor = newHeight / size.height
-        let newSize = CGSize(width: size.width * scaleFactor, height: newHeight)
+    func scale(toHeight newHeight: CGFloat, opaque: Bool = false) -> UIImage? {
+        let scaleFactor = newHeight / base.size.height
+        let newSize = CGSize(width: base.size.width * scaleFactor, height: newHeight)
 
-        UIGraphicsBeginImageContextWithOptions(newSize, opaque, scale)
+        UIGraphicsBeginImageContextWithOptions(newSize, opaque, base.scale)
         defer { UIGraphicsEndImageContext() }
 
-        draw(in: CGRect(origin: .zero, size: newSize))
+        base.draw(in: CGRect(origin: .zero, size: newSize))
         return UIGraphicsGetImageFromCurrentImageContext()
     }
 }
 
 // MARK: - 图片旋转与翻转
-public extension UIImage {
+public extension DyWrapper where Base: UIImage {
     /// 修正图片方向(确保总是 .up 方向)
     /// - Returns: 方向修正后的图片
     ///
     /// - Example:
     ///
-    ///     let fixedImage = capturedImage.dy_fixOrientation()
+    ///     let fixedImage = capturedImage.dy.fixOrientation()
     ///
-    func dy_fixOrientation() -> UIImage {
-        guard imageOrientation != .up, let _ = self.cgImage else { return self }
-        // 通过 `draw(in:)` 让 UIKit 自动应用 `imageOrientation` 变换,将方向"烘焙"进像素,
-        // 得到一张 .up 的图片(直接对 .up 调用 dy_apply 会被短路返回原图,无法修正方向)
-        let drawRect = CGRect(origin: .zero, size: size)
-        UIGraphicsBeginImageContextWithOptions(size, false, scale)
-        self.draw(in: drawRect)
+    func fixOrientation() -> UIImage {
+        guard base.imageOrientation != .up, let _ = base.cgImage else { return base }
+
+        let drawRect = CGRect(origin: .zero, size: base.size)
+        UIGraphicsBeginImageContextWithOptions(base.size, false, base.scale)
+        base.draw(in: drawRect)
         let image = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
-        return image ?? self
+        return image ?? base
     }
 
     /// 按角度旋转图片(正数顺时针,负数逆时针)
@@ -470,11 +466,11 @@ public extension UIImage {
     ///
     /// - Example:
     ///
-    ///     let rotatedImage = image.dy_rotate(degrees: 90)
+    ///     let rotatedImage = image.dy.rotate(degrees: 90)
     ///
-    func dy_rotate(degrees: CGFloat) -> UIImage? {
+    func rotate(degrees: CGFloat) -> UIImage? {
         let radians = degrees * .pi / 180
-        return dy_rotate(radians: radians)
+        return self.rotate(radians: radians)
     }
 
     /// 按弧度旋转图片
@@ -483,17 +479,17 @@ public extension UIImage {
     ///
     /// - Example:
     ///
-    ///     let rotatedImage = image.dy_rotate(radians: -.pi / 2)
+    ///     let rotatedImage = image.dy.rotate(radians: -.pi / 2)
     ///
-    func dy_rotate(radians: CGFloat) -> UIImage? {
-        guard let cgImage = self.cgImage else { return nil }
+    func rotate(radians: CGFloat) -> UIImage? {
+        guard let cgImage = base.cgImage else { return nil }
 
         // 计算旋转后所需画布尺寸
-        let rect = CGRect(origin: .zero, size: size)
+        let rect = CGRect(origin: .zero, size: base.size)
         let rotatedRect = rect.applying(CGAffineTransform(rotationAngle: radians))
         let boundingSize = CGSize(
-            width: ceil(rotatedRect.width),
-            height: ceil(rotatedRect.height)
+            width: (rotatedRect.width).dy.ceil(),
+            height: (rotatedRect.height).dy.ceil()
         )
 
         let renderer = UIGraphicsImageRenderer(size: boundingSize)
@@ -504,10 +500,10 @@ public extension UIImage {
 
             // 绘制原始图像(居中)
             let drawRect = CGRect(
-                x: -size.width / 2,
-                y: -size.height / 2,
-                width: size.width,
-                height: size.height
+                x: -base.size.width / 2,
+                y: -base.size.height / 2,
+                width: base.size.width,
+                height: base.size.height
             )
             context.cgContext.draw(cgImage, in: drawRect)
         }
@@ -518,10 +514,10 @@ public extension UIImage {
     ///
     /// - Example:
     ///
-    ///     let mirroredImage = image.dy_flipHorizontal()
+    ///     let mirroredImage = image.dy.flipHorizontal()
     ///
-    func dy_flipHorizontal() -> UIImage? {
-        return dy_apply(orientation: .upMirrored)
+    func flipHorizontal() -> UIImage? {
+        return self.apply(orientation: .upMirrored)
     }
 
     /// 垂直翻转图片
@@ -529,17 +525,17 @@ public extension UIImage {
     ///
     /// - Example:
     ///
-    ///     let flippedImage = image.flipVertical()
+    ///     let flippedImage = image.dy.flipVertical()
     ///
-    func dy_flipVertical() -> UIImage? {
-        return dy_apply(orientation: .downMirrored)
+    func flipVertical() -> UIImage? {
+        return self.apply(orientation: .downMirrored)
     }
 
     /// 应用指定的 `UIImage.Orientation` 并返回新图像
     /// - Parameter orientation: 目标方向
     /// - Returns: 转换后的 `UIImage`,失败时返回 nil
-    private func dy_apply(orientation: UIImage.Orientation) -> UIImage? {
-        guard let cgImage = self.cgImage else { return nil }
+    private func apply(orientation: UIImage.Orientation) -> UIImage? {
+        guard let cgImage = base.cgImage else { return nil }
 
         let rect = CGRect(x: 0, y: 0, width: cgImage.width, height: cgImage.height)
         var drawRect = rect
@@ -548,7 +544,7 @@ public extension UIImage {
         // 构建变换矩阵
         switch orientation {
         case .up:
-            return self
+            return base
         case .upMirrored:
             transform = transform.translatedBy(x: rect.width, y: 0).scaledBy(x: -1, y: 1)
         case .down:
@@ -595,18 +591,18 @@ public extension UIImage {
 }
 
 // MARK: - 图片圆角处理
-public extension UIImage {
+public extension DyWrapper where Base: UIImage {
     /// 为图片添加圆角
     /// - Parameter radius: 圆角半径(nil时生成圆形图片)
     /// - Returns: 带圆角的图片
-    func dy_roundedCorner(radius: CGFloat? = nil) -> UIImage? {
-        let maxRadius = min(size.width, size.height) / 2
+    func roundedCorner(radius: CGFloat? = nil) -> UIImage? {
+        let maxRadius = min(base.size.width, base.size.height) / 2
         let cornerRadius = radius ?? maxRadius
 
-        return UIGraphicsImageRenderer(size: size).image { _ in
-            let rect = CGRect(origin: .zero, size: size)
+        return UIGraphicsImageRenderer(size: base.size).image { _ in
+            let rect = CGRect(origin: .zero, size: base.size)
             UIBezierPath(roundedRect: rect, cornerRadius: cornerRadius).addClip()
-            draw(in: rect)
+            base.draw(in: rect)
         }
     }
 
@@ -616,17 +612,17 @@ public extension UIImage {
     ///   - radius: 圆角半径
     ///   - corners: 需要添加圆角的方位
     /// - Returns: 处理后的图片
-    func dy_roundedCorner(targetSize: CGSize? = nil,
-                          radius: CGFloat,
-                          corners: UIRectCorner = .allCorners) -> UIImage?
+    func roundedCorner(targetSize: CGSize? = nil,
+                       radius: CGFloat,
+                       corners: UIRectCorner = .allCorners) -> UIImage?
     {
-        let targetSize = targetSize ?? size
+        let targetSize = targetSize ?? base.size
 
         return UIGraphicsImageRenderer(size: targetSize).image { _ in
             let rect = CGRect(origin: .zero, size: targetSize)
             let path = UIBezierPath(roundedRect: rect, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
             path.addClip()
-            draw(in: rect)
+            base.draw(in: rect)
         }
     }
 
@@ -639,12 +635,12 @@ public extension UIImage {
     ///   - borderColor: 边框颜色
     ///   - backgroundColor: 背景颜色
     /// - Returns: `UIImage`
-    func dy_roundedCorner(targetSize: CGSize,
-                          radius: CGFloat,
-                          corners: UIRectCorner = .allCorners,
-                          borderWidth: CGFloat = 0,
-                          borderColor: UIColor? = nil,
-                          backgroundColor: UIColor? = nil) -> UIImage?
+    func roundedCorner(targetSize: CGSize,
+                       radius: CGFloat,
+                       corners: UIRectCorner = .allCorners,
+                       borderWidth: CGFloat = 0,
+                       borderColor: UIColor? = nil,
+                       backgroundColor: UIColor? = nil) -> UIImage?
     {
         return UIGraphicsImageRenderer(size: targetSize).image { context in
             // 设置背景色
@@ -658,7 +654,7 @@ public extension UIImage {
             path.addClip()
 
             // 绘制图片
-            draw(in: rect)
+            base.draw(in: rect)
 
             // 绘制边框
             if borderWidth > 0, let borderColor {
@@ -671,14 +667,14 @@ public extension UIImage {
 
     /// 生成圆形图片
     /// - Returns: 圆形裁剪后的图片
-    func dy_circularImage() -> UIImage? {
-        let diameter = min(size.width, size.height)
-        return dy_roundedCorner(radius: diameter / 2)
+    func circularImage() -> UIImage? {
+        let diameter = min(base.size.width, base.size.height)
+        return self.roundedCorner(radius: diameter / 2)
     }
 }
 
 // MARK: - 颜色分析
-public extension UIImage {
+public extension DyWrapper where Base: UIImage {
     /// 表示一种被统计的颜色及其出现次数
     struct DyCountedColor {
         public let color: UIColor
@@ -721,12 +717,12 @@ public extension UIImage {
     /// - Example:
     ///   ```swift
     ///   if let image = UIImage(named: "avatar") {
-    ///       let palette = image.dy_analyzeColors(maxSize: CGSize(width: 100, height: 100))
+    ///       let palette = image.dy.analyzeColors(maxSize: CGSize(width: 100, height: 100))
     ///       view.backgroundColor = palette.background
     ///   }
     ///   ```
-    func dy_analyzeColors(maxSize: CGSize = CGSize(width: 250, height: 250)) -> DyColorPalette {
-        guard let cgImage = self.cgImage else {
+    func analyzeColors(maxSize: CGSize = CGSize(width: 250, height: 250)) -> DyColorPalette {
+        guard let cgImage = base.cgImage else {
             let fallbackColor = UIColor.black
             return DyColorPalette(
                 background: fallbackColor,
@@ -737,10 +733,10 @@ public extension UIImage {
         }
 
         // 计算缩放尺寸,保持宽高比,且不超过 maxSize
-        let scale = min(maxSize.width / size.width, maxSize.height / size.height, 1.0)
+        let scale = min(maxSize.width / base.size.width, maxSize.height / base.size.height, 1.0)
         let targetSize = CGSize(
-            width: size.width * scale,
-            height: size.height * scale
+            width: base.size.width * scale,
+            height: base.size.height * scale
         )
 
         // 创建位图上下文(RGBA8,Premultiplied Last,即 BGRA)
@@ -839,7 +835,7 @@ public extension UIImage {
             background.getRed(&r2, green: &g2, blue: &b2, alpha: nil)
             let l1 = 0.299 * r1 + 0.587 * g1 + 0.114 * b1
             let l2 = 0.299 * r2 + 0.587 * g2 + 0.114 * b2
-            return abs(l1 - l2) > 0.3
+            return (l1 - l2).dy.abs() > 0.3
         }
 
         // 筛选背景色：从边缘颜色中找出现频率最高的非随机色
@@ -929,14 +925,14 @@ public extension UIImage {
     ///
     /// - Example:
     ///   ```swift
-    ///   image.dy_extractThemeColor { color in
+    ///   image.dy.extractThemeColor { color in
     ///       DispatchQueue.main.async {
     ///           self.titleLabel.textColor = color ?? .label
     ///       }
     ///   }
     ///   ```
-    func dy_extractThemeColor(_ completion: @escaping DyAction1<UIColor?>) {
-        guard let cgImage = self.cgImage else {
+    func extractThemeColor(_ completion: @escaping DyAction1<UIColor?>) {
+        guard let cgImage = base.cgImage else {
             DispatchQueue.main.async { completion(nil) }
             return
         }
@@ -1032,16 +1028,16 @@ public extension UIImage {
     ///
     /// - Example:
     ///   ```swift
-    ///   if let avgColor = image.dy_averageColor() {
+    ///   if let avgColor = image.dy.averageColor() {
     ///       view.backgroundColor = avgColor
     ///   }
     ///   ```
-    func dy_averageColor() -> UIColor? {
+    func averageColor() -> UIColor? {
         // 尝试获取有效的 CIImage
         var ciImage: CIImage?
-        if let existingCI = self.ciImage {
+        if let existingCI = base.ciImage {
             ciImage = existingCI
-        } else if let cg = self.cgImage {
+        } else if let cg = base.cgImage {
             ciImage = CIImage(cgImage: cg)
         }
 
@@ -1104,19 +1100,19 @@ public extension UIImage {
     ///
     /// - Example:
     ///   ```swift
-    ///   if let color = image.dy_color(at: CGPoint(x: 10, y: 20)) {
+    ///   if let color = image.dy.color(at: CGPoint(x: 10, y: 20)) {
     ///       print("Color: \(color)")
     ///   }
     ///   ```
-    func dy_color(at point: CGPoint) -> UIColor? {
-        guard let cgImage = self.cgImage else { return nil }
-        guard point.x >= 0, point.y >= 0, point.x < size.width, point.y < size.height else {
+    func color(at point: CGPoint) -> UIColor? {
+        guard let cgImage = base.cgImage else { return nil }
+        guard point.x >= 0, point.y >= 0, point.x < base.size.width, point.y < base.size.height else {
             return nil
         }
 
         // 将 point 转换为像素坐标(考虑 scale)
-        let scaleX = CGFloat(cgImage.width) / size.width
-        let scaleY = CGFloat(cgImage.height) / size.height
+        let scaleX = CGFloat(cgImage.width) / base.size.width
+        let scaleY = CGFloat(cgImage.height) / base.size.height
         let pixelX = Int(point.x * scaleX)
         let pixelY = Int(point.y * scaleY)
 
@@ -1171,15 +1167,15 @@ public extension UIImage {
     ///
     /// - Example:
     ///   ```swift
-    ///   image.dy_color(at: CGPoint(x: 50, y: 50)) { color in
+    ///   image.dy.color(at: CGPoint(x: 50, y: 50)) { color in
     ///       DispatchQueue.main.async {
     ///           self.indicatorView.backgroundColor = color
     ///       }
     ///   }
     ///   ```
-    func dy_color(at point: CGPoint, completion: @escaping DyAction1<UIColor?>) {
+    func color(at point: CGPoint, completion: @escaping DyAction1<UIColor?>) {
         DispatchQueue.global(qos: .userInteractive).async {
-            let color = self.dy_color(at: point)
+            let color = self.color(at: point)
             DispatchQueue.main.async {
                 completion(color)
             }
@@ -1188,12 +1184,12 @@ public extension UIImage {
 }
 
 // MARK: - 颜色调整
-public extension UIImage {
+public extension DyWrapper where Base: UIImage {
     /// 修改图像的渲染模式
     /// - Parameter renderingMode: 目标渲染模式(如 `.alwaysTemplate`)
     /// - Returns: 应用新渲染模式后的 `UIImage`
-    func dy_renderingMode(_ renderingMode: UIImage.RenderingMode) -> UIImage {
-        return withRenderingMode(renderingMode)
+    func renderingMode(_ renderingMode: UIImage.RenderingMode) -> UIImage {
+        return base.withRenderingMode(renderingMode)
     }
 
     /// 使用指定颜色对图像进行着色(适用于模板图像)
@@ -1203,15 +1199,15 @@ public extension UIImage {
     /// - Returns: 着色后的新图像;若失败则返回原图
     ///
     /// > ⚠️ 注意：此方法在 iOS 13+ 才可用低版本请使用 `tint` 或确保图像为 `.alwaysTemplate` 模式
-    func dy_tintColor(with color: UIColor, renderingMode: UIImage.RenderingMode = .alwaysOriginal) -> UIImage {
-        return withTintColor(color, renderingMode: renderingMode)
+    func tintColor(with color: UIColor, renderingMode: UIImage.RenderingMode = .alwaysOriginal) -> UIImage {
+        return base.withTintColor(color).withRenderingMode(renderingMode)
     }
 
     /// 为 SF Symbol 图像应用符号配置(如粗细、层级、尺寸等)
     /// - Parameter configuration: 符号配置对象
     /// - Returns: 应用配置后的新图像;若失败返回 `nil`
-    func dy_symbolConfiguration(_ configuration: UIImage.SymbolConfiguration) -> UIImage? {
-        return withConfiguration(configuration)
+    func symbolConfiguration(_ configuration: UIImage.SymbolConfiguration) -> UIImage? {
+        return base.withConfiguration(configuration)
     }
 
     /// 设置图像的整体透明度(Alpha 值)
@@ -1221,19 +1217,19 @@ public extension UIImage {
     /// - Example:
     ///   ```swift
     ///   let image = UIImage(named: "example.png")
-    ///   let newImage = image?.imageAlpha(0.5)
+    ///   let newImage = image?.dy.imageAlpha(0.5)
     ///   // newImage: 透明度为 50% 的图像
     ///   ```
-    func dy_imageAlpha(_ alpha: CGFloat) -> UIImage {
+    func imageAlpha(_ alpha: CGFloat) -> UIImage {
         // 边界检查
-        guard alpha >= 0.0, alpha <= 1.0 else { return self }
+        guard alpha >= 0.0, alpha <= 1.0 else { return base }
 
         let format = UIGraphicsImageRendererFormat.default()
-        format.scale = scale
-        let renderer = UIGraphicsImageRenderer(size: size, format: format)
+        format.scale = base.scale
+        let renderer = UIGraphicsImageRenderer(size: base.size, format: format)
 
         return renderer.image { context in
-            draw(at: .zero, blendMode: .normal, alpha: alpha)
+            base.draw(at: .zero, blendMode: .normal, alpha: alpha)
         }
     }
 
@@ -1244,21 +1240,21 @@ public extension UIImage {
     /// - Example:
     ///   ```swift
     ///   let image = UIImage(named: "icon")?.withRenderingMode(.alwaysTemplate)
-    ///   let filled = image?.dy_filled(with: .red)
+    ///   let filled = image?.dy.filled(with: .red)
     ///   ```
-    func dy_filled(with color: UIColor) -> UIImage {
-        guard let cgImage = self.cgImage else { return self }
+    func filled(with color: UIColor) -> UIImage {
+        guard let cgImage = base.cgImage else { return base }
 
         let format = UIGraphicsImageRendererFormat.default()
-        format.scale = scale
-        let renderer = UIGraphicsImageRenderer(size: size, format: format)
+        format.scale = base.scale
+        let renderer = UIGraphicsImageRenderer(size: base.size, format: format)
 
         return renderer.image { context in
             // 先绘制原始图像作为遮罩(仅取 Alpha 通道)
-            context.cgContext.clip(to: CGRect(origin: .zero, size: size), mask: cgImage)
+            context.cgContext.clip(to: CGRect(origin: .zero, size: base.size), mask: cgImage)
             // 再用指定颜色填充裁剪区域
             color.setFill()
-            context.fill(CGRect(origin: .zero, size: size))
+            context.fill(CGRect(origin: .zero, size: base.size))
         }
     }
 
@@ -1269,17 +1265,17 @@ public extension UIImage {
     /// - Example:
     ///   ```swift
     ///   let image = UIImage(named: "logo-transparent.png")
-    ///   let withBg = image?.dy_backgroundColor(.systemBlue)
+    ///   let withBg = image?.dy.backgroundColor(.systemBlue)
     ///   ```
-    func dy_backgroundColor(_ color: UIColor) -> UIImage {
+    func backgroundColor(_ color: UIColor) -> UIImage {
         let format = UIGraphicsImageRendererFormat.default()
-        format.scale = scale
-        let renderer = UIGraphicsImageRenderer(size: size, format: format)
+        format.scale = base.scale
+        let renderer = UIGraphicsImageRenderer(size: base.size, format: format)
 
         return renderer.image { context in
             color.setFill()
             context.fill(context.format.bounds)
-            draw(at: .zero)
+            base.draw(at: .zero)
         }
     }
 
@@ -1293,73 +1289,73 @@ public extension UIImage {
     /// - Example:
     ///   ```swift
     ///   let image = UIImage(named: "texture.png")
-    ///   let tinted = image?.dy_tint(.red, blendMode: .multiply)
+    ///   let tinted = image?.dy.tint(.red, blendMode: .multiply)
     ///   ```
-    func dy_tint(_ color: UIColor, blendMode: CGBlendMode, alpha: CGFloat = 1.0) -> UIImage {
+    func tint(_ color: UIColor, blendMode: CGBlendMode, alpha: CGFloat = 1.0) -> UIImage {
         let format = UIGraphicsImageRendererFormat.default()
-        format.scale = scale
-        let renderer = UIGraphicsImageRenderer(size: size, format: format)
+        format.scale = base.scale
+        let renderer = UIGraphicsImageRenderer(size: base.size, format: format)
 
         return renderer.image { context in
             // 先绘制底色
             color.setFill()
-            context.fill(CGRect(origin: .zero, size: size))
+            context.fill(CGRect(origin: .zero, size: base.size))
             // 再以指定混合模式叠加原图
-            draw(in: CGRect(origin: .zero, size: size), blendMode: blendMode, alpha: alpha)
+            base.draw(in: CGRect(origin: .zero, size: base.size), blendMode: blendMode, alpha: alpha)
         }
     }
 }
 
 // MARK: - 背景透明化
-public extension UIImage {
+public extension DyWrapper where Base: UIImage {
     /// 移除接近白色的背景,使其变为透明
     /// - Returns: 白色背景区域透明化后的新图像;若失败返回 `nil`
     ///
     /// - Example:
     ///   ```swift
     ///   let logo = UIImage(named: "company_logo")
-    ///   let transparentLogo = logo?.dy_removeWhiteBackground()
+    ///   let transparentLogo = logo?.dy.removeWhiteBackground()
     ///   ```
-    func dy_removeWhiteBackground() -> UIImage? {
+    func removeWhiteBackground() -> UIImage? {
         // 允许一定容差(222～255 表示浅灰到纯白)
         let colorRange: [CGFloat] = [222, 255, 222, 255, 222, 255]
-        return dy_makeBackgroundTransparent(colorRange: colorRange)
+        return self.makeBackgroundTransparent(colorRange: colorRange)
     }
 
     /// 移除接近黑色的背景,使其变为透明
     /// - Returns: 黑色背景区域透明化后的新图像;若失败返回 `nil`
-    func dy_removeBlackBackground() -> UIImage? {
+    func removeBlackBackground() -> UIImage? {
         // 容差范围：0～32(深灰到纯黑)
         let colorRange: [CGFloat] = [0, 32, 0, 32, 0, 32]
-        return dy_makeBackgroundTransparent(colorRange: colorRange)
+        return self.makeBackgroundTransparent(colorRange: colorRange)
     }
 
     /// 将指定 RGB 范围内的像素设为透明
     /// - Parameter colorRange: `[Rmin, Rmax, Gmin, Gmax, Bmin, Bmax]`,每个分量 0～255
     /// - Returns: 透明化后的新图像;若输入无效或处理失败,返回 `nil`
-    private func dy_makeBackgroundTransparent(colorRange: [CGFloat]) -> UIImage? {
+    private func makeBackgroundTransparent(colorRange: [CGFloat]) -> UIImage? {
         guard colorRange.count == 6,
-              let cgImage = self.cgImage,
+              let cgImage = base.cgImage,
               let maskedCGImage = cgImage.copy(maskingColorComponents: colorRange)
         else {
             return nil
         }
 
         let format = UIGraphicsImageRendererFormat.default()
-        format.scale = scale
-        let renderer = UIGraphicsImageRenderer(size: size, format: format)
+        format.scale = base.scale
+        let renderer = UIGraphicsImageRenderer(size: base.size, format: format)
 
         return renderer.image { context in
             // Core Graphics 原点在左下,UIKit 在左上 → 需翻转 Y 轴
-            context.cgContext.translateBy(x: 0, y: size.height)
+            context.cgContext.translateBy(x: 0, y: base.size.height)
             context.cgContext.scaleBy(x: 1, y: -1)
-            context.cgContext.draw(maskedCGImage, in: CGRect(origin: .zero, size: size))
+            context.cgContext.draw(maskedCGImage, in: CGRect(origin: .zero, size: base.size))
         }
     }
 }
 
 // MARK: - 特效处理
-public extension UIImage {
+public extension DyWrapper where Base: UIImage {
     /// 应用高斯模糊效果
     /// - Parameter radius: 模糊半径(建议 0～100),默认 20
     /// - Returns: 模糊后的新图像;若失败返回 `nil`
@@ -1367,19 +1363,19 @@ public extension UIImage {
     /// - Example:
     ///   ```swift
     ///   let portrait = UIImage(named: "profile")
-    ///   let blurred = portrait?.dy_gaussianBlur(radius: 15)
+    ///   let blurred = portrait?.dy.gaussianBlur(radius: 15)
     ///   ```
-    func dy_gaussianBlur(radius: CGFloat = 20) -> UIImage? {
+    func gaussianBlur(radius: CGFloat = 20) -> UIImage? {
         guard radius >= 0 else { return nil }
-        return dy_applyCoreImageFilter(filterName: "CIGaussianBlur", parameters: [kCIInputRadiusKey: radius])
+        return self.applyCoreImageFilter(filterName: "CIGaussianBlur", parameters: [kCIInputRadiusKey: radius])
     }
 
     /// 应用像素化(马赛克)效果
     /// - Parameter scale: 像素块大小(越大越模糊),默认 20
     /// - Returns: 像素化后的新图像;若失败返回 `nil`
-    func dy_pixelation(scale: CGFloat = 20) -> UIImage? {
+    func pixelation(scale: CGFloat = 20) -> UIImage? {
         guard scale > 0 else { return nil }
-        return dy_applyCoreImageFilter(filterName: "CIPixellate", parameters: [kCIInputScaleKey: scale])
+        return self.applyCoreImageFilter(filterName: "CIPixellate", parameters: [kCIInputScaleKey: scale])
     }
 
     /// 通用 Core Image 滤镜应用方法
@@ -1387,8 +1383,8 @@ public extension UIImage {
     ///   - filterName: CIFilter 名称(如 "CIGaussianBlur")
     ///   - parameters: 滤镜参数字典
     /// - Returns: 处理后的新图像;若失败返回 `nil`
-    private func dy_applyCoreImageFilter(filterName: String, parameters: [String: Any]) -> UIImage? {
-        guard let ciImage = CIImage(image: self) else { return nil }
+    private func applyCoreImageFilter(filterName: String, parameters: [String: Any]) -> UIImage? {
+        guard let ciImage = CIImage(image: base) else { return nil }
 
         // 合并用户参数与输入图像
         var finalParams = parameters
@@ -1409,12 +1405,12 @@ public extension UIImage {
         }
 
         // 根据原始 UIImage 的 scale 和 orientation 创建新的 UIImage
-        return UIImage(cgImage: cgImage, scale: self.scale, orientation: self.imageOrientation)
+        return UIImage(cgImage: cgImage, scale: base.scale, orientation: base.imageOrientation)
     }
 }
 
 // MARK: - 滤镜效果
-public extension UIImage {
+public extension DyWrapper where Base: UIImage {
     /// 内置照片滤镜类型
     enum DyPhotoFilter {
         case sepia(intensity: CGFloat = 1.0) // 棕褐色调
@@ -1430,9 +1426,9 @@ public extension UIImage {
     /// - Example:
     ///   ```swift
     ///   let photo = UIImage(named: "vacation")
-    ///   let vintagePhoto = photo?.dy_filter(.sepia(intensity: 0.8))
+    ///   let vintagePhoto = photo?.dy.filter(.sepia(intensity: 0.8))
     ///   ```
-    func dy_filter(_ filter: DyPhotoFilter) -> UIImage? {
+    func filter(_ filter: DyPhotoFilter) -> UIImage? {
         let filterName: String
         var parameters: [String: Any] = [:]
 
@@ -1450,22 +1446,22 @@ public extension UIImage {
             filterName = "CIPhotoEffectTonal"
         }
 
-        return dy_applyCoreImageFilter(filterName: filterName, parameters: parameters)
+        return self.applyCoreImageFilter(filterName: filterName, parameters: parameters)
     }
 }
 
 // MARK: - 人脸处理
-public extension UIImage {
+public extension DyWrapper where Base: UIImage {
     /// 检测图像中的人脸位置
     /// - Returns: 人脸边界框数组(UIKit 坐标系,原点左上);若无结果或失败返回 `nil`
     ///
     /// - Example:
     ///   ```swift
     ///   let groupPhoto = UIImage(named: "team")
-    ///   let faces = groupPhoto?.dy_detectFaces()
+    ///   let faces = groupPhoto?.dy.detectFaces()
     ///   ```
-    func dy_detectFaces() -> [CGRect]? {
-        guard let ciImage = CIImage(image: self) else { return nil }
+    func detectFaces() -> [CGRect]? {
+        guard let ciImage = CIImage(image: base) else { return nil }
 
         let options: [String: Any] = [
             CIDetectorAccuracy: CIDetectorAccuracyHigh,
@@ -1480,7 +1476,7 @@ public extension UIImage {
         // 将 Core Image 坐标(原点左下)转换为 UIKit 坐标(原点左上)
         return features.compactMap { feature in
             var rect = feature.bounds
-            rect.origin.y = self.size.height - rect.maxY
+            rect.origin.y = base.size.height - rect.maxY
             return rect
         }
     }
@@ -1488,20 +1484,20 @@ public extension UIImage {
     /// 对检测到的人脸区域应用马赛克(像素化)效果
     /// - Parameter pixelScale: 像素块大小,默认 10.0
     /// - Returns: 人脸打码后的新图像;若无人脸或失败,返回原图
-    func dy_pixelateFaces(pixelScale: CGFloat = 10.0) -> UIImage? {
+    func pixelateFaces(pixelScale: CGFloat = 10.0) -> UIImage? {
         guard pixelScale > 0,
-              let ciImage = CIImage(image: self),
-              let faces = dy_detectFaces(),
+              let ciImage = CIImage(image: base),
+              let faces = self.detectFaces(),
               !faces.isEmpty
         else {
-            return self
+            return base
         }
 
         // 创建全图马赛克版本
-        guard let pixelFilter = CIFilter(name: "CIPixellate") else { return self }
+        guard let pixelFilter = CIFilter(name: "CIPixellate") else { return base }
         pixelFilter.setValue(ciImage, forKey: kCIInputImageKey)
         pixelFilter.setValue(pixelScale, forKey: kCIInputScaleKey)
-        guard let pixelatedImage = pixelFilter.outputImage else { return self }
+        guard let pixelatedImage = pixelFilter.outputImage else { return base }
 
         // 创建人脸区域的合成蒙版(白色为人脸,黑色为其他)
         let maskSize = ciImage.extent.size
@@ -1537,28 +1533,28 @@ public extension UIImage {
         }
 
         // 若未生成有效蒙版,直接返回原图
-        guard let finalMask = compositeMask else { return self }
+        guard let finalMask = compositeMask else { return base }
 
         // 使用蒙版混合：原图(背景) + 马赛克图(前景)
-        guard let blendFilter = CIFilter(name: "CIBlendWithMask") else { return self }
+        guard let blendFilter = CIFilter(name: "CIBlendWithMask") else { return base }
         blendFilter.setValue(pixelatedImage, forKey: kCIInputImageKey)
         blendFilter.setValue(ciImage, forKey: kCIInputBackgroundImageKey)
         blendFilter.setValue(finalMask, forKey: kCIInputMaskImageKey)
 
-        guard let outputImage = blendFilter.outputImage else { return self }
+        guard let outputImage = blendFilter.outputImage else { return base }
 
         // 渲染为 UIImage
         let sharedContext = CIContext(options: [.useSoftwareRenderer: false])
         guard let cgImage = sharedContext.createCGImage(outputImage, from: ciImage.extent) else {
-            return self
+            return base
         }
 
-        return UIImage(cgImage: cgImage, scale: scale, orientation: imageOrientation)
+        return UIImage(cgImage: cgImage, scale: base.scale, orientation: base.imageOrientation)
     }
 }
 
 // MARK: - 渐变图像
-public extension UIImage {
+public extension DyWrapper where Base: UIImage {
     /// 渐变方向选项
     enum DyGradientDirection {
         case horizontal // 左 → 右
@@ -1568,7 +1564,7 @@ public extension UIImage {
         case custom(start: CGPoint, end: CGPoint) // 自定义
 
         /// 根据尺寸计算起点和终点
-        func dy_points(for size: CGSize) -> (start: CGPoint, end: CGPoint) {
+        func points(for size: CGSize) -> (start: CGPoint, end: CGPoint) {
             switch self {
             case .horizontal:
                 return (.zero, CGPoint(x: size.width, y: 0))
@@ -1595,13 +1591,13 @@ public extension UIImage {
     ///
     /// - Example:
     ///   ```swift
-    ///   let gradient = UIImage.dy_gradientImage(
+    ///   let gradient = UIImage.dy.gradientImage(
     ///       colors: [.red, .blue],
     ///       size: CGSize(width: 100, height: 100),
     ///       cornerRadius: 10
     ///   )
     ///   ```
-    static func dy_gradientImage(
+    static func gradientImage(
         colors: [UIColor],
         size: CGSize = CGSize(width: 1, height: 1),
         cornerRadius: CGFloat = 0,
@@ -1632,7 +1628,7 @@ public extension UIImage {
                 locations: locations?.map { min(max($0, 0), 1) } // 限制 0～1
             ) else { return }
 
-            let (startPoint, endPoint) = direction.dy_points(for: size)
+            let (startPoint, endPoint) = direction.points(for: size)
             context.cgContext.drawLinearGradient(
                 gradient,
                 start: startPoint,
@@ -1644,7 +1640,7 @@ public extension UIImage {
 }
 
 // MARK: - 图像加载(仅限本地资源)
-public extension UIImage {
+public extension DyWrapper where Base: UIImage {
     /// 从本地资源名称加载静态图像
     ///
     /// 此方法从主 `Bundle` 中查找指定名称的图像资源(支持 Asset Catalog 和文件系统)
@@ -1657,9 +1653,9 @@ public extension UIImage {
     ///
     /// - Example:
     ///   ```swift
-    ///   let icon = UIImage.dy_fromResource(named: "app_icon")
+    ///   let icon = UIImage.dy.fromResource(named: "app_icon")
     ///   ```
-    static func dy_fromResource(named name: String) -> UIImage? {
+    static func fromResource(named name: String) -> UIImage? {
         guard !name.isEmpty else { return nil }
         return UIImage(named: name)
     }
@@ -1675,16 +1671,16 @@ public extension UIImage {
     ///   ```swift
     ///   let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first!
     ///   let imagePath = (documentsPath as NSString).appendingPathComponent("photo.jpg")
-    ///   let image = UIImage.dy_fromFile(at: imagePath)
+    ///   let image = UIImage.dy.fromFile(at: imagePath)
     ///   ```
-    static func dy_fromFile(at path: String) -> UIImage? {
+    static func fromFile(at path: String) -> UIImage? {
         guard !path.isEmpty, FileManager.default.fileExists(atPath: path) else { return nil }
         return UIImage(contentsOfFile: path)
     }
 }
 
 // MARK: - GIF 动画支持
-public extension UIImage {
+public extension DyWrapper where Base: UIImage {
     /// GIF 资源来源类型
     ///
     /// 用于指定 GIF 数据的获取方式,支持从 `Data`、`Bundle` 资源或 `NSDataAsset` 加载
@@ -1708,22 +1704,22 @@ public extension UIImage {
     ///
     /// - Example:
     ///   ```swift
-    ///   let gif = UIImage.animatedGIF(from: .resource("loading"))
+    ///   let gif = UIImage.dy.animatedGIF(from: .resource("loading"))
     ///   imageView.image = gif
     ///   ```
-    static func dy_animatedGIF(from source: DyGIFSource) -> UIImage? {
-        guard let data = dy_gifData(from: source) else { return nil }
-        return dy_animatedGIF(from: data)
+    static func animatedGIF(from source: DyGIFSource) -> UIImage? {
+        guard let data = self.gifData(from: source) else { return nil }
+        return self.animatedGIF(from: data)
     }
 
     /// 从原始数据创建 GIF 动画图像
     ///
     /// - Parameter data: GIF 格式的原始二进制数据
     /// - Returns: 动画图像对象,失败时返回 `nil`
-    private static func dy_animatedGIF(from data: Data) -> UIImage? {
+    private static func animatedGIF(from data: Data) -> UIImage? {
         guard !data.isEmpty,
               let source = CGImageSourceCreateWithData(data as CFData, nil),
-              let (images, duration) = dy_extractGIFFrames(from: source),
+              let (images, duration) = self.extractGIFFrames(from: source),
               !images.isEmpty
         else {
             return nil
@@ -1732,7 +1728,7 @@ public extension UIImage {
     }
 
     /// 从 `DyGIFSource` 提取原始数据
-    private static func dy_gifData(from source: DyGIFSource) -> Data? {
+    private static func gifData(from source: DyGIFSource) -> Data? {
         switch source {
         case let .data(data):
             return data.isEmpty ? nil : data
@@ -1762,7 +1758,7 @@ public extension UIImage {
     ///
     /// - Parameter source: 已创建的 GIF 图像源
     /// - Returns: 包含帧图像数组和总时长的元组,若无有效帧则返回 `nil`
-    private static func dy_extractGIFFrames(from source: CGImageSource) -> (images: [UIImage], duration: TimeInterval)? {
+    private static func extractGIFFrames(from source: CGImageSource) -> (images: [UIImage], duration: TimeInterval)? {
         let frameCount = CGImageSourceGetCount(source)
         guard frameCount > 0 else { return nil }
 
@@ -1774,7 +1770,7 @@ public extension UIImage {
                 continue
             }
 
-            let delay = dy_gifFrameDelay(from: source, at: index)
+            let delay = self.gifFrameDelay(from: source, at: index)
             totalDuration += max(delay, 0.01) // 防止零延迟导致播放异常
 
             images.append(UIImage(cgImage: cgImage))
@@ -1792,7 +1788,7 @@ public extension UIImage {
     ///   - source: GIF 图像源
     ///   - index: 帧索引(从 0 开始)
     /// - Returns: 延迟时间(秒)
-    private static func dy_gifFrameDelay(from source: CGImageSource, at index: Int) -> TimeInterval {
+    private static func gifFrameDelay(from source: CGImageSource, at index: Int) -> TimeInterval {
         guard let properties = CGImageSourceCopyPropertiesAtIndex(source, index, nil) as? [String: Any],
               let gifDict = properties[kCGImagePropertyGIFDictionary as String] as? [String: Any]
         else {
@@ -1811,7 +1807,7 @@ public extension UIImage {
 }
 
 // MARK: - 水印处理
-public extension UIImage {
+public extension DyWrapper where Base: UIImage {
     /// 水印位置枚举
     ///
     /// 支持预设位置(如左上、右下、居中)或自定义坐标点
@@ -1830,7 +1826,7 @@ public extension UIImage {
         ///   - imageSize: 背景图像的尺寸
         ///   - margin: 边距
         /// - Returns: 水印应绘制的 `CGRect`
-        func dy_rect(forSize size: CGSize, inImageSize imageSize: CGSize, margin: CGFloat) -> CGRect {
+        func rect(forSize size: CGSize, inImageSize imageSize: CGSize, margin: CGFloat) -> CGRect {
             let x: CGFloat
             let y: CGFloat
 
@@ -1880,39 +1876,39 @@ public extension UIImage {
     ///       .foregroundColor: UIColor.white.withAlphaComponent(0.8),
     ///       .backgroundColor: UIColor.black.withAlphaComponent(0.3)
     ///   ]
-    ///   let result = image.addTextWatermark(
+    ///   let result = image.dy.addTextWatermark(
     ///       text: "机密",
     ///       attributes: attributes,
     ///       position: .topLeft,
     ///       margin: 16
     ///   )
     ///   ```
-    func dy_addTextWatermark(
+    func addTextWatermark(
         text: String,
         attributes: [NSAttributedString.Key: Any]? = nil,
         position: DyWatermarkPosition = .bottomRight,
         margin: CGFloat = 20
     ) -> UIImage {
         // 快速返回：空文本或无效尺寸
-        guard !text.isEmpty, size.width > 0, size.height > 0 else {
-            return self
+        guard !text.isEmpty, base.size.width > 0, base.size.height > 0 else {
+            return base
         }
 
         let format = UIGraphicsImageRendererFormat()
-        format.scale = scale
+        format.scale = base.scale
         format.opaque = false // 支持透明背景
-        let renderer = UIGraphicsImageRenderer(size: size, format: format)
+        let renderer = UIGraphicsImageRenderer(size: base.size, format: format)
 
         return renderer.image { context in
             // 绘制原始图像
-            self.draw(at: .zero)
+            base.draw(at: .zero)
 
             // 计算文本尺寸
             let textSize = text.size(withAttributes: attributes)
             guard textSize.width > 0, textSize.height > 0 else { return }
 
             // 计算水印位置
-            let textRect = position.dy_rect(forSize: textSize, inImageSize: size, margin: margin)
+            let textRect = position.rect(forSize: textSize, inImageSize: base.size, margin: margin)
             text.draw(in: textRect, withAttributes: attributes)
         }
     }
@@ -1930,14 +1926,14 @@ public extension UIImage {
     ///
     /// - Example:
     ///   ```swift
-    ///   let result = image.dy_addImageWatermark(
+    ///   let result = image.dy.addImageWatermark(
     ///       watermarkImage: logo,
     ///       position: .center,
     ///       margin: 0,
     ///       alpha: 0.6
     ///   )
     ///   ```
-    func dy_addImageWatermark(
+    func addImageWatermark(
         watermarkImage: UIImage?,
         position: DyWatermarkPosition = .bottomRight,
         margin: CGFloat = 20,
@@ -1946,22 +1942,22 @@ public extension UIImage {
         guard let watermarkImage,
               watermarkImage.size.width > 0,
               watermarkImage.size.height > 0,
-              size.width > 0,
-              size.height > 0
+              base.size.width > 0,
+              base.size.height > 0
         else {
-            return self
+            return base
         }
 
         let format = UIGraphicsImageRendererFormat()
-        format.scale = scale
+        format.scale = base.scale
         format.opaque = false
-        let renderer = UIGraphicsImageRenderer(size: size, format: format)
+        let renderer = UIGraphicsImageRenderer(size: base.size, format: format)
 
         return renderer.image { context in
-            self.draw(at: .zero)
+            base.draw(at: .zero)
 
             let watermarkSize = watermarkImage.size
-            let watermarkRect = position.dy_rect(forSize: watermarkSize, inImageSize: size, margin: margin)
+            let watermarkRect = position.rect(forSize: watermarkSize, inImageSize: base.size, margin: margin)
             watermarkImage.draw(in: watermarkRect, blendMode: .normal, alpha: min(max(alpha, 0), 1))
         }
     }
@@ -1981,13 +1977,13 @@ public extension UIImage {
     ///
     /// - Example:
     ///   ```swift
-    ///   let placeholder = UIImage.dy_placeholder(
+    ///   let placeholder = UIImage.dy.placeholder(
     ///       with: "A",
     ///       size: CGSize(width: 60, height: 60),
     ///       isCircular: true
     ///   )
     ///   ```
-    static func dy_placeholder(
+    static func placeholder(
         with text: String,
         size: CGSize,
         backgroundColor: UIColor = .systemGray,
@@ -2028,7 +2024,7 @@ public extension UIImage {
 }
 
 // MARK: - 实用功能
-public extension UIImage {
+public extension DyWrapper where Base: UIImage {
     /// 将图像平铺至指定尺寸
     ///
     /// 适用于生成背景纹理、图案填充等场景
@@ -2038,18 +2034,18 @@ public extension UIImage {
     ///
     /// - Example:
     ///   ```swift
-    ///   let tiled = patternImage.dy_tiled(to: view.bounds.size)
+    ///   let tiled = patternImage.dy.tiled(to: view.bounds.size)
     ///   ```
-    func dy_tiled(to size: CGSize) -> UIImage {
-        guard size.width > 0, size.height > 0 else { return self }
+    func tiled(to size: CGSize) -> UIImage {
+        guard size.width > 0, size.height > 0 else { return base }
 
         let format = UIGraphicsImageRendererFormat()
-        format.scale = scale
+        format.scale = base.scale
         format.opaque = false
         let renderer = UIGraphicsImageRenderer(size: size, format: format)
 
         return renderer.image { _ in
-            UIColor(patternImage: self).setFill()
+            UIColor(patternImage: base).setFill()
             UIRectFill(CGRect(origin: .zero, size: size))
         }
     }
@@ -2068,11 +2064,11 @@ public extension UIImage {
     /// - Example:
     ///   ```swift
     ///   DispatchQueue.global().async {
-    ///       let size = UIImage.dy_sizeOfRemoteImage(at: url, maximumDimension: 1024)
+    ///       let size = UIImage.dy.sizeOfRemoteImage(at: url, maximumDimension: 1024)
     ///       print("Image size: \(size)")
     ///   }
     ///   ```
-    static func dy_sizeOfRemoteImage(at url: URL, maximumDimension: CGFloat? = nil) -> CGSize {
+    static func sizeOfRemoteImage(at url: URL, maximumDimension: CGFloat? = nil) -> CGSize {
         guard let source = CGImageSourceCreateWithURL(url as CFURL, nil),
               let properties = CGImageSourceCopyPropertiesAtIndex(source, 0, nil) as? [CFString: Any],
               let width = properties[kCGImagePropertyPixelWidth] as? CGFloat,

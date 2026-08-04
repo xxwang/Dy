@@ -1,7 +1,7 @@
 import Foundation
 
 // MARK: - 整数判断
-public extension NSDecimalNumber {
+public extension DyWrapper where Base: NSDecimalNumber {
     /// 检查当前 `NSDecimalNumber` 是否表示一个数学意义上的整数(即小数部分为零)
     /// 支持负数、零、极大/极小值,且不会因浮点转换丢失精度
     ///
@@ -9,15 +9,15 @@ public extension NSDecimalNumber {
     ///
     /// - Example:
     ///   ```swift
-    ///   NSDecimalNumber(string: "10").dy_isInteger       // true
-    ///   NSDecimalNumber(string: "10.0").dy_isInteger     // true
-    ///   NSDecimalNumber(string: "10.1").dy_isInteger     // false
-    ///   NSDecimalNumber(value: -5).dy_isInteger          // true
-    ///   NSDecimalNumber.notANumber.dy_isInteger          // false
+    ///   NSDecimalNumber(string: "10").dy.isInteger       // true
+    ///   NSDecimalNumber(string: "10.0").dy.isInteger     // true
+    ///   NSDecimalNumber(string: "10.1").dy.isInteger     // false
+    ///   NSDecimalNumber(value: -5).dy.isInteger          // true
+    ///   NSDecimalNumber.notANumber.dy.isInteger          // false
     ///   ```
-    var dy_isInteger: Bool {
+    var isInteger: Bool {
         // 特殊值处理：NaN 或无穷大(虽然 NSDecimalNumber 通常不支持无穷,但防御性处理)
-        if self == .notANumber {
+        if base == .notANumber {
             return false
         }
 
@@ -33,19 +33,19 @@ public extension NSDecimalNumber {
         )
 
         // 将当前值舍入到整数(去掉所有小数位)
-        let rounded = self.rounding(accordingToBehavior: handler)
+        let rounded = base.rounding(accordingToBehavior: handler)
 
         // 比较原值与舍入后的值是否完全相等
-        return self.compare(rounded) == .orderedSame
+        return base.compare(rounded) == .orderedSame
     }
 
     /// 返回当前数值的绝对值
-    var dy_absoluteValue: NSDecimalNumber {
-        return self.compare(NSDecimalNumber.zero) == .orderedAscending ? self.multiplying(by: -1) : self
+    var absoluteValue: NSDecimalNumber {
+        return base.compare(NSDecimalNumber.zero) == .orderedAscending ? base.multiplying(by: -1) : base
     }
 
     /// 返回当前数值的相反数(正变负,负变正)
-    var dy_negated: NSDecimalNumber {
-        return self.multiplying(by: -1)
+    var negated: NSDecimalNumber {
+        return base.multiplying(by: -1)
     }
 }

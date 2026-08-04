@@ -1,7 +1,9 @@
 import MapKit
 
+extension MKMapRect: DyExtension {}
+
 // MARK: - 方法
-public extension MKMapRect {
+public extension DyWrapper where Base == MKMapRect {
     /// 将 `MKCoordinateRegion`(经纬度区域)转换为 `MKMapRect`(地图投影矩形)
     ///
     /// 此方法通过计算区域的左上角和右下角地理坐标,再将其转换为地图投影点(`MKMapPoint`),
@@ -20,19 +22,19 @@ public extension MKMapRect {
     ///       center: CLLocationCoordinate2D(latitude: 37.7749, longitude: -122.4194),
     ///       span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)
     ///   )
-    ///   let mapRect = MKMapRect.dy_regionToMapRect(region)
+    ///   let mapRect = MKMapRect.dy.regionToMapRect(region)
     ///   mapView.setVisibleMapRect(mapRect, animated: true)
     ///   ```
-    static func dy_regionToMapRect(_ region: MKCoordinateRegion) -> MKMapRect {
+    static func regionToMapRect(_ region: MKCoordinateRegion) -> MKMapRect {
         // 计算左上角和右下角的地理坐标
-        let topLeft = MKMapPoint(region.dy_topLeftCoordinate)
-        let bottomRight = MKMapPoint(region.dy_bottomRightCoordinate)
+        let topLeft = MKMapPoint(region.dy.topLeftCoordinate)
+        let bottomRight = MKMapPoint(region.dy.bottomRightCoordinate)
 
         // 构造 MKMapRect
         let origin = MKMapPoint(x: min(topLeft.x, bottomRight.x), y: min(topLeft.y, bottomRight.y))
         let size = MKMapSize(
-            width: abs(bottomRight.x - topLeft.x),
-            height: abs(bottomRight.y - topLeft.y)
+            width: (bottomRight.x - topLeft.x).dy.abs(),
+            height: (bottomRight.y - topLeft.y).dy.abs()
         )
 
         return MKMapRect(origin: origin, size: size)

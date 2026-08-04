@@ -1,32 +1,34 @@
 import MapKit
 
+extension MKCoordinateRegion: DyExtension {}
+
 // MARK: - 角点计算
-public extension MKCoordinateRegion {
+public extension DyWrapper where Base == MKCoordinateRegion {
     /// 获取当前区域的左上角地理坐标(最大纬度,最小经度)
     ///
     /// - Note:
     ///   - 假设区域不跨越国际日期变更线(±180° 经度)
     ///   - 不适用于极地附近(纬度 > 85°)的高精度场景
-    var dy_topLeftCoordinate: CLLocationCoordinate2D {
+    var topLeftCoordinate: CLLocationCoordinate2D {
         CLLocationCoordinate2D(
-            latitude: center.latitude + span.latitudeDelta / 2,
-            longitude: center.longitude - span.longitudeDelta / 2
+            latitude: base.center.latitude + base.span.latitudeDelta / 2,
+            longitude: base.center.longitude - base.span.longitudeDelta / 2
         )
     }
 
     /// 获取当前区域的右下角地理坐标(最小纬度,最大经度)
     ///
     /// - Note: 同 `topLeftCoordinate`,有相同限制
-    var dy_bottomRightCoordinate: CLLocationCoordinate2D {
+    var bottomRightCoordinate: CLLocationCoordinate2D {
         CLLocationCoordinate2D(
-            latitude: center.latitude - span.latitudeDelta / 2,
-            longitude: center.longitude + span.longitudeDelta / 2
+            latitude: base.center.latitude - base.span.latitudeDelta / 2,
+            longitude: base.center.longitude + base.span.longitudeDelta / 2
         )
     }
 }
 
 // MARK: - 边界
-public extension MKCoordinateRegion {
+public extension DyWrapper where Base == MKCoordinateRegion {
     /// 计算包含所有坐标的最小 `MKCoordinateRegion`,并添加指定边距
     ///
     /// - Parameters:
@@ -43,9 +45,9 @@ public extension MKCoordinateRegion {
     /// - Example:
     ///   ```swift
     ///   let coords = [CLLocationCoordinate2D(latitude: 39.9, longitude: 116.4)]
-    ///   let region = MKCoordinateRegion.dy_boundingRegion(for: coords, margin: 500)
+    ///   let region = MKCoordinateRegion.dy.boundingRegion(for: coords, margin: 500)
     ///   ```
-    static func dy_boundingRegion(
+    static func boundingRegion(
         for coordinates: [CLLocationCoordinate2D],
         margin: CLLocationDistance = 100
     ) -> MKCoordinateRegion {
@@ -76,11 +78,11 @@ public extension MKCoordinateRegion {
         if span.latitudeDelta == 0, span.longitudeDelta == 0 {
             // 单点：使用 margin 反推一个合理 span
             let tempRegion = MKCoordinateRegion(center: center, span: MKCoordinateSpan(latitudeDelta: 0.001, longitudeDelta: 0.001))
-            return tempRegion.dy_expanded(by: margin)
+            return tempRegion.dy.expanded(by: margin)
         }
 
         let baseRegion = MKCoordinateRegion(center: center, span: span)
-        return baseRegion.dy_expanded(by: margin)
+        return baseRegion.dy.expanded(by: margin)
     }
 
     /// 在当前区域四周扩展指定距离(米)
@@ -92,9 +94,9 @@ public extension MKCoordinateRegion {
     ///   - 使用近似公式：1° 纬度 ≈ 111,000 米
     ///   - 经度缩放考虑纬度余弦(赤道最大,极地趋近于 0)
     ///   - 为避免极点附近数值不稳定,对 `cos(lat)` 设置下限(0.01)
-    func dy_expanded(by margin: CLLocationDistance) -> MKCoordinateRegion {
+    func expanded(by margin: CLLocationDistance) -> MKCoordinateRegion {
         // 防止在极点附近 cos(lat) → 0 导致 longitudeDelta 爆炸
-        let latRadians = center.latitude * .pi / 180
+        let latRadians = base.center.latitude * .pi / 180
         let cosLat = max(cos(latRadians), 0.01) // 下限 0.01 ≈ 纬度 84.26°
 
         // 将米转换为经纬度跨度
@@ -102,10 +104,10 @@ public extension MKCoordinateRegion {
         let deltaLon = margin / (111000.0 * cosLat)
 
         let newSpan = MKCoordinateSpan(
-            latitudeDelta: span.latitudeDelta + deltaLat,
-            longitudeDelta: span.longitudeDelta + deltaLon
+            latitudeDelta: base.span.latitudeDelta + deltaLat,
+            longitudeDelta: base.span.longitudeDelta + deltaLon
         )
 
-        return MKCoordinateRegion(center: center, span: newSpan)
+        return MKCoordinateRegion(center: base.center, span: newSpan)
     }
 }

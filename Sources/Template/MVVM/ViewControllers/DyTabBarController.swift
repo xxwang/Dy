@@ -22,10 +22,17 @@ open class DyTabBarController: UITabBarController {
 @objc extension DyTabBarController: DySetupable {
     /// 控制器初始化样式
     open func setupUI() {
-        self.dy_delegate(self) // 设置代理
-            .dy_overrideUserInterfaceStyle(self.selectedViewController?.overrideUserInterfaceStyle ?? .light) // 设置UI样式
+        self
+            .dy
+            // 设置代理
+            .delegate(self)
+            // 设置UI样式
+            .overrideUserInterfaceStyle(self.selectedViewController?.overrideUserInterfaceStyle ?? .light)
 
-        self.view.dy_backgroundColor(.white) // 控制器背景色
+        self.view
+            .dy
+            // 控制器背景色
+            .backgroundColor(.white)
     }
 }
 
