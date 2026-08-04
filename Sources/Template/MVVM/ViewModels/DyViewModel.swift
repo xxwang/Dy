@@ -1,7 +1,7 @@
 import Foundation
 import Combine
 
-@MainActor open class DyViewModel: ObservableObject {
+open class DyViewModel: ObservableObject {
     public var cancellables = Set<AnyCancellable>()
 
     public nonisolated init() {}
