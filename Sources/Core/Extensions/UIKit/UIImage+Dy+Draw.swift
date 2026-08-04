@@ -1,7 +1,7 @@
 import UIKit
 
 // MARK: - 圆角纯色图片绘制
-public extension UIImage {
+public extension DyWrapper where Base: UIImage {
     /// 创建一个指定尺寸、背景色和圆角的纯色图片,可选添加边框
     ///
     /// 此方法适用于生成头像占位图、按钮背景等场景
@@ -14,7 +14,7 @@ public extension UIImage {
     ///   - borderColor: 边框颜色若为 `nil` 或 `borderWidth ≤ 0`,则不绘制边框
     ///   - borderWidth: 边框宽度必须 > 0 才会绘制边框
     /// - Returns: 生成的 `UIImage` 实例;若输入无效则返回空图片
-    static func dy_drawRoundedImage(
+    static func drawRoundedImage(
         size: CGSize,
         bgColor: UIColor,
         cornerRadii: CGSize,
@@ -49,7 +49,7 @@ public extension UIImage {
 }
 
 // MARK: - 基础形状图标绘制
-public extension UIImage {
+public extension DyWrapper where Base: UIImage {
     /// 箭头方向枚举,用于控制箭头或三角形的朝向
     enum DyArrowDirection: Int, CaseIterable {
         case up = 0 // < 向上
@@ -66,7 +66,7 @@ public extension UIImage {
     ///   - lineWidth: 线条宽度,建议 ≥ 1
     ///   - direction: 箭头指向方向
     /// - Returns: 渲染后的箭头图片
-    static func dy_drawArrow(
+    static func drawArrow(
         size: CGSize,
         color: UIColor,
         lineWidth: CGFloat,
@@ -117,7 +117,7 @@ public extension UIImage {
     ///   - fillColor: 填充颜色
     ///   - direction: 三角形尖角方向
     /// - Returns: 渲染后的三角形图片
-    static func dy_drawTriangle(
+    static func drawTriangle(
         size: CGSize,
         fillColor: UIColor,
         direction: DyArrowDirection
@@ -166,7 +166,7 @@ public extension UIImage {
     ///   - borderColor: 边框颜色(可选)
     ///   - borderWidth: 边框宽度(≤0 则不绘制)
     /// - Returns: 渲染后的对勾图标
-    static func dy_drawCheckmark(
+    static func drawCheckmark(
         size: CGSize,
         fillColor: UIColor,
         lineWidth: CGFloat,
@@ -247,7 +247,7 @@ public extension UIImage {
     ///   - lineColor: 线条颜色
     ///   - lineWidth: 线条宽度
     /// - Returns: 渲染后的叉号图片
-    static func dy_drawCross(
+    static func drawCross(
         size: CGSize,
         lineColor: UIColor,
         lineWidth: CGFloat
@@ -279,7 +279,7 @@ public extension UIImage {
     ///   - lineColor: 线条颜色
     ///   - lineWidth: 线条宽度
     /// - Returns: 渲染后的加号图片
-    static func dy_drawPlus(
+    static func drawPlus(
         size: CGSize,
         lineColor: UIColor,
         lineWidth: CGFloat
@@ -314,7 +314,7 @@ public extension UIImage {
     ///   - lineColor: 圆环颜色
     ///   - lineWidth: 圆环线宽
     /// - Returns: 渲染后的空心圆图片
-    static func dy_drawCircle(
+    static func drawCircle(
         size: CGSize,
         lineColor: UIColor,
         lineWidth: CGFloat
@@ -349,7 +349,7 @@ public extension UIImage {
     ///   - color: 填充颜色
     ///   - insets: 内边距,默认为 `.zero`
     /// - Returns: 渲染后的实心圆图片
-    static func dy_drawSolidCircle(
+    static func drawSolidCircle(
         size: CGSize,
         color: UIColor,
         insets: UIEdgeInsets = .zero
@@ -385,7 +385,7 @@ public extension UIImage {
     ///   - lineWidth: 外圈线宽
     ///   - innerSpacing: 内圈与外圈之间的间距(≥0)
     /// - Returns: 渲染后的双圆图标
-    static func dy_drawDoubleCircle(
+    static func drawDoubleCircle(
         size: CGSize,
         lineColor: UIColor,
         lineWidth: CGFloat,
@@ -433,7 +433,7 @@ public extension UIImage {
     ///   - innerColor: 内圆颜色
     ///   - spacing: 内圆与外圆之间的间距(≥0)
     /// - Returns: 渲染后的双实心圆图片
-    static func dy_drawDoubleSolidCircle(
+    static func drawDoubleSolidCircle(
         size: CGSize,
         outerColor: UIColor,
         innerColor: UIColor,
@@ -474,7 +474,7 @@ public extension UIImage {
     ///   - size: 图标尺寸
     ///   - color: 填充颜色
     /// - Returns: 渲染后的五角星图片
-    static func dy_drawStar(
+    static func drawStar(
         size: CGSize,
         color: UIColor
     ) -> UIImage {
@@ -506,7 +506,18 @@ public extension UIImage {
 }
 
 // MARK: - 多图合成
-public extension UIImage {
+public extension DyWrapper where Base: UIImage {
+    /// 更类型安全的多图合成方法(推荐使用)
+    ///
+    /// - Parameters:
+    ///   - size: 画布尺寸
+    ///   - items: 要绘制的图层列表
+    /// - Returns: 合成后的图片
+    struct DyDrawItem {
+        let image: UIImage
+        let rect: CGRect
+    }
+
     /// 将多个图片按指定位置绘制到一个画布上
     ///
     /// - Important: 推荐使用 `[DrawItem]` 结构体替代字典,但为兼容现有接口保留此版本
@@ -518,7 +529,7 @@ public extension UIImage {
     ///             - `"image"`: `UIImage`
     ///             - `"rect"`: `CGRect`
     /// - Returns: 合成后的图片;若尺寸无效或无有效图层,返回空图片
-    static func dy_drawImages(size: CGSize, images: [[String: Any]]) -> UIImage {
+    static func drawImages(size: CGSize, images: [[String: Any]]) -> UIImage {
         guard size.width > 0, size.height > 0 else {
             return UIImage()
         }
@@ -536,24 +547,13 @@ public extension UIImage {
         }
     }
 
-    /// 更类型安全的多图合成方法(推荐使用)
-    ///
-    /// - Parameters:
-    ///   - size: 画布尺寸
-    ///   - items: 要绘制的图层列表
-    /// - Returns: 合成后的图片
-    struct DyDrawItem {
-        let image: UIImage
-        let rect: CGRect
-    }
-
     /// 将多个图片按指定位置绘制到一个画布上(类型安全版本)
     ///
     /// - Parameters:
     ///   - size: 画布尺寸
     ///   - items: 图片与位置的组合列表
     /// - Returns: 合成后的图片
-    static func dy_drawImages(size: CGSize, items: [DyDrawItem]) -> UIImage {
+    static func drawImages(size: CGSize, items: [DyDrawItem]) -> UIImage {
         guard size.width > 0, size.height > 0 else {
             return UIImage()
         }

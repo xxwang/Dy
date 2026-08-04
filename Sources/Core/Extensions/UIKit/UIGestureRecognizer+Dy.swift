@@ -2,46 +2,46 @@ import UIKit
 
 // MARK: - 事件回调处理
 extension UIGestureRecognizer {
-    /// 关联属性键(使用稳定内存地址作为 key)
-    private enum AssociatedKeys {
+    /// 关联属性键
+    private enum Keys {
         static var recognized: UInt8 = 0
         static var stateChanged: UInt8 = 0
     }
 
     /// 手势识别成功时触发的闭包
-    var dy_recognizedBlock: DyAction1<UIGestureRecognizer>? {
-        get { return self.dy_getAssociatedObject(forKey: &AssociatedKeys.recognized) }
-        set { self.dy_setAssociatedObject(newValue, forKey: &AssociatedKeys.recognized) }
+    var recognizedBlock: DyAction1<UIGestureRecognizer>? {
+        get { return self.dy.GetAO(forKey: &Keys.recognized) }
+        set { self.dy.SetAO(newValue, forKey: &Keys.recognized) }
     }
 
     /// 手势状态变化时触发的闭包
-    var dy_stateChangedBlock: DyAction1<UIGestureRecognizer.State>? {
-        get { return self.dy_getAssociatedObject(forKey: &AssociatedKeys.stateChanged) }
-        set { self.dy_setAssociatedObject(newValue, forKey: &AssociatedKeys.stateChanged) }
+    var stateChangedBlock: DyAction1<UIGestureRecognizer.State>? {
+        get { return self.dy.GetAO(forKey: &Keys.stateChanged) }
+        set { self.dy.SetAO(newValue, forKey: &Keys.stateChanged) }
     }
 
     /// 处理手势状态变化
-    @objc func dy_stateChangeHandler() {
+    @objc func stateChangeHandler() {
         // 状态回调
-        self.dy_stateChangedBlock?(state)
+        self.stateChangedBlock?(state)
 
         if state == .recognized {
             // 手势识别回调
-            self.dy_recognizedBlock?(self)
+            self.recognizedBlock?(self)
         }
     }
 }
 
 // MARK: - 属性
-public extension UIGestureRecognizer {
+public extension DyWrapper where Base: UIGestureRecognizer {
     /// 视图是否启用了用户交互
-    var dy_canRecognizeGesture: Bool {
-        self.view?.isUserInteractionEnabled == true
+    var canRecognizeGesture: Bool {
+        base.view?.isUserInteractionEnabled == true
     }
 
     /// 获取手势在所属视图中的触摸位置
-    var dy_locationInView: CGPoint {
-        guard let view = self.view else { return .zero }
-        return self.location(in: view)
+    var locationInView: CGPoint {
+        guard let view = base.view else { return .zero }
+        return base.location(in: view)
     }
 }

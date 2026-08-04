@@ -4,7 +4,7 @@ import Foundation
 public extension DyWrapper where Base == String {
     /// 判断字符串是否为单个视觉单元的 Emoji
     var isSingleEmoji: Bool {
-        return base.count == 1 && base.first?.dy_isEmoji == true
+        return base.count == 1 && base.first?.dy.isEmoji == true
     }
 
     /// 判断字符串是否包含至少一个 Emoji 字符
@@ -24,7 +24,7 @@ public extension DyWrapper where Base == String {
 
     /// 提取所有`Emoji`字符数组
     var emojis: [Character] {
-        return base.filter(\.dy_isEmoji)
+        return base.filter(\.dy.isEmoji)
     }
 
     /// 提取所有 `Emoji` 的底层 `Unicode` 标量

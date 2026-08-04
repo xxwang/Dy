@@ -156,7 +156,7 @@ public extension DyWrapper where Base: CALayer {
     /// 启用或禁用光栅化(将图层预渲染为位图)
     /// - Parameter shouldRasterize: 是否启用光栅化
     /// - Returns: `Self`
-    /// - Important: 启用后建议调用 `dy_rasterizationScale(DyScreen.screenScale)` 以适配 Retina 屏幕
+    /// - Important: 启用后建议调用 `dy.rasterizationScale(DyScreen.screenScale)` 以适配 Retina 屏幕
     @discardableResult
     func shouldRasterize(_ shouldRasterize: Bool) -> Self {
         base.shouldRasterize = shouldRasterize

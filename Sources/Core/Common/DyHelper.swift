@@ -43,8 +43,7 @@ public extension DyHelper {
     /// 判断依据：`key window` 的 `safeAreaInsets.bottom > 0`
     /// 注意：在 `iPad` 或非全面屏设备上返回 `false`
     var isIPhoneXSeries: Bool {
-        let bottomInset = UIWindow.dy_keyWindow?.safeAreaInsets.bottom ?? 0
-
+        let bottomInset = UIWindow.dy.keyWindow?.safeAreaInsets.bottom ?? 0
         return isPhone && bottomInset > 0
     }
 }
@@ -159,13 +158,13 @@ public extension DyHelper {
     /// 判断指定方向是否被当前 App 支持
     func isSupportedOrientation(_ orientation: UIInterfaceOrientation) -> Bool {
         let supported = UIApplication.shared.supportedInterfaceOrientations(for: nil)
-        return supported.contains(orientation.dy_interfaceOrientationMask)
+        return supported.contains(orientation.dy.toInterfaceOrientationMask)
     }
 }
 
 // MARK: - 辅助方法
 public extension DyHelper {
-    /// 获取去掉模块前缀的类名（如 "MyApp.MyClass" → "MyClass"）
+    /// 获取去掉模块前缀的类名（如 `MyApp.MyClass` → `MyClass`）
     func className(_ type: (some Any).Type) -> String {
         String(reflecting: type).components(separatedBy: ".").last ?? String(describing: type)
     }

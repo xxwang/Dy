@@ -1,15 +1,15 @@
 import UIKit
 
 // MARK: - 属性
-public extension UITextField {
+public extension DyWrapper where Base: UITextField {
     /// 判断当前文本内容是否为空
-    var dy_isEmpty: Bool {
-        self.text == nil || self.text == ""
+    var isEmpty: Bool {
+        base.text == nil || base.text == ""
     }
 }
 
 // MARK: - 常用方法
-public extension UITextField {
+public extension DyWrapper where Base: UITextField {
     /// 为输入框添加工具栏到 `inputAccessoryView`
     ///
     /// - Parameters:
@@ -20,10 +20,10 @@ public extension UITextField {
     /// - Example:
     ///   ```swift
     ///   let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(dismissKeyboard))
-    ///   textField.dy_add2olbar(items: [doneButton])
+    ///   textField.dy.addToolbar(items: [doneButton])
     ///   ```
     @discardableResult
-    func dy_add2olbar(items: [UIBarButtonItem]?, height: CGFloat = 44) -> UIToolbar {
+    func addToolbar(items: [UIBarButtonItem]?, height: CGFloat = 44) -> UIToolbar {
         let toolbar = UIToolbar()
         toolbar.items = items
         toolbar.sizeToFit()
@@ -38,7 +38,7 @@ public extension UITextField {
                                              constant: height)
         fixedHeight.isActive = true
 
-        self.inputAccessoryView = toolbar
+        base.inputAccessoryView = toolbar
         return toolbar
     }
 
@@ -56,7 +56,7 @@ public extension UITextField {
     /// - Example:
     ///   ```swift
     ///   func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-    ///       return textField.dy_inputRestrictions(
+    ///       return textField.dy.inputRestrictions(
     ///           shouldChangeTextIn: range,
     ///           replacementText: string,
     ///           maxCharacters: 10,
@@ -64,7 +64,7 @@ public extension UITextField {
     ///       )
     ///   }
     ///   ```
-    func dy_inputRestrictions(
+    func inputRestrictions(
         shouldChangeTextIn range: NSRange,
         replacementText text: String,
         maxCharacters: Int,
@@ -76,12 +76,12 @@ public extension UITextField {
         }
 
         // 正则校验(仅校验新增字符)
-        if let regexPattern = regex, !text.dy_isMatch(pattern: regexPattern) {
+        if let regexPattern = regex, !text.dy.isMatch(pattern: regexPattern) {
             return false
         }
 
         // 计算新文本
-        let currentText = self.text ?? ""
+        let currentText = base.text ?? ""
         guard let textRange = Range(range, in: currentText) else { return false }
         let newText = currentText.replacingCharacters(in: textRange, with: text)
 

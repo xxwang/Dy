@@ -123,6 +123,7 @@ extension Set: DyExtension {}
 extension JSONDecoder: DyExtension {}
 extension JSONEncoder: DyExtension {}
 
+extension CGFloat: DyExtension {}
 extension CGPoint: DyExtension {}
 extension CGRect: DyExtension {}
 extension CGSize: DyExtension {}

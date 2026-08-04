@@ -1,148 +1,5 @@
 import UIKit
 
-// MARK: - 属性
-public extension UILabel {
-    /// 获取 `UILabel` 在当前约束下实际使用的字体大小(考虑 `adjustsFontSizeToFitWidth`)
-    ///
-    /// - 注意: 此属性应在布局完成后(如 `layoutSubviews` 后)调用,否则 `bounds` 可能为零
-    /// - 原理: 通过比较文本所需宽度与 label 可用宽度,结合 `minimumScaleFactor` 计算缩放比例
-    ///
-    /// - Example:
-    ///   ```swift
-    ///   label.adjustsFontSizeToFitWidth = true
-    ///   label.minimumScaleFactor = 0.5
-    ///   print("实际字号: \(label.dy_actualFontSize)")
-    ///   ```
-    var dy_actualFontSize: CGFloat {
-        // 快速返回：未启用自动缩放、无文本、无字体或容器宽度无效
-        guard adjustsFontSizeToFitWidth,
-              let text = self.text,
-              !text.isEmpty,
-              bounds.width > 0,
-              let font = self.font
-        else {
-            return self.font?.pointSize ?? 0
-        }
-
-        // 计算原始文本在当前字体下的单行宽度
-        let originalWidth = (text as NSString).boundingRect(
-            with: CGSize(width: .greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude),
-            options: [.usesLineFragmentOrigin, .usesFontLeading],
-            attributes: [.font: font],
-            context: nil
-        ).width
-
-        // 若原始宽度未超出容器,使用原始字号
-        guard originalWidth > bounds.width else {
-            return font.pointSize
-        }
-
-        // 计算缩放比例,并受 minimumScaleFactor 限制
-        let scale = bounds.width / originalWidth
-        let clampedScale = max(minimumScaleFactor, scale)
-        return font.pointSize * clampedScale
-    }
-
-    /// 根据当前文本、字体、宽度和行数限制,计算内容所需的高度
-    ///
-    /// - 注意: 此方法考虑了 `numberOfLines`、`lineBreakMode`、`attributedText/text` 优先级
-    /// - 推荐在 label 布局完成后调用(确保 `bounds.width` 有效)
-    ///
-    /// - Example:
-    ///   ```swift
-    ///   label.frame.size.width = 200
-    ///   label.numberOfLines = 0
-    ///   print("所需高度: \(label.dy_requiredHeight)")
-    ///   ```
-    var dy_requiredHeight: CGFloat {
-        guard bounds.width > 0 else { return 0 }
-
-        let textToUse = attributedText ?? (text.map { NSAttributedString(string: $0) })
-        guard let text = textToUse, text.length > 0 else { return 0 }
-
-        let constraintBox = CGSize(width: bounds.width, height: .greatestFiniteMagnitude)
-        let options: NSStringDrawingOptions = [.usesLineFragmentOrigin, .usesFontLeading]
-
-        var boundingRect = text.boundingRect(
-            with: constraintBox,
-            options: options,
-            context: nil
-        )
-
-        // 如果 numberOfLines > 0,限制最大行数
-        if numberOfLines > 0 {
-            let lineHeight = font.lineHeight
-            let maxHeight = CGFloat(numberOfLines) * lineHeight
-            if boundingRect.height > maxHeight {
-                boundingRect.size.height = ceil(maxHeight)
-            }
-        }
-
-        return ceil(boundingRect.height)
-    }
-
-    /// 将 `UILabel` 的文本按当前宽度和字体拆分为多行字符串数组
-    ///
-    /// - 注意: 依赖外部扩展 `String.splitIntoLines1(forWidth:usingFont:)`
-    /// - 若该扩展不存在,此属性将返回空数组
-    ///
-    /// - Example:
-    ///   ```swift
-    ///   label.frame.size.width = 100
-    ///   print("所有行: \(label.dy_allTextLines)")
-    ///   ```
-    var dy_allTextLines: [String] {
-        guard let text = self.text,
-              let font = self.font,
-              bounds.width > 0
-        else {
-            return []
-        }
-        return text.dy_wrappedLines(maxWidth: bounds.width, font: font)
-    }
-
-    /// 获取第一行显示的文本内容(若存在)
-    ///
-    /// - Returns: 第一行字符串,若无内容则返回 `nil`
-    var dy_firstLine: String? {
-        self.dy_allTextLines.first
-    }
-
-    /// 判断当前文本是否因空间不足而被截断(省略号或隐藏)
-    ///
-    /// - 注意: 使用 Core Text 精确检测,适用于单行/多行、任意 `lineBreakMode`
-    /// - 性能开销中等,避免在 `cellForRow` 或动画中高频调用
-    var dy_isTextTruncated: Bool {
-        // 边界检查
-        guard let text = self.text,
-              !text.isEmpty,
-              let font = self.font,
-              bounds.width > 0,
-              bounds.height > 0
-        else {
-            return false
-        }
-
-        // 构建富文本(优先使用 attributedText)
-        let displayText = self.attributedText ?? NSAttributedString(string: text, attributes: [.font: font])
-
-        // 创建 framesetter
-        let framesetter = CTFramesetterCreateWithAttributedString(displayText as CFAttributedString)
-
-        // 创建限制路径(宽高由 label bounds 决定)
-        let path = CGPath(rect: CGRect(x: 0, y: 0, width: bounds.width, height: bounds.height), transform: nil)
-
-        // 创建 frame(注意：range 设为 (0, 0) 表示使用全部文本)
-        let frame = CTFramesetterCreateFrame(framesetter, CFRange(location: 0, length: 0), path, nil)
-
-        // 获取可见范围：直接调用,无额外参数
-        let visibleRange = CTFrameGetVisibleStringRange(frame)
-
-        // 如果可见字符数 < 总字符数,则被截断
-        return visibleRange.length < displayText.length
-    }
-}
-
 // MARK: - 构造方法
 public extension UILabel {
     /// 使用纯文本创建 UILabel
@@ -174,8 +31,151 @@ public extension UILabel {
     }
 }
 
+// MARK: - 属性
+public extension DyWrapper where Base: UILabel {
+    /// 获取 `UILabel` 在当前约束下实际使用的字体大小(考虑 `adjustsFontSizeToFitWidth`)
+    ///
+    /// - 注意: 此属性应在布局完成后(如 `layoutSubviews` 后)调用,否则 `bounds` 可能为零
+    /// - 原理: 通过比较文本所需宽度与 label 可用宽度,结合 `minimumScaleFactor` 计算缩放比例
+    ///
+    /// - Example:
+    ///   ```swift
+    ///   label.adjustsFontSizeToFitWidth = true
+    ///   label.minimumScaleFactor = 0.5
+    ///   print("实际字号: \(label.dy.actualFontSize)")
+    ///   ```
+    var actualFontSize: CGFloat {
+        // 快速返回：未启用自动缩放、无文本、无字体或容器宽度无效
+        guard base.adjustsFontSizeToFitWidth,
+              let text = base.text,
+              !text.isEmpty,
+              base.bounds.width > 0,
+              let font = base.font
+        else {
+            return base.font?.pointSize ?? 0
+        }
+
+        // 计算原始文本在当前字体下的单行宽度
+        let originalWidth = (text as NSString).boundingRect(
+            with: CGSize(width: .greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude),
+            options: [.usesLineFragmentOrigin, .usesFontLeading],
+            attributes: [.font: font],
+            context: nil
+        ).width
+
+        // 若原始宽度未超出容器,使用原始字号
+        guard originalWidth > base.bounds.width else {
+            return font.pointSize
+        }
+
+        // 计算缩放比例,并受 minimumScaleFactor 限制
+        let scale = base.bounds.width / originalWidth
+        let clampedScale = max(base.minimumScaleFactor, scale)
+        return font.pointSize * clampedScale
+    }
+
+    /// 根据当前文本、字体、宽度和行数限制,计算内容所需的高度
+    ///
+    /// - 注意: 此方法考虑了 `numberOfLines`、`lineBreakMode`、`attributedText/text` 优先级
+    /// - 推荐在 label 布局完成后调用(确保 `bounds.width` 有效)
+    ///
+    /// - Example:
+    ///   ```swift
+    ///   label.frame.size.width = 200
+    ///   label.numberOfLines = 0
+    ///   print("所需高度: \(label.dy.requiredHeight)")
+    ///   ```
+    var requiredHeight: CGFloat {
+        guard base.bounds.width > 0 else { return 0 }
+
+        let textToUse = base.attributedText ?? (base.text.map { NSAttributedString(string: $0) })
+        guard let text = textToUse, text.length > 0 else { return 0 }
+
+        let constraintBox = CGSize(width: base.bounds.width, height: .greatestFiniteMagnitude)
+        let options: NSStringDrawingOptions = [.usesLineFragmentOrigin, .usesFontLeading]
+
+        var boundingRect = base.text?.boundingRect(
+            with: constraintBox,
+            options: options,
+            context: nil
+        ) ?? .zero
+
+        // 如果 numberOfLines > 0,限制最大行数
+        if base.numberOfLines > 0 {
+            let lineHeight = base.font.lineHeight
+            let maxHeight = CGFloat(base.numberOfLines) * lineHeight
+            if boundingRect.height > maxHeight {
+                boundingRect.size.height = maxHeight.dy.ceil()
+            }
+        }
+
+        return boundingRect.height.dy.ceil()
+    }
+
+    /// 将 `UILabel` 的文本按当前宽度和字体拆分为多行字符串数组
+    ///
+    /// - 注意: 依赖外部扩展 `String.splitIntoLines1(forWidth:usingFont:)`
+    /// - 若该扩展不存在,此属性将返回空数组
+    ///
+    /// - Example:
+    ///   ```swift
+    ///   label.frame.size.width = 100
+    ///   print("所有行: \(label.dy.allTextLines)")
+    ///   ```
+    var allTextLines: [String] {
+        guard let text = base.text,
+              let font = base.font,
+              base.bounds.width > 0
+        else {
+            return []
+        }
+        return text.dy.wrappedLines(maxWidth: base.bounds.width, font: font)
+    }
+
+    /// 获取第一行显示的文本内容(若存在)
+    ///
+    /// - Returns: 第一行字符串,若无内容则返回 `nil`
+    var firstLine: String? {
+        self.allTextLines.first
+    }
+
+    /// 判断当前文本是否因空间不足而被截断(省略号或隐藏)
+    ///
+    /// - 注意: 使用 Core Text 精确检测,适用于单行/多行、任意 `lineBreakMode`
+    /// - 性能开销中等,避免在 `cellForRow` 或动画中高频调用
+    var isTextTruncated: Bool {
+        // 边界检查
+        guard let text = base.text,
+              !text.isEmpty,
+              let font = base.font,
+              base.bounds.width > 0,
+              base.bounds.height > 0
+        else {
+            return false
+        }
+
+        // 构建富文本(优先使用 attributedText)
+        let displayText = base.attributedText ?? NSAttributedString(string: text, attributes: [.font: font])
+
+        // 创建 framesetter
+        let framesetter = CTFramesetterCreateWithAttributedString(displayText as CFAttributedString)
+
+        // 创建限制路径(宽高由 label bounds 决定)
+        let path = CGPath(rect: CGRect(x: 0, y: 0, width: base.bounds.width, height: base.bounds.height), transform: nil)
+
+        // 创建 frame(注意：range 设为 (0, 0) 表示使用全部文本)
+        let frame = CTFramesetterCreateFrame(framesetter, CFRange(location: 0, length: 0), path, nil)
+
+        // 获取可见范围：直接调用,无额外参数
+        let visibleRange = CTFrameGetVisibleStringRange(frame)
+
+        // 如果可见字符数 < 总字符数,则被截断
+        return visibleRange.length < displayText.length
+    }
+}
+
 // MARK: - UILabel 内容尺寸计算
-public extension UILabel {
+public extension DyWrapper where Base: UILabel {
     /// 根据当前文本内容(普通或富文本)和指定最大宽度,计算所需尺寸
     ///
     /// - Parameter maxWidth: 最大允许宽度,默认为 `.greatestFiniteMagnitude`
@@ -188,26 +188,26 @@ public extension UILabel {
     /// - Example:
     ///   ```swift
     ///   label.text = "Hello World"
-    ///   let size = label.dy_size(maxWidth: 200)
+    ///   let size = label.dy.size(maxWidth: 200)
     ///   ```
-    func dy_size(maxWidth: CGFloat = .greatestFiniteMagnitude) -> CGSize {
-        return if self.attributedText != nil {
-            self.attributedText?.dy_size(maxWidth: maxWidth) ?? .zero
+    func size(maxWidth: CGFloat = .greatestFiniteMagnitude) -> CGSize {
+        return if base.attributedText != nil {
+            base.attributedText?.dy.size(maxWidth: maxWidth) ?? .zero
         } else {
-            self.text?.dy_size(maxWidth: maxWidth, font: self.font) ?? .zero
+            base.text?.dy.size(maxWidth: maxWidth, font: base.font) ?? .zero
         }
     }
 
     /// 根据内容计算`CGSize`
     /// - Parameter maxWidth: 最大宽度
     /// - Returns: `CGSize`
-    func dy_sizeThatFits(maxWidth: CGFloat) -> CGSize {
-        return self.sizeThatFits(CGSize(width: maxWidth, height: CGFloat.greatestFiniteMagnitude))
+    func sizeThatFits(maxWidth: CGFloat) -> CGSize {
+        return base.sizeThatFits(CGSize(width: maxWidth, height: CGFloat.greatestFiniteMagnitude))
     }
 }
 
 // MARK: - UILabel 富文本内容设置
-public extension UILabel {
+public extension DyWrapper where Base: UILabel {
     /// 设置图文混排内容(支持在指定位置插入多张图片)
     ///
     /// - Parameters:
@@ -228,7 +228,7 @@ public extension UILabel {
     ///   ```swift
     ///   let label = UILabel()
     ///   label.font = .systemFont(ofSize: 16)
-    ///   label.dy_blend(
+    ///   label.dy.blend(
     ///       "Swift & UIKit",
     ///       images: [UIImage(systemName: "swift")],
     ///       insertPosition: 5,
@@ -237,7 +237,7 @@ public extension UILabel {
     ///   )
     ///   ```
     @discardableResult
-    func dy_blend(
+    func blend(
         _ text: String? = nil,
         images: [UIImage?] = [],
         insertPosition: Int = 0,
@@ -245,10 +245,10 @@ public extension UILabel {
         spacing: CGFloat = 5,
         useOriginalSize: Bool = false
     ) -> NSMutableAttributedString {
-        guard let font = self.font else {
+        guard let font = base.font else {
             assertionFailure("UILabel.font is nil")
             let result = NSMutableAttributedString(string: text ?? "")
-            self.attributedText = result
+            base.attributedText = result
             return result
         }
 
@@ -296,7 +296,7 @@ public extension UILabel {
         let suffix = String(baseText.dropFirst(actualInsertPos))
         attributedString.append(NSAttributedString(string: suffix))
 
-        self.attributedText = attributedString
+        base.attributedText = attributedString
         return attributedString
     }
 
@@ -311,26 +311,26 @@ public extension UILabel {
     ///
     /// - Example:
     ///   ```swift
-    ///   label.dy_textWithSpacing("多行\n文本", lineSpacing: 8, wordSpacing: 2)
+    ///   label.dy.textWithSpacing("多行\n文本", lineSpacing: 8, wordSpacing: 2)
     ///   ```
     @discardableResult
-    func dy_textWithSpacing(
+    func textWithSpacing(
         _ text: String,
         lineSpacing: CGFloat,
         wordSpacing: CGFloat = 0
     ) -> NSMutableAttributedString {
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineSpacing = lineSpacing
-        paragraphStyle.alignment = self.textAlignment
+        paragraphStyle.alignment = base.textAlignment
 
         let attributes: [NSAttributedString.Key: Any] = [
-            .font: self.font ?? UIFont.systemFont(ofSize: 14),
+            .font: base.font ?? UIFont.systemFont(ofSize: 14),
             .paragraphStyle: paragraphStyle,
             .kern: wordSpacing,
         ]
 
         let attributedString = NSMutableAttributedString(string: text, attributes: attributes)
-        self.attributedText = attributedString
+        base.attributedText = attributedString
         return attributedString
     }
 
@@ -351,16 +351,16 @@ public extension UILabel {
     ///   ```swift
     ///   label.text = "This is a long sentence that wraps."
     ///   label.frame.size.width = 100
-    ///   print(label.dy_renderedLines())
+    ///   print(label.dy.renderedLines())
     ///   ```
-    func dy_renderedLines(
+    func renderedLines(
         maxWidth: CGFloat? = nil,
         lineSpacing: CGFloat = 0,
         wordSpacing: CGFloat = 0
     ) -> [String] {
-        guard let text = self.text, !text.isEmpty, let font = self.font else { return [] }
+        guard let text = base.text, !text.isEmpty, let font = base.font else { return [] }
 
-        let width = maxWidth ?? max(1, self.bounds.width) // 防止 width <= 0
+        let width = maxWidth ?? max(1, base.bounds.width) // 防止 width <= 0
 
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineSpacing = lineSpacing

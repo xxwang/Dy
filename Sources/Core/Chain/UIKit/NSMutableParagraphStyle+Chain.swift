@@ -79,7 +79,7 @@ public extension DyWrapper where Base: NSMutableParagraphStyle {
     ///
     /// - Example:
     ///   ```swift
-    ///   let style = NSMutableParagraphStyle().dy_headIndent(10.0)
+    ///   let style = NSMutableParagraphStyle().dy.headIndent(10.0)
     ///   ```
     @discardableResult
     func headIndent(_ headIndent: CGFloat) -> Self {

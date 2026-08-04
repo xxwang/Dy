@@ -15,8 +15,9 @@ public extension DyWrapper where Base: NSMutableAttributedString {
     /// - Example:
     ///   ```swift
     ///   let attr = NSMutableAttributedString()
-    ///       .dy_string("点击 ")
-    ///       .dy_attachment(UIImage(systemName: "arrow.right"), at: 3)
+    ///       .dy
+    ///       .string("点击 ")
+    ///       .attachment(UIImage(systemName: "arrow.right"), at: 3)
     ///   ```
     @discardableResult
     func attachment(_ image: UIImage?, bounds: CGRect = .zero, at index: Int = 0) -> Self {
@@ -243,7 +244,7 @@ public extension DyWrapper where Base: NSMutableAttributedString {
     ///
     /// - Example:
     ///   ```swift
-    ///   .dy_textShadow(color: .black, offset: CGSize(width: 1, height: 1), radius: 2)
+    ///   .dy.textShadow(color: .black, offset: CGSize(width: 1, height: 1), radius: 2)
     ///   ```
     @discardableResult
     func textShadow(color: UIColor, offset: CGSize, radius: CGFloat, for range: NSRange? = nil) -> Self {
@@ -270,7 +271,7 @@ public extension DyWrapper where Base: NSMutableAttributedString {
     ///
     /// - Example:
     ///   ```swift
-    ///   .dy_addAttributes([.foregroundColor: UIColor.red], toOccurrencesOf: "World")
+    ///   .dy.addAttributes([.foregroundColor: UIColor.red], toOccurrencesOf: "World")
     ///   ```
     @discardableResult
     func addAttributes(_ attributes: [NSAttributedString.Key: Any], toOccurrencesOf target: some StringProtocol) -> Self {
@@ -291,7 +292,7 @@ public extension DyWrapper where Base: NSMutableAttributedString {
     ///
     /// - Example:
     ///   ```swift
-    ///   .dy_addAttributes([.foregroundColor: .blue], toRangesMatching: "\\d+") // 高亮所有数字
+    ///   .dy.addAttributes([.foregroundColor: .blue], toRangesMatching: "\\d+") // 高亮所有数字
     ///   ```
     @discardableResult
     func addAttributes(_ attributes: [NSAttributedString.Key: Any], toRangesMatching pattern: String, options: NSRegularExpression.Options = []) -> Self {

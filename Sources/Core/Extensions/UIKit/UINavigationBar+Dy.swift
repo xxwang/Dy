@@ -1,11 +1,11 @@
 import UIKit
 
 // MARK: - 常用方法
-public extension UINavigationBar {
+public extension DyWrapper where Base: UINavigationBar {
     /// 设置导航条为透明
     /// - Parameter tintColor: 导航条上的按钮和文字颜色,默认为白色
-    func dy_transparent(with tintColor: UIColor = .white) {
-        self.dy
+    func transparent(with tintColor: UIColor = .white) {
+        self
             .isTranslucent(true)
             .backgroundColor(.clear)
             .backgroundImage(UIImage())
@@ -19,8 +19,8 @@ public extension UINavigationBar {
     /// - Parameters:
     ///   - background: 背景颜色
     ///   - text: 文字颜色
-    func dy_colors(background: UIColor, text: UIColor) {
-        self.dy
+    func colors(background: UIColor, text: UIColor) {
+        self
             .isTranslucent(false)
             .backgroundColor(background)
             .barTintColor(background)

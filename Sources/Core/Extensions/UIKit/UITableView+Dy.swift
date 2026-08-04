@@ -1,13 +1,13 @@
 import UIKit
 
 // MARK: - Cell 注册与复用
-public extension UITableView {
+public extension DyWrapper where Base: UITableView {
     /// 复用无 `indexPath` 的 `Cell`(适用于非标准场景,如动态高度估算)
     /// - Parameter cellType: 期望的 `Cell` 类型
     /// - Returns: 类型安全的 Cell 实例
     /// - Throws: 若未注册或类型不匹配,程序将 `crash`(开发期快速暴露问题)
-    func dy_dequeueReusableCell<T: UITableViewCell>(withCellClass cellType: T.Type) -> T {
-        guard let cell = dequeueReusableCell(withIdentifier: cellType.identifier) as? T else {
+    func dequeueReusableCell<T: UITableViewCell>(withCellClass cellType: T.Type) -> T {
+        guard let cell = base.dequeueReusableCell(withIdentifier: cellType.identifier) as? T else {
             fatalError("未能复用 Cell: \(cellType). 请确认已通过 register 注册！")
         }
         return cell
@@ -18,21 +18,21 @@ public extension UITableView {
     ///   - cellType: 期望的 `Cell` 类型
     ///   - indexPath: 位置索引
     /// - Returns: 类型安全的 `Cell`
-    func dy_dequeueReusableCell<T: UITableViewCell>(
+    func dequeueReusableCell<T: UITableViewCell>(
         withCellClass cellType: T.Type,
         for indexPath: IndexPath
     ) -> T {
-        guard let cell = dequeueReusableCell(withIdentifier: cellType.identifier, for: indexPath) as? T else {
+        guard let cell = base.dequeueReusableCell(withIdentifier: cellType.identifier, for: indexPath) as? T else {
             fatalError("未能复用 Cell: \(cellType). 请确认已注册！")
         }
         return cell
     }
 
     /// 复用 `Header/Footer View`
-    func dy_dequeueReusableHeaderFooterView<T: UITableViewHeaderFooterView>(
+    func dequeueReusableHeaderFooterView<T: UITableViewHeaderFooterView>(
         withHeaderFooterViewClass viewType: T.Type
     ) -> T {
-        guard let view = dequeueReusableHeaderFooterView(withIdentifier: viewType.identifier) as? T else {
+        guard let view = base.dequeueReusableHeaderFooterView(withIdentifier: viewType.identifier) as? T else {
             fatalError("未能复用 Header/Footer: \(viewType). 请确认已注册！")
         }
         return view

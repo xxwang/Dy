@@ -1,15 +1,17 @@
 import UIKit
 
+extension UIInterfaceOrientation: DyExtension {}
+
 // MARK: - 自定义
-public extension UIInterfaceOrientation {
+public extension DyWrapper where Base == UIInterfaceOrientation {
     /// 是否为横屏方向(`left` 或 `right`)
-    var dy_isLandscape: Bool {
-        self == .landscapeLeft || self == .landscapeRight
+    var isLandscape: Bool {
+        base == .landscapeLeft || base == .landscapeRight
     }
 
     /// 转换为 `UIInterfaceOrientationMask`(用于判断支持性)
-    var dy_interfaceOrientationMask: UIInterfaceOrientationMask {
-        switch self {
+    var toInterfaceOrientationMask: UIInterfaceOrientationMask {
+        switch base {
         case .portrait: return .portrait
         case .portraitUpsideDown: return .portraitUpsideDown
         case .landscapeLeft: return .landscapeLeft

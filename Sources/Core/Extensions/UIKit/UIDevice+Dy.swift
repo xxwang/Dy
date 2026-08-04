@@ -8,9 +8,9 @@ import Darwin
 import os.log
 
 // MARK: - 存储与内存信息
-public extension UIDevice {
+public extension DyWrapper where Base: UIDevice {
     /// 总磁盘容量(字节)
-    static var dy_totalDiskCapacityInBytes: Int64 {
+    static var totalDiskCapacityInBytes: Int64 {
         guard let attrs = try? FileManager.default.attributesOfFileSystem(forPath: NSHomeDirectory()),
               let space = attrs[.systemSize] as? NSNumber,
               space.int64Value > 0
@@ -21,7 +21,7 @@ public extension UIDevice {
     }
 
     /// 可用磁盘容量(字节),优先使用 iOS 11+ 的重要用途容量
-    static var dy_freeDiskCapacityInBytes: Int64 {
+    static var freeDiskCapacityInBytes: Int64 {
         let homeURL = URL(fileURLWithPath: NSHomeDirectory())
         if #available(iOS 11.0, *) {
             do {
@@ -39,31 +39,31 @@ public extension UIDevice {
     }
 
     /// 已用磁盘容量(字节)
-    static var dy_usedDiskCapacityInBytes: Int64 {
-        let total = self.dy_totalDiskCapacityInBytes
-        let free = self.dy_freeDiskCapacityInBytes
+    static var usedDiskCapacityInBytes: Int64 {
+        let total = self.totalDiskCapacityInBytes
+        let free = self.freeDiskCapacityInBytes
         guard total > 0, free >= 0 else { return -1 }
         let used = total - free
         return used > 0 ? used : -1
     }
 
     /// 物理内存总量(字节)
-    static var dy_physicalMemoryInBytes: UInt64 {
+    static var physicalMemoryInBytes: UInt64 {
         return ProcessInfo.processInfo.physicalMemory
     }
 }
 
 // MARK: - 设备控制(如闪光灯)
-public extension UIDevice {
+public extension DyWrapper where Base: UIDevice {
     /// 闪光灯当前是否开启
-    static var dy_isTorchOn: Bool {
+    static var isTorchOn: Bool {
         guard let device = AVCaptureDevice.default(for: .video) else { return false }
         return device.torchMode == .on
     }
 
     /// 设置闪光灯开关状态
     /// - 自动处理配置锁和权限
-    static func dy_setTorchMode(_ isOn: Bool) {
+    static func setTorchMode(_ isOn: Bool) {
         guard let device = AVCaptureDevice.default(for: .video),
               device.hasTorch else { return }
 
@@ -78,11 +78,11 @@ public extension UIDevice {
 }
 
 // MARK: - 网络信息
-public extension UIDevice {
+public extension DyWrapper where Base: UIDevice {
     /// 获取当前连接的 Wi-Fi 网络信息(SSID 和 BSSID)
     /// ⚠️ 需在 Xcode Capabilities 中启用 "Access WiFi Information"
     /// ⚠️ iOS 13+ 后台或未连接 VPN 时可能返回 (nil, nil)
-    static var dy_connectedWiFiNetwork: (ssid: String?, bssid: String?) {
+    static var connectedWiFiNetwork: (ssid: String?, bssid: String?) {
         guard let interfaces = CNCopySupportedInterfaces() as? [String] else {
             return (nil, nil)
         }
@@ -100,7 +100,7 @@ public extension UIDevice {
     }
 
     /// 获取设备所有活动网络接口的 IP 地址(IPv4 + IPv6,不含 loopback)
-    static var dy_allIPAddresses: [String] {
+    static var allIPAddresses: [String] {
         var addresses: [String] = []
         var ifaddr: UnsafeMutablePointer<ifaddrs>?
 
@@ -140,7 +140,7 @@ public extension UIDevice {
     }
 
     /// 获取 Wi-Fi 接口(en0)的 IP 地址(通常用于局域网通信)
-    static var dy_wifiIPAddress: String? {
+    static var wifiIPAddress: String? {
         var ifaddr: UnsafeMutablePointer<ifaddrs>?
         guard getifaddrs(&ifaddr) == 0, let firstAddr = ifaddr else { return nil }
 

@@ -140,8 +140,9 @@ public extension DyNaView {
     /// - Example:
     ///   ```swift
     ///   let navBar = DyNaView.naview()
-    ///       .dy_title("首页")
-    ///       .dy_backAction { /* 返回逻辑 */ }
+    ///       .dy.
+    ///       title("首页")
+    ///       .backAction { /* 返回逻辑 */ }
     ///   ```
     static func naview() -> DyNaView {
         let naView = DyNaView()

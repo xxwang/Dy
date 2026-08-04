@@ -148,11 +148,11 @@ public extension DyWrapper where Base: UIApplication {
 
         init(_ versionString: String) {
             self.versionString = versionString
-            let comps = versionString.dy_split(bySeparator: ".")
+            let comps = versionString.dy.split(bySeparator: ".")
             if comps.count >= 3 {
-                self.major = comps[0].dy_toInt()
-                self.minor = comps[1].dy_toInt()
-                self.patch = comps[2].dy_toInt()
+                self.major = comps[0].dy.toInt()
+                self.minor = comps[1].dy.toInt()
+                self.patch = comps[2].dy.toInt()
                 self.isValid = true
             } else {
                 self.major = 0
@@ -176,20 +176,20 @@ public extension DyWrapper where Base: UIApplication {
 
     /// 当前 App 的结构化版本信息
     var currentAppVersion: DyAppVersion {
-        return DyAppVersion(Bundle.dy_appVersion)
+        return DyAppVersion(Bundle.dy.appVersion)
     }
 
     /// 是否为首次安装或升级到新版本(只读,不会写回 UserDefaults)
     /// - Note: 本属性只做判断,不产生任何副作用。处理完新版本引导逻辑后,请调用 `dy_recordCurrentVersion()` 记录当前版本。
     var isNewVersion: Bool {
-        let current = Bundle.dy_appVersion
+        let current = Bundle.dy.appVersion
         let saved = UserDefaults.standard.string(forKey: "Dy.AppVersion") ?? ""
         return DyAppVersion(current).isGreaterThan(DyAppVersion(saved))
     }
 
     /// 将当前 App 版本记录到 UserDefaults(通常在处理完新版本引导后调用)
     func recordCurrentVersion() {
-        UserDefaults.standard.set(Bundle.dy_appVersion, forKey: "Dy.AppVersion")
+        UserDefaults.standard.set(Bundle.dy.appVersion, forKey: "Dy.AppVersion")
     }
 
     /// 比较当前版本是否低于指定版本

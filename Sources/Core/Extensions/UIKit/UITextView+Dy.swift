@@ -2,7 +2,7 @@ import UIKit
 import os.log
 
 // MARK: - 常用方法
-public extension UITextView {
+public extension DyWrapper where Base: UITextView {
     /// 限制输入字符数,并可选通过正则表达式过滤输入内容,支持中英文、表情符号(以 Unicode 字符计数)
     ///
     /// - Note: 此方法应在 `textView(_:shouldChangeTextIn:replacementText:)` 中调用
@@ -18,10 +18,10 @@ public extension UITextView {
     ///
     ///   ```swift
     ///   func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
-    ///       return textView.dy_inputRestrictions(in: range, newText: text, maxLength: 100)
+    ///       return textView.dy.inputRestrictions(in: range, newText: text, maxLength: 100)
     ///   }
     ///   ```
-    func dy_inputRestrictions(
+    func inputRestrictions(
         in range: NSRange,
         newText text: String,
         maxLength maxCharacters: Int,
@@ -31,12 +31,12 @@ public extension UITextView {
         guard !text.isEmpty else { return true }
 
         // 获取当前文本,安全处理 nil
-        let currentText = self.text ?? ""
+        let currentText = base.text ?? ""
 
         // 用户使用中文拼音输入法时(如九宫格),`markedTextRange != nil` 表示正在输入中,此时不应截断
-        if self.markedTextRange != nil {
+        if base.markedTextRange != nil {
             // 在高亮状态下,只做正则校验(不截断,避免打断输入)
-            if let pattern = regexPattern, !text.dy_isMatch(pattern: pattern) {
+            if let pattern = regexPattern, !text.dy.isMatch(pattern: pattern) {
                 return false
             }
             // 不在此处判断长度,因为高亮文本尚未确认
@@ -44,7 +44,7 @@ public extension UITextView {
         }
 
         // 非高亮状态：先校验正则
-        if let pattern = regexPattern, !text.dy_isMatch(pattern: pattern) {
+        if let pattern = regexPattern, !text.dy.isMatch(pattern: pattern) {
             return false
         }
 
@@ -67,14 +67,13 @@ public extension UITextView {
             }
 
             // 更新文本并禁止原生插入
-            self.text = fullText
+            base.text = fullText
             // 移动光标到末尾(可选增强体验)
-            if let newPosition = self.position(from: self.beginningOfDocument, offset: fullText.utf16.count) {
-                self.selectedTextRange = self.textRange(from: newPosition, to: newPosition)
+            if let newPosition = base.position(from: base.beginningOfDocument, offset: fullText.utf16.count) {
+                base.selectedTextRange = base.textRange(from: newPosition, to: newPosition)
             }
             return false
         }
-
         return true
     }
 
@@ -86,12 +85,12 @@ public extension UITextView {
     ///   - text: 要追加的文本
     ///   - font: 文本字体(默认使用当前 `font`)
     ///   - linkURL: 可选的 `URL` 字符串,若提供则整段文本变为可点击链接
-    func dy_addLinkText(
+    func addLinkText(
         _ text: String,
         font: UIFont? = nil,
         linkURL: String? = nil
     ) {
-        let effectiveFont = font ?? self.font ?? UIFont.preferredFont(forTextStyle: .body)
+        let effectiveFont = font ?? base.font ?? UIFont.preferredFont(forTextStyle: .body)
         let attributes: [NSAttributedString.Key: Any] = [.font: effectiveFont]
         let attributedString = NSMutableAttributedString(string: text, attributes: attributes)
 
@@ -101,11 +100,11 @@ public extension UITextView {
             attributedString.addAttribute(.link, value: url, range: NSRange(text.startIndex..., in: text))
         }
 
-        let current = (self.attributedText ?? NSAttributedString()).mutableCopy() as? NSMutableAttributedString
+        let current = (base.attributedText ?? NSAttributedString()).mutableCopy() as? NSMutableAttributedString
             ?? NSMutableAttributedString()
 
         current.append(attributedString)
-        self.attributedText = current
+        base.attributedText = current
     }
 
     /// 自动识别并转换 `@用户名` 和 `#话题#` 为可点击链接
@@ -117,8 +116,8 @@ public extension UITextView {
     ///
     /// - 忽略已存在于 URL 中的内容(如 `http://example.com/@user` 不会被转换)
     /// - 仅匹配由字母、数字、下划线组成的用户名或话题名
-    func dy_convertMentionsAndHashtags() {
-        guard let plainText = self.text, !plainText.isEmpty else {
+    func convertMentionsAndHashtags() {
+        guard let plainText = base.text, !plainText.isEmpty else {
             return
         }
 
@@ -153,7 +152,6 @@ public extension UITextView {
                 os_log(.error, "Regex error in convertMentionsAndHashtags: %{public}@", String(describing: error))
             }
         }
-
-        self.attributedText = attributed
+        base.attributedText = attributed
     }
 }

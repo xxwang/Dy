@@ -370,7 +370,7 @@ public extension DyWrapper where Base: UIButton {
     /// - Returns: `Self`
     @discardableResult
     func expandClickArea(_ size: CGFloat = 10) -> Self {
-        base.dy.SetAO(size, forKey: &UIButton.Keys.dy_expandSizeKey)
+        base.expandClickArea(size)
         return self
     }
 

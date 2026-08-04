@@ -35,26 +35,26 @@ public extension UIStackView {
 }
 
 // MARK: - 视图交换
-public extension UIStackView {
+public extension DyWrapper where Base: UIStackView {
     /// 无动画地交换两个排列子视图的位置
     ///
     /// - Parameters:
     ///   - firstView: 第一个要交换的视图
     ///   - secondView: 第二个要交换的视图
-    func dy_switchViews(_ firstView: UIView, _ secondView: UIView) {
+    func switchViews(_ firstView: UIView, _ secondView: UIView) {
         guard
-            let index1 = arrangedSubviews.firstIndex(of: firstView),
-            let index2 = arrangedSubviews.firstIndex(of: secondView),
+            let index1 = base.arrangedSubviews.firstIndex(of: firstView),
+            let index2 = base.arrangedSubviews.firstIndex(of: secondView),
             index1 != index2
         else { return }
 
         // 先移除两个视图
-        removeArrangedSubview(firstView)
-        removeArrangedSubview(secondView)
+        base.removeArrangedSubview(firstView)
+        base.removeArrangedSubview(secondView)
 
         // 在交换后的位置重新插入
-        insertArrangedSubview(firstView, at: index2 > index1 ? index2 - 1 : index2)
-        insertArrangedSubview(secondView, at: index1)
+        base.insertArrangedSubview(firstView, at: index2 > index1 ? index2 - 1 : index2)
+        base.insertArrangedSubview(secondView, at: index1)
     }
 
     /// 交换两个排列子视图的位置,可选择是否启用动画
@@ -67,7 +67,7 @@ public extension UIStackView {
     ///   - delay: 动画开始前的延迟时间(秒)默认为 `0`
     ///   - options: 动画选项默认为 `.curveEaseInOut`
     ///   - completion: 动画完成后的回调闭包默认为 `nil`
-    func dy_swapViews(
+    func swapViews(
         _ firstView: UIView,
         _ secondView: UIView,
         animated: Bool = false,
@@ -82,13 +82,13 @@ public extension UIStackView {
                 delay: delay,
                 options: options,
                 animations: {
-                    self.dy_switchViews(firstView, secondView)
-                    self.superview?.layoutIfNeeded()
+                    self.switchViews(firstView, secondView)
+                    self.base.superview?.layoutIfNeeded()
                 },
                 completion: completion
             )
         } else {
-            self.dy_switchViews(firstView, secondView)
+            self.switchViews(firstView, secondView)
         }
     }
 }

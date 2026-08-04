@@ -146,9 +146,9 @@ public extension DyWrapper where Base: UIGestureRecognizer {
     /// - Returns: `Self`
     @discardableResult
     func onRecognized(_ block: @escaping DyAction1<UIGestureRecognizer>) -> Self {
-        base.dy_recognizedBlock = block
-        base.removeTarget(base, action: #selector(UIGestureRecognizer.dy_stateChangeHandler))
-        base.addTarget(base, action: #selector(UIGestureRecognizer.dy_stateChangeHandler))
+        base.recognizedBlock = block
+        base.removeTarget(base, action: #selector(UIGestureRecognizer.stateChangeHandler))
+        base.addTarget(base, action: #selector(UIGestureRecognizer.stateChangeHandler))
         return self
     }
 
@@ -159,9 +159,9 @@ public extension DyWrapper where Base: UIGestureRecognizer {
     /// - Returns: `Self`
     @discardableResult
     func onStateChanged(_ block: @escaping DyAction1<UIGestureRecognizer.State>) -> Self {
-        base.dy_stateChangedBlock = block
-        base.removeTarget(base, action: #selector(UIGestureRecognizer.dy_stateChangeHandler))
-        base.addTarget(base, action: #selector(UIGestureRecognizer.dy_stateChangeHandler))
+        base.stateChangedBlock = block
+        base.removeTarget(base, action: #selector(UIGestureRecognizer.stateChangeHandler))
+        base.addTarget(base, action: #selector(UIGestureRecognizer.stateChangeHandler))
         return self
     }
 }

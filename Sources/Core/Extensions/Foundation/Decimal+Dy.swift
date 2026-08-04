@@ -245,8 +245,8 @@ public extension DyWrapper where Base == Decimal {
     ///
     /// - Example:
     ///   ```swift
-    ///   Decimal(-5).dy_clamped(to: 0...100) // 0
-    ///   Decimal(150).dy_clamped(to: 0...100) // 100
+    ///   Decimal(-5).dy.clamped(to: 0...100) // 0
+    ///   Decimal(150).dy.clamped(to: 0...100) // 100
     ///   ```
     func clamped(to limits: ClosedRange<Decimal>) -> Decimal {
         if base < limits.lowerBound {
