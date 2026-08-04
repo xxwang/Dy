@@ -2,7 +2,7 @@ import Foundation
 import DyCore
 
 open class DyDataModel: DyModel, Codable {
-    override public nonisolated init() {
+    override public init() {
         super.init()
     }
 
