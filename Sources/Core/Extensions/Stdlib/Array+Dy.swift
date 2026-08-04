@@ -1,5 +1,7 @@
 import Foundation
 
+extension Array: DyExtension {}
+
 // MARK: - 下标
 public extension Array {
     /// 安全下标访问,避免越界崩溃

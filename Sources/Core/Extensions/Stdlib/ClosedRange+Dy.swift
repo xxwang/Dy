@@ -6,6 +6,7 @@ public protocol DyBoundedClosedRange: RangeExpression where Bound: Comparable {
 }
 
 extension ClosedRange: DyBoundedClosedRange {}
+extension ClosedRange: DyExtension {}
 
 // MARK: - 整数闭区间 (Int) 的随机值扩展
 public extension DyWrapper where Base == ClosedRange<Int> {

@@ -19,3 +19,5 @@ import CryptoKit
 #if canImport(CoreLocation)
     import CoreLocation
 #endif
+
+extension String: DyExtension {}

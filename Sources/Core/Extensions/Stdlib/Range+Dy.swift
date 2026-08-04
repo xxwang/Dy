@@ -6,6 +6,7 @@ public protocol DyBoundedRange: RangeExpression where Bound: Comparable {
 }
 
 extension Range: DyBoundedRange {}
+extension Range: DyExtension {}
 
 // MARK: - 类型转换
 public extension DyWrapper where Base == Range<String.Index> {

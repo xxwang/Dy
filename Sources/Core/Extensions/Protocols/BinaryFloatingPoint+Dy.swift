@@ -1,6 +1,10 @@
 import CoreGraphics
 import Foundation
 
+extension Float: DyExtension {}
+extension Double: DyExtension {}
+extension CGFloat: DyExtension {}
+
 // MARK: - 类型转换
 public extension DyWrapper where Base: BinaryFloatingPoint {
     /// 将当前浮点数值转换为布尔值

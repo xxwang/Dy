@@ -1,6 +1,8 @@
 import CoreGraphics
 import Foundation
 
+extension Int: DyExtension {}
+
 // MARK: - 类型转换
 public extension DyWrapper where Base: BinaryInteger {
     /// 转换为 `Bool`

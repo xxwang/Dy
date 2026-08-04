@@ -1,5 +1,7 @@
 import Foundation
 
+extension Dictionary: DyExtension {}
+
 // MARK: - 字典构造器
 public extension Dictionary {
     /// 根据 KeyPath 对序列分组构造字典,值为元素数组

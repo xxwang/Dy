@@ -1,5 +1,7 @@
 import CoreGraphics
 
+extension CGPoint: DyExtension {}
+
 // MARK: - 向量属性
 public extension DyWrapper where Base == CGPoint {
     /// 向量长度(到原点的距离)

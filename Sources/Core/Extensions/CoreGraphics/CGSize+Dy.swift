@@ -1,6 +1,8 @@
 import CoreGraphics
 import UIKit
 
+extension CGSize: DyExtension {}
+
 // MARK: - 属性
 public extension DyWrapper where Base == CGSize {
     /// 宽高比(width / height)

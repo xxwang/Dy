@@ -1,5 +1,7 @@
 import UIKit
 
+extension UIEdgeInsets: DyExtension {}
+
 // MARK: - 构造方法
 public extension UIEdgeInsets {
     /// 创建四个方向相等的 `UIEdgeInsets`

@@ -1,5 +1,7 @@
 import Foundation
 
+extension Bool: DyExtension {}
+
 // MARK: - 类型转换
 public extension DyWrapper where Base == Bool {
     /// 将布尔值转换为对应的整数值

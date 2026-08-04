@@ -1,5 +1,7 @@
 import Foundation
 
+extension Character: DyExtension {}
+
 // MARK: - 构造方法
 public extension Character {
     /// 使用 `ASCII` 码值`(0–127)`创建一个 `Character`

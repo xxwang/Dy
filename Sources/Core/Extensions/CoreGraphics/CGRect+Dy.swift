@@ -1,5 +1,7 @@
 import CoreGraphics
 
+extension CGRect: DyExtension {}
+
 // MARK: - 构造方法
 public extension CGRect {
     /// 使用中心点和尺寸初始化矩形

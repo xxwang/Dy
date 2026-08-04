@@ -1,5 +1,7 @@
 import Foundation
 
+extension Set: DyExtension {}
+
 // MARK: - 条件判断
 public extension DyWrapper where Base: Sequence {
     /// 检查序列中没有任何元素满足指定条件

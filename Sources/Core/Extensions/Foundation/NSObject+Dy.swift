@@ -1,5 +1,7 @@
 import Foundation
 
+extension NSObject: DyExtension {}
+
 // MARK: - 获取类信息
 public extension DyWrapper where Base: NSObject {
     /// 获取对象的类名
