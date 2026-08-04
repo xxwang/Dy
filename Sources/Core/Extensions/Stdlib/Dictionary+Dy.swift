@@ -120,8 +120,7 @@ public extension Dictionary {
 }
 
 // MARK: - 通用字典操作
-public extension DyWrapper where Base == Dictionary<String, Any> {
-
+public extension DyWrapper where Base == [String: Any] {
     /// 尝试将字典转为 `JSON Data`（要求 `Key == String`）
     ///
     /// - Note: 仅当 `Key` 为 `String` 且所有值均为 JSON 兼容类型（如 `String`, `Number`, `Bool`, `Array`, `Dictionary`, `NSNull`）时有效

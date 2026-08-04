@@ -1,4 +1,4 @@
-import UIKit
+import Foundation
 
 // MARK: - 链式设置属性(自定义)
 public extension DyWrapper where Base: NSMutableAttributedString {
