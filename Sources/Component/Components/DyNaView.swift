@@ -12,7 +12,7 @@ open class DyNaView: UIView {
         .build()
 
     /// 标题容器(包含返回按钮和标题)
-    open lazy var naview = UIView.view()
+    open lazy var titleBar = UIView.view()
         .dy
         .backgroundColor(.clear)
         .build()
@@ -45,19 +45,22 @@ open class DyNaView: UIView {
     override public init(frame: CGRect) {
         super.init(frame: frame)
 
-        self.dy
+        self
+            .dy
             .backgroundColor(.white)
             .isUserInteractionEnabled(true)
 
         // 添加核心子视图(顺序决定层级)
-        self.dy
+        self
+            .dy
             .addSubviews([
                 self.statusBar,
-                self.naview,
+                self.titleBar,
                 self.lineView,
             ])
 
-        self.naview.dy
+        self.titleBar
+            .dy
             .addSubviews([
                 self.backButton,
                 self.titleLabel,
@@ -81,7 +84,7 @@ open class DyNaView: UIView {
         )
 
         // 标题栏：紧接状态栏下方
-        naview.frame = CGRect(
+        titleBar.frame = CGRect(
             x: 0,
             y: statusBar.frame.maxY,
             width: bounds.width,
@@ -102,7 +105,7 @@ open class DyNaView: UIView {
         let buttonX = max(10, DyScreen.safeAreaLeft)
         backButton.frame = CGRect(
             x: buttonX,
-            y: (naview.bounds.height - buttonSize) / 2,
+            y: (titleBar.bounds.height - buttonSize) / 2,
             width: buttonSize,
             height: buttonSize
         )
@@ -110,10 +113,10 @@ open class DyNaView: UIView {
         // 标题：居中于标题栏，左右各留安全距离给返回按钮和右侧安全区
         let rightInset = max(10, DyScreen.safeAreaRight)
         let availableWidth = bounds.width - backButton.frame.maxX - rightInset
-        let titleSize = titleLabel.sizeThatFits(CGSize(width: availableWidth, height: naview.bounds.height))
+        let titleSize = titleLabel.sizeThatFits(CGSize(width: availableWidth, height: titleBar.bounds.height))
         titleLabel.frame = CGRect(
             x: (bounds.width - titleSize.width) / 2,
-            y: (naview.bounds.height - titleSize.height) / 2,
+            y: (titleBar.bounds.height - titleSize.height) / 2,
             width: min(titleSize.width, availableWidth),
             height: titleSize.height
         )
