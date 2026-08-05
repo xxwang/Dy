@@ -74,7 +74,11 @@ open class DyNaView: UIView {
 
     override open func layoutSubviews() {
         super.layoutSubviews()
-
+        
+        if DyScreen.statusBarHeight <= 1 {
+            return
+        }
+        
         // 状态栏：顶部,高度由系统定义
         statusBar.frame = CGRect(
             x: 0,
@@ -91,13 +95,12 @@ open class DyNaView: UIView {
             height: DyScreen.navigationBarHeight
         )
 
-        // 分割线：位于整个导航栏底部，高度适配屏幕密度
-        let lineHeight = 1.0 / DyScreen.screenScale
+        // 分割线：位于整个导航栏底部
         lineView.frame = CGRect(
             x: 0,
-            y: bounds.height - lineHeight,
+            y: bounds.height - 1.0,
             width: bounds.width,
-            height: lineHeight
+            height: 1.0
         )
 
         // 返回按钮：左侧安全区域或 10pt 内边距
