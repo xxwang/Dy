@@ -58,7 +58,6 @@ open class DyViewController: UIViewController {
                 width: DyScreen.screenWidth,
                 height: DyScreen.navBarTotalHeight
             ))
-            .isHidden(true)
             .add2(self.view)
     }
 
