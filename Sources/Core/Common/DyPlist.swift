@@ -2,7 +2,7 @@ import Foundation
 import os.log
 
 // MARK: - 用于读写 plist 文件的工具类
-public final class DyPlist: @unchecked Sendable {
+public final class DyPlist: Sendable {
     /// 全局共享实例
     public static let shared = DyPlist()
 
@@ -56,13 +56,25 @@ public extension DyPlist {
             return false
         }
 
-        guard let plistData = try? PropertyListSerialization.data(
-            fromPropertyList: data,
-            format: .xml,
-            options: 0
-        ) else { return false }
+        let plistData: Data
+        do {
+            plistData = try PropertyListSerialization.data(
+                fromPropertyList: data,
+                format: .xml,
+                options: 0
+            )
+        } catch {
+            os_log(.error, "[Dy] DyPlist 序列化失败: %{public}@", error.localizedDescription)
+            return false
+        }
 
-        return (try? plistData.write(to: url, options: .atomic)) != nil
+        do {
+            try plistData.write(to: url, options: .atomic)
+            return true
+        } catch {
+            os_log(.error, "[Dy] DyPlist 写入失败: %{public}@", error.localizedDescription)
+            return false
+        }
     }
 }
 

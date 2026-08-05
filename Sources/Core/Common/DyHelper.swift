@@ -3,7 +3,7 @@ import AdSupport
 import AppTrackingTransparency
 
 /// 提供常用辅助信息
-public final class DyHelper: @unchecked Sendable {
+public final class DyHelper: Sendable {
     public static let shared = DyHelper()
     private init() {}
 }

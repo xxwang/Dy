@@ -110,8 +110,8 @@ public extension DyWrapper where Base == Character {
         let scalars = base.unicodeScalars
 
         // 单标量：直接检查 isEmoji 属性
-        if scalars.count == 1 {
-            return scalars.first!.properties.isEmoji
+        if let first = scalars.first, scalars.count == 1 {
+            return first.properties.isEmoji
         }
 
         // 多标量：必须以 Emoji 标量开头,并包含 VS-16、ZWJ 或区域指示符

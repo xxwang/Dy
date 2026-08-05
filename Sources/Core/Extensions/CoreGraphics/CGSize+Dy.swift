@@ -96,7 +96,8 @@ public extension CGSize {
     }
 
     static func / (lhs: CGSize, scalar: CGFloat) -> CGSize {
-        CGSize(width: lhs.width / scalar, height: lhs.height / scalar)
+        guard scalar != 0 else { return .zero }
+        return CGSize(width: lhs.width / scalar, height: lhs.height / scalar)
     }
 
     static func /= (lhs: inout CGSize, scalar: CGFloat) {
@@ -104,6 +105,7 @@ public extension CGSize {
     }
 
     static func / (lhs: CGSize, rhs: CGSize) -> CGSize {
-        CGSize(width: lhs.width / rhs.width, height: lhs.height / rhs.height)
+        guard rhs.width != 0, rhs.height != 0 else { return .zero }
+        return CGSize(width: lhs.width / rhs.width, height: lhs.height / rhs.height)
     }
 }

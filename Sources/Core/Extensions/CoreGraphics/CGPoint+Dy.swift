@@ -84,7 +84,8 @@ public extension CGPoint {
     }
 
     static func / (point: CGPoint, scalar: CGFloat) -> CGPoint {
-        CGPoint(x: point.x / scalar, y: point.y / scalar)
+        guard scalar != 0 else { return .zero }
+        return CGPoint(x: point.x / scalar, y: point.y / scalar)
     }
 
     static func /= (point: inout CGPoint, scalar: CGFloat) {

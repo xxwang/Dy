@@ -66,7 +66,7 @@ public extension UIImage {
     ///   - darkImageName: 深色模式下图片的名字(可选)
     convenience init?(lightImageName: String, darkImageName: String? = nil) {
         guard let lightImage = UIImage(named: lightImageName) else { return nil }
-        let darkImage = darkImageName != nil ? UIImage(named: darkImageName!) : nil
+        let darkImage = darkImageName.flatMap { UIImage(named: $0) }
         self.init(lightImage: lightImage, darkImage: darkImage)
     }
 }
@@ -899,15 +899,16 @@ public extension DyWrapper where Base: UIImage {
             if primary == nil, hasContrast(color, against: backgroundColor) {
                 primary = color
             } else if secondary == nil,
-                      primary != nil,
-                      isDistinct(color, primary!),
+                      let p = primary,
+                      isDistinct(color, p),
                       hasContrast(color, against: backgroundColor)
             {
                 secondary = color
             } else if detail == nil,
-                      secondary != nil,
-                      isDistinct(color, secondary!),
-                      isDistinct(color, primary!),
+                      let s = secondary,
+                      let p = primary,
+                      isDistinct(color, s),
+                      isDistinct(color, p),
                       hasContrast(color, against: backgroundColor)
             {
                 detail = color

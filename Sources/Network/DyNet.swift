@@ -190,8 +190,11 @@ extension DyNet {
             params = nil; encoding = URLEncoding.default
         }
         let method = base.httpMethod.flatMap { HTTPMethod(rawValue: $0) } ?? .get
+        guard let url = base.url else {
+            preconditionFailure("Download URL must not be nil at this point")
+        }
         return session.download(
-            base.url!,
+            url,
             method: method,
             parameters: params,
             encoding: encoding,
