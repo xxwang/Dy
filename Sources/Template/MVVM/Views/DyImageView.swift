@@ -4,7 +4,7 @@ import Combine
 open class DyImageView: UIImageView {
     public var cancellables = Set<AnyCancellable>()
 
-    override public init(frame: CGRect) {
+    override public required init(frame: CGRect) {
         super.init(frame: frame)
     }
 
@@ -13,8 +13,9 @@ open class DyImageView: UIImageView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override open class func imageView() -> DyImageView {
-        DyImageView(frame: .zero).dy
+    override open class func imageView() -> Self {
+        Self(frame: .zero)
+            .dy
             .contentMode(.scaleAspectFit)
             .build()
     }

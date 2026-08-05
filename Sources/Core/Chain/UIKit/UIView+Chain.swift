@@ -936,7 +936,8 @@ public extension DyWrapper where Base: UIView {
     /// - Returns: `Self`
     @discardableResult
     func onTapGestureRecognizer(_ block: @escaping DyAction1<UITapGestureRecognizer>) -> Self {
-        let tap = UITapGestureRecognizer().dy
+        let tap = UITapGestureRecognizer()
+            .dy
             .onRecognized { recognizer in
                 if let tap = recognizer as? UITapGestureRecognizer {
                     block(tap)
@@ -955,7 +956,8 @@ public extension DyWrapper where Base: UIView {
     /// - Returns: `Self`
     @discardableResult
     func onLongPressGestureRecognizer(minimumDuration: TimeInterval = 0.5, _ block: @escaping DyAction1<UILongPressGestureRecognizer>) -> Self {
-        let longPress = UILongPressGestureRecognizer.longPressGestureRecognizer().dy
+        let longPress = UILongPressGestureRecognizer.longPressGestureRecognizer()
+            .dy
             .minimumPressDuration(minimumDuration)
             .onRecognized { recognizer in
                 if let longPress = recognizer as? UILongPressGestureRecognizer {
@@ -992,7 +994,8 @@ public extension DyWrapper where Base: UIView {
     /// - Returns: `Self`
     @discardableResult
     func onScreenEdgePanGestureRecognizer(edges: UIRectEdge, _ block: @escaping DyAction1<UIScreenEdgePanGestureRecognizer>) -> Self {
-        let screenEdgePan = UIScreenEdgePanGestureRecognizer.screenEdgePanGestureRecognizer().dy
+        let screenEdgePan = UIScreenEdgePanGestureRecognizer.screenEdgePanGestureRecognizer()
+            .dy
             .edges(edges)
             .onRecognized { recognizer in
                 if let screenEdgePan = recognizer as? UIScreenEdgePanGestureRecognizer {
@@ -1014,7 +1017,8 @@ public extension DyWrapper where Base: UIView {
     func onSwipeGestureRecognizer(direction: UISwipeGestureRecognizer.Direction = .right,
                                   _ block: @escaping DyAction1<UISwipeGestureRecognizer>) -> Self
     {
-        let swipeGesture = UISwipeGestureRecognizer.swipeGestureRecognizer().dy
+        let swipeGesture = UISwipeGestureRecognizer.swipeGestureRecognizer()
+            .dy
             .direction(direction)
             .onRecognized { recognizer in
                 if let swipe = recognizer as? UISwipeGestureRecognizer {
@@ -1033,7 +1037,8 @@ public extension DyWrapper where Base: UIView {
     @discardableResult
     func onPinchGestureRecognizer(_ block: @escaping DyAction1<UIPinchGestureRecognizer>) -> Self {
         let pinch = UIPinchGestureRecognizer.pinchGestureRecognizer()
-        pinch.dy
+        pinch
+            .dy
             .onStateChanged { [weak pinch] _ in
                 guard let pinch else { return }
                 block(pinch)
@@ -1050,7 +1055,8 @@ public extension DyWrapper where Base: UIView {
     @discardableResult
     func onRotationGestureRecognizer(_ block: @escaping DyAction1<UIRotationGestureRecognizer>) -> Self {
         let rotation = UIRotationGestureRecognizer.rotationGestureRecognizer()
-        rotation.dy
+        rotation
+            .dy
             .onStateChanged { [weak rotation] _ in
                 guard let rotation else { return }
                 block(rotation)

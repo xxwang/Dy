@@ -332,6 +332,11 @@ public extension DyQueue {
         let shouldRun: Bool
         onceLock.lock()
         if !onceTokens.contains(token) {
+            // 限制最大 token 数，防止 Set 无限增长（保留最近的一半）
+            if onceTokens.count >= 500 {
+                let half = onceTokens.count / 2
+                onceTokens = Set(Array(onceTokens).prefix(half))
+            }
             onceTokens.insert(token)
             shouldRun = true
         } else {

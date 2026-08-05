@@ -113,7 +113,11 @@ public extension DyWrapper where Base: UIApplication {
             return
         }
 
-        let telURL = URL(string: "tel://\(cleanNumber)")!
+        guard let telURL = URL(string: "tel://\(cleanNumber)") else {
+            assertionFailure("无法构造电话 URL: tel://\(cleanNumber)")
+            completion?(false)
+            return
+        }
         self.open(telURL, completion: completion)
     }
 

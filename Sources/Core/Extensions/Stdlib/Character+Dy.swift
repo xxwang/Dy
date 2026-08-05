@@ -143,6 +143,10 @@ public extension DyWrapper where Base == Character {
         let digits = "0123456789"
         let special = includeSpecialChars ? "!@#$%^&*()-_=+[]{}|;:'\",.<>?/" : ""
         let pool = letters + digits + special
-        return pool.randomElement()!
+        guard let randomChar = pool.randomElement() else {
+            assertionFailure("Character.random() pool is unexpectedly empty")
+            return "a"
+        }
+        return randomChar
     }
 }

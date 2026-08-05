@@ -77,8 +77,8 @@ public extension DySheetView {
             self.shadeView.alpha = 0.01
             self.contentContainer.alpha = 0.01
             self.contentContainer.transform = CGAffineTransform(translationX: 0, y: self.contentContainer.dy.height)
-        } completion: { _ in
-            self.removeFromSuperview()
+        } completion: { [weak self] _ in
+            self?.removeFromSuperview()
         }
     }
 }

@@ -70,8 +70,8 @@ public extension DyAlertView {
             self.shadeView.alpha = 0.01
             self.contentContainer.alpha = 0.01
             self.contentContainer.transform = CGAffineTransform(scaleX: 0.25, y: 0.25)
-        } completion: { _ in
-            self.removeFromSuperview()
+        } completion: { [weak self] _ in
+            self?.removeFromSuperview()
         }
     }
 }

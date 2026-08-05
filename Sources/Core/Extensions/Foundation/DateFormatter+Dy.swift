@@ -1,5 +1,14 @@
 import Foundation
 
+/// 缓存的 ISO 8601 formatter（避免重复创建昂贵的 DateFormatter 实例）
+private let _cachedISO8601Formatter: DateFormatter = {
+    let formatter = DateFormatter()
+    formatter.locale = Locale(identifier: "en_US_POSIX")
+    formatter.timeZone = TimeZone(secondsFromGMT: 0)
+    formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+    return formatter
+}()
+
 // MARK: - 构造方法
 public extension DateFormatter {
     /// 创建自定义格式的 `DateFormatter`
@@ -25,11 +34,7 @@ public extension DyWrapper where Base: DateFormatter {
     ///
     /// 格式：`yyyy-MM-dd'T'HH:mm:ssZ`
     static func iso8601() -> DateFormatter {
-        let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "en_US_POSIX")
-        formatter.timeZone = TimeZone(secondsFromGMT: 0) // 强制UTC
-        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
-        return formatter
+        _cachedISO8601Formatter
     }
 
     /// 创建一个自定义配置的 `DateFormatter` 实例

@@ -15,8 +15,8 @@ open class DyBlockButton: UIButton {
     }
 
     /// 工厂创建方法
-    override open class func button() -> DyBlockButton {
-        DyBlockButton()
+    override open class func button() -> Self {
+        Self()
     }
 }
 

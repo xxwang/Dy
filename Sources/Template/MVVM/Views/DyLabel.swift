@@ -13,8 +13,9 @@ open class DyLabel: UILabel {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override open class func label() -> DyLabel {
-        DyLabel().dy
+    override open class func label() -> Self {
+        Self()
+            .dy
             .lineBreakMode(.byTruncatingTail)
             .build()
     }

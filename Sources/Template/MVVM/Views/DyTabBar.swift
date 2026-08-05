@@ -13,8 +13,9 @@ open class DyTabBar: UITabBar {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override open class func tabBar() -> DyTabBar {
-        DyTabBar().dy
+    override open class func tabBar() -> Self {
+        Self()
+            .dy
             .isTranslucent(false)
             .backgroundColor(.clear)
             .shadowImage(UIImage(color: .clear) ?? UIImage())

@@ -6,27 +6,32 @@ open class DyNaView: UIView {
     open var backBlock: DyAction?
 
     /// 状态栏占位区域(不可交互,仅用于布局)
-    open lazy var statusBar = UIView.view().dy
+    open lazy var statusBar = UIView.view()
+        .dy
         .backgroundColor(.clear)
         .build()
 
     /// 标题容器(包含返回按钮和标题)
-    open lazy var naview = UIView.view().dy
+    open lazy var naview = UIView.view()
+        .dy
         .backgroundColor(.clear)
         .build()
 
     /// 底部分割线(默认半透明黑线)
-    open lazy var lineView = UIView.view().dy
+    open lazy var lineView = UIView.view()
+        .dy
         .backgroundColor(.black.dy.alpha(0.25))
         .build()
 
     /// 返回按钮(UIButton)
-    open lazy var backButton = UIButton.button().dy
+    open lazy var backButton = UIButton.button()
+        .dy
         .addTarget(self, action: #selector(onBackAction))
         .build()
 
     /// 标题标签
-    open lazy var titleLabel = UILabel.label().dy
+    open lazy var titleLabel = UILabel.label()
+        .dy
         .textAlignment(.center)
         .lineBreakMode(.byTruncatingTail)
         .build()
@@ -254,7 +259,8 @@ public extension DyWrapper where Base: DyNaView {
     /// 设置渐变背景(覆盖纯色和图片)
     @discardableResult
     func backgroundGradient(_ colors: [UIColor]) -> Self {
-        let gradient = CAGradientLayer().dy
+        let gradient = CAGradientLayer()
+            .dy
             .frame(base.bounds)
             .colors(colors)
             .startPoint(.zero)

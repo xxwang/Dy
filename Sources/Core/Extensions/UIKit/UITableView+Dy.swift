@@ -8,7 +8,8 @@ public extension DyWrapper where Base: UITableView {
     /// - Throws: 若未注册或类型不匹配,程序将 `crash`(开发期快速暴露问题)
     func dequeueReusableCell<T: UITableViewCell>(withCellClass cellType: T.Type) -> T {
         guard let cell = base.dequeueReusableCell(withIdentifier: cellType.identifier) as? T else {
-            fatalError("未能复用 Cell: \(cellType). 请确认已通过 register 注册！")
+            assertionFailure("未能复用 Cell: \(cellType). 请确认已通过 register 注册！")
+            return T()
         }
         return cell
     }
@@ -23,7 +24,8 @@ public extension DyWrapper where Base: UITableView {
         for indexPath: IndexPath
     ) -> T {
         guard let cell = base.dequeueReusableCell(withIdentifier: cellType.identifier, for: indexPath) as? T else {
-            fatalError("未能复用 Cell: \(cellType). 请确认已注册！")
+            assertionFailure("未能复用 Cell: \(cellType). 请确认已注册！")
+            return T()
         }
         return cell
     }
@@ -33,7 +35,8 @@ public extension DyWrapper where Base: UITableView {
         withHeaderFooterViewClass viewType: T.Type
     ) -> T {
         guard let view = base.dequeueReusableHeaderFooterView(withIdentifier: viewType.identifier) as? T else {
-            fatalError("未能复用 Header/Footer: \(viewType). 请确认已注册！")
+            assertionFailure("未能复用 Header/Footer: \(viewType). 请确认已注册！")
+            return T()
         }
         return view
     }

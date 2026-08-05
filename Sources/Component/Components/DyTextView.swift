@@ -6,7 +6,8 @@ open class DyTextView: UITextView {
     public var cancellables = Set<AnyCancellable>()
 
     /// 占位文本标签
-    lazy var placeholderLabel: UILabel = UILabel.label().dy
+    lazy var placeholderLabel: UILabel = UILabel.label()
+        .dy
         .numberOfLines(0)
         .backgroundColor(.clear)
         .textColor(.placeholderText)

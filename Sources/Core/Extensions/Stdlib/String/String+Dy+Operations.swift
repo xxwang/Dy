@@ -13,8 +13,8 @@ public extension DyWrapper where Base == String {
     ///     `"hello world".dy.capitalizeFirst()` → `"Hello world"`
     ///
     func capitalizeFirst() -> String? {
-        guard !base.isEmpty else { return nil }
-        return String(base.first!).uppercased() + base.dropFirst()
+        guard let first = base.first else { return nil }
+        return String(first).uppercased() + base.dropFirst()
     }
 
     /// 返回反转的字符串(非 mutating)

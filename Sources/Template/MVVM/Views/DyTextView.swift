@@ -12,8 +12,8 @@ open class DyTextView: UITextView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override open class func textView() -> DyTextView {
-        DyTextView()
+    override open class func textView() -> Self {
+        Self()
     }
 
     deinit {

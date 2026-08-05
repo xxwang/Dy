@@ -13,8 +13,9 @@ open class DyControl: UIControl {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override open class func control() -> DyControl {
-        DyControl().dy
+    override open class func control() -> Self {
+        Self()
+            .dy
             .isHighlighted(false)
             .build()
     }

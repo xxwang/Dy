@@ -306,7 +306,10 @@ public extension DyWrapper where Base: UIView {
             base.badgeLabel = label
         }
 
-        let label = base.badgeLabel!
+        guard let label = base.badgeLabel else {
+            assertionFailure("badgeLabel should not be nil after creation")
+            return
+        }
         label.text = number.isEmpty ? "" : ((Int(number) ?? 0) > 99 ? "99+" : number)
 
         // 更新圆角

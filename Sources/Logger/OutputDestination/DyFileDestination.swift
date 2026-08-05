@@ -77,7 +77,9 @@ public final class DyFileDestination {
     }
 
     deinit {
-        fileHandle.closeFile()
+        queue.sync {
+            fileHandle.closeFile()
+        }
     }
 }
 

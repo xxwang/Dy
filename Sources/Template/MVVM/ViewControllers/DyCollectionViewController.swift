@@ -3,7 +3,8 @@ import DyCore
 
 open class DyCollectionViewController: DyViewController {
     /// `UICollectionView`
-    open lazy var collectionView = UICollectionView.vCollectionView().dy
+    open lazy var collectionView = UICollectionView.vCollectionView()
+        .dy
         .dataSource(self)
         .delegate(self)
         .build()
@@ -20,10 +21,14 @@ open class DyCollectionViewController: DyViewController {
         super.setupUI()
 
         // 添加到导航栏下面 确保导航栏阴影可以正常显示
-        self.view.insertSubview(
-            self.collectionView,
-            belowSubview: self.naview
-        )
+        if self.naview.superview != nil {
+            self.view.insertSubview(
+                self.collectionView,
+                belowSubview: self.naview
+            )
+        } else {
+            self.view.addSubview(self.collectionView)
+        }
         self.updateNaview()
     }
 }

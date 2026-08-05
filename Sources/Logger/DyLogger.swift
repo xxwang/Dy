@@ -1,7 +1,7 @@
 import Foundation
 
 // MARK: - DyLogger
-public class DyLogger {
+public final class DyLogger {
     /// 最低日志级别，低于此级别的日志将被忽略。读取通过队列同步保证线程安全
     public var minimumLevel: DyLogLevel {
         get { queue.sync { _minimumLevel } }

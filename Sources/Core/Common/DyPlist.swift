@@ -1,4 +1,5 @@
 import Foundation
+import os.log
 
 // MARK: - 用于读写 plist 文件的工具类
 public final class DyPlist: @unchecked Sendable {
@@ -16,18 +17,30 @@ public extension DyPlist {
     /// - Returns: `Any?`
     func read(from url: URL) -> Any? {
         guard url.pathExtension.lowercased() == "plist",
-              FileManager.default.fileExists(atPath: url.path),
-              let data = try? Data(contentsOf: url)
+              FileManager.default.fileExists(atPath: url.path)
         else {
             return nil
         }
 
+        let data: Data
+        do {
+            data = try Data(contentsOf: url)
+        } catch {
+            os_log(.error, "[Dy] DyPlist 读取文件失败: %{public}@", error.localizedDescription)
+            return nil
+        }
+
         var format = PropertyListSerialization.PropertyListFormat.xml
-        return try? PropertyListSerialization.propertyList(
-            from: data,
-            options: .mutableContainersAndLeaves,
-            format: &format
-        )
+        do {
+            return try PropertyListSerialization.propertyList(
+                from: data,
+                options: .mutableContainersAndLeaves,
+                format: &format
+            )
+        } catch {
+            os_log(.error, "[Dy] DyPlist 解析失败: %{public}@", error.localizedDescription)
+            return nil
+        }
     }
 
     /// 写入数据到指定`url`中

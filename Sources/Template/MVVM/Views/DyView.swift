@@ -14,8 +14,8 @@ open class DyView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override open class func view() -> DyView {
-        DyView()
+    override open class func view() -> Self {
+        Self()
     }
 
     deinit {

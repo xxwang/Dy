@@ -1,4 +1,5 @@
 import Foundation
+import os.log
 
 // MARK: - 字符串写入
 public extension DyWrapper where Base: FileManager {
@@ -31,6 +32,7 @@ public extension DyWrapper where Base: FileManager {
             try string.write(to: url.dy.expandingTildeInUrl, atomically: true, encoding: .utf8)
             return true
         } catch {
+            os_log(.error, "[Dy] FileManager writeString 失败: %{public}@", error.localizedDescription)
             return false
         }
     }
@@ -79,6 +81,7 @@ public extension DyWrapper where Base: FileManager {
             fileHandle.write(data)
             return true
         } catch {
+            os_log(.error, "[Dy] FileManager appendString 失败: %{public}@", error.localizedDescription)
             return false
         }
     }
@@ -114,6 +117,7 @@ public extension DyWrapper where Base: FileManager {
             try data.write(to: url.dy.expandingTildeInUrl, options: .atomic)
             return true
         } catch {
+            os_log(.error, "[Dy] FileManager writeData 失败: %{public}@", error.localizedDescription)
             return false
         }
     }
@@ -155,6 +159,7 @@ public extension DyWrapper where Base: FileManager {
             fileHandle.write(data)
             return true
         } catch {
+            os_log(.error, "[Dy] FileManager appendData 失败: %{public}@", error.localizedDescription)
             return false
         }
     }
@@ -201,6 +206,7 @@ public extension DyWrapper where Base: FileManager {
             )
             return true
         } catch {
+            os_log(.error, "[Dy] FileManager createDirectory 失败: %{public}@", error.localizedDescription)
             return false
         }
     }
@@ -241,6 +247,7 @@ public extension DyWrapper where Base: FileManager {
             )
             return true
         } catch {
+            os_log(.error, "[Dy] FileManager copyItem 失败: %{public}@", error.localizedDescription)
             return false
         }
     }
@@ -262,6 +269,7 @@ public extension DyWrapper where Base: FileManager {
             )
             return true
         } catch {
+            os_log(.error, "[Dy] FileManager moveItem 失败: %{public}@", error.localizedDescription)
             return false
         }
     }
@@ -279,6 +287,7 @@ public extension DyWrapper where Base: FileManager {
             try FileManager.default.removeItem(atPath: path.dy.expandingTildeInPath)
             return true
         } catch {
+            os_log(.error, "[Dy] FileManager removeItem 失败: %{public}@", error.localizedDescription)
             return false
         }
     }
@@ -300,6 +309,7 @@ public extension DyWrapper where Base: FileManager {
             let attributes = try FileManager.default.attributesOfItem(atPath: path.dy.expandingTildeInPath)
             return DyFileAttributes(attributes: attributes)
         } catch {
+            os_log(.error, "[Dy] FileManager attributes 失败: %{public}@", error.localizedDescription)
             return nil
         }
     }
@@ -347,6 +357,7 @@ public extension DyWrapper where Base: FileManager {
             let baseURL = URL(fileURLWithPath: path.dy.expandingTildeInPath)
             return items.map { baseURL.appendingPathComponent($0).path }
         } catch {
+            os_log(.error, "[Dy] FileManager contentsOfDirectory 失败: %{public}@", error.localizedDescription)
             return []
         }
     }
@@ -363,6 +374,7 @@ public extension DyWrapper where Base: FileManager {
             let baseURL = URL(fileURLWithPath: path.dy.expandingTildeInPath)
             return subpaths.map { baseURL.appendingPathComponent($0).path }
         } catch {
+            os_log(.error, "[Dy] FileManager recursiveContentsOfDirectory 失败: %{public}@", error.localizedDescription)
             return []
         }
     }

@@ -58,7 +58,7 @@ public extension DyNet {
         do {
             return try response.mapBusiness(type)
         } catch {
-            throw DyNetError.decodeFailure(error)
+            throw (error as? DyNetError) ?? .decodeFailure(error)
         }
     }
 }

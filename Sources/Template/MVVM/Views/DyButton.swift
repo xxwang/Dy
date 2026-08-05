@@ -3,8 +3,9 @@ import Combine
 
 open class DyButton: UIButton {
     public var cancellables = Set<AnyCancellable>()
-    override open class func button() -> DyButton {
-        DyButton(type: .custom).dy
+    override open class func button() -> Self {
+        Self(type: .custom)
+            .dy
             .isHighlighted(false)
             .build()
     }

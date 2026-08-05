@@ -23,10 +23,14 @@ open class DyScrollViewController: DyViewController {
         super.setupUI()
 
         // 滚动视图添加到导航栏下面 确保导航栏阴影可以正常显示
-        self.view.insertSubview(
-            self.scrollView,
-            belowSubview: self.naview
-        )
+        if self.naview.superview != nil {
+            self.view.insertSubview(
+                self.scrollView,
+                belowSubview: self.naview
+            )
+        } else {
+            self.view.addSubview(self.scrollView)
+        }
 
         // 内容容器
         self.contentView

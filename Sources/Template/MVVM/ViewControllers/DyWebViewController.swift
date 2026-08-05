@@ -80,10 +80,14 @@ open class DyWebViewController: DyViewController {
         super.setupUI()
 
         // 添加到导航栏下面 确保导航栏阴影可以正常显示
-        self.view.insertSubview(
-            self.webView,
-            belowSubview: self.naview
-        )
+        if self.naview.superview != nil {
+            self.view.insertSubview(
+                self.webView,
+                belowSubview: self.naview
+            )
+        } else {
+            self.view.addSubview(self.webView)
+        }
 
         self.updateNaview()
     }

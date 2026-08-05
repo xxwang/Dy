@@ -60,7 +60,8 @@ public extension DyWrapper where Base: UICollectionView {
             withReuseIdentifier: cellType.identifier,
             for: indexPath
         ) as? T else {
-            fatalError("未能正确复用 Cell: \(cellType). 请确认已通过register 注册！")
+            assertionFailure("未能正确复用 Cell: \(cellType). 请确认已通过register 注册！")
+            return T()
         }
         return cell
     }
@@ -81,7 +82,8 @@ public extension DyWrapper where Base: UICollectionView {
             withReuseIdentifier: viewType.identifier,
             for: indexPath
         ) as? T else {
-            fatalError("未能正确复用 Supplementary View: \(viewType). 请确认已注册！")
+            assertionFailure("未能正确复用 Supplementary View: \(viewType). 请确认已注册！")
+            return T()
         }
         return view
     }

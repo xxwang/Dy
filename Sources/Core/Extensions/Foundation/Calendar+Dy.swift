@@ -280,7 +280,10 @@ public extension DyWrapper where Base == Calendar {
                 return nil
             }
             let c = base.dateComponents([.year, .month], from: comp)
-            return (c.year!, c.month!)
+            guard let year = c.year, let month = c.month else {
+                return nil
+            }
+            return (year, month)
         }
     }
 }

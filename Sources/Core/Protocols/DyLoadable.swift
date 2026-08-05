@@ -20,11 +20,12 @@ public extension DyLoadable where Self: UIView {
         let targetBundle = bundle ?? Bundle(for: Self.self)
 
         guard let views = targetBundle.loadNibNamed(name, owner: nil, options: nil) else {
-            fatalError("""
+            assertionFailure("""
             ❌ [Dy] 无法加载 XIB '\(name)'
             检查：XIB 是否存在并已加入 Target
             Bundle: \(targetBundle.bundlePath)
             """)
+            return Self(frame: .zero)
         }
 
         if let view = views.first(where: { type(of: $0) == Self.self }) as? Self {
@@ -35,10 +36,11 @@ public extension DyLoadable where Self: UIView {
         }
 
         let types = views.map { String(describing: type(of: $0)) }.joined(separator: ", ")
-        fatalError("""
+        assertionFailure("""
         ❌ [Dy] XIB '\(name)' 无类型 '\(Self.self)' 的视图
         可用类型: [\(types)]请检查根视图类设置
         """)
+        return views.first as? Self ?? Self(frame: .zero)
     }
 }
 
@@ -61,11 +63,12 @@ public extension DyLoadable where Self: UIViewController {
         let storyboard = UIStoryboard(name: storyboardName, bundle: targetBundle)
 
         guard let controller = storyboard.instantiateViewController(withIdentifier: storyboardId) as? Self else {
-            fatalError("""
+            assertionFailure("""
             ❌ [Dy] 无法从 Storyboard '\(storyboardName)' 加载 ID '\(storyboardId)' 的控制器
             检查：Storyboard ID 和 Custom Class 是否正确
             Bundle: \(targetBundle.bundlePath)
             """)
+            return Self()
         }
 
         return controller

@@ -123,9 +123,12 @@ extension DyNet {
         let base = prepareBaseRequest(endpoint)
         switch endpoint.task {
         case let .uploadMultipart(builder):
+            guard let url = base.url else {
+                throw DyNetError.message("URLRequest.url is nil for upload")
+            }
             return session.upload(
                 multipartFormData: { builder($0) },
-                to: base.url!,
+                to: url,
                 method: base.method ?? .get,
                 headers: base.headers
             )
@@ -187,7 +190,14 @@ extension DyNet {
             params = nil; encoding = URLEncoding.default
         }
         let method = base.httpMethod.flatMap { HTTPMethod(rawValue: $0) } ?? .get
-        return session.download(base.url!, method: method, parameters: params, encoding: encoding, headers: base.headers, to: dest)
+        return session.download(
+            base.url!,
+            method: method,
+            parameters: params,
+            encoding: encoding,
+            headers: base.headers,
+            to: dest
+        )
     }
 
     private static func fingerprint(_ request: URLRequest?) -> String {

@@ -4,6 +4,12 @@ import CoreImage
 import CoreImage.CIFilterBuiltins
 import ImageIO
 
+/// 共享 `CIContext`（线程安全），避免每次滤镜操作重复创建昂贵实例。
+private let sharedCIContext: CIContext = CIContext(options: [
+    .workingColorSpace: CGColorSpaceCreateDeviceRGB(),
+    .useSoftwareRenderer: false,
+])
+
 // MARK: - 构造方法
 public extension UIImage {
     /// 根据颜色和大小创建纯色图片,可选圆角半径
@@ -1058,16 +1064,9 @@ public extension DyWrapper where Base: UIImage {
             return nil
         }
 
-        // 复用 CIContext(线程安全)
-        let sharedContext = CIContext(
-            options: [
-                .workingColorSpace: CGColorSpaceCreateDeviceRGB(),
-                .outputColorSpace: CGColorSpaceCreateDeviceRGB(),
-            ]
-        )
-
+        // 复用共享 CIContext(线程安全)
         var bitmap = [UInt8](repeating: 0, count: 4)
-        sharedContext.render(
+        sharedCIContext.render(
             outputImage,
             toBitmap: &bitmap,
             rowBytes: 4,
@@ -1397,10 +1396,7 @@ public extension DyWrapper where Base: UIImage {
         }
 
         // 使用共享 CIContext 提升性能(线程安全)
-        let sharedContext = CIContext(options: [.useSoftwareRenderer: false])
-
-        // 创建 CGImage 不需要手动调整坐标系
-        guard let cgImage = sharedContext.createCGImage(outputImage, from: outputImage.extent) else {
+        guard let cgImage = sharedCIContext.createCGImage(outputImage, from: outputImage.extent) else {
             return nil
         }
 
@@ -1544,8 +1540,7 @@ public extension DyWrapper where Base: UIImage {
         guard let outputImage = blendFilter.outputImage else { return base }
 
         // 渲染为 UIImage
-        let sharedContext = CIContext(options: [.useSoftwareRenderer: false])
-        guard let cgImage = sharedContext.createCGImage(outputImage, from: ciImage.extent) else {
+        guard let cgImage = sharedCIContext.createCGImage(outputImage, from: ciImage.extent) else {
             return base
         }
 

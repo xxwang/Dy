@@ -14,16 +14,14 @@ public extension DyWrapper where Base == String {
     ///
     /// - Returns: 第一个字符的字符串形式;若为空串,返回 `nil`
     var firstCharacter: String? {
-        guard !base.isEmpty else { return nil }
-        return String(base.first!)
+        base.first.map { String($0) }
     }
 
     /// 获取最后一个字符（作为字符串）
     ///
     /// - Returns: 最后一个字符的字符串形式;若为空串,返回 `nil`
     var lastCharacter: String? {
-        guard !base.isEmpty else { return nil }
-        return String(base.last!)
+        base.last.map { String($0) }
     }
 
     /// 统计单词数量（以空白符和标点符号为分隔）
