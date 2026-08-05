@@ -622,22 +622,30 @@ public extension DyWrapper where Base == Date {
 
     /// 昨天
     static var yesterday: Date? {
-        Date().dy.yesterday()
+        Date()
+            .dy
+            .yesterday()
     }
 
     /// 明天
     static var tomorrow: Date? {
-        Date().dy.tomorrow()
+        Date()
+            .dy
+            .tomorrow()
     }
 
     /// 前天
     static var dayBeforeYesterday: Date? {
-        Date().dy.adding(days: -2)
+        Date()
+            .dy
+            .adding(days: -2)
     }
 
     /// 后天
     static var dayAfterTomorrow: Date? {
-        Date().dy.adding(days: 2)
+        Date()
+            .dy
+            .adding(days: 2)
     }
 
     /// 获取指定年月的天数
