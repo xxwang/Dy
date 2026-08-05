@@ -75,59 +75,41 @@ open class DyNaView: UIView {
     override open func layoutSubviews() {
         super.layoutSubviews()
 
-        // 状态栏：顶部,高度由系统定义
-        statusBar.frame = CGRect(
-            x: 0,
-            y: 0,
-            width: bounds.width,
-            height: DyScreen.statusBarHeight
-        )
+        // 动画期间跳过手动布局，避免与系统过渡动画冲突产生抖动
+        guard UIView.inheritedAnimationDuration == 0 else { return }
 
-        // 标题栏：紧接状态栏下方
-        titleBar.frame = CGRect(
-            x: 0,
-            y: statusBar.frame.maxY,
-            width: bounds.width,
-            height: DyScreen.navigationBarHeight
-        )
-
-        // 分割线：位于整个导航栏底部，高度适配屏幕密度
+        let safeTop = DyScreen.statusBarHeight
+        let navHeight = DyScreen.navigationBarHeight
+        let safeLeft = max(10, DyScreen.safeAreaLeft)
+        let safeRight = max(10, DyScreen.safeAreaRight)
         let lineHeight = 1.0 / DyScreen.screenScale
-        lineView.frame = CGRect(
-            x: 0,
-            y: bounds.height - lineHeight,
-            width: bounds.width,
-            height: lineHeight
-        )
 
-        // 返回按钮：左侧安全区域或 10pt 内边距
+        statusBar.frame = CGRect(x: 0, y: 0, width: bounds.width, height: safeTop)
+
+        titleBar.frame = CGRect(x: 0, y: safeTop, width: bounds.width, height: navHeight)
+
+        lineView.frame = CGRect(x: 0, y: bounds.height - lineHeight, width: bounds.width, height: lineHeight)
+
         let buttonSize: CGFloat = 40
-        let buttonX = max(10, DyScreen.safeAreaLeft)
         backButton.frame = CGRect(
-            x: buttonX,
-            y: (titleBar.bounds.height - buttonSize) / 2,
+            x: safeLeft,
+            y: (navHeight - buttonSize) / 2,
             width: buttonSize,
             height: buttonSize
         )
 
-        // 标题：居中于标题栏，左右各留安全距离给返回按钮和右侧安全区
-        let rightInset = max(10, DyScreen.safeAreaRight)
-        let availableWidth = bounds.width - backButton.frame.maxX - rightInset
-        let titleSize = titleLabel.sizeThatFits(CGSize(width: availableWidth, height: titleBar.bounds.height))
+        let availableWidth = bounds.width - backButton.frame.maxX - safeRight
+        let titleSize = titleLabel.sizeThatFits(CGSize(width: availableWidth, height: navHeight))
         titleLabel.frame = CGRect(
             x: (bounds.width - titleSize.width) / 2,
-            y: (titleBar.bounds.height - titleSize.height) / 2,
+            y: (navHeight - titleSize.height) / 2,
             width: min(titleSize.width, availableWidth),
             height: titleSize.height
         )
 
-        // 背景图：铺满整个导航栏
         backgroundImageView?.frame = bounds
-
-        // 渐变层：同步 bounds
         gradientLayer?.frame = bounds
 
-        // 阴影路径跟随 bounds（在 layoutSubviews 中更新，避免 init 时 bounds 为 .zero）
         if layer.shadowOpacity > 0 {
             layer.shadowPath = UIBezierPath(rect: bounds).cgPath
         }
