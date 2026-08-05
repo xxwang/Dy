@@ -2,8 +2,13 @@ import UIKit
 import DyCore
 
 open class DyTableViewController: DyViewController {
+    /// 控制`UITableView`的样式(通过子类重写)
+    var tableViewStyle: UITableView.Style {
+        return .grouped
+    }
+
     /// `UITableView`
-    open lazy var tableView = UITableView.tableView()
+    open lazy var tableView = UITableView.tableView(tableViewStyle)
         .dy
         .dataSource(self)
         .delegate(self)

@@ -55,7 +55,7 @@ import WebKit
 // MARK: - UITableView
 @objc extension UITableView {
     /// 创建一个默认配置的 `UITableView`(`grouped` 样式),启用自动尺寸、透明背景、无分隔线等
-    open class func tableView() -> UITableView {
+    open class func tableView(_ style: UITableView.Style = .grouped) -> UITableView {
         let tableView = UITableView(frame: .zero, style: .grouped)
             .dy
             .rowHeight(UITableView.automaticDimension)
