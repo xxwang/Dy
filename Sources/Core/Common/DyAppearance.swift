@@ -13,7 +13,7 @@ public extension DyAppearance {
     /// - Parameters:
     ///   - userInterfaceStyle: 强制使用的界面主题默认 `.light`
     ///   - scrollInContentInsetAdjustmentBehavior: 滚动内容内边距调整行为默认 `.never`(避免自动偏移)
-    func setup(
+    func initGlobalUI(
         userInterfaceStyle: UIUserInterfaceStyle = .light,
         scrollInContentInsetAdjustmentBehavior: UIScrollView.ContentInsetAdjustmentBehavior = .never
     ) {
@@ -28,6 +28,9 @@ public extension DyAppearance {
 
         // 导航栏统一样式
         self.setupNavigationBar()
+
+        // 标签栏统一样式
+        self.setupTabBar()
     }
 }
 
@@ -98,6 +101,36 @@ public extension DyAppearance {
         navBar.standardAppearance = appearance
         // 确保滚动到顶部时样式一致
         navBar.scrollEdgeAppearance = appearance
+    }
+
+    /// 应用统一的标签栏全局样式
+    ///
+    /// - Parameters:
+    ///   - translucent: 是否启用半透明效果建议设为 `false` 以避免布局跳动
+    ///   - backgroundColor: 背景色若为 `nil`,使用不透明系统背景色
+    ///   - shadowColor: 底部阴影线颜色设为 `.clear` 可完全隐藏分割线
+    func setupTabBar(
+        translucent: Bool = false,
+        backgroundColor: UIColor? = nil,
+        shadowColor: UIColor = .clear
+    ) {
+        let appearance = UITabBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        appearance.shadowColor = shadowColor
+        // 禁用模糊,确保背景色纯净
+        appearance.backgroundEffect = nil
+
+        if let backgroundColor {
+            appearance.backgroundColor = backgroundColor
+        }
+
+        let tabBar = UITabBar.appearance()
+        tabBar.isTranslucent = translucent
+        tabBar.standardAppearance = appearance
+        // 确保滚动到顶部时样式一致
+        if #available(iOS 15.0, *) {
+            tabBar.scrollEdgeAppearance = appearance
+        }
     }
 }
 
