@@ -74,11 +74,7 @@ open class DyNaView: UIView {
 
     override open func layoutSubviews() {
         super.layoutSubviews()
-        
-        if DyScreen.statusBarHeight <= 1 {
-            return
-        }
-        
+
         // 状态栏：顶部,高度由系统定义
         statusBar.frame = CGRect(
             x: 0,
@@ -98,9 +94,9 @@ open class DyNaView: UIView {
         // 分割线：位于整个导航栏底部
         lineView.frame = CGRect(
             x: 0,
-            y: bounds.height - 1.0,
+            y: bounds.height - 0.4,
             width: bounds.width,
-            height: 1.0
+            height: 0.4
         )
 
         // 返回按钮：左侧安全区域或 10pt 内边距
@@ -123,12 +119,6 @@ open class DyNaView: UIView {
             width: min(titleSize.width, availableWidth),
             height: titleSize.height
         )
-
-        // 背景图：铺满整个导航栏
-        backgroundImageView?.frame = bounds
-
-        // 渐变层：同步 bounds
-        gradientLayer?.frame = bounds
 
         // 阴影路径跟随 bounds（在 layoutSubviews 中更新，避免 init 时 bounds 为 .zero）
         if layer.shadowOpacity > 0 {
