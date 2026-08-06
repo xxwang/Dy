@@ -92,11 +92,12 @@ open class DyNaView: UIView {
         )
 
         // 分割线：位于整个导航栏底部
+        let lineHeight = 1.0 / DyScreen.screenScale
         lineView.frame = CGRect(
             x: 0,
-            y: bounds.height - 0.4,
+            y: bounds.height - lineHeight,
             width: bounds.width,
-            height: 0.4
+            height: lineHeight
         )
 
         // 返回按钮：左侧安全区域或 10pt 内边距
