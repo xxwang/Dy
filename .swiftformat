@@ -32,7 +32,6 @@
 # ========================
 
 --enable noExplicitOwnership       # 自动添加weak/unowned修饰符
---enable redundantProperty         # 检查冗余属性声明
 --enable sortSwitchCases           # 自动排序switch case顺序
 --enable unusedPrivateDeclarations # 检查未使用的私有声明
 --enable wrapEnumCases             # 多case枚举自动换行
