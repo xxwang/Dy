@@ -13,13 +13,10 @@ let package = Package(
         .library(name: "DyComponent", targets: ["DyComponent"]),
         .library(name: "DyCore", targets: ["DyCore"]),
         .library(name: "DyCombineCocoa", targets: ["DyCombineCocoa"]),
-        .library(name: "DyNetwork", targets: ["DyNetwork"]),
         .library(name: "DyLogger", targets: ["DyLogger"]),
 
     ],
-    dependencies: [
-        .package(url: "https://github.com/Alamofire/Alamofire.git", .upToNextMajor(from: "5.9.0")),
-    ],
+    dependencies: [],
     targets: [
         .target(
             name: "Dy",
@@ -28,7 +25,6 @@ let package = Package(
                 .target(name: "DyComponent"),
                 .target(name: "DyCore"),
                 .target(name: "DyCombineCocoa"),
-                .target(name: "DyNetwork"),
                 .target(name: "DyLogger"),
             ],
             path: "Sources/Dy",
@@ -70,17 +66,6 @@ let package = Package(
         .target(
             name: "DyCombineCocoa",
             path: "Sources/CombineCocoa",
-            swiftSettings: [
-                .define("SPM_MODE"),
-            ]
-        ),
-        .target(
-            name: "DyNetwork",
-            dependencies: [
-                .product(name: "Alamofire", package: "Alamofire"),
-            ],
-            path: "Sources/Network",
-            exclude: ["README.md"],
             swiftSettings: [
                 .define("SPM_MODE"),
             ]
