@@ -93,16 +93,17 @@ public extension DyWrapper where Base: RangeReplaceableCollection {
     ///     [1, 2, 3, 4].dy.rotated(by: -1) // [2, 3, 4, 1]
     ///     ```
     func rotated(by places: Int) -> Base {
-        var copy = base
-        guard !copy.isEmpty, places != 0 else { return copy }
+        guard !base.isEmpty, places != 0 else { return base }
 
-        let n = copy.count
+        let n = base.count
         let k = (places % n + n) % n
+        // 向右旋转 k 位:后 k 个元素挪到前面,切分点取 n - k
+        let splitIndex = base.index(base.startIndex, offsetBy: n - k)
 
-        let midIndex = copy.index(copy.startIndex, offsetBy: k)
-        let rotated = [copy[midIndex...], copy[..<midIndex]].joined()
-
-        return copy
+        var result = Base()
+        result.append(contentsOf: base[splitIndex...])
+        result.append(contentsOf: base[..<splitIndex])
+        return result
     }
 
     /// 原地旋转集合(通用实现,适用于所有 RangeReplaceableCollection)
@@ -118,10 +119,13 @@ public extension DyWrapper where Base: RangeReplaceableCollection {
 
         let n = base.count
         let k = (places % n + n) % n
+        // 向右旋转 k 位:后 k 个元素挪到前面,切分点取 n - k
+        let splitIndex = base.index(base.startIndex, offsetBy: n - k)
 
-        let midIndex = base.index(base.startIndex, offsetBy: k)
-        let rotated = [base[midIndex...], base[..<midIndex]].joined()
-        base = Base(rotated)
+        var result = Base()
+        result.append(contentsOf: base[splitIndex...])
+        result.append(contentsOf: base[..<splitIndex])
+        base = result
 
         return base
     }
