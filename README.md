@@ -3,7 +3,8 @@
 轻量级 Swift 扩展工具库 — 基于 `SoloWrapper` 命名空间模式，为 UIKit、Foundation、CoreGraphics 等提供 `.solo.` 链式 API，不污染原生类型。
 
 ```swift
-import Solo  // 一行引入全部模块（SoloCore + SoloComponent + SoloTemplate + SoloCombineCocoa + SoloLogger）
+// 一行引入全部模块（SoloCore + SoloComponent + SoloTemplate + SoloCombineCocoa + SoloLogger）
+import Solo
 
 // 链式配置 UIView
 let view = UIView()
