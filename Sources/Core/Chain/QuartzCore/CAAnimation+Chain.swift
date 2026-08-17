@@ -1,7 +1,7 @@
 import QuartzCore
 
 // MARK: - 链式设置属性
-public extension DyWrapper where Base: CAAnimation {
+public extension SoloWrapper where Base: CAAnimation {
     /// 设置动画的代理对象
     /// - Parameter delegate: 遵循 `CAAnimationDelegate` 协议的代理实例
     /// - Returns: `Self`

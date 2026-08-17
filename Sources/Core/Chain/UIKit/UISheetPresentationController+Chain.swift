@@ -2,7 +2,7 @@ import UIKit
 
 // MARK: - 链式设置属性
 @available(iOS 15.0, *)
-public extension DyWrapper where Base: UISheetPresentationController {
+public extension SoloWrapper where Base: UISheetPresentationController {
     /// 设置代理
     /// - Parameter delegate: 代理对象
     /// - Returns: `Self`

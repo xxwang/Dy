@@ -1,3 +1,3 @@
 @_exported import UIKit
-@_exported import DyCore
-@_exported import DyComponent
+@_exported import SoloCore
+@_exported import SoloComponent

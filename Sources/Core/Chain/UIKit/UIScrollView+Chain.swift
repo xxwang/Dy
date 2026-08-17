@@ -1,7 +1,7 @@
 import UIKit
 
 // MARK: - 链式设置属性
-public extension DyWrapper where Base: UIScrollView {
+public extension SoloWrapper where Base: UIScrollView {
     /// 设置下拉刷新控件
     /// - Parameter refreshControl: 下拉刷新控件
     /// - Returns: `Self`
@@ -236,7 +236,7 @@ public extension DyWrapper where Base: UIScrollView {
 }
 
 // MARK: - 链式方法(自定义)
-public extension DyWrapper where Base: UIScrollView {
+public extension SoloWrapper where Base: UIScrollView {
     /// 滚动到内容顶部(考虑 `contentInset.top`)
     ///
     /// - Parameter animated: 是否启用滚动动画
@@ -281,7 +281,7 @@ public extension DyWrapper where Base: UIScrollView {
 }
 
 // MARK: - 链式分页滚动(上下左右一页)
-public extension DyWrapper where Base: UIScrollView {
+public extension SoloWrapper where Base: UIScrollView {
     /// 向上滚动一页(若启用分页,则对齐页面;否则滚动一屏高度)
     ///
     /// - Parameter animated: 是否启用滚动动画

@@ -3,40 +3,40 @@
 import PackageDescription
 
 let package = Package(
-    name: "Dy",
+    name: "Solo",
     platforms: [
         .iOS(.v13),
     ],
     products: [
-        .library(name: "Dy", targets: ["Dy"]),
-        .library(name: "DyTemplate", targets: ["DyTemplate"]),
-        .library(name: "DyComponent", targets: ["DyComponent"]),
-        .library(name: "DyCore", targets: ["DyCore"]),
-        .library(name: "DyCombineCocoa", targets: ["DyCombineCocoa"]),
-        .library(name: "DyLogger", targets: ["DyLogger"]),
+        .library(name: "Solo", targets: ["Solo"]),
+        .library(name: "SoloTemplate", targets: ["SoloTemplate"]),
+        .library(name: "SoloComponent", targets: ["SoloComponent"]),
+        .library(name: "SoloCore", targets: ["SoloCore"]),
+        .library(name: "SoloCombineCocoa", targets: ["SoloCombineCocoa"]),
+        .library(name: "SoloLogger", targets: ["SoloLogger"]),
 
     ],
     dependencies: [],
     targets: [
         .target(
-            name: "Dy",
+            name: "Solo",
             dependencies: [
-                .target(name: "DyTemplate"),
-                .target(name: "DyComponent"),
-                .target(name: "DyCore"),
-                .target(name: "DyCombineCocoa"),
-                .target(name: "DyLogger"),
+                .target(name: "SoloTemplate"),
+                .target(name: "SoloComponent"),
+                .target(name: "SoloCore"),
+                .target(name: "SoloCombineCocoa"),
+                .target(name: "SoloLogger"),
             ],
-            path: "Sources/Dy",
+            path: "Sources/Solo",
             swiftSettings: [
                 .define("SPM_MODE"),
             ]
         ),
         .target(
-            name: "DyTemplate",
+            name: "SoloTemplate",
             dependencies: [
-                .target(name: "DyComponent"),
-                .target(name: "DyCore"),
+                .target(name: "SoloComponent"),
+                .target(name: "SoloCore"),
             ],
             path: "Sources/Template",
             swiftSettings: [
@@ -44,9 +44,9 @@ let package = Package(
             ]
         ),
         .target(
-            name: "DyComponent",
+            name: "SoloComponent",
             dependencies: [
-                .target(name: "DyCore"),
+                .target(name: "SoloCore"),
             ],
             path: "Sources/Component",
             resources: [
@@ -57,21 +57,21 @@ let package = Package(
             ]
         ),
         .target(
-            name: "DyCore",
+            name: "SoloCore",
             path: "Sources/Core",
             swiftSettings: [
                 .define("SPM_MODE"),
             ]
         ),
         .target(
-            name: "DyCombineCocoa",
+            name: "SoloCombineCocoa",
             path: "Sources/CombineCocoa",
             swiftSettings: [
                 .define("SPM_MODE"),
             ]
         ),
         .target(
-            name: "DyLogger",
+            name: "SoloLogger",
             path: "Sources/Logger",
             swiftSettings: [
                 .define("SPM_MODE"),

@@ -1,7 +1,7 @@
 import UIKit
 
 // MARK: - 链式设置属性
-public extension DyWrapper where Base: NSMutableParagraphStyle {
+public extension SoloWrapper where Base: NSMutableParagraphStyle {
     /// 设置文本对齐方式
     ///
     /// - Parameter alignment: 对齐方式(如 `.left`, `.center`, `.right`)
@@ -79,7 +79,7 @@ public extension DyWrapper where Base: NSMutableParagraphStyle {
     ///
     /// - Example:
     ///   ```swift
-    ///   let style = NSMutableParagraphStyle().dy.headIndent(10.0)
+    ///   let style = NSMutableParagraphStyle().solo.headIndent(10.0)
     ///   ```
     @discardableResult
     func headIndent(_ headIndent: CGFloat) -> Self {

@@ -1,7 +1,7 @@
 import Foundation
 
 // MARK: - 链式方法
-public extension DyWrapper where Base: Timer {
+public extension SoloWrapper where Base: Timer {
     /// 设置运行模式
     /// - Parameter mode: 运行模式
     /// - Returns: `Self`

@@ -1,7 +1,7 @@
 import QuartzCore
 
 // MARK: - 链式设置属性
-public extension DyWrapper where Base: CABasicAnimation {
+public extension SoloWrapper where Base: CABasicAnimation {
     /// 设置动画的起始值
     /// - Parameter value: 动画开始时的值(如 `CGFloat`, `CGColor`, `CGPoint`, `CGSize` 等)
     ///   若为 `nil`,则使用图层当前值作为起点

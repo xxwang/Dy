@@ -1,7 +1,7 @@
 import UIKit
 
 // MARK: - 链式设置属性
-public extension DyWrapper where Base: UITapGestureRecognizer {
+public extension SoloWrapper where Base: UITapGestureRecognizer {
     /// 设置触发点击手势所需的点击次数
     /// - Parameter count: 点击次数（如单击=1，双击=2），默认为 1
     /// - Returns: `Self`

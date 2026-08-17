@@ -1,7 +1,7 @@
 import UIKit
 
 // MARK: - 链式设置属性
-public extension DyWrapper where Base: UIStackView {
+public extension SoloWrapper where Base: UIStackView {
     /// 设置子视图的排列轴向(水平或垂直)
     /// - Parameter axis: 布局轴向
     /// - Returns: `Self`
@@ -38,7 +38,7 @@ public extension DyWrapper where Base: UIStackView {
         return self
     }
 
-    /// 为指定的排列子视图之后设置自定义间距(仅 iOS 11 及以上,Dy 最低支持 iOS 14,故安全使用)
+    /// 为指定的排列子视图之后设置自定义间距(仅 iOS 11 及以上,Solo 最低支持 iOS 14,故安全使用)
     ///
     /// - Parameters:
     ///   - spacing: 自定义间距值
@@ -88,7 +88,7 @@ public extension DyWrapper where Base: UIStackView {
 }
 
 // MARK: - 链式方法
-public extension DyWrapper where Base: UIStackView {
+public extension SoloWrapper where Base: UIStackView {
     /// 批量添加多个排列子视图
     /// - Parameter views: 要添加的视图数组
     /// - Returns: `Self`

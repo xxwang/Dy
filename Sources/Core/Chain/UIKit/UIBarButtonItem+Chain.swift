@@ -1,7 +1,7 @@
 import UIKit
 
 // MARK: - 链式设置属性
-public extension DyWrapper where Base: UIBarButtonItem {
+public extension SoloWrapper where Base: UIBarButtonItem {
     /// 设置按钮的显示样式(如 `.plain`、`.done` 等)
     ///
     /// - Parameter style: 指定按钮的视觉样式
@@ -118,7 +118,7 @@ public extension DyWrapper where Base: UIBarButtonItem {
 }
 
 // MARK: - 链式方法
-public extension DyWrapper where Base: UIBarButtonItem {
+public extension SoloWrapper where Base: UIBarButtonItem {
     /// 设置按钮图标的渲染模式(例如保持原始颜色或使用模板色)
     ///
     /// - Parameter renderingMode: 渲染模式(如 `.alwaysOriginal`, `.alwaysTemplate`)

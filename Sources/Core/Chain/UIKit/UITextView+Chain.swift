@@ -2,7 +2,7 @@ import UIKit
 import os.log
 
 // MARK: - 链式设置属性
-public extension DyWrapper where Base: UITextView {
+public extension SoloWrapper where Base: UITextView {
     /// 设置是否可编辑
     /// - Parameter isEditable: 是否可以编辑
     /// - Returns: `Self`
@@ -185,7 +185,7 @@ public extension DyWrapper where Base: UITextView {
 }
 
 // MARK: - 链式方法(自定义)
-public extension DyWrapper where Base: UITextView {
+public extension SoloWrapper where Base: UITextView {
     /// 滚动到顶部
     /// - Returns: `Self`
     @discardableResult

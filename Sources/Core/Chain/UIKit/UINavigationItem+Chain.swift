@@ -1,7 +1,7 @@
 import UIKit
 
 // MARK: - 链式设置属性
-public extension DyWrapper where Base: UINavigationItem {
+public extension SoloWrapper where Base: UINavigationItem {
     /// 设置大标题的显示模式
     /// - Note: 需配合 `UINavigationBar.prefersLargeTitles = true` 使用
     /// - Parameter mode: 大标题显示模式

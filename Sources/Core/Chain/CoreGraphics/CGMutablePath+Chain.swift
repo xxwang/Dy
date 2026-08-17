@@ -1,7 +1,7 @@
 import CoreGraphics
 
 // MARK: - 链式语法(系统)
-public extension DyWrapper where Base: CGMutablePath {
+public extension SoloWrapper where Base: CGMutablePath {
     /// 添加另一个路径到当前路径
     /// - Parameters:
     ///   - path: 要添加的路径

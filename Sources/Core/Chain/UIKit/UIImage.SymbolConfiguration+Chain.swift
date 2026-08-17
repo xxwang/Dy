@@ -1,7 +1,7 @@
 import UIKit
 
 // MARK: - 链式设置属性(自定义)
-public extension DyWrapper where Base == UIImage.SymbolConfiguration {
+public extension SoloWrapper where Base == UIImage.SymbolConfiguration {
     /// 设置文本样式
     /// - Parameter textStyle: 文本样式
     /// - Returns: `Self`

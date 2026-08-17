@@ -1,7 +1,7 @@
 import UIKit
 
 // MARK: - 链式设置属性
-public extension DyWrapper where Base: UIPanGestureRecognizer {
+public extension SoloWrapper where Base: UIPanGestureRecognizer {
     /// 设置触发平移手势所需的最少触摸点数
     /// - Parameter count: 最小触摸数量，默认为 1
     /// - Returns: `Self`
@@ -32,7 +32,7 @@ public extension DyWrapper where Base: UIPanGestureRecognizer {
 }
 
 // MARK: - 链式方法
-public extension DyWrapper where Base: UIPanGestureRecognizer {
+public extension SoloWrapper where Base: UIPanGestureRecognizer {
     /// 设置当前平移偏移量（通常用于重置手势状态）
     /// - Parameters:
     ///   - translation: 平移向量（相对于起始点）

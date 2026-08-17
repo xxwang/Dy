@@ -1,7 +1,7 @@
 import UIKit
 
 // MARK: - 链式设置属性
-public extension DyWrapper where Base: UIScreenEdgePanGestureRecognizer {
+public extension SoloWrapper where Base: UIScreenEdgePanGestureRecognizer {
     /// 设置触发边缘
     /// - Parameter edges: 触发边缘
     /// - Returns: `Self`

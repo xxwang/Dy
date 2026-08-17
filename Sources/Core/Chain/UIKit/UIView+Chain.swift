@@ -1,7 +1,7 @@
 import UIKit
 
 // MARK: - 链式设置属性(布局)
-public extension DyWrapper where Base: UIView {
+public extension SoloWrapper where Base: UIView {
     /// 设置控件的`frame`
     /// - Parameter frame: 要设置的值
     /// - Returns: `Self`
@@ -119,7 +119,7 @@ public extension DyWrapper where Base: UIView {
 }
 
 // MARK: - 链式设置属性
-public extension DyWrapper where Base: UIView {
+public extension SoloWrapper where Base: UIView {
     /// 是否启用 `autoresizing mask`(即`Autoresizing`)
     /// - Parameter enable: 是否开启
     /// - Returns: `Self`
@@ -453,13 +453,13 @@ public extension DyWrapper where Base: UIView {
 }
 
 // MARK: - 链式设置图层属性
-public extension DyWrapper where Base: UIView {
+public extension SoloWrapper where Base: UIView {
     /// 设置`layer.borderColor`
     /// - Parameter color: 边框颜色
     /// - Returns: `Self`
     @discardableResult
     func borderColor(_ color: UIColor) -> Self {
-        base.layer.dy.borderColor(color)
+        base.layer.solo.borderColor(color)
         return self
     }
 
@@ -468,7 +468,7 @@ public extension DyWrapper where Base: UIView {
     /// - Returns: `Self`
     @discardableResult
     func borderWidth(_ width: CGFloat) -> Self {
-        base.layer.dy.borderWidth(width)
+        base.layer.solo.borderWidth(width)
         return self
     }
 
@@ -477,16 +477,16 @@ public extension DyWrapper where Base: UIView {
     /// - Returns: `Self`
     @discardableResult
     func shouldRasterize(_ rasterize: Bool) -> Self {
-        base.layer.dy.shouldRasterize(rasterize)
+        base.layer.solo.shouldRasterize(rasterize)
         return self
     }
 
     /// 设置光栅化比例
-    /// - Parameter scale: 光栅化比例,通常为当前主屏幕 scale(`DyScreen.screenScale`)
+    /// - Parameter scale: 光栅化比例,通常为当前主屏幕 scale(`SoloScreen.screenScale`)
     /// - Returns: `Self`
     @discardableResult
     func rasterizationScale(_ scale: CGFloat) -> Self {
-        base.layer.dy.rasterizationScale(scale)
+        base.layer.solo.rasterizationScale(scale)
         return self
     }
 
@@ -495,7 +495,7 @@ public extension DyWrapper where Base: UIView {
     /// - Returns: `Self`
     @discardableResult
     func shadowColor(_ color: UIColor) -> Self {
-        base.layer.dy.shadowColor(color)
+        base.layer.solo.shadowColor(color)
         return self
     }
 
@@ -504,7 +504,7 @@ public extension DyWrapper where Base: UIView {
     /// - Returns: `Self`
     @discardableResult
     func shadowOffset(_ offset: CGSize) -> Self {
-        base.layer.dy.shadowOffset(offset)
+        base.layer.solo.shadowOffset(offset)
         return self
     }
 
@@ -513,7 +513,7 @@ public extension DyWrapper where Base: UIView {
     /// - Returns: `Self`
     @discardableResult
     func shadowRadius(_ radius: CGFloat) -> Self {
-        base.layer.dy.shadowRadius(radius)
+        base.layer.solo.shadowRadius(radius)
         return self
     }
 
@@ -522,7 +522,7 @@ public extension DyWrapper where Base: UIView {
     /// - Returns: `Self`
     @discardableResult
     func shadowOpacity(_ opacity: Float) -> Self {
-        base.layer.dy.shadowOpacity(opacity)
+        base.layer.solo.shadowOpacity(opacity)
         return self
     }
 
@@ -531,7 +531,7 @@ public extension DyWrapper where Base: UIView {
     /// - Returns: `Self`
     @discardableResult
     func shadowPath(_ path: CGPath) -> Self {
-        base.layer.dy.shadowPath(path)
+        base.layer.solo.shadowPath(path)
         return self
     }
 
@@ -540,7 +540,7 @@ public extension DyWrapper where Base: UIView {
     /// - Returns: `Self`
     @discardableResult
     func cornerRadius(_ cornerRadius: CGFloat) -> Self {
-        base.layer.dy.cornerRadius(cornerRadius)
+        base.layer.solo.cornerRadius(cornerRadius)
         return self
     }
 
@@ -549,7 +549,7 @@ public extension DyWrapper where Base: UIView {
     /// - Returns: `Self`
     @discardableResult
     func maskedCorners(_ maskedCorners: CACornerMask) -> Self {
-        base.layer.dy.maskedCorners(maskedCorners)
+        base.layer.solo.maskedCorners(maskedCorners)
         return self
     }
 
@@ -558,7 +558,7 @@ public extension DyWrapper where Base: UIView {
     /// - Returns: `Self`
     @discardableResult
     func masksToBounds(_ masksToBounds: Bool) -> Self {
-        base.layer.dy.masksToBounds(masksToBounds)
+        base.layer.solo.masksToBounds(masksToBounds)
         return self
     }
 
@@ -600,7 +600,7 @@ public extension DyWrapper where Base: UIView {
 }
 
 // MARK: - 链式方法
-public extension DyWrapper where Base: UIView {
+public extension SoloWrapper where Base: UIView {
     /// 添加子控件到当前视图上
     /// - Parameter subviews: 要添加的子控件数组
     /// - Returns: `Self`
@@ -823,7 +823,7 @@ public extension DyWrapper where Base: UIView {
 }
 
 // MARK: - 链式方法自定义
-public extension DyWrapper where Base: UIView {
+public extension SoloWrapper where Base: UIView {
     /// 把`self`添加到父视图
     /// - Parameter superview: 父视图,`self`将被添加为该视图的子视图
     /// - Returns: `Self`
@@ -874,7 +874,7 @@ public extension DyWrapper where Base: UIView {
 }
 
 // MARK: - 链式设置手势
-public extension DyWrapper where Base: UIView {
+public extension SoloWrapper where Base: UIView {
     /// 添加手势识别器
     /// - Parameter gestureRecognizer: 要添加的手势识别器
     /// - Returns: `Self`
@@ -928,16 +928,16 @@ public extension DyWrapper where Base: UIView {
 }
 
 // MARK: - 链式手势(自定义)
-public extension DyWrapper where Base: UIView {
+public extension SoloWrapper where Base: UIView {
     /// 添加单击手势
     /// - Warning: 闭包被内部手势识别器**强引用**。若闭包内使用 `self`，
     ///   请使用 `[weak self]` 避免循环引用泄漏。
     /// - Parameter block: 手势触发时的回调
     /// - Returns: `Self`
     @discardableResult
-    func onTapGestureRecognizer(_ block: @escaping DyAction1<UITapGestureRecognizer>) -> Self {
+    func onTapGestureRecognizer(_ block: @escaping SoloAction1<UITapGestureRecognizer>) -> Self {
         let tap = UITapGestureRecognizer()
-            .dy
+            .solo
             .onRecognized { recognizer in
                 if let tap = recognizer as? UITapGestureRecognizer {
                     block(tap)
@@ -955,9 +955,9 @@ public extension DyWrapper where Base: UIView {
     ///   - block: 手势触发时的回调
     /// - Returns: `Self`
     @discardableResult
-    func onLongPressGestureRecognizer(minimumDuration: TimeInterval = 0.5, _ block: @escaping DyAction1<UILongPressGestureRecognizer>) -> Self {
+    func onLongPressGestureRecognizer(minimumDuration: TimeInterval = 0.5, _ block: @escaping SoloAction1<UILongPressGestureRecognizer>) -> Self {
         let longPress = UILongPressGestureRecognizer.longPressGestureRecognizer()
-            .dy
+            .solo
             .minimumPressDuration(minimumDuration)
             .onRecognized { recognizer in
                 if let longPress = recognizer as? UILongPressGestureRecognizer {
@@ -974,9 +974,10 @@ public extension DyWrapper where Base: UIView {
     /// - Parameter block: 手势进行中持续回调(began/changed/ended 各触发一次)
     /// - Returns: `Self`
     @discardableResult
-    func onPanGestureRecognizer(_ block: @escaping DyAction1<UIPanGestureRecognizer>) -> Self {
+    func onPanGestureRecognizer(_ block: @escaping SoloAction1<UIPanGestureRecognizer>) -> Self {
         let pan = UIPanGestureRecognizer.panGestureRecognizer()
-        pan.dy
+        pan
+            .solo
             .onStateChanged { [weak pan] _ in
                 guard let pan else { return }
                 block(pan)
@@ -993,9 +994,9 @@ public extension DyWrapper where Base: UIView {
     ///   - block: 手势触发时的回调
     /// - Returns: `Self`
     @discardableResult
-    func onScreenEdgePanGestureRecognizer(edges: UIRectEdge, _ block: @escaping DyAction1<UIScreenEdgePanGestureRecognizer>) -> Self {
+    func onScreenEdgePanGestureRecognizer(edges: UIRectEdge, _ block: @escaping SoloAction1<UIScreenEdgePanGestureRecognizer>) -> Self {
         let screenEdgePan = UIScreenEdgePanGestureRecognizer.screenEdgePanGestureRecognizer()
-            .dy
+            .solo
             .edges(edges)
             .onRecognized { recognizer in
                 if let screenEdgePan = recognizer as? UIScreenEdgePanGestureRecognizer {
@@ -1015,10 +1016,10 @@ public extension DyWrapper where Base: UIView {
     /// - Returns: `Self`
     @discardableResult
     func onSwipeGestureRecognizer(direction: UISwipeGestureRecognizer.Direction = .right,
-                                  _ block: @escaping DyAction1<UISwipeGestureRecognizer>) -> Self
+                                  _ block: @escaping SoloAction1<UISwipeGestureRecognizer>) -> Self
     {
         let swipeGesture = UISwipeGestureRecognizer.swipeGestureRecognizer()
-            .dy
+            .solo
             .direction(direction)
             .onRecognized { recognizer in
                 if let swipe = recognizer as? UISwipeGestureRecognizer {
@@ -1035,10 +1036,10 @@ public extension DyWrapper where Base: UIView {
     /// - Parameter block: 手势进行中持续回调(began/changed/ended 各触发一次)
     /// - Returns: `Self`
     @discardableResult
-    func onPinchGestureRecognizer(_ block: @escaping DyAction1<UIPinchGestureRecognizer>) -> Self {
+    func onPinchGestureRecognizer(_ block: @escaping SoloAction1<UIPinchGestureRecognizer>) -> Self {
         let pinch = UIPinchGestureRecognizer.pinchGestureRecognizer()
         pinch
-            .dy
+            .solo
             .onStateChanged { [weak pinch] _ in
                 guard let pinch else { return }
                 block(pinch)
@@ -1053,10 +1054,10 @@ public extension DyWrapper where Base: UIView {
     /// - Parameter block: 手势进行中持续回调(began/changed/ended 各触发一次)
     /// - Returns: `Self`
     @discardableResult
-    func onRotationGestureRecognizer(_ block: @escaping DyAction1<UIRotationGestureRecognizer>) -> Self {
+    func onRotationGestureRecognizer(_ block: @escaping SoloAction1<UIRotationGestureRecognizer>) -> Self {
         let rotation = UIRotationGestureRecognizer.rotationGestureRecognizer()
         rotation
-            .dy
+            .solo
             .onStateChanged { [weak rotation] _ in
                 guard let rotation else { return }
                 block(rotation)

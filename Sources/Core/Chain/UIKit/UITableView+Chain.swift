@@ -1,7 +1,7 @@
 import UIKit
 
 // MARK: - Cell 注册与复用
-public extension DyWrapper where Base: UITableView {
+public extension SoloWrapper where Base: UITableView {
     /// 使用类名注册`纯代码` `Cell`
     /// - Parameter cellType: `Cell` 类型(需继承 `UITableViewCell`)
     @discardableResult
@@ -51,7 +51,7 @@ public extension DyWrapper where Base: UITableView {
 }
 
 // MARK: - 链式设置属性
-public extension DyWrapper where Base: UITableView {
+public extension SoloWrapper where Base: UITableView {
     /// 设置 `delegate`
     /// - Parameter delegate: 代理对象
     /// - Returns: `Self`
@@ -197,7 +197,7 @@ public extension DyWrapper where Base: UITableView {
 }
 
 // MARK: - 链式方法
-public extension DyWrapper where Base: UITableView {
+public extension SoloWrapper where Base: UITableView {
     /// 滚动到最近选中的行
     /// - Parameters:
     ///   - position: 位置
@@ -222,7 +222,7 @@ public extension DyWrapper where Base: UITableView {
 }
 
 // MARK: - 链式方法(自定义)
-public extension DyWrapper where Base: UITableView {
+public extension SoloWrapper where Base: UITableView {
     /// 滚动到顶部
     /// - Parameter animated: 是否动画
     /// - Returns: `Self`

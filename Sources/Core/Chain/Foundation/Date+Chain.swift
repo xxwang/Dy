@@ -1,7 +1,7 @@
 import Foundation
 
 // MARK: - 链式设置
-public extension DyWrapper where Base == Date {
+public extension SoloWrapper where Base == Date {
     /// 设置日期的年份
     ///
     /// - Parameter year: 目标年份(必须为正整数,例如 `2024`)

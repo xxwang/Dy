@@ -1,7 +1,7 @@
 import QuartzCore
 
 // MARK: - 属性
-public extension DyWrapper where Base: CAKeyframeAnimation {
+public extension SoloWrapper where Base: CAKeyframeAnimation {
     /// 设置动画的关键帧值数组
     /// - Parameter values: 动画在各关键帧的值(如 `[0.0, 1.0]`、`[red, green, blue]`、`[point1, point2]`)
     ///   类型需与 `keyPath` 对应(如 `position` 需 `NSValue(cgPoint:)`)

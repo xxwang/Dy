@@ -1,7 +1,7 @@
 import UIKit
 
 // MARK: - 链式设置属性
-public extension DyWrapper where Base: UISwitch {
+public extension SoloWrapper where Base: UISwitch {
     /// 设置开关的开启/关闭状态
     ///
     /// - Parameter isOn: `true` 表示开启,`false` 表示关闭
@@ -45,7 +45,7 @@ public extension DyWrapper where Base: UISwitch {
 }
 
 // MARK: - 链式方法(自定义)
-public extension DyWrapper where Base: UISwitch {
+public extension SoloWrapper where Base: UISwitch {
     /// 切换当前开关状态(开 ↔ 关),可选带动画
     ///
     /// - Parameter animated: 是否启用切换动画默认为 `true`

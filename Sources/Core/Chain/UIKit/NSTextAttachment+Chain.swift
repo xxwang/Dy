@@ -1,7 +1,7 @@
 import UIKit
 
 // MARK: - 链式设置属性
-public extension DyWrapper where Base: NSTextAttachment {
+public extension SoloWrapper where Base: NSTextAttachment {
     /// 设置附件的图片
     /// - Parameter image: 要显示的图片(可为 `nil`)
     /// - Returns: `Self`

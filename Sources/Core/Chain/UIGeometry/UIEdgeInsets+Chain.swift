@@ -1,7 +1,7 @@
 import UIKit
 
 // MARK: - 链式修改：基于当前值生成新值
-public extension DyWrapper where Base == UIEdgeInsets {
+public extension SoloWrapper where Base == UIEdgeInsets {
     /// 在当前边距基础上,向顶部增加指定偏移量
     @discardableResult
     func insetBy(top: CGFloat) -> Self {

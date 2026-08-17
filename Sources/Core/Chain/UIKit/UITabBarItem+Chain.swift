@@ -1,7 +1,7 @@
 import UIKit
 
 // MARK: - 链式设置属性
-public extension DyWrapper where Base: UITabBarItem {
+public extension SoloWrapper where Base: UITabBarItem {
     /// 设置标题
     /// - Parameter title: 标题文本
     /// - Returns: `Self`
@@ -86,7 +86,7 @@ public extension DyWrapper where Base: UITabBarItem {
 }
 
 // MARK: - 链式方法
-public extension DyWrapper where Base: UITabBarItem {
+public extension SoloWrapper where Base: UITabBarItem {
     /// 设置`Badge`文本属性
     /// - Parameters:
     ///   - textAttributes: 文本属性字典(如字体、颜色等)

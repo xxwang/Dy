@@ -1,7 +1,7 @@
 import UIKit
 
 // MARK: - 链式设置属性
-public extension DyWrapper where Base: UISearchBar {
+public extension SoloWrapper where Base: UISearchBar {
     /// 设置占位符文本
     /// - Parameter placeholder: 占位文本
     /// - Returns: `Self`
@@ -60,7 +60,7 @@ public extension DyWrapper where Base: UISearchBar {
 }
 
 // MARK: - 链式方法(自定义)
-public extension DyWrapper where Base: UISearchBar {
+public extension SoloWrapper where Base: UISearchBar {
     /// 清空搜索文本
     /// - Returns: `Self`
     @discardableResult

@@ -1,7 +1,7 @@
 import UIKit
 
 // MARK: - 链式设置属性
-public extension DyWrapper where Base: UIControl {
+public extension SoloWrapper where Base: UIControl {
     /// 设置控件启用状态
     /// - Parameter isEnabled: 是否启用
     /// - Returns: 当前实例,支持链式调用
@@ -49,7 +49,7 @@ public extension DyWrapper where Base: UIControl {
 }
 
 // MARK: - 链式方法
-public extension DyWrapper where Base: UIControl {
+public extension SoloWrapper where Base: UIControl {
     /// 链式添加 `target-action`
     /// - Parameters:
     ///   - target: 目标对象

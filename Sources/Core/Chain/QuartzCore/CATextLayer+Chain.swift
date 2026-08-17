@@ -2,7 +2,7 @@ import QuartzCore
 import UIKit
 
 // MARK: - 属性
-public extension DyWrapper where Base: CATextLayer {
+public extension SoloWrapper where Base: CATextLayer {
     /// 设置显示的文本内容
     /// - Parameter string: 要显示的字符串(支持 `NSAttributedString`,但此处仅设为 `String`)
     /// - Returns: `Self`
@@ -66,7 +66,7 @@ public extension DyWrapper where Base: CATextLayer {
     /// - Important: 若不设置,高分辨率屏幕可能出现模糊
     /// - Returns: `Self`
     @discardableResult
-    func contentsScale(_ scale: CGFloat = DyScreen.screenScale) -> Self {
+    func contentsScale(_ scale: CGFloat = SoloScreen.screenScale) -> Self {
         base.contentsScale = scale
         return self
     }

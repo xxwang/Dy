@@ -1,7 +1,7 @@
 import QuartzCore
 
 // MARK: - 属性
-public extension DyWrapper where Base: CASpringAnimation {
+public extension SoloWrapper where Base: CASpringAnimation {
     /// 设置弹簧系统的质量(Mass)
     /// - Parameter mass: 质量(单位：任意)值越大,惯性越大,动画越“迟钝”
     ///   默认值：`1.0`典型范围：`0.1 ～ 10.0`

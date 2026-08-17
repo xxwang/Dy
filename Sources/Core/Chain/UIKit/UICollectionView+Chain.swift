@@ -1,7 +1,7 @@
 import UIKit
 
 // MARK: - 链式设置属性
-public extension DyWrapper where Base: UICollectionView {
+public extension SoloWrapper where Base: UICollectionView {
     /// 设置 `delegate`
     /// - Parameter delegate: 代理对象
     /// - Returns: `Self`
@@ -22,7 +22,7 @@ public extension DyWrapper where Base: UICollectionView {
 }
 
 // MARK: - 方法
-public extension DyWrapper where Base: UICollectionView {
+public extension SoloWrapper where Base: UICollectionView {
     /// 注册 `Cell` 类(纯代码方式),支持链式调用
     /// - Parameter cell: `UICollectionViewCell` 的子类类型
     /// - Returns: `Self`
@@ -88,7 +88,7 @@ public extension DyWrapper where Base: UICollectionView {
     func collectionViewLayout(
         _ layout: UICollectionViewLayout,
         animated: Bool = true,
-        completion: DyAction1<Bool>? = nil
+        completion: SoloAction1<Bool>? = nil
     ) -> Self {
         base.setCollectionViewLayout(layout, animated: animated, completion: completion)
         return self
@@ -118,7 +118,7 @@ public extension DyWrapper where Base: UICollectionView {
 }
 
 // MARK: - 链式方法(自定义)
-public extension DyWrapper where Base: UICollectionView {
+public extension SoloWrapper where Base: UICollectionView {
     /// 滚动到指定 `Item`
     /// - Parameters:
     ///   - indexPath: `Item`索引
