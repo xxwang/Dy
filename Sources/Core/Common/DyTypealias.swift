@@ -15,3 +15,6 @@ public typealias DyFunc2<T1, T2, R> = (T1, T2) -> R
 public typealias DyFunc3<T1, T2, T3, R> = (T1, T2, T3) -> R
 public typealias DyFunc4<T1, T2, T3, T4, R> = (T1, T2, T3, T4) -> R
 public typealias DyFunc5<T1, T2, T3, T4, T5, R> = (T1, T2, T3, T4, T5) -> R
+
+// MARK: - 其它
+public typealias DyPair<T1, T2> = DyModel2<T1, T2>
