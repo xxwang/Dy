@@ -20,4 +20,10 @@ open class SoloCollectionViewCell: UICollectionViewCell {
 }
 
 // MARK: - SoloSetupable
-@objc extension SoloCollectionViewCell: SoloSetupable {}
+@objc extension SoloCollectionViewCell: SoloSetupable {
+    /// 配置UI
+    open func setupUI() {}
+
+    /// 绑定事件
+    open func bindEvents() {}
+}

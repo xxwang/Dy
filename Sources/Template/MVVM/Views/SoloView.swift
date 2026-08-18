@@ -24,4 +24,10 @@ open class SoloView: UIView {
 }
 
 // MARK: - SoloSetupable
-@objc extension SoloView: SoloSetupable {}
+@objc extension SoloView: SoloSetupable {
+    /// 配置UI
+    open func setupUI() {}
+
+    /// 绑定事件
+    open func bindEvents() {}
+}

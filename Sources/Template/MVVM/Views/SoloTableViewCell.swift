@@ -21,9 +21,13 @@ open class SoloTableViewCell: UITableViewCell {
 
 // MARK: - SoloSetupable
 @objc extension SoloTableViewCell: SoloSetupable {
+    /// 配置UI
     open func setupUI() {
         self.solo
             .selectionStyle(.none)
             .backgroundColor(.clear)
     }
+
+    /// 绑定事件
+    open func bindEvents() {}
 }

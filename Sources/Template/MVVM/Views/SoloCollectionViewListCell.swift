@@ -22,4 +22,10 @@ open class SoloCollectionViewListCell: UICollectionViewListCell {
 
 // MARK: - SoloSetupable
 @available(iOS 14.0, *)
-@objc extension SoloCollectionViewListCell: SoloSetupable {}
+@objc extension SoloCollectionViewListCell: SoloSetupable {
+    /// 配置UI
+    open func setupUI() {}
+
+    /// 绑定事件
+    open func bindEvents() {}
+}

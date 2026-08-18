@@ -24,4 +24,10 @@ open class SoloCollectionReusableView: UICollectionReusableView {
 }
 
 // MARK: - SoloSetupable
-@objc extension SoloCollectionReusableView: SoloSetupable {}
+@objc extension SoloCollectionReusableView: SoloSetupable {
+    /// 配置UI
+    open func setupUI() {}
+
+    /// 绑定事件
+    open func bindEvents() {}
+}
