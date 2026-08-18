@@ -6,10 +6,10 @@ import SoloCore
 open class SoloSheetView: UIView {
     public var cancellables = Set<AnyCancellable>()
     /// 遮罩层
-    private lazy var shadeView = UIView.view()
+    private lazy var shadeView = SoloView.view()
 
     /// 内容容器（从底部弹出的部分）
-    public lazy var contentContainer = UIView.view()
+    public lazy var contentView = SoloView.view()
 
     override public init(frame: CGRect) {
         super.init(frame: frame)
@@ -52,21 +52,21 @@ public extension SoloSheetView {
             .frame(container.bounds)
 
         // 内容容器
-        self.contentContainer
+        self.contentView
             .solo
-            .left((container.solo.width - self.contentContainer.solo.width) / 2)
-            .top(self.solo.height - self.contentContainer.solo.height)
+            .left((container.solo.width - self.contentView.solo.width) / 2)
+            .top(self.solo.height - self.contentView.solo.height)
 
         // 设置初始化状态
         self.shadeView.alpha = 0.01
-        self.contentContainer.alpha = 0.01
-        self.contentContainer.transform = CGAffineTransform(translationX: 0, y: self.contentContainer.solo.height)
+        self.contentView.alpha = 0.01
+        self.contentView.transform = CGAffineTransform(translationX: 0, y: self.contentView.solo.height)
 
         // 从底部滑入
         UIView.animate(withDuration: animationDuration(), delay: 0, options: .curveEaseOut) {
             self.shadeView.alpha = 0.75
-            self.contentContainer.alpha = 1
-            self.contentContainer.transform = .identity
+            self.contentView.alpha = 1
+            self.contentView.transform = .identity
         }
     }
 
@@ -75,8 +75,8 @@ public extension SoloSheetView {
         // 滑出动画
         UIView.animate(withDuration: animationDuration(), delay: 0, options: .curveEaseIn) {
             self.shadeView.alpha = 0.01
-            self.contentContainer.alpha = 0.01
-            self.contentContainer.transform = CGAffineTransform(translationX: 0, y: self.contentContainer.solo.height)
+            self.contentView.alpha = 0.01
+            self.contentView.transform = CGAffineTransform(translationX: 0, y: self.contentView.solo.height)
         } completion: { [weak self] _ in
             self?.removeFromSuperview()
         }
@@ -85,14 +85,14 @@ public extension SoloSheetView {
 
 // MARK: - SoloSetupable
 @objc extension SoloSheetView: SoloSetupable {
-    /// 设置UI (子类重写该方法)在子类中应该在该方法中,设置contentContainer的size
+    /// 设置UI (子类重写该方法)在子类中应该在该方法中,设置contentView的size
     open func setupUI() {
         // 添加子视图
         self
             .solo
             .addSubviews([
                 self.shadeView,
-                self.contentContainer,
+                self.contentView,
             ])
 
         // 配置遮罩
@@ -102,11 +102,11 @@ public extension SoloSheetView {
             .isUserInteractionEnabled(isTapOutsideToDismiss())
 
         // 配置内容容器
-        self.contentContainer
+        self.contentView
             .solo
-            .backgroundColor(contentContainerBackgroundColor())
+            .backgroundColor(contentViewBackgroundColor())
             .maskedCorners([.solo.topLeft, .solo.topRight])
-            .cornerRadius(contentContainerCornerRadius())
+            .cornerRadius(contentViewCornerRadius())
             .masksToBounds(true)
 
         // 遮罩点击关闭
@@ -122,12 +122,12 @@ public extension SoloSheetView {
 // MARK: - 子类可重写方法
 @objc extension SoloSheetView {
     /// 内容容器圆角（默认只作用于顶部）
-    open func contentContainerCornerRadius() -> CGFloat {
+    open func contentViewCornerRadius() -> CGFloat {
         return 16
     }
 
     /// 内容容器背景色
-    open func contentContainerBackgroundColor() -> UIColor {
+    open func contentViewBackgroundColor() -> UIColor {
         return .white
     }
 
