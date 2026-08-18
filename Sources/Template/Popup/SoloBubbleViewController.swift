@@ -98,6 +98,10 @@ extension SoloBubbleViewController: UIPopoverPresentationControllerDelegate {
     ) -> UIModalPresentationStyle {
         return .none
     }
+    
+    public func presentationControllerShouldDismiss(_ presentationController: UIPresentationController) -> Bool {
+        return true
+    }
 }
 
 // MARK: - SoloBubbleBackgroundView

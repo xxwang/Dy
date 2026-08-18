@@ -70,3 +70,11 @@ public extension SoloSheetViewController {
         return true
     }
 }
+
+//MARK: - UISheetPresentationControllerDelegate
+@available(iOS 15.0, *)
+extension SoloSheetViewController: UISheetPresentationControllerDelegate {
+    public func presentationControllerShouldDismiss(_ presentationController: UIPresentationController) -> Bool {
+        return true
+    }
+}
