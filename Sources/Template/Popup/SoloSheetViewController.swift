@@ -48,6 +48,11 @@ public extension SoloSheetViewController {
 
     /// 返回抽屉支持的档位
     /// - Returns: 默认 `[.medium(), .large()]`
+    ///    iOS16可以自定义高度
+    ///
+    ///        .custom(identifier: .init("custom100"), resolver: { context in
+    ///            return 100
+    ///        })
     open func sheetDetents() -> [UISheetPresentationController.Detent] {
         return [.medium(), .large()]
     }
