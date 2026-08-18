@@ -29,7 +29,7 @@ public extension SoloSheetViewController {
             // 是否显示顶部小横条
             .prefersGrabberVisible(prefersGrabberVisible())
             // 设置最大不暗化档位（小于此档位背景变暗）
-            .largestUndimmedDetentIdentifier(largestUndimmedDetentIdentifier() ?? .medium)
+            .largestUndimmedDetentIdentifier(largestUndimmedDetentIdentifier())
             // 紧凑高度下是否从底部边缘附着
             .prefersEdgeAttachedInCompactHeight(prefersEdgeAttachedInCompactHeight())
 
@@ -71,7 +71,7 @@ public extension SoloSheetViewController {
     }
 }
 
-//MARK: - UISheetPresentationControllerDelegate
+// MARK: - UISheetPresentationControllerDelegate
 @available(iOS 15.0, *)
 extension SoloSheetViewController: UISheetPresentationControllerDelegate {
     public func presentationControllerShouldDismiss(_ presentationController: UIPresentationController) -> Bool {

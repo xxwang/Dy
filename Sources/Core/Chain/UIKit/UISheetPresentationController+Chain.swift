@@ -79,7 +79,7 @@ public extension SoloWrapper where Base: UISheetPresentationController {
     /// - Parameter identifier: 档位标识符（如 .medium）
     /// - Returns: `Self`
     @discardableResult
-    func largestUndimmedDetentIdentifier(_ largestUndimmedDetentIdentifier: UISheetPresentationController.Detent.Identifier) -> Self {
+    func largestUndimmedDetentIdentifier(_ largestUndimmedDetentIdentifier: UISheetPresentationController.Detent.Identifier?) -> Self {
         base.largestUndimmedDetentIdentifier = largestUndimmedDetentIdentifier
         return self
     }
