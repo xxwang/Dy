@@ -29,6 +29,7 @@ public final class SoloFileDestination {
 
     private let sizeLock = NSLock()
     private var currentSize: Int = 0
+    private var isRotating = false
 
     public init?(
         filePath: String,
@@ -117,9 +118,13 @@ private extension SoloFileDestination {
         guard maxFileSize > 0 else { return }
         sizeLock.lock()
         currentSize += byteCount
+        // 仅在尚未轮转时才触发一次轮转;轮转在途期间重复超阈值只累加,不再重复排程,
+        // 避免高频写入下多个轮转块串行执行互相覆盖、丢失日志
+        let shouldRotate = currentSize >= maxFileSize && !isRotating
+        if shouldRotate { isRotating = true }
         sizeLock.unlock()
 
-        if currentSize >= maxFileSize {
+        if shouldRotate {
             rotateLogFile()
         }
     }
@@ -151,6 +156,7 @@ private extension SoloFileDestination {
 
             self.sizeLock.lock()
             self.currentSize = 0
+            self.isRotating = false
             self.sizeLock.unlock()
         }
     }

@@ -40,24 +40,9 @@ public extension UIImage {
     ///   - lightImage: 浅色模式下的图片
     ///   - darkImage: 深色模式下的图片(可选)
     convenience init?(lightImage: UIImage, darkImage: UIImage? = nil) {
-        let darkImage = darkImage ?? lightImage
-        let asset = UIImageAsset()
-
-        let lightTrait = UITraitCollection(traitsFrom: [
-            .init(userInterfaceStyle: .light),
-            .init(displayScale: lightImage.scale),
-        ])
-
-        let darkTrait = UITraitCollection(traitsFrom: [
-            .init(userInterfaceStyle: .dark),
-            .init(displayScale: darkImage.scale),
-        ])
-
-        asset.register(lightImage, with: lightTrait)
-        asset.register(darkImage, with: darkTrait)
-
-        guard let cgImage = asset.image(with: .current).cgImage else { return nil }
-        self.init(cgImage: cgImage)
+        // 委托系统原生 API：UIImage(lightImage:darkImage:) 原生支持 trait 动态切换，
+        // 保留深浅色自动换图能力（原实现提取 cgImage 重建会丢失动态特性）
+        self.init(lightImage: lightImage, darkImage: darkImage ?? lightImage)
     }
 
     /// 通过图片名称创建支持深浅色模式的动态图片
@@ -78,15 +63,15 @@ public extension UIImage {
 
 // MARK: - UIImage属性
 public extension SoloWrapper where Base: UIImage {
-    /// 获取图片的大小(单位:字节)
+    /// 获取图片解码后的位图大小(单位:字节),O(1) 估算,避免每次全量 JPEG 编码
     var sizeInBytes: Int {
-        return base.jpegData(compressionQuality: 1)?.count ?? 0
+        guard let cg = base.cgImage else { return 0 }
+        return cg.bytesPerRow * cg.height
     }
 
-    /// 获取图片的大小(单位:KB)
+    /// 获取图片解码后的位图大小(单位:KB)
     var sizeInKB: Double {
-        guard let byteCount = base.jpegData(compressionQuality: 1)?.count else { return 0 }
-        return Double(byteCount) / 1024.0
+        return Double(sizeInBytes) / 1024.0
     }
 
     /// 返回使用原始渲染模式的图片实例
