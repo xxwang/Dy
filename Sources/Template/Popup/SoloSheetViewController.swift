@@ -9,12 +9,12 @@ open class SoloSheetViewController: SoloViewController {
     }
 }
 
-// MARK: - 公开方法
+// MARK: - 子类可重写
 @available(iOS 15.0, *)
-public extension SoloSheetViewController {
+@objc extension SoloSheetViewController {
     /// 显示底部抽屉
     /// - Parameter parent: 父视图控制器
-    func show(from parent: UIViewController) {
+    open func show(from parent: UIViewController) {
         self
             .solo
             // 设置模态样式为底部抽屉
@@ -35,11 +35,7 @@ public extension SoloSheetViewController {
 
         parent.present(self, animated: true)
     }
-}
 
-// MARK: - 子类可重写配置
-@available(iOS 15.0, *)
-@objc extension SoloSheetViewController {
     /// 是否禁止用户通过下拉或点击背景关闭抽屉
     /// - Returns: 默认 `false`（允许关闭）
     open func shouldPreventDismissal() -> Bool {

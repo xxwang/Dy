@@ -5,18 +5,23 @@ import UIKit
 open class SoloBubbleViewController: SoloViewController {
     private var sourceView: UIView?
 
+    override public var preferredContentSize: CGSize {
+        get { self.bubbleContentSize() }
+        set { super.preferredContentSize = newValue }
+    }
+
     override open func viewDidLoad() {
         super.viewDidLoad()
     }
 }
 
-// MARK: - 公开方法
-public extension SoloBubbleViewController {
+// MARK: - 子类可重写
+@objc extension SoloBubbleViewController {
     /// 显示气泡弹窗
     /// - Parameters:
     ///   - from: 父视图控制器
     ///   - sourceView: 气泡指向的源视图（必须提供）
-    func show(from parent: UIViewController, sourceView: UIView) {
+    open func show(from parent: UIViewController, sourceView: UIView) {
         self.sourceView = sourceView
 
         self
@@ -44,14 +49,6 @@ public extension SoloBubbleViewController {
         parent.present(self, animated: true)
     }
 
-    override var preferredContentSize: CGSize {
-        get { self.bubbleContentSize() }
-        set { super.preferredContentSize = newValue }
-    }
-}
-
-// MARK: - 子类可重写配置
-@objc extension SoloBubbleViewController {
     /// 返回气泡大小
     /// - Returns: 气泡大小
     open func bubbleContentSize() -> CGSize {
