@@ -121,7 +121,9 @@ private extension SoloFileDestination {
         // 仅在尚未轮转时才触发一次轮转;轮转在途期间重复超阈值只累加,不再重复排程,
         // 避免高频写入下多个轮转块串行执行互相覆盖、丢失日志
         let shouldRotate = currentSize >= maxFileSize && !isRotating
-        if shouldRotate { isRotating = true }
+        if shouldRotate {
+            isRotating = true
+        }
         sizeLock.unlock()
 
         if shouldRotate {

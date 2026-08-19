@@ -78,26 +78,13 @@ import WebKit
 
 // MARK: - UICollectionView
 @objc extension UICollectionView {
-    /// 创建一个水平滚动的 `UICollectionView`,使用 `UICollectionViewFlowLayout`
-    open class func hCollectionView() -> UICollectionView {
+    /// 创建一个 `UICollectionView`,使用 `UICollectionViewFlowLayout`
+    /// - Parameter scrollDirection: 滚动方向
+    /// - Returns: `UICollectionView`
+    open class func collectionView(scrollDirection: UICollectionView.ScrollDirection = .vertical) -> UICollectionView {
         let layout = UICollectionViewFlowLayout.layout()
             .solo
-            .scrollDirection(.horizontal)
-            .build()
-
-        return UICollectionView(frame: .zero, collectionViewLayout: layout)
-            .solo
-            .showsHorizontalScrollIndicator(false)
-            .showsVerticalScrollIndicator(false)
-            .backgroundColor(.clear)
-            .build()
-    }
-
-    /// 创建一个垂直滚动的 `UICollectionView`,使用 `UICollectionViewFlowLayout`
-    open class func vCollectionView() -> UICollectionView {
-        let layout = UICollectionViewFlowLayout.layout()
-            .solo
-            .scrollDirection(.vertical)
+            .scrollDirection(scrollDirection)
             .build()
 
         return UICollectionView(frame: .zero, collectionViewLayout: layout)
