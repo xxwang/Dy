@@ -3,13 +3,11 @@ import SoloCore
 
 open class SoloCollectionViewController: SoloViewController {
     /// `UICollectionView`
-    open lazy var collectionView = UICollectionView.collectionView(
-        scrollDirection: self.collectionViewScrollDirection
-    )
-    .solo
-    .dataSource(self)
-    .delegate(self)
-    .build()
+    open lazy var collectionView = UICollectionView.collectionView(scrollDirection: self.scrollDirection)
+        .solo
+        .dataSource(self)
+        .delegate(self)
+        .build()
 
     override open func viewDidLoad() {
         super.viewDidLoad()
@@ -52,7 +50,7 @@ open class SoloCollectionViewController: SoloViewController {
     }
 
     /// 设置`UICollectionView`滚动方向
-    open var collectionViewScrollDirection: UICollectionView.ScrollDirection {
+    open var scrollDirection: UICollectionView.ScrollDirection {
         return .vertical
     }
 }
