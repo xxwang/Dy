@@ -2,7 +2,7 @@ import UIKit
 import Combine
 import SoloCore
 
-open class SoloTextView: UITextView {
+open class SoloPlaceholderTextView: UITextView {
     public var cancellables = Set<AnyCancellable>()
 
     /// 占位文本标签
@@ -39,7 +39,7 @@ open class SoloTextView: UITextView {
 }
 
 // MARK: - SoloSetupable
-@objc extension SoloTextView: SoloSetupable {
+@objc extension SoloPlaceholderTextView: SoloSetupable {
     /// 设置UI
     open func setupUI() {
         // 添加占位文本标签
@@ -99,7 +99,7 @@ open class SoloTextView: UITextView {
 }
 
 // MARK: - 链式语法
-public extension SoloWrapper where Base: SoloTextView {
+public extension SoloWrapper where Base: SoloPlaceholderTextView {
     /// 设置占位文字内容
     /// - Parameter text: 要设置的文字
     /// - Returns: `Self`
