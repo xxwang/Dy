@@ -70,7 +70,7 @@ public extension Array {
     /// 使用 `JSONSerialization` 将数组序列化为 `Data`
     /// - Returns: 若数组内容兼容 JSON（仅含 `String`, `Number`, `Bool`, `Array`, `Dictionary`, `NSNull`）,则返回 `Data`;否则返回 `nil`
     /// - Note: 此方法不进行编译期类型检查,运行时可能失败
-    func solo_toData() -> Data? {
+    func solo_data() -> Data? {
         return try? JSONSerialization.data(withJSONObject: self)
     }
 }

@@ -38,7 +38,7 @@ public extension BidirectionalCollection {
 }
 
 // MARK: - 获取元素
-public extension SoloWrapper where Base: BidirectionalCollection {
+public extension BidirectionalCollection {
     /// 返回集合从头部截取指定数量的元素
     /// - Parameter count: 要截取的元素数量
     /// - Returns: 截取后的集合
@@ -46,11 +46,11 @@ public extension SoloWrapper where Base: BidirectionalCollection {
     /// - Example:
     ///
     ///     let array = [1, 2, 3, 4, 5]
-    ///     print(array.solo.prefix(count: 3)) // 输出:[1, 2, 3]
+    ///     print(array.solo_prefix(count: 3)) // 输出:[1, 2, 3]
     ///
-    func prefix(count: Int) -> Base.SubSequence {
-        guard count > 0 else { return base[base.startIndex ..< base.startIndex] }
-        return base.prefix(count)
+    func solo_prefix(count: Int) -> Self.SubSequence {
+        guard count > 0 else { return self[self.startIndex ..< self.startIndex] }
+        return self.prefix(count)
     }
 
     /// 返回集合从尾部截取指定数量的元素
@@ -60,10 +60,10 @@ public extension SoloWrapper where Base: BidirectionalCollection {
     /// - Example:
     ///
     ///     let array = [1, 2, 3, 4, 5]
-    ///     print(array.solo.suffix(count: 3)) // 输出:[3, 4, 5]
+    ///     print(array.solo_suffix(count: 3)) // 输出:[3, 4, 5]
     ///
-    func suffix(count: Int) -> Base.SubSequence {
-        guard count > 0 else { return base[base.endIndex ..< base.endIndex] }
-        return base.suffix(count)
+    func solo_suffix(count: Int) -> Self.SubSequence {
+        guard count > 0 else { return self[self.endIndex ..< self.endIndex] }
+        return self.suffix(count)
     }
 }

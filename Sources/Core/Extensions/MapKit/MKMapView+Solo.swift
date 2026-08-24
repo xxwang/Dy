@@ -1,13 +1,13 @@
 import MapKit
 
 // MARK: - 复用
-public extension SoloWrapper where Base: MKMapView {
+public extension MKMapView {
     /// 尝试从重用队列中获取指定类型的注解视图(无关联注解)
     ///
     /// - Returns: 可重用视图,若无可重用项则返回 `nil`
     /// - Note: 适用于动态创建视图的场景,但通常应使用带 `for:` 的版本
-    func dequeueReusableAnnotationView<T: MKAnnotationView>(withClass annotationViewClass: T.Type) -> T? {
-        base.dequeueReusableAnnotationView(withIdentifier: String(describing: T.self)) as? T
+    func solo_dequeueReusableAnnotationView<T: MKAnnotationView>(withClass annotationViewClass: T.Type) -> T? {
+        self.dequeueReusableAnnotationView(withIdentifier: String(describing: T.self)) as? T
     }
 
     /// 从重用队列中获取指定类型的注解视图,并绑定到给定注解
@@ -21,15 +21,15 @@ public extension SoloWrapper where Base: MKMapView {
     ///   ```swift
     ///   func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
     ///       guard !(annotation is MKUserLocation) else { return nil }
-    ///       return mapView.solo.dequeueReusableAnnotationView(withClass: CustomPinView.self, for: annotation)
+    ///       return mapView.solo_dequeueReusableAnnotationView(withClass: CustomPinView.self, for: annotation)
     ///   }
     ///   ```
-    func dequeueReusableAnnotationView<T: MKAnnotationView>(
+    func solo_dequeueReusableAnnotationView<T: MKAnnotationView>(
         withClass annotationViewClass: T.Type,
         for annotation: MKAnnotation
     ) -> T {
         // 强制转换是安全的,前提是已正确注册
-        guard let view = base.dequeueReusableAnnotationView(
+        guard let view = self.dequeueReusableAnnotationView(
             withIdentifier: String(describing: T.self),
             for: annotation
         ) as? T else {
@@ -41,7 +41,7 @@ public extension SoloWrapper where Base: MKMapView {
 }
 
 // MARK: - 缩放控制
-public extension SoloWrapper where Base: MKMapView {
+public extension MKMapView {
     /// 缩放地图以显示一组坐标,并添加指定边距
     ///
     /// - Parameters:
@@ -54,7 +54,7 @@ public extension SoloWrapper where Base: MKMapView {
     ///   - 若仅有一个点,使用 `MKCoordinateRegion` 以米为单位设置范围
     ///   - 若有多个点,使用 `MKPolygon.boundingMapRect` 计算包围矩形
     ///   - `不支持跨越国际日期变更线(±180°)的坐标集合`
-    func zoom(
+    func solo_zoom(
         to coordinates: [CLLocationCoordinate2D],
         meter: Double,
         edgePadding: UIEdgeInsets = .zero,
@@ -68,11 +68,11 @@ public extension SoloWrapper where Base: MKMapView {
                 latitudinalMeters: meter,
                 longitudinalMeters: meter
             )
-            base.setRegion(region, animated: animated)
+            self.setRegion(region, animated: animated)
         } else {
             // 使用 MKPolygon 自动计算 boundingMapRect
             let polygon = MKPolygon(coordinates: coordinates, count: coordinates.count)
-            base.setVisibleMapRect(polygon.boundingMapRect, edgePadding: edgePadding, animated: animated)
+            self.setVisibleMapRect(polygon.boundingMapRect, edgePadding: edgePadding, animated: animated)
         }
     }
 
@@ -84,35 +84,35 @@ public extension SoloWrapper where Base: MKMapView {
     ///   - animated: 是否启用动画
     ///
     /// - Note: 依赖 `MKMapRect.regionToMapRect(_:)` 扩展(需确保已实现)
-    func zoom(to region: MKCoordinateRegion, edgePadding: UIEdgeInsets = .zero, animated: Bool = true) {
-        let mapRect = MKMapRect.solo.regionToMapRect(region)
-        base.setVisibleMapRect(mapRect, edgePadding: edgePadding, animated: animated)
+    func solo_zoom(to region: MKCoordinateRegion, edgePadding: UIEdgeInsets = .zero, animated: Bool = true) {
+        let mapRect = MKMapRect.solo_regionToMapRect(region)
+        self.setVisibleMapRect(mapRect, edgePadding: edgePadding, animated: animated)
     }
 }
 
 // MARK: - 工具方法
-public extension SoloWrapper where Base: MKMapView {
+public extension MKMapView {
     /// 添加多个注解,可选择是否先清除现有注解
-    func addAnnotations(_ annotations: [MKAnnotation], clearExisting: Bool = false) {
+    func solo_addAnnotations(_ annotations: [MKAnnotation], clearExisting: Bool = false) {
         if clearExisting {
-            base.removeAnnotations(base.annotations)
+            self.removeAnnotations(self.annotations)
         }
-        base.addAnnotations(annotations)
+        self.addAnnotations(annotations)
     }
 
     /// 将视图中的点转换为地理坐标
-    func convertPointToCoordinate(_ point: CGPoint) -> CLLocationCoordinate2D {
-        base.convert(point, toCoordinateFrom: base)
+    func solo_convertPointToCoordinate(_ point: CGPoint) -> CLLocationCoordinate2D {
+        self.convert(point, toCoordinateFrom: self)
     }
 
     /// 将地理坐标转换为视图中的点
-    func convertCoordinateToPoint(_ coordinate: CLLocationCoordinate2D) -> CGPoint {
-        base.convert(coordinate, toPointTo: base)
+    func solo_convertCoordinateToPoint(_ coordinate: CLLocationCoordinate2D) -> CGPoint {
+        self.convert(coordinate, toPointTo: self)
     }
 
     /// 判断某坐标是否在当前可见地图区域内
-    func isCoordinateVisible(_ coordinate: CLLocationCoordinate2D) -> Bool {
+    func solo_isCoordinateVisible(_ coordinate: CLLocationCoordinate2D) -> Bool {
         let mapPoint = MKMapPoint(coordinate)
-        return base.visibleMapRect.contains(mapPoint)
+        return self.visibleMapRect.contains(mapPoint)
     }
 }

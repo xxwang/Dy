@@ -41,10 +41,10 @@ public extension CLLocation {
     ///   print("中点: \(midpoint.coordinate.latitude), \(midpoint.coordinate.longitude)")
     ///   ```
     func solo_midPoint(to destination: CLLocation) -> CLLocation {
-        let lat1 = self.coordinate.latitude.solo_toRadians()
-        let lon1 = self.coordinate.longitude.solo_toRadians()
-        let lat2 = destination.coordinate.latitude.solo_toRadians()
-        let lon2 = destination.coordinate.longitude.solo_toRadians()
+        let lat1 = self.coordinate.latitude.solo_radians()
+        let lon1 = self.coordinate.longitude.solo_radians()
+        let lat2 = destination.coordinate.latitude.solo_radians()
+        let lon2 = destination.coordinate.longitude.solo_radians()
 
         let deltaLon = lon2 - lon1
 
@@ -55,8 +55,8 @@ public extension CLLocation {
         let lon3 = lon1 + atan2(by, cos(lat1) + bx)
 
         return CLLocation(
-            latitude: lat3.solo_toDegrees(),
-            longitude: lon3.solo_toDegrees()
+            latitude: lat3.solo_degrees(),
+            longitude: lon3.solo_degrees()
         )
     }
 

@@ -46,7 +46,7 @@ public extension UIColor {
             red: r / 255.0,
             green: g / 255.0,
             blue: b / 255.0,
-            alpha: alpha.solo.clamped(to: 0 ... 1)
+            alpha: alpha.solo_clamped(to: 0 ... 1)
         )
     }
 
@@ -96,7 +96,7 @@ public extension UIColor {
             return nil
         }
 
-        self.init(red: r, green: g, blue: b, alpha: a.solo.clamped(to: 0 ... 1))
+        self.init(red: r, green: g, blue: b, alpha: a.solo_clamped(to: 0 ... 1))
     }
 
     /// 使用十六进制 `Int` 值创建颜色(如 `0xFF5733`)
@@ -111,7 +111,7 @@ public extension UIColor {
             red: r / 255.0,
             green: g / 255.0,
             blue: b / 255.0,
-            alpha: alpha.solo.clamped(to: 0 ... 1)
+            alpha: alpha.solo_clamped(to: 0 ... 1)
         )
     }
 
@@ -123,10 +123,10 @@ public extension UIColor {
     ///   - alpha: 透明度
     convenience init(r: CGFloat, g: CGFloat, b: CGFloat, alpha: CGFloat = 1.0) {
         self.init(
-            red: (r.solo.clamped(to: 0 ... 255)) / 255.0,
-            green: (g.solo.clamped(to: 0 ... 255)) / 255.0,
-            blue: (b.solo.clamped(to: 0 ... 255)) / 255.0,
-            alpha: alpha.solo.clamped(to: 0 ... 1)
+            red: (r.solo_clamped(to: 0 ... 255)) / 255.0,
+            green: (g.solo_clamped(to: 0 ... 255)) / 255.0,
+            blue: (b.solo_clamped(to: 0 ... 255)) / 255.0,
+            alpha: alpha.solo_clamped(to: 0 ... 1)
         )
     }
 
@@ -142,9 +142,9 @@ public extension UIColor {
 }
 
 // MARK: - 属性
-public extension SoloWrapper where Base: UIColor {
+public extension UIColor {
     /// 生成一个随机颜色
-    static var random: UIColor {
+    static var solo_random: UIColor {
         let red = CGFloat.random(in: 0 ... 1)
         let green = CGFloat.random(in: 0 ... 1)
         let blue = CGFloat.random(in: 0 ... 1)
@@ -153,35 +153,35 @@ public extension SoloWrapper where Base: UIColor {
 }
 
 // MARK: - 常用方法
-public extension SoloWrapper where Base: UIColor {
+public extension UIColor {
     /// 设置颜色的透明度(链式调用)
     /// - Parameter alpha: 透明度(范围 0.0 ~ 1.0)
     /// - Returns: 透明度调整后的`UIColor`
-    func alpha(_ alpha: CGFloat) -> UIColor {
-        return base.withAlphaComponent(alpha)
+    func solo_alpha(_ alpha: CGFloat) -> UIColor {
+        return self.withAlphaComponent(alpha)
     }
 }
 
 // MARK: - 颜色组成(RGB)
-public extension SoloWrapper where Base: UIColor {
+public extension UIColor {
     /// 安全获取 `RGBA` 分量(0.0 ～ 1.0)
     /// - Returns: `(red, green, blue, alpha)` 元组,若无法转换则返回 `nil`
-    var rgbaComponents: (red: CGFloat, green: CGFloat, blue: CGFloat, alpha: CGFloat) {
+    var solo_rgbaComponents: (red: CGFloat, green: CGFloat, blue: CGFloat, alpha: CGFloat) {
         var r: CGFloat = 0, g: CGFloat = 0, b: CGFloat = 0, a: CGFloat = 0
-        base.getRed(&r, green: &g, blue: &b, alpha: &a)
+        self.getRed(&r, green: &g, blue: &b, alpha: &a)
         return (red: r, green: g, blue: b, alpha: a)
     }
 
     /// 获取 `RGB` 分量(标准化为 0...1 范围)
-    var rgbComponents: (red: CGFloat, green: CGFloat, blue: CGFloat) {
-        let (r, g, b, _) = self.rgbaComponents
+    var solo_rgbComponents: (red: CGFloat, green: CGFloat, blue: CGFloat) {
+        let (r, g, b, _) = self.solo_rgbaComponents
         return (r, g, b)
     }
 
     /// 安全获取 `RGB` 分量(0 ～ 255 整数)
     /// - Returns: `(red, green, blue)` 元组(Int,范围 0–255),若无法转换则返回 `nil`
-    var rgbIntComponents: (red: Int, green: Int, blue: Int)? {
-        let rgba = self.rgbaComponents
+    var solo_rgbIntComponents: (red: Int, green: Int, blue: Int)? {
+        let rgba = self.solo_rgbaComponents
         return (
             red: Int((rgba.red * 255).rounded()),
             green: Int((rgba.green * 255).rounded()),
@@ -191,108 +191,108 @@ public extension SoloWrapper where Base: UIColor {
 
     /// 安全获取 `RGB` 分量(0.0 ～ 1.0 浮点)
     /// - Returns: `(red, green, blue)` 元组(`CGFloat`),若无法转换则返回 `nil`
-    var rgbFloatComponents: (red: CGFloat, green: CGFloat, blue: CGFloat) {
-        let rgba = self.rgbaComponents
+    var solo_rgbFloatComponents: (red: CGFloat, green: CGFloat, blue: CGFloat) {
+        let rgba = self.solo_rgbaComponents
         return (red: rgba.red, green: rgba.green, blue: rgba.blue)
     }
 }
 
 // MARK: - 颜色组成(HSBA)
-public extension SoloWrapper where Base: UIColor {
+public extension UIColor {
     /// 安全获取 `HSBA` 分量(色相、饱和度、亮度、透明度)
     /// - Returns: `(hue, saturation, brightness, alpha)` 元组(0.0 ～ 1.0),若无法转换则返回 `nil`
-    var hsbaComponents: (hue: CGFloat, saturation: CGFloat, brightness: CGFloat, alpha: CGFloat) {
+    var solo_hsbaComponents: (hue: CGFloat, saturation: CGFloat, brightness: CGFloat, alpha: CGFloat) {
         var h: CGFloat = 0, s: CGFloat = 0, b: CGFloat = 0, a: CGFloat = 0
-        base.getHue(&h, saturation: &s, brightness: &b, alpha: &a)
+        self.getHue(&h, saturation: &s, brightness: &b, alpha: &a)
         return (hue: h, saturation: s, brightness: b, alpha: a)
     }
 }
 
 // MARK: - 颜色组成(单独成员)
-public extension SoloWrapper where Base: UIColor {
+public extension UIColor {
     /// 获取红色分量(0.0 ～ 1.0)
-    var redComponent: CGFloat? {
-        return self.rgbaComponents.red
+    var solo_redComponent: CGFloat? {
+        return self.solo_rgbaComponents.red
     }
 
     /// 获取绿色分量(0.0 ～ 1.0)
-    var greenComponent: CGFloat? {
-        return self.rgbaComponents.green
+    var solo_greenComponent: CGFloat? {
+        return self.solo_rgbaComponents.green
     }
 
     /// 获取蓝色分量(0.0 ～ 1.0)
-    var blueComponent: CGFloat? {
-        return self.rgbaComponents.blue
+    var solo_blueComponent: CGFloat? {
+        return self.solo_rgbaComponents.blue
     }
 
     /// 获取透明度分量(0.0 ～ 1.0)
-    var alphaComponent: CGFloat? {
-        return self.rgbaComponents.alpha
+    var solo_alphaComponent: CGFloat? {
+        return self.solo_rgbaComponents.alpha
     }
 
     /// 获取色相分量(0.0 ～ 1.0)
-    var hueComponent: CGFloat? {
-        return self.hsbaComponents.hue
+    var solo_hueComponent: CGFloat? {
+        return self.solo_hsbaComponents.hue
     }
 
     /// 获取饱和度分量(0.0 ～ 1.0)
-    var saturationComponent: CGFloat? {
-        return self.hsbaComponents.saturation
+    var solo_saturationComponent: CGFloat? {
+        return self.solo_hsbaComponents.saturation
     }
 
     /// 获取亮度分量(0.0 ～ 1.0)
-    var brightnessComponent: CGFloat? {
-        return self.hsbaComponents.brightness
+    var solo_brightnessComponent: CGFloat? {
+        return self.solo_hsbaComponents.brightness
     }
 }
 
 // MARK: - 转换
-public extension SoloWrapper where Base: UIColor {
+public extension UIColor {
     /// 从十六进制字符串创建 `UIColor`(支持` #RGB, #RRGGBB, 0xRRGGBB`)
     /// - Parameters:
     ///   - hex: 十六进制字符串
     ///   - alpha: 透明度
     /// - Returns: `UIColor`
-    static func color(from hex: String, alpha: CGFloat = 1.0) -> UIColor {
+    static func solo_color(from hex: String, alpha: CGFloat = 1.0) -> UIColor {
         return UIColor(hex: hex, alpha: alpha)
     }
 
     /// 转换为`CIColor`
-    func toCIColor() -> CoreImage.CIColor {
-        return CoreImage.CIColor(color: base)
+    func solo_cIColor() -> CoreImage.CIColor {
+        return CoreImage.CIColor(color: self)
     }
 
     /// 转换为指定尺寸的`UIImage`
     /// - Parameter size: 图片尺寸
     /// - Returns: `UIImage?`
-    func toImage(ofSize size: CGSize) -> UIImage? {
+    func solo_uIImage(ofSize size: CGSize) -> UIImage? {
         let rect = CGRect(origin: .zero, size: size)
         UIGraphicsBeginImageContextWithOptions(size, false, 0)
         defer { UIGraphicsEndImageContext() }
         guard let context = UIGraphicsGetCurrentContext() else { return nil }
-        context.setFillColor(base.cgColor)
+        context.setFillColor(self.cgColor)
         context.fill(rect)
         return UIGraphicsGetImageFromCurrentImageContext()
     }
 
     /// 返回 RGB 整数表示(如 0xFF0000)
-    func toRGBInt() -> Int {
-        let (r, g, b, _) = self.rgbaComponents
+    func solo_rGBInt() -> Int {
+        let (r, g, b, _) = self.solo_rgbaComponents
         return (Int(r * 255) << 16) | (Int(g * 255) << 8) | Int(b * 255)
     }
 
     /// 返回长格式十六进制字符串(#RRGGBB)
     /// - Parameter prefixed: 是否包含 `#` 前缀(默认 `true`)
-    func toHexString(prefixed: Bool = true) -> String {
-        let (r, g, b, _) = self.rgbaComponents
+    func solo_hexString(prefixed: Bool = true) -> String {
+        let (r, g, b, _) = self.solo_rgbaComponents
         let hex = String(format: "%02X%02X%02X", Int(r * 255), Int(g * 255), Int(b * 255))
         return prefixed ? "#\(hex)" : hex
     }
 
     /// 尝试返回短格式十六进制(#RGB),若不能则返回长格式
     /// - Returns: `String`
-    func toShortHexOrLong() -> String {
-        let long = self.toHexString(prefixed: false)
+    func solo_shortHexOrLong() -> String {
+        let long = self.solo_hexString(prefixed: false)
         let chars = Array(long)
         guard chars.count == 6,
               chars[0] == chars[1],
@@ -306,10 +306,10 @@ public extension SoloWrapper where Base: UIColor {
 }
 
 // MARK: - 色彩操作
-public extension SoloWrapper where Base: UIColor {
+public extension UIColor {
     /// 返回给定颜色的`互补色`(基于 `RGB` 空间)
     /// - 返回 `nil` 如果颜色无法转换为 `RGB`(如系统动态颜色)
-    static func complementary(for color: UIColor) -> UIColor? {
+    static func solo_complementary(for color: UIColor) -> UIColor? {
         var r: CGFloat = 0, g: CGFloat = 0, b: CGFloat = 0, a: CGFloat = 0
         guard color.getRed(&r, green: &g, blue: &b, alpha: &a) else { return nil }
         return UIColor(
@@ -321,43 +321,43 @@ public extension SoloWrapper where Base: UIColor {
     }
 
     /// 获取互补色(基于 HSB 色相偏移 180°)
-    var complementary: UIColor {
+    var solo_complementary: UIColor {
         var hue: CGFloat = 0, saturation: CGFloat = 0, brightness: CGFloat = 0, alpha: CGFloat = 0
-        base.getHue(&hue, saturation: &saturation, brightness: &brightness, alpha: &alpha)
+        self.getHue(&hue, saturation: &saturation, brightness: &brightness, alpha: &alpha)
         let complementaryHue = (hue + 0.5).truncatingRemainder(dividingBy: 1.0)
         return UIColor(hue: complementaryHue, saturation: saturation, brightness: brightness, alpha: alpha)
     }
 
     /// 增加亮度
-    func lighten(by amount: CGFloat = 0.2) -> UIColor {
+    func solo_lighten(by amount: CGFloat = 0.2) -> UIColor {
         var h: CGFloat = 0, s: CGFloat = 0, b: CGFloat = 0, a: CGFloat = 0
-        base.getHue(&h, saturation: &s, brightness: &b, alpha: &a)
+        self.getHue(&h, saturation: &s, brightness: &b, alpha: &a)
         return UIColor(hue: h, saturation: s, brightness: min(b + amount, 1.0), alpha: a)
     }
 
     /// 降低亮度
-    func darken(by amount: CGFloat = 0.2) -> UIColor {
+    func solo_darken(by amount: CGFloat = 0.2) -> UIColor {
         var h: CGFloat = 0, s: CGFloat = 0, b: CGFloat = 0, a: CGFloat = 0
-        base.getHue(&h, saturation: &s, brightness: &b, alpha: &a)
+        self.getHue(&h, saturation: &s, brightness: &b, alpha: &a)
         return UIColor(hue: h, saturation: s, brightness: max(b - amount, 0), alpha: a)
     }
 
     /// 确保饱和度不低于指定值
-    func withMinSaturation(_ minSaturation: CGFloat) -> UIColor {
+    func solo_withMinSaturation(_ minSaturation: CGFloat) -> UIColor {
         var h: CGFloat = 0, s: CGFloat = 0, b: CGFloat = 0, a: CGFloat = 0
-        base.getHue(&h, saturation: &s, brightness: &b, alpha: &a)
+        self.getHue(&h, saturation: &s, brightness: &b, alpha: &a)
         let newSat = max(s, minSaturation)
         return UIColor(hue: h, saturation: newSat, brightness: b, alpha: a)
     }
 
     /// 混合两个颜色(按权重)
-    static func blend(_ color1: UIColor, weight1: CGFloat = 0.5, with color2: UIColor, weight2: CGFloat = 0.5) -> UIColor {
+    static func solo_blend(_ color1: UIColor, weight1: CGFloat = 0.5, with color2: UIColor, weight2: CGFloat = 0.5) -> UIColor {
         let total = weight1 + weight2
         let w1 = weight1 / total
         let w2 = weight2 / total
 
-        let (r1, g1, b1, a1) = color1.solo.rgbaComponents
-        let (r2, g2, b2, a2) = color2.solo.rgbaComponents
+        let (r1, g1, b1, a1) = color1.solo_rgbaComponents
+        let (r2, g2, b2, a2) = color2.solo_rgbaComponents
 
         return UIColor(
             red: r1 * w1 + r2 * w2,
@@ -368,10 +368,10 @@ public extension SoloWrapper where Base: UIColor {
     }
 
     /// 在两个颜色之间插值
-    static func interpolate(from start: UIColor, to end: UIColor, progress: CGFloat) -> UIColor {
+    static func solo_interpolate(from start: UIColor, to end: UIColor, progress: CGFloat) -> UIColor {
         let p = min(max(progress, 0), 1)
-        let (sr, sg, sb, sa) = start.solo.rgbaComponents
-        let (er, eg, eb, ea) = end.solo.rgbaComponents
+        let (sr, sg, sb, sa) = start.solo_rgbaComponents
+        let (er, eg, eb, ea) = end.solo_rgbaComponents
         return UIColor(
             red: sr + (er - sr) * p,
             green: sg + (eg - sg) * p,
@@ -382,12 +382,12 @@ public extension SoloWrapper where Base: UIColor {
 }
 
 // MARK: - 判断
-public extension SoloWrapper where Base: UIColor {
+public extension UIColor {
     /// 判断颜色是否为暗色
     ///
     /// 使用亮度公式 `0.2126 * R + 0.7152 * G + 0.0722 * B` 计算亮度值,小于 0.5 视为暗色
-    var isDark: Bool {
-        let components = self.rgbComponents
+    var solo_isDark: Bool {
+        let components = self.solo_rgbComponents
         let luminance = 0.2126 * components.red + 0.7152 * components.green + 0.0722 * components.blue
         return luminance < 0.5
     }
@@ -395,8 +395,8 @@ public extension SoloWrapper where Base: UIColor {
     /// 判断颜色是否为黑色或白色
     ///
     /// 如果颜色接近纯黑(RGB 值均小于 0.09)或纯白(RGB 值均大于 0.91),则返回 true
-    var isBlackOrWhite: Bool {
-        let components = self.rgbComponents
+    var solo_isBlackOrWhite: Bool {
+        let components = self.solo_rgbComponents
         return (components.red > 0.91 && components.green > 0.91 && components.blue > 0.91) ||
             (components.red < 0.09 && components.green < 0.09 && components.blue < 0.09)
     }
@@ -404,16 +404,16 @@ public extension SoloWrapper where Base: UIColor {
     /// 判断颜色是否为黑色
     ///
     /// 若颜色非常接近黑色(RGB 值均小于 0.09),返回 true
-    var isBlack: Bool {
-        let components = self.rgbComponents
+    var solo_isBlack: Bool {
+        let components = self.solo_rgbComponents
         return components.red < 0.09 && components.green < 0.09 && components.blue < 0.09
     }
 
     /// 判断颜色是否为白色
     ///
     /// 若颜色非常接近白色(RGB 值均大于 0.91),返回 true
-    var isWhite: Bool {
-        let components = self.rgbComponents
+    var solo_isWhite: Bool {
+        let components = self.solo_rgbComponents
         return components.red > 0.91 && components.green > 0.91 && components.blue > 0.91
     }
 
@@ -423,20 +423,20 @@ public extension SoloWrapper where Base: UIColor {
     ///   - color: 要比较的颜色
     ///   - threshold: 差异阈值,默认 0.25
     /// - Returns: 如果颜色显著不同,返回 true
-    func isDistinct(from color: UIColor, threshold: CGFloat = 0.25) -> Bool {
-        let bg = self.rgbComponents
-        let fg = color.solo.rgbComponents
+    func solo_isDistinct(from color: UIColor, threshold: CGFloat = 0.25) -> Bool {
+        let bg = self.solo_rgbComponents
+        let fg = color.solo_rgbComponents
 
         // 确保两个颜色都不是灰色系
-        if (bg.red - bg.green).solo.abs() < 0.03 && (bg.red - bg.blue).solo.abs() < 0.03 &&
-            (fg.red - fg.green).solo.abs() < 0.03 && (fg.red - fg.blue).solo.abs() < 0.03
+        if (bg.red - bg.green).solo_abs() < 0.03 && (bg.red - bg.blue).solo_abs() < 0.03 &&
+            (fg.red - fg.green).solo_abs() < 0.03 && (fg.red - fg.blue).solo_abs() < 0.03
         {
             return false
         }
 
-        return (bg.red - fg.red).solo.abs() > threshold ||
-            (bg.green - fg.green).solo.abs() > threshold ||
-            (bg.blue - fg.blue).solo.abs() > threshold
+        return (bg.red - fg.red).solo_abs() > threshold ||
+            (bg.green - fg.green).solo_abs() > threshold ||
+            (bg.blue - fg.blue).solo_abs() > threshold
     }
 
     /// 检查两种颜色之间是否存在足够的对比度
@@ -445,9 +445,9 @@ public extension SoloWrapper where Base: UIColor {
     ///
     /// - Parameter color: 要比较的颜色
     /// - Returns: 如果有足够对比度,返回 true
-    func hasSufficientContrast(with color: UIColor) -> Bool {
-        let bg = self.rgbComponents
-        let fg = color.solo.rgbComponents
+    func solo_hasSufficientContrast(with color: UIColor) -> Bool {
+        let bg = self.solo_rgbComponents
+        let fg = color.solo_rgbComponents
 
         let bgLum = 0.2126 * bg.red + 0.7152 * bg.green + 0.0722 * bg.blue
         let fgLum = 0.2126 * fg.red + 0.7152 * fg.green + 0.0722 * fg.blue
@@ -458,11 +458,11 @@ public extension SoloWrapper where Base: UIColor {
 }
 
 // MARK: - 动态颜色
-public extension SoloWrapper where Base: UIColor {
+public extension UIColor {
     /// 使用相同的十六进制颜色创建动态颜色(浅色/深色模式下颜色相同)
-    static func dynamic(hex: String) -> UIColor {
-        let color = self.color(from: hex)
-        return self.dynamic(light: color, dark: color)
+    static func solo_dynamic(hex: String) -> UIColor {
+        let color = self.solo_color(from: hex)
+        return self.solo_dynamic(light: color, dark: color)
     }
 
     /// 使用不同十六进制颜色创建动态颜色(分别指定浅色/深色模式)
@@ -470,15 +470,15 @@ public extension SoloWrapper where Base: UIColor {
     ///   - lightHex: 浅色模式下的颜色
     ///   - darkHex: 深色模式下的颜色
     /// - Returns: 动态颜色对象
-    static func dynamic(lightHex: String, darkHex: String) -> UIColor {
-        let light = self.color(from: lightHex)
-        let dark = self.color(from: darkHex)
-        return self.dynamic(light: light, dark: dark)
+    static func solo_dynamic(lightHex: String, darkHex: String) -> UIColor {
+        let light = self.solo_color(from: lightHex)
+        let dark = self.solo_color(from: darkHex)
+        return self.solo_dynamic(light: light, dark: dark)
     }
 
     /// 使用相同的 `UIColor` 创建动态颜色
-    static func dynamic(color: UIColor) -> UIColor {
-        self.dynamic(light: color, dark: color)
+    static func solo_dynamic(color: UIColor) -> UIColor {
+        self.solo_dynamic(light: color, dark: color)
     }
 
     /// 使用不同 `UIColor` 创建动态颜色
@@ -486,7 +486,7 @@ public extension SoloWrapper where Base: UIColor {
     ///   - light: 浅色模式颜色
     ///   - dark: 深色模式颜色
     /// - Returns: 动态颜色
-    static func dynamic(light: UIColor, dark: UIColor) -> UIColor {
+    static func solo_dynamic(light: UIColor, dark: UIColor) -> UIColor {
         return UIColor { traitCollection in
             traitCollection.userInterfaceStyle == .dark ? dark : light
         }
@@ -494,12 +494,12 @@ public extension SoloWrapper where Base: UIColor {
 }
 
 // MARK: - 渐变
-public extension SoloWrapper where Base: UIColor {
+public extension UIColor {
     /// 创建可复用的渐变图层(推荐用于动态UI)
     ///
     /// - Parameters: 同上
     /// - Returns: 配置好的 `CAGradientLayer`
-    static func gradientLayer(
+    static func solo_gradientLayer(
         frame: CGRect,
         colors: [UIColor],
         locations: [CGFloat]? = nil,
@@ -534,7 +534,7 @@ public extension SoloWrapper where Base: UIColor {
     ///   - startPoint: 渐变起点(单位坐标,默认左上角 `(0, 0)`)
     ///   - endPoint: 渐变终点(单位坐标,默认右下角 `(1, 1)`)
     /// - Returns: 渲染后的 `UIImage`,失败返回 `nil`
-    static func gradientImage(
+    static func solo_gradientImage(
         size: CGSize,
         colors: [UIColor],
         locations: [CGFloat]? = nil,
@@ -573,14 +573,14 @@ public extension SoloWrapper where Base: UIColor {
     ///
     /// - Warning: 此方法生成的 UIColor 使用 `patternImage`,会在视图中平铺
     ///   若尺寸与使用区域不一致,可能出现拉伸或重复建议优先使用 `createGradientLayer`
-    static func gradientColor(
+    static func solo_gradientColor(
         size: CGSize,
         colors: [UIColor],
         locations: [CGFloat]? = nil,
         startPoint: CGPoint = .zero,
         endPoint: CGPoint = CGPoint(x: 1, y: 1)
     ) -> UIColor? {
-        guard let image = self.gradientImage(
+        guard let image = self.solo_gradientImage(
             size: size,
             colors: colors,
             locations: locations,
@@ -593,17 +593,17 @@ public extension SoloWrapper where Base: UIColor {
 }
 
 // MARK: - [UIColor] 链式调用
-public extension SoloWrapper where Base == [UIColor] {
+public extension [UIColor] {
     /// 生成渐变图层
-    func gradientLayer(
+    func solo_gradientLayer(
         frame: CGRect,
         locations: [CGFloat]? = nil,
         startPoint: CGPoint = .zero,
         endPoint: CGPoint = CGPoint(x: 1, y: 1)
     ) -> CAGradientLayer {
-        UIColor.solo.gradientLayer(
+        UIColor.solo_gradientLayer(
             frame: frame,
-            colors: base,
+            colors: self,
             locations: locations,
             startPoint: startPoint,
             endPoint: endPoint
@@ -611,15 +611,15 @@ public extension SoloWrapper where Base == [UIColor] {
     }
 
     /// 生成渐变图片
-    func gradientImage(
+    func solo_gradientImage(
         size: CGSize,
         locations: [CGFloat]? = nil,
         startPoint: CGPoint = .zero,
         endPoint: CGPoint = CGPoint(x: 1, y: 1)
     ) -> UIImage? {
-        UIColor.solo.gradientImage(
+        UIColor.solo_gradientImage(
             size: size,
-            colors: base,
+            colors: self,
             locations: locations,
             startPoint: startPoint,
             endPoint: endPoint
@@ -627,15 +627,15 @@ public extension SoloWrapper where Base == [UIColor] {
     }
 
     /// 生成渐变 `UIColor`(谨慎使用)
-    func gradientColor(
+    func solo_gradientColor(
         size: CGSize,
         locations: [CGFloat]? = nil,
         startPoint: CGPoint = .zero,
         endPoint: CGPoint = CGPoint(x: 1, y: 1)
     ) -> UIColor? {
-        UIColor.solo.gradientColor(
+        UIColor.solo_gradientColor(
             size: size,
-            colors: base,
+            colors: self,
             locations: locations,
             startPoint: startPoint,
             endPoint: endPoint

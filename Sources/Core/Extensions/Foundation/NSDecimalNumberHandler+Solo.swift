@@ -18,7 +18,7 @@ public enum SoloDecimalNumberHandlerOperator {
     /// - Example:
     ///   ```swift
     ///   let handler = NSDecimalNumberHandler.default
-    ///   let result = DecimalNumberHandlerOperator.multiply.calculate(
+    ///   let result = SoloDecimalNumberHandlerOperator.multiply.calculate(
     ///       numberA: NSDecimalNumber(5),
     ///       numberB: NSDecimalNumber(3),
     ///       behavior: handler
@@ -45,7 +45,7 @@ public enum SoloDecimalNumberHandlerOperator {
 ///
 /// 所有公共方法均使用泛型约束 `LosslessStringConvertible`,确保输入类型(如 `Int`, `Double`, `String` 等)
 /// 能无损转换为字符串并正确解析为 `NSDecimalNumber`,避免因非法输入导致静默错误
-public extension SoloWrapper where Base: NSDecimalNumberHandler {
+public extension NSDecimalNumberHandler {
     /// 执行基本数值计算
     ///
     /// 支持任意符合 `LosslessStringConvertible` 协议的类型作为输入(如 `Int`, `Float`, `Double`, `String`, `NSDecimalNumber`)
@@ -65,7 +65,7 @@ public extension SoloWrapper where Base: NSDecimalNumberHandler {
     ///
     /// - Example:
     ///   ```swift
-    ///   let result = NSDecimalNumberHandler.solo.calculate(
+    ///   let result = NSDecimalNumberHandler.solo_calculate(
     ///       operator: .add,
     ///       valueA: 10.5,
     ///       valueB: "2.3",
@@ -74,7 +74,7 @@ public extension SoloWrapper where Base: NSDecimalNumberHandler {
     ///   )
     ///   print(result) // 输出: 12.80
     ///   ```
-    static func calculate(
+    static func solo_calculate(
         operator: SoloDecimalNumberHandlerOperator,
         valueA: some LosslessStringConvertible,
         valueB: some LosslessStringConvertible,
@@ -100,7 +100,7 @@ public extension SoloWrapper where Base: NSDecimalNumberHandler {
 }
 
 // MARK: - 实用工具方法
-public extension SoloWrapper where Base: NSDecimalNumberHandler {
+public extension NSDecimalNumberHandler {
     /// 判断两个数是否可以整除(即 `valueA ÷ valueB` 的结果为整数)
     ///
     /// - Parameters:
@@ -110,10 +110,10 @@ public extension SoloWrapper where Base: NSDecimalNumberHandler {
     ///
     /// - Example:
     ///   ```swift
-    ///   let divisible = NSDecimalNumberHandler.solo.isDivisible(valueA: 10, valueB: 2)
+    ///   let divisible = NSDecimalNumberHandler.solo_isDivisible(valueA: 10, valueB: 2)
     ///   print(divisible) // true
     ///   ```
-    static func isDivisible(
+    static func solo_isDivisible(
         valueA: some LosslessStringConvertible,
         valueB: some LosslessStringConvertible
     ) -> Bool {
@@ -121,8 +121,8 @@ public extension SoloWrapper where Base: NSDecimalNumberHandler {
         if divisor == .zero {
             return false
         }
-        let result = self.calculate(operator: .divide, valueA: valueA, valueB: valueB, roundingMode: .down, scale: 10)
-        return result.solo.isInteger
+        let result = self.solo_calculate(operator: .divide, valueA: valueA, valueB: valueB, roundingMode: .down, scale: 10)
+        return result.solo_isInteger
     }
 
     /// 执行向下取整的整数除法(即“地板除”)
@@ -134,16 +134,16 @@ public extension SoloWrapper where Base: NSDecimalNumberHandler {
     ///
     /// - Example:
     ///   ```swift
-    ///   let quotient = NSDecimalNumberHandler.solo.intFloor(valueA: 10, valueB: 3)
+    ///   let quotient = NSDecimalNumberHandler.solo_intFloor(valueA: 10, valueB: 3)
     ///   print(quotient) // 3
     ///   ```
-    static func intFloor(
+    static func solo_intFloor(
         valueA: some LosslessStringConvertible,
         valueB: some LosslessStringConvertible
     ) -> Int {
         let divisor = NSDecimalNumber(string: String(valueB))
         guard divisor != .zero else { return 0 }
-        let result = self.calculate(operator: .divide, valueA: valueA, valueB: valueB, roundingMode: .down, scale: 0)
+        let result = self.solo_calculate(operator: .divide, valueA: valueA, valueB: valueB, roundingMode: .down, scale: 0)
         return result.intValue
     }
 
@@ -156,14 +156,14 @@ public extension SoloWrapper where Base: NSDecimalNumberHandler {
     ///
     /// - Example:
     ///   ```swift
-    ///   let tax = NSDecimalNumberHandler.solo.calculatePercentage(value: 200, percentage: 15)
+    ///   let tax = NSDecimalNumberHandler.solo_calculatePercentage(value: 200, percentage: 15)
     ///   print(tax) // 30
     ///   ```
-    static func calculatePercentage(
+    static func solo_calculatePercentage(
         value: some LosslessStringConvertible,
         percentage: some LosslessStringConvertible
     ) -> NSDecimalNumber {
-        let product = self.calculate(operator: .multiply, valueA: value, valueB: percentage)
+        let product = self.solo_calculate(operator: .multiply, valueA: value, valueB: percentage)
         return product.dividing(by: NSDecimalNumber(100))
     }
 
@@ -176,10 +176,10 @@ public extension SoloWrapper where Base: NSDecimalNumberHandler {
     ///
     /// - Example:
     ///   ```swift
-    ///   let price = NSDecimalNumberHandler.solo.floorToNearest(value: 7.5, multiple: 2)
+    ///   let price = NSDecimalNumberHandler.solo_floorToNearest(value: 7.5, multiple: 2)
     ///   print(price) // 6
     ///   ```
-    static func floorToNearest(
+    static func solo_floorToNearest(
         value: some LosslessStringConvertible,
         multiple: some LosslessStringConvertible
     ) -> NSDecimalNumber {
@@ -202,10 +202,10 @@ public extension SoloWrapper where Base: NSDecimalNumberHandler {
     ///
     /// - Example:
     ///   ```swift
-    ///   let clamped = NSDecimalNumberHandler.solo.clamp(value: 25, lowerBound: 10, upperBound: 20)
+    ///   let clamped = NSDecimalNumberHandler.solo_clamp(value: 25, lowerBound: 10, upperBound: 20)
     ///   print(clamped) // 20
     ///   ```
-    static func clamp(
+    static func solo_clamp(
         value: some LosslessStringConvertible,
         lowerBound: some LosslessStringConvertible,
         upperBound: some LosslessStringConvertible
@@ -229,12 +229,12 @@ public extension SoloWrapper where Base: NSDecimalNumberHandler {
     ///
     /// - Example:
     ///   ```swift
-    ///   let pos = NSDecimalNumberHandler.solo.positive(-42)
+    ///   let pos = NSDecimalNumberHandler.solo_positive(-42)
     ///   print(pos) // 42
     ///   ```
-    static func positive(_ value: some LosslessStringConvertible) -> NSDecimalNumber {
+    static func solo_positive(_ value: some LosslessStringConvertible) -> NSDecimalNumber {
         let number = NSDecimalNumber(string: String(value))
-        return number.solo.absoluteValue
+        return number.solo_absoluteValue
     }
 
     /// 获取数值的相反数(符号取反)
@@ -244,12 +244,12 @@ public extension SoloWrapper where Base: NSDecimalNumberHandler {
     ///
     /// - Example:
     ///   ```swift
-    ///   let neg = NSDecimalNumberHandler.solo.negative(5)
+    ///   let neg = NSDecimalNumberHandler.solo_negative(5)
     ///   print(neg) // -5
     ///   ```
-    static func negative(_ value: some LosslessStringConvertible) -> NSDecimalNumber {
+    static func solo_negative(_ value: some LosslessStringConvertible) -> NSDecimalNumber {
         let number = NSDecimalNumber(string: String(value))
-        return number.solo.negated
+        return number.solo_negated
     }
 
     /// 计算数值数组的总和
@@ -259,10 +259,10 @@ public extension SoloWrapper where Base: NSDecimalNumberHandler {
     ///
     /// - Example:
     ///   ```swift
-    ///   let total = NSDecimalNumberHandler.solo.sum(of: [1, 2.5, "3"])
+    ///   let total = NSDecimalNumberHandler.solo_sum(of: [1, 2.5, "3"])
     ///   print(total) // 6.5
     ///   ```
-    static func sum(of values: [some LosslessStringConvertible]) -> NSDecimalNumber {
+    static func solo_sum(of values: [some LosslessStringConvertible]) -> NSDecimalNumber {
         return values.reduce(.zero) { acc, val in
             acc.adding(NSDecimalNumber(string: String(val)))
         }
@@ -275,10 +275,10 @@ public extension SoloWrapper where Base: NSDecimalNumberHandler {
     ///
     /// - Example:
     ///   ```swift
-    ///   let product = NSDecimalNumberHandler.solo.product(of: [2, 3, 4])
+    ///   let product = NSDecimalNumberHandler.solo_product(of: [2, 3, 4])
     ///   print(product) // 24
     ///   ```
-    static func product(of values: [some LosslessStringConvertible]) -> NSDecimalNumber {
+    static func solo_product(of values: [some LosslessStringConvertible]) -> NSDecimalNumber {
         return values.reduce(.one) { acc, val in
             acc.multiplying(by: NSDecimalNumber(string: String(val)))
         }
@@ -293,15 +293,15 @@ public extension SoloWrapper where Base: NSDecimalNumberHandler {
     ///
     /// - Example:
     ///   ```swift
-    ///   let parts = NSDecimalNumberHandler.solo.splitByRatios(total: 100, ratios: [1, 2, 3])
+    ///   let parts = NSDecimalNumberHandler.solo_splitByRatios(total: 100, ratios: [1, 2, 3])
     ///   // 相当于按 1:2:3 分配 → [16.66..., 33.33..., 50]
     ///   ```
-    static func splitByRatios(
+    static func solo_splitByRatios(
         total: some LosslessStringConvertible,
         ratios: [some LosslessStringConvertible]
     ) -> [NSDecimalNumber] {
         let totalNum = NSDecimalNumber(string: String(total))
-        let ratioSum = self.sum(of: ratios)
+        let ratioSum = self.solo_sum(of: ratios)
         guard ratioSum != .zero else { return Array(repeating: .zero, count: ratios.count) }
         return ratios.map { ratio in
             let r = NSDecimalNumber(string: String(ratio))
@@ -320,10 +320,10 @@ public extension SoloWrapper where Base: NSDecimalNumberHandler {
     ///
     /// - Example:
     ///   ```swift
-    ///   let randomPrice = NSDecimalNumberHandler.solo.random(min: 10, max: 20)
+    ///   let randomPrice = NSDecimalNumberHandler.solo_random(min: 10, max: 20)
     ///   print(randomPrice) // 如: 14.728...
     ///   ```
-    static func random(
+    static func solo_random(
         min: some LosslessStringConvertible,
         max: some LosslessStringConvertible
     ) -> NSDecimalNumber {

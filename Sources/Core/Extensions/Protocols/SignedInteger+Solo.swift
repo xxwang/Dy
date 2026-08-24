@@ -1,7 +1,7 @@
 import Foundation
 
 // MARK: - 判断
-public extension SoloWrapper where Base: SignedInteger {
+public extension SignedInteger {
     /// 判断当前整数是否为质数(素数)
     ///
     /// - Returns: 若数值 > 1 且仅能被 1 和自身整除,则返回 `true`;否则返回 `false`
@@ -10,24 +10,24 @@ public extension SoloWrapper where Base: SignedInteger {
     ///
     /// - Example:
     ///     ```swift
-    ///     print((7).solo.isPrime)   // true
-    ///     print((8).solo.isPrime)   // false
-    ///     print((1).solo.isPrime)   // false
+    ///     print((7).solo_isPrime)   // true
+    ///     print((8).solo_isPrime)   // false
+    ///     print((1).solo_isPrime)   // false
     ///     ```
-    var isPrime: Bool {
-        guard base > 1 else { return false }
-        if base == 2 {
+    var solo_isPrime: Bool {
+        guard self > 1 else { return false }
+        if self == 2 {
             return true
         }
-        if base.isMultiple(of: 2) {
+        if self.isMultiple(of: 2) {
             return false
         }
 
         // 使用 Self 类型进行安全计算,避免 Int 强制转换
-        let limit = Base(Double(base).squareRoot().rounded(.up))
-        var divisor: Base = 3
+        let limit = Self(Double(self).squareRoot().rounded(.up))
+        var divisor: Self = 3
         while divisor <= limit {
-            if base.isMultiple(of: divisor) {
+            if self.isMultiple(of: divisor) {
                 return false
             }
             divisor += 2 // 只检查奇数
@@ -37,7 +37,7 @@ public extension SoloWrapper where Base: SignedInteger {
 }
 
 // MARK: - 数值操作
-public extension SoloWrapper where Base: SignedInteger {
+public extension SignedInteger {
     /// 将正整数转换为罗马数字表示
     ///
     /// - Returns: 罗马数字字符串(如 `"MCMXCIV"`);若数值 ≤ 0,返回 `nil`
@@ -45,20 +45,20 @@ public extension SoloWrapper where Base: SignedInteger {
     ///
     /// - Example:
     ///     ```swift
-    ///     print((1994).solo.toRomanNumeral() as Any) // "MCMXCIV"
-    ///     print((0).solo.toRomanNumeral() as Any)    // nil
+    ///     print((1994).solo_toRomanNumeral() as Any) // "MCMXCIV"
+    ///     print((0).solo_toRomanNumeral() as Any)    // nil
     ///     ```
-    func toRomanNumeral() -> String? {
-        guard base > 0, base <= 3999 else { return nil } // 罗马数字通常不超过 3999
+    func solo_toRomanNumeral() -> String? {
+        guard self > 0, self <= 3999 else { return nil } // 罗马数字通常不超过 3999
 
         // 使用 (value, symbol) 元组数组,避免索引错位
-        let mappings: [(value: Base, symbol: String)] = [
+        let mappings: [(value: Self, symbol: String)] = [
             (1000, "M"), (900, "CM"), (500, "D"), (400, "CD"),
             (100, "C"), (90, "XC"), (50, "L"), (40, "XL"),
             (10, "X"), (9, "IX"), (5, "V"), (4, "IV"), (1, "I"),
         ]
 
-        var value = base
+        var value = self
         var result = ""
 
         for mapping in mappings {
@@ -76,10 +76,10 @@ public extension SoloWrapper where Base: SignedInteger {
     /// - Example:
     ///
     ///     let value = -42
-    ///     print(value.solo.abs()) // 42
+    ///     print(value.solo_abs()) // 42
     ///
-    func abs() -> Base {
-        return Swift.abs(base)
+    func solo_abs() -> Self {
+        return Swift.abs(self)
     }
 
     /// 计算两个整数的最大公约数(GCD)
@@ -89,11 +89,11 @@ public extension SoloWrapper where Base: SignedInteger {
     ///
     /// - Example:
     ///     ```swift
-    ///     print((12).solo.gcd(with: 15)) // 3
-    ///     print((-8).solo.gcd(with: 12)) // 4
+    ///     print((12).solo_gcd(with: 15)) // 3
+    ///     print((-8).solo_gcd(with: 12)) // 4
     ///     ```
-    func gcd(with other: Base) -> Base {
-        var a = Swift.abs(base)
+    func solo_gcd(with other: Self) -> Self {
+        var a = Swift.abs(self)
         var b = Swift.abs(other)
         while b != 0 {
             (a, b) = (b, a % b)
@@ -109,12 +109,12 @@ public extension SoloWrapper where Base: SignedInteger {
     ///
     /// - Example:
     ///     ```swift
-    ///     print((12).solo.lcm(with: 15)) // 60
-    ///     print((0).solo.lcm(with: 5))   // 0
+    ///     print((12).solo_lcm(with: 15)) // 60
+    ///     print((0).solo_lcm(with: 5))   // 0
     ///     ```
-    func lcm(with other: Base) -> Base {
-        guard base != 0, other != 0 else { return 0 }
-        return (Swift.abs(base) / self.gcd(with: other)) * Swift.abs(other)
+    func solo_lcm(with other: Self) -> Self {
+        guard self != 0, other != 0 else { return 0 }
+        return (Swift.abs(self) / self.solo_gcd(with: other)) * Swift.abs(other)
     }
 
     /// 计算当前非负整数的阶乘
@@ -125,20 +125,20 @@ public extension SoloWrapper where Base: SignedInteger {
     ///
     /// - Example:
     ///     ```swift
-    ///     print((5).solo.factorial() as Any)  // Optional(120)
-    ///     print((-1).solo.factorial() as Any) // nil
+    ///     print((5).solo_factorial() as Any)  // Optional(120)
+    ///     print((-1).solo_factorial() as Any) // nil
     ///     ```
-    func factorial() -> Base? {
-        guard base >= 0 else { return nil }
+    func solo_factorial() -> Self? {
+        guard self >= 0 else { return nil }
 
         // 将 20 转为 Self 类型进行安全比较
-        let maxSafe: Base = 20
-        guard base <= maxSafe else { return nil }
+        let maxSafe: Self = 20
+        guard self <= maxSafe else { return nil }
 
-        var result: Base = 1
+        var result: Self = 1
         // 将 2 转为 Self,并使用 stride 或循环
-        var i: Base = 2
-        while i <= base {
+        var i: Self = 2
+        while i <= self {
             result *= i
             i += 1
         }
@@ -152,15 +152,15 @@ public extension SoloWrapper where Base: SignedInteger {
     ///
     /// - Example:
     ///     ```swift
-    ///     (3).solo.times {
+    ///     (3).solo_times {
     ///         print("Hello!")
     ///     }
     ///     // 输出三次 "Hello!"
     ///     ```
-    func times(_ body: SoloAction) {
-        guard base > 0 else { return }
-        var count: Base = 0
-        while count < base {
+    func solo_times(_ body: SoloAction) {
+        guard self > 0 else { return }
+        var count: Self = 0
+        while count < self {
             body()
             count += 1
         }

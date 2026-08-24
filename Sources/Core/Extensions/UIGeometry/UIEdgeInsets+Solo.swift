@@ -1,7 +1,5 @@
 import UIKit
 
-extension UIEdgeInsets: SoloExtension {}
-
 // MARK: - 构造方法
 public extension UIEdgeInsets {
     /// 创建四个方向相等的 `UIEdgeInsets`
@@ -69,15 +67,15 @@ public extension UIEdgeInsets {
 }
 
 // MARK: - 属性
-public extension SoloWrapper where Base == UIEdgeInsets {
+public extension UIEdgeInsets {
     /// 水平方向的总边距(`left` + `right`)
     ///
     /// - Example:
     ///
     ///     let inset = UIEdgeInsets(top: 10, left: 5, bottom: 5, right: 5)
     ///     let horizontal = inset.solo.horizontal // 10
-    var horizontal: CGFloat {
-        base.left + base.right
+    var solo_horizontal: CGFloat {
+        self.left + self.right
     }
 
     /// 垂直方向的总边距(`top` + `bottom`)
@@ -86,7 +84,7 @@ public extension SoloWrapper where Base == UIEdgeInsets {
     ///
     ///     let inset = UIEdgeInsets(top: 10, left: 5, bottom: 5, right: 5)
     ///     let vertical = inset.solo.vertical // 20
-    var vertical: CGFloat {
-        base.top + base.bottom
+    var solo_vertical: CGFloat {
+        self.top + self.bottom
     }
 }

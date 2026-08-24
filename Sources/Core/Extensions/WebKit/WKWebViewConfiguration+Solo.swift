@@ -1,9 +1,9 @@
 import WebKit
 
 // MARK: - 属性
-public extension SoloWrapper where Base: WKWebViewConfiguration {
+public extension WKWebViewConfiguration {
     /// 默认的 `WKWebViewConfiguration` 配置实例
-    static func `default`() -> WKWebViewConfiguration {
+    static func solo_default() -> WKWebViewConfiguration {
         let configuration = WKWebViewConfiguration()
         // 是否允许视频在网页内联播放(而非强制全屏)
         configuration.allowsInlineMediaPlayback = true

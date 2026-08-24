@@ -1,24 +1,22 @@
 import QuartzCore
 import UIKit
 
-extension CACornerMask: SoloExtension {}
-
 // MARK: - 属性
-public extension SoloWrapper where Base == CACornerMask {
+public extension CACornerMask {
     /// 左上角(等价于 `.layerMinXMinYCorner`)
-    static let topLeft: CACornerMask = .layerMinXMinYCorner
+    static let solo_topLeft: CACornerMask = .layerMinXMinYCorner
 
     /// 右上角(等价于 `.layerMaxXMinYCorner`)
-    static let topRight: CACornerMask = .layerMaxXMinYCorner
+    static let solo_topRight: CACornerMask = .layerMaxXMinYCorner
 
     /// 左下角(等价于 `.layerMinXMaxYCorner`)
-    static let bottomLeft: CACornerMask = .layerMinXMaxYCorner
+    static let solo_bottomLeft: CACornerMask = .layerMinXMaxYCorner
 
     /// 右下角(等价于 `.layerMaxXMaxYCorner`)
-    static let bottomRight: CACornerMask = .layerMaxXMaxYCorner
+    static let solo_bottomRight: CACornerMask = .layerMaxXMaxYCorner
 
-    /// 所有四个角(等价于 `[.layerMinXMinYCorner, .layerMaxXMinYCorner, .layerMinXMaxYCorner, .layerMaxXMaxYCorner]`)
-    static let all: CACornerMask = [
+    /// 所有四个角
+    static let solo_all: CACornerMask = [
         .layerMinXMinYCorner,
         .layerMaxXMinYCorner,
         .layerMinXMaxYCorner,
@@ -27,21 +25,21 @@ public extension SoloWrapper where Base == CACornerMask {
 }
 
 // MARK: - 方法
-public extension SoloWrapper where Base == CACornerMask {
+public extension CACornerMask {
     /// 将 `CACornerMask` 转换为 `UIRectCorner`
     /// - Returns: `UIRectCorner`
-    func toUIRectCorner() -> UIRectCorner {
+    func solo_uIRectCorner() -> UIRectCorner {
         var corners: UIRectCorner = []
-        if base.contains(.layerMinXMinYCorner) {
+        if self.contains(.layerMinXMinYCorner) {
             corners.insert(.topLeft)
         }
-        if base.contains(.layerMaxXMinYCorner) {
+        if self.contains(.layerMaxXMinYCorner) {
             corners.insert(.topRight)
         }
-        if base.contains(.layerMinXMaxYCorner) {
+        if self.contains(.layerMinXMaxYCorner) {
             corners.insert(.bottomLeft)
         }
-        if base.contains(.layerMaxXMaxYCorner) {
+        if self.contains(.layerMaxXMaxYCorner) {
             corners.insert(.bottomRight)
         }
         return corners

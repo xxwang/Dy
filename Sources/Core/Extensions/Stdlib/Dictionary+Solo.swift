@@ -102,7 +102,7 @@ public extension Dictionary {
     /// - Note: 仅当 `Key` 为 `String` 且所有值均为 JSON 兼容类型（如 `String`, `Number`, `Bool`, `Array`, `Dictionary`, `NSNull`）时有效
     /// - Returns: 成功则返回 `Data`,否则返回 `nil`
     /// - Warning: 若 `Key` 不是 `String`,会触发 `assertionFailure` 并返回 `nil`
-    func solo_toData() -> Data? {
+    func solo_data() -> Data? {
         guard Key.self == String.self else {
             assertionFailure("data requires Key == String")
             return nil

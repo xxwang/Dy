@@ -12,7 +12,7 @@ public extension SoloLoadable where Self: UIView {
     ///   - nibName: `XIB` 文件名(不含 `.xib`),默认为类名
     ///   - bundle: 资源 `Bundle`,默认为类所在 `Bundle`
     /// - Returns: 加载的视图实例
-    static func loadView(
+    static func solo_loadView(
         nibName: String? = nil,
         bundle: Bundle? = nil
     ) -> Self {
@@ -52,7 +52,7 @@ public extension SoloLoadable where Self: UIViewController {
     ///   - bundle: 资源 `Bundle`(默认为类所在 `Bundle`)
     ///   - identifier: 控制器 ID(默认为类名)
     /// - Returns: 加载的控制器实例
-    static func loadViewController(
+    static func solo_loadViewController(
         from storyboardName: String = "Main",
         bundle: Bundle? = nil,
         identifier: String? = nil

@@ -1,7 +1,5 @@
 import QuartzCore
 
-extension CATransform3D: SoloExtension {}
-
 // MARK: - 构造方法
 public extension CATransform3D {
     /// 创建一个平移变换
@@ -38,36 +36,36 @@ public extension CATransform3D {
 }
 
 // MARK: - 属性
-public extension SoloWrapper where Base == CATransform3D {
+public extension CATransform3D {
     /// 返回单位变换矩阵(无任何变换)
     /// 对应系统常量 `CATransform3DIdentity`
     /// - Returns: 单位 `CATransform3D` 矩阵 `[1 0 0 0; 0 1 0 0; 0 0 1 0; 0 0 0 1]`
-    static var identity: CATransform3D {
+    static var solo_identity: CATransform3D {
         return CATransform3DIdentity
     }
 
     /// 判断当前变换是否为单位变换(即未发生任何变换)
     /// - Returns: 如果是单位矩阵,返回 `true`;否则返回 `false`
-    var isIdentity: Bool {
-        return CATransform3DIsIdentity(base)
+    var solo_isIdentity: Bool {
+        return CATransform3DIsIdentity(self)
     }
 
     /// 尝试将当前 3D 变换转换为 2D 仿射变换
     /// - Returns: 若变换是仿射的,则返回对应的 `CGAffineTransform`;
     ///   否则返回 `CGAffineTransform.identity`(不会崩溃,但结果可能不符合预期)
-    var cgAffineTransform: CGAffineTransform {
-        return CATransform3DGetAffineTransform(base)
+    var solo_cGAffineTransform: CGAffineTransform {
+        return CATransform3DGetAffineTransform(self)
     }
 
     /// 判断当前 3D 变换是否可以用 2D 仿射变换(`CGAffineTransform`)精确表示
     /// - Returns: 如果可以无损转为 2D 变换,返回 `true`;否则(如包含透视、非平面旋转等)返回 `false`
-    var isAffine: Bool {
-        return CATransform3DIsAffine(base)
+    var solo_isAffine: Bool {
+        return CATransform3DIsAffine(self)
     }
 }
 
 // MARK: - 值语义变换方法(返回新实例,不修改原值)
-public extension SoloWrapper where Base == CATransform3D {
+public extension CATransform3D {
     /// 返回在当前变换基础上再应用平移后的新变换
     /// - Parameters:
     ///   - tx: X 轴平移量
@@ -75,8 +73,8 @@ public extension SoloWrapper where Base == CATransform3D {
     ///   - tz: Z 轴平移量
     /// - Returns: 新的 `CATransform3D` 实例
     @inlinable
-    func translatedBy(tx: CGFloat, ty: CGFloat, tz: CGFloat) -> CATransform3D {
-        return CATransform3DTranslate(base, tx, ty, tz)
+    func solo_translatedBy(tx: CGFloat, ty: CGFloat, tz: CGFloat) -> CATransform3D {
+        return CATransform3DTranslate(self, tx, ty, tz)
     }
 
     /// 返回在当前变换基础上再应用缩放后的新变换
@@ -86,8 +84,8 @@ public extension SoloWrapper where Base == CATransform3D {
     ///   - sz: Z 轴缩放因子
     /// - Returns: 新的 `CATransform3D` 实例
     @inlinable
-    func scaledBy(sx: CGFloat, sy: CGFloat, sz: CGFloat) -> CATransform3D {
-        return CATransform3DScale(base, sx, sy, sz)
+    func solo_scaledBy(sx: CGFloat, sy: CGFloat, sz: CGFloat) -> CATransform3D {
+        return CATransform3DScale(self, sx, sy, sz)
     }
 
     /// 返回在当前变换基础上再应用旋转后的新变换
@@ -98,8 +96,8 @@ public extension SoloWrapper where Base == CATransform3D {
     ///   - z: 旋转轴 Z 分量
     /// - Returns: 新的 `CATransform3D` 实例
     @inlinable
-    func rotated(angle: CGFloat, x: CGFloat, y: CGFloat, z: CGFloat) -> CATransform3D {
-        return CATransform3DRotate(base, angle, x, y, z)
+    func solo_rotated(angle: CGFloat, x: CGFloat, y: CGFloat, z: CGFloat) -> CATransform3D {
+        return CATransform3DRotate(self, angle, x, y, z)
     }
 
     /// 返回当前变换与另一个变换连接(组合)后的新变换
@@ -107,28 +105,28 @@ public extension SoloWrapper where Base == CATransform3D {
     /// - Parameter t2: 要连接的另一个变换
     /// - Returns: 新的 `CATransform3D` 实例
     @inlinable
-    func concatenating(_ t2: CATransform3D) -> CATransform3D {
-        return CATransform3DConcat(base, t2)
+    func solo_concatenating(_ t2: CATransform3D) -> CATransform3D {
+        return CATransform3DConcat(self, t2)
     }
 
     /// 返回当前变换的逆变换
     /// - Returns: 逆变换矩阵
     /// - Warning: 如果当前变换不可逆(如行列式为 0),结果未定义,可能导致渲染异常
     @inlinable
-    func inverted() -> CATransform3D {
-        return CATransform3DInvert(base)
+    func solo_inverted() -> CATransform3D {
+        return CATransform3DInvert(self)
     }
 }
 
 // MARK: - 可变变换方法(就地修改自身)
-public extension SoloWrapper where Base == CATransform3D {
+public extension CATransform3D {
     /// 在当前变换基础上就地应用平移
     /// - Parameters:
     ///   - tx: X 轴平移量
     ///   - ty: Y 轴平移量
     ///   - tz: Z 轴平移量
-    func translate(by tx: CGFloat, _ ty: CGFloat, _ tz: CGFloat) {
-        base = CATransform3DTranslate(base, tx, ty, tz)
+    mutating func solo_translate(by tx: CGFloat, _ ty: CGFloat, _ tz: CGFloat) {
+        self = CATransform3DTranslate(self, tx, ty, tz)
     }
 
     /// 在当前变换基础上就地应用缩放
@@ -136,8 +134,8 @@ public extension SoloWrapper where Base == CATransform3D {
     ///   - sx: X 轴缩放因子
     ///   - sy: Y 轴缩放因子
     ///   - sz: Z 轴缩放因子
-    func scale(by sx: CGFloat, _ sy: CGFloat, _ sz: CGFloat) {
-        base = CATransform3DScale(base, sx, sy, sz)
+    mutating func solo_scale(by sx: CGFloat, _ sy: CGFloat, _ sz: CGFloat) {
+        self = CATransform3DScale(self, sx, sy, sz)
     }
 
     /// 在当前变换基础上就地应用旋转
@@ -146,20 +144,20 @@ public extension SoloWrapper where Base == CATransform3D {
     ///   - x: 旋转轴 X 分量
     ///   - y: 旋转轴 Y 分量
     ///   - z: 旋转轴 Z 分量
-    func rotate(by angle: CGFloat, aroundAxis x: CGFloat, _ y: CGFloat, _ z: CGFloat) {
-        base = CATransform3DRotate(base, angle, x, y, z)
+    mutating func solo_rotate(by angle: CGFloat, aroundAxis x: CGFloat, _ y: CGFloat, _ z: CGFloat) {
+        self = CATransform3DRotate(self, angle, x, y, z)
     }
 
     /// 就地连接另一个变换
     /// - Parameter t2: 要连接的变换
-    func concatenate(_ t2: CATransform3D) {
-        base = CATransform3DConcat(base, t2)
+    mutating func solo_concatenate(_ t2: CATransform3D) {
+        self = CATransform3DConcat(self, t2)
     }
 
     /// 就地取当前变换的逆变换
     /// - Warning: 若变换不可逆,行为未定义
-    func invert() {
-        base = CATransform3DInvert(base)
+    mutating func solo_invert() {
+        self = CATransform3DInvert(self)
     }
 }
 

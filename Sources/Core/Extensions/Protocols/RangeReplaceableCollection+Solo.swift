@@ -81,7 +81,7 @@ public extension RangeReplaceableCollection {
 }
 
 // MARK: - 旋转
-public extension SoloWrapper where Base: RangeReplaceableCollection {
+public extension RangeReplaceableCollection {
     /// 返回一个按指定位置旋转后的副本
     ///
     /// - Parameter places: 旋转位数正数向右旋转,负数向左旋转
@@ -89,21 +89,13 @@ public extension SoloWrapper where Base: RangeReplaceableCollection {
     ///
     /// - Example:
     ///     ```swift
-    ///     [1, 2, 3, 4].solo.rotated(by: 1)  // [4, 1, 2, 3]
-    ///     [1, 2, 3, 4].solo.rotated(by: -1) // [2, 3, 4, 1]
+    ///     [1, 2, 3, 4].solo_rotated(by: 1)  // [4, 1, 2, 3]
+    ///     [1, 2, 3, 4].solo_rotated(by: -1) // [2, 3, 4, 1]
     ///     ```
-    func rotated(by places: Int) -> Base {
-        guard !base.isEmpty, places != 0 else { return base }
-
-        let n = base.count
-        let k = (places % n + n) % n
-        // 向右旋转 k 位:后 k 个元素挪到前面,切分点取 n - k
-        let splitIndex = base.index(base.startIndex, offsetBy: n - k)
-
-        var result = Base()
-        result.append(contentsOf: base[splitIndex...])
-        result.append(contentsOf: base[..<splitIndex])
-        return result
+    func solo_rotated(by places: Int) -> Self {
+        var copy = self
+        copy.solo_rotate(by: places)
+        return copy
     }
 
     /// 原地旋转集合(通用实现,适用于所有 RangeReplaceableCollection)
@@ -114,25 +106,22 @@ public extension SoloWrapper where Base: RangeReplaceableCollection {
     /// - Note: 该实现具有 O(n) 时间和空间复杂度
     ///         若需极致性能(如大数组),建议使用针对 `Array` 的特化版本
     @discardableResult
-    func rotate(by places: Int) -> Base {
-        guard !base.isEmpty, places != 0 else { return base }
+    mutating func solo_rotate(by places: Int) -> Self {
+        guard !isEmpty, places != 0 else { return self }
 
-        let n = base.count
+        let n = count
         let k = (places % n + n) % n
-        // 向右旋转 k 位:后 k 个元素挪到前面,切分点取 n - k
-        let splitIndex = base.index(base.startIndex, offsetBy: n - k)
 
-        var result = Base()
-        result.append(contentsOf: base[splitIndex...])
-        result.append(contentsOf: base[..<splitIndex])
-        base = result
+        let midIndex = index(startIndex, offsetBy: k)
+        let rotated = [self[midIndex...], self[..<midIndex]].joined()
+        self = Self(rotated)
 
-        return base
+        return self
     }
 }
 
 // MARK: - 删除
-public extension SoloWrapper where Base: RangeReplaceableCollection {
+public extension RangeReplaceableCollection {
     /// 删除第一个满足条件的元素
     ///
     /// - Parameter where: 判断条件
@@ -141,13 +130,13 @@ public extension SoloWrapper where Base: RangeReplaceableCollection {
     /// - Example:
     ///     ```swift
     ///     var arr = [1, 2, 3, 2]
-    ///     arr.solo.removeFirst(where: { $0 == 2 }) // 删除第一个 2
+    ///     arr.solo_removeFirst(where: { $0 == 2 }) // 删除第一个 2
     ///     // arr == [1, 3, 2]
     ///     ```
     @discardableResult
-    func removeFirst(where condition: (Base.Element) throws -> Bool) rethrows -> Base.Element? {
-        guard let index = try base.firstIndex(where: condition) else { return nil }
-        return base.remove(at: index)
+    mutating func solo_removeFirst(where condition: (Element) throws -> Bool) rethrows -> Element? {
+        guard let index = try firstIndex(where: condition) else { return nil }
+        return remove(at: index)
     }
 
     /// 删除所有重复元素(基于 `Hashable`)
@@ -157,12 +146,12 @@ public extension SoloWrapper where Base: RangeReplaceableCollection {
     /// - Example:
     ///     ```swift
     ///     var words = ["a", "b", "a", "c"]
-    ///     words.solo.removeDuplicates(by: { $0 })
+    ///     words.solo_removeDuplicates(by: { $0 })
     ///     // ["a", "b", "c"]
     ///     ```
-    func removeDuplicates<T: Hashable>(by transform: (Base.Element) throws -> T) rethrows {
+    mutating func solo_removeDuplicates<T: Hashable>(by transform: (Element) throws -> T) rethrows {
         var seen = Set<T>()
-        try base.removeAll { element in
+        try removeAll { element in
             let key = try transform(element)
             return !seen.insert(key).inserted
         }
@@ -175,12 +164,12 @@ public extension SoloWrapper where Base: RangeReplaceableCollection {
     /// - Example:
     ///     ```swift
     ///     var nums = [1, 2, 1, 3]
-    ///     nums.solo.removeDuplicates()
+    ///     nums.solo_removeDuplicates()
     ///     // [1, 2, 3]
     ///     ```
-    func removeDuplicates() where Base.Element: Hashable {
-        var seen = Set<Base.Element>()
-        base.removeAll { !seen.insert($0).inserted }
+    mutating func solo_removeDuplicates() where Element: Hashable {
+        var seen = Set<Element>()
+        removeAll { !seen.insert($0).inserted }
     }
 
     /// 随机删除一个元素
@@ -190,17 +179,17 @@ public extension SoloWrapper where Base: RangeReplaceableCollection {
     /// - Example:
     ///     ```swift
     ///     var deck = ["♠️", "♥️", "♦️", "♣️"]
-    ///     let card = deck.solo.removeRandomElement()
+    ///     let card = deck.solo_removeRandomElement()
     ///     ```
     @discardableResult
-    func removeRandomElement() -> Base.Element? {
-        guard let randomIndex = base.indices.randomElement() else { return nil }
-        return base.remove(at: randomIndex)
+    mutating func solo_removeRandomElement() -> Element? {
+        guard let randomIndex = indices.randomElement() else { return nil }
+        return remove(at: randomIndex)
     }
 }
 
 // MARK: - 条件截取
-public extension SoloWrapper where Base: RangeReplaceableCollection {
+public extension RangeReplaceableCollection {
     /// 原地保留从头开始满足条件的连续元素
     ///
     /// - Parameter while: 判断条件
@@ -209,13 +198,13 @@ public extension SoloWrapper where Base: RangeReplaceableCollection {
     /// - Example:
     ///     ```swift
     ///     var nums = [1, 2, 3, 1]
-    ///     nums.solo.keep(while: { $0 < 3 })
+    ///     nums.solo_keep(while: { $0 < 3 })
     ///     // [1, 2]
     ///     ```
     @discardableResult
-    func keep(while condition: (Base.Element) throws -> Bool) rethrows -> Self {
-        if let firstNonMatching = try base.firstIndex(where: { try !condition($0) }) {
-            base.removeSubrange(firstNonMatching...)
+    mutating func solo_keep(while condition: (Element) throws -> Bool) rethrows -> Self {
+        if let firstNonMatching = try firstIndex(where: { try !condition($0) }) {
+            removeSubrange(firstNonMatching...)
         }
         return self
     }
@@ -227,10 +216,10 @@ public extension SoloWrapper where Base: RangeReplaceableCollection {
     ///
     /// - Example:
     ///     ```swift
-    ///     [1, 2, 3, 1].solo.take(while: { $0 < 3 }) // [1, 2]
+    ///     [1, 2, 3, 1].solo_take(while: { $0 < 3 }) // [1, 2]
     ///     ```
-    func take(while condition: (Base.Element) throws -> Bool) rethrows -> Base {
-        return try Base(base.prefix(while: condition))
+    func solo_take(while condition: (Element) throws -> Bool) rethrows -> Self {
+        return try Self(prefix(while: condition))
     }
 
     /// 返回跳过开头满足条件的连续元素后的剩余部分
@@ -240,18 +229,18 @@ public extension SoloWrapper where Base: RangeReplaceableCollection {
     ///
     /// - Example:
     ///     ```swift
-    ///     [1, 2, 3, 1].solo.skip(while: { $0 < 3 }) // [3, 1]
+    ///     [1, 2, 3, 1].solo_skip(while: { $0 < 3 }) // [3, 1]
     ///     ```
-    func skip(while condition: (Base.Element) throws -> Bool) rethrows -> Base {
-        guard let firstNonMatching = try base.firstIndex(where: { try !condition($0) }) else {
-            return Base()
+    func solo_skip(while condition: (Element) throws -> Bool) rethrows -> Self {
+        guard let firstNonMatching = try firstIndex(where: { try !condition($0) }) else {
+            return Self()
         }
-        return Base(base[firstNonMatching...])
+        return Self(self[firstNonMatching...])
     }
 }
 
 // MARK: - 追加
-public extension SoloWrapper where Base: RangeReplaceableCollection {
+public extension RangeReplaceableCollection {
     /// 仅当元素非 `nil` 时追加
     ///
     /// - Parameter element: 可选元素
@@ -259,12 +248,12 @@ public extension SoloWrapper where Base: RangeReplaceableCollection {
     /// - Example:
     ///     ```swift
     ///     var arr = [1]
-    ///     arr.solo.appendIfNonNil(2)    // [1, 2]
-    ///     arr.solo.appendIfNonNil(nil)  // 无变化
+    ///     arr.solo_appendIfNonNil(2)    // [1, 2]
+    ///     arr.solo_appendIfNonNil(nil)  // 无变化
     ///     ```
-    func appendIfNonNil(_ element: Base.Element?) {
+    mutating func solo_appendIfNonNil(_ element: Element?) {
         if let element {
-            base.append(element)
+            append(element)
         }
     }
 
@@ -275,12 +264,12 @@ public extension SoloWrapper where Base: RangeReplaceableCollection {
     /// - Example:
     ///     ```swift
     ///     var arr = [1]
-    ///     arr.solo.appendIfNonNil(contentsOf: [2, 3]) // [1, 2, 3]
-    ///     arr.solo.appendIfNonNil(contentsOf: nil)    // 无变化
+    ///     arr.solo_appendIfNonNil(contentsOf: [2, 3]) // [1, 2, 3]
+    ///     arr.solo_appendIfNonNil(contentsOf: nil)    // 无变化
     ///     ```
-    func appendIfNonNil(contentsOf newElements: (some Sequence<Base.Element>)?) {
+    mutating func solo_appendIfNonNil(contentsOf newElements: (some Sequence<Element>)?) {
         if let newElements {
-            base.append(contentsOf: newElements)
+            append(contentsOf: newElements)
         }
     }
 }

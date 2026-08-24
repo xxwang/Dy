@@ -56,35 +56,35 @@ public extension UIBezierPath {
 }
 
 // MARK: - 路径绘制
-public extension SoloWrapper where Base: UIBezierPath {
+public extension UIBezierPath {
     /// 添加由三点定义的圆弧(通过外接圆)
     /// - Parameters:
     ///   - startPoint: 起始点
     ///   - middlePoint: 圆弧上的中间点(用于确定圆)
     ///   - endPoint: 终止点
     ///   - clockwise: 是否顺时针绘制
-    func addArc(
+    func solo_addArc(
         from startPoint: CGPoint,
         through middlePoint: CGPoint,
         to endPoint: CGPoint,
         clockwise: Bool
     ) {
-        guard let center = self.calculateCircleCenter(
+        guard let center = self.solo_calculateCircleCenter(
             pointA: startPoint,
             pointB: middlePoint,
             pointC: endPoint
         ) else {
             // 三点共线,无法构成圆 → 改为画直线
-            base.move(to: startPoint)
-            base.addLine(to: endPoint)
+            self.move(to: startPoint)
+            self.addLine(to: endPoint)
             return
         }
 
-        let radius = self.calculateRadius(center: center, point: startPoint)
+        let radius = self.solo_calculateRadius(center: center, point: startPoint)
         let startAngle = atan2(startPoint.y - center.y, startPoint.x - center.x)
         let endAngle = atan2(endPoint.y - center.y, endPoint.x - center.x)
 
-        base.addArc(
+        self.addArc(
             withCenter: center,
             radius: radius,
             startAngle: startAngle,
@@ -99,16 +99,16 @@ public extension SoloWrapper where Base: UIBezierPath {
     ///   - start: 起始点
     ///   - end: 终止点
     ///   - clockwise: 是否顺时针绘制
-    func addArc(
+    func solo_addArc(
         withCenter center: CGPoint,
         from start: CGPoint,
         to end: CGPoint,
         clockwise: Bool
     ) {
-        let radius = self.calculateRadius(center: center, point: start)
+        let radius = self.solo_calculateRadius(center: center, point: start)
         let startAngle = atan2(start.y - center.y, start.x - center.x)
         let endAngle = atan2(end.y - center.y, end.x - center.x)
-        base.addArc(
+        self.addArc(
             withCenter: center,
             radius: radius,
             startAngle: startAngle,
@@ -121,34 +121,34 @@ public extension SoloWrapper where Base: UIBezierPath {
     /// - Parameters:
     ///   - size: 矩形尺寸
     ///   - centered: 是否以当前点为中心绘制
-    func addRectangle(size: CGSize, centered: Bool = false) {
+    func solo_addRectangle(size: CGSize, centered: Bool = false) {
         let rect = centered
             ? CGRect(x: -size.width / 2, y: -size.height / 2, width: size.width, height: size.height)
             : CGRect(origin: .zero, size: size)
-        base.append(UIBezierPath(rect: rect))
+        self.append(UIBezierPath(rect: rect))
     }
 
     /// 添加椭圆子路径
     /// - Parameters:
     ///   - size: 椭圆尺寸
     ///   - centered: 是否以当前点为中心绘制
-    func addEllipse(size: CGSize, centered: Bool = false) {
+    func solo_addEllipse(size: CGSize, centered: Bool = false) {
         let rect = centered
             ? CGRect(x: -size.width / 2, y: -size.height / 2, width: size.width, height: size.height)
             : CGRect(origin: .zero, size: size)
-        base.append(UIBezierPath(ovalIn: rect))
+        self.append(UIBezierPath(ovalIn: rect))
     }
 
     /// 添加圆形子路径
     /// - Parameters:
     ///   - radius: 圆半径
     ///   - centered: 是否以当前点为中心绘制
-    func addCircle(radius: CGFloat, centered: Bool = false) {
+    func solo_addCircle(radius: CGFloat, centered: Bool = false) {
         let diameter = radius * 2
         let rect = centered
             ? CGRect(x: -radius, y: -radius, width: diameter, height: diameter)
             : CGRect(origin: .zero, size: CGSize(width: diameter, height: diameter))
-        base.append(UIBezierPath(ovalIn: rect))
+        self.append(UIBezierPath(ovalIn: rect))
     }
 
     /// 添加三次贝塞尔曲线
@@ -156,8 +156,8 @@ public extension SoloWrapper where Base: UIBezierPath {
     ///   - to: 终点
     ///   - controlPoint1: 第一控制点
     ///   - controlPoint2: 第二控制点
-    func addCubicCurve(to: CGPoint, controlPoint1: CGPoint, controlPoint2: CGPoint) {
-        base.addCurve(to: to, controlPoint1: controlPoint1, controlPoint2: controlPoint2)
+    func solo_addCubicCurve(to: CGPoint, controlPoint1: CGPoint, controlPoint2: CGPoint) {
+        self.addCurve(to: to, controlPoint1: controlPoint1, controlPoint2: controlPoint2)
     }
 
     /// 添加带箭头的直线
@@ -166,9 +166,9 @@ public extension SoloWrapper where Base: UIBezierPath {
     ///   - to: 终点
     ///   - headSize: 箭头长度
     ///   - headAngle: 箭头张开角度(默认 30°)
-    func addArrow(from: CGPoint, to: CGPoint, headSize: CGFloat, headAngle: CGFloat = .pi / 6) {
-        base.move(to: from)
-        base.addLine(to: to)
+    func solo_addArrow(from: CGPoint, to: CGPoint, headSize: CGFloat, headAngle: CGFloat = .pi / 6) {
+        self.move(to: from)
+        self.addLine(to: to)
 
         let angle = atan2(to.y - from.y, to.x - from.x)
         let leftAngle = angle + headAngle
@@ -183,10 +183,10 @@ public extension SoloWrapper where Base: UIBezierPath {
             y: to.y - headSize * sin(rightAngle)
         )
 
-        base.move(to: to)
-        base.addLine(to: left)
-        base.move(to: to)
-        base.addLine(to: right)
+        self.move(to: to)
+        self.addLine(to: left)
+        self.move(to: to)
+        self.addLine(to: right)
     }
 
     /// 添加正多边形(如三角形、五角星基底等)
@@ -194,10 +194,10 @@ public extension SoloWrapper where Base: UIBezierPath {
     ///   - sides: 边数(≥3)
     ///   - radius: 外接圆半径
     ///   - centered: 是否以 (0,0) 为中心
-    func addRegularPolygon(sides: Int, radius: CGFloat, centered: Bool = false) {
+    func solo_addRegularPolygon(sides: Int, radius: CGFloat, centered: Bool = false) {
         guard sides >= 3, radius > 0 else { return }
 
-        let center = centered ? CGPoint.zero : base.currentPoint
+        let center = centered ? CGPoint.zero : self.currentPoint
         let angleIncrement = 2 * .pi / CGFloat(sides)
 
         for i in 0 ..< sides {
@@ -207,31 +207,31 @@ public extension SoloWrapper where Base: UIBezierPath {
             let point = CGPoint(x: x, y: y)
 
             if i == 0 {
-                base.move(to: point)
+                self.move(to: point)
             } else {
-                base.addLine(to: point)
+                self.addLine(to: point)
             }
         }
-        base.close()
+        self.close()
     }
 
     /// 添加由点序列构成的闭合形状
     /// - Parameter points: 点数组(至少 3 个点)
-    func addClosedShape(from points: [CGPoint]) {
+    func solo_addClosedShape(from points: [CGPoint]) {
         guard points.count >= 3 else { return }
-        base.move(to: points[0])
+        self.move(to: points[0])
         for point in points.dropFirst() {
-            base.addLine(to: point)
+            self.addLine(to: point)
         }
-        base.close()
+        self.close()
     }
 }
 
 // MARK: - 几何计算辅助方法
-private extension SoloWrapper where Base: UIBezierPath {
+private extension UIBezierPath {
     /// 通过三点计算外接圆圆心
     /// - Returns: 圆心坐标,若三点共线则返回 `nil`
-    func calculateCircleCenter(pointA: CGPoint, pointB: CGPoint, pointC: CGPoint) -> CGPoint? {
+    func solo_calculateCircleCenter(pointA: CGPoint, pointB: CGPoint, pointC: CGPoint) -> CGPoint? {
         // 使用行列式法求解圆心,避免斜率无穷大问题
         let a = pointB.x - pointA.x
         let b = pointB.y - pointA.y
@@ -249,7 +249,7 @@ private extension SoloWrapper where Base: UIBezierPath {
     }
 
     /// 计算两点间距离(即半径)
-    func calculateRadius(center: CGPoint, point: CGPoint) -> CGFloat {
+    func solo_calculateRadius(center: CGPoint, point: CGPoint) -> CGFloat {
         return hypot(point.x - center.x, point.y - center.y)
     }
 }

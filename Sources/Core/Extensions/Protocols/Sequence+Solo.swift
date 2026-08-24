@@ -1,9 +1,7 @@
 import Foundation
 
-extension Set: SoloExtension {}
-
 // MARK: - 条件判断
-public extension SoloWrapper where Base: Sequence {
+public extension Sequence {
     /// 检查序列中没有任何元素满足指定条件
     ///
     /// - Parameter condition: 判断闭包
@@ -11,10 +9,10 @@ public extension SoloWrapper where Base: Sequence {
     ///
     /// - Example:
     ///     ```swift
-    ///     [1, 3, 5].solo.noneSatisfy { $0.isMultiple(of: 2) } // true
+    ///     [1, 3, 5].solo_noneSatisfy { $0.isMultiple(of: 2) } // true
     ///     ```
-    func noneSatisfy(_ condition: (Base.Element) throws -> Bool) rethrows -> Bool {
-        return try !base.contains { try condition($0) }
+    func solo_noneSatisfy(_ condition: (Element) throws -> Bool) rethrows -> Bool {
+        return try !contains { try condition($0) }
     }
 
     /// 返回不满足条件的元素(即“排除”满足条件的元素)
@@ -25,10 +23,10 @@ public extension SoloWrapper where Base: Sequence {
     ///
     /// - Example:
     ///     ```swift
-    ///     [2, 4, 7].solo.reject { $0.isMultiple(of: 2) } // [7]
+    ///     [2, 4, 7].solo_reject { $0.isMultiple(of: 2) } // [7]
     ///     ```
-    func reject(_ condition: (Base.Element) throws -> Bool) rethrows -> [Base.Element] {
-        return try base.filter { try !condition($0) }
+    func solo_reject(_ condition: (Element) throws -> Bool) rethrows -> [Element] {
+        return try filter { try !condition($0) }
     }
 
     /// 统计满足条件的元素个数
@@ -38,11 +36,11 @@ public extension SoloWrapper where Base: Sequence {
     ///
     /// - Example:
     ///     ```swift
-    ///     [2, 4, 7].solo.count { $0.isMultiple(of: 2) } // 2
+    ///     [2, 4, 7].solo_count { $0.isMultiple(of: 2) } // 2
     ///     ```
-    func count(_ condition: (Base.Element) throws -> Bool) rethrows -> Int {
+    func solo_count(_ condition: (Element) throws -> Bool) rethrows -> Int {
         var count = 0
-        for element in base where try condition(element) {
+        for element in self where try condition(element) {
             count += 1
         }
         return count
@@ -50,17 +48,17 @@ public extension SoloWrapper where Base: Sequence {
 }
 
 // MARK: - 遍历
-public extension SoloWrapper where Base: Sequence {
+public extension Sequence {
     /// 反向遍历序列中的每个元素
     ///
     /// - Parameter body: 对每个元素执行的操作
     ///
     /// - Example:
     ///     ```swift
-    ///     [0, 2, 4].solo.forEachReversed { print($0) } // 4, 2, 0
+    ///     [0, 2, 4].solo_forEachReversed { print($0) } // 4, 2, 0
     ///     ```
-    func forEachReversed(_ body: (Base.Element) throws -> Void) rethrows {
-        try base.reversed().forEach(body)
+    func solo_forEachReversed(_ body: (Element) throws -> Void) rethrows {
+        try reversed().forEach(body)
     }
 
     /// 仅对满足条件的元素执行操作
@@ -71,21 +69,21 @@ public extension SoloWrapper where Base: Sequence {
     ///
     /// - Example:
     ///     ```swift
-    ///     [0, 2, 4, 7].solo.forEachWhere({ $0.isMultiple(of: 2) }) { print($0) }
+    ///     [0, 2, 4, 7].solo_forEachWhere({ $0.isMultiple(of: 2) }) { print($0) }
     ///     // 输出: 0, 2, 4
     ///     ```
-    func forEachWhere(
-        _ condition: (Base.Element) throws -> Bool,
-        _ body: (Base.Element) throws -> Void
+    func solo_forEachWhere(
+        _ condition: (Element) throws -> Bool,
+        _ body: (Element) throws -> Void
     ) rethrows {
-        for element in base where try condition(element) {
+        for element in self where try condition(element) {
             try body(element)
         }
     }
 }
 
 // MARK: - 转换与聚合
-public extension SoloWrapper where Base: Sequence {
+public extension Sequence {
     /// 对序列进行前缀累积(scan),返回每一步的中间结果
     ///
     /// - Parameters:
@@ -96,11 +94,11 @@ public extension SoloWrapper where Base: Sequence {
     ///
     /// - Example:
     ///     ```swift
-    ///     [1, 2, 3].solo.scan(initial: 0, +) // [1, 3, 6]
+    ///     [1, 2, 3].solo_scan(initial: 0, +) // [1, 3, 6]
     ///     ```
-    func scan<U>(initial: U, _ next: (U, Base.Element) throws -> U) rethrows -> [U] {
+    func solo_scan<U>(initial: U, _ next: (U, Element) throws -> U) rethrows -> [U] {
         var running = initial
-        return try base.map { element in
+        return try map { element in
             running = try next(running, element)
             return running
         }
@@ -113,12 +111,12 @@ public extension SoloWrapper where Base: Sequence {
     ///
     /// - Example:
     ///     ```swift
-    ///     [1, 3, 4].solo.single { $0.isMultiple(of: 2) } // Optional(4)
-    ///     [2, 4].solo.single { $0.isMultiple(of: 2) }    // nil(多个匹配)
+    ///     [1, 3, 4].solo_single { $0.isMultiple(of: 2) } // Optional(4)
+    ///     [2, 4].solo_single { $0.isMultiple(of: 2) }    // nil(多个匹配)
     ///     ```
-    func single(_ condition: (Base.Element) throws -> Bool) rethrows -> Base.Element? {
-        var found: Base.Element?
-        for element in base where try condition(element) {
+    func solo_single(_ condition: (Element) throws -> Bool) rethrows -> Element? {
+        var found: Element?
+        for element in self where try condition(element) {
             guard found == nil else { return nil } // 多于一个
             found = element
         }
@@ -132,13 +130,13 @@ public extension SoloWrapper where Base: Sequence {
     ///
     /// - Example:
     ///     ```swift
-    ///     let (evens, odds) = [0, 1, 2, 3].solo.partition { $0.isMultiple(of: 2) }
+    ///     let (evens, odds) = [0, 1, 2, 3].solo_partition { $0.isMultiple(of: 2) }
     ///     // evens = [0, 2], odds = [1, 3]
     ///     ```
-    func partition(_ condition: (Base.Element) throws -> Bool) rethrows -> ([Base.Element], [Base.Element]) {
-        var matching = [Base.Element]()
-        var nonMatching = [Base.Element]()
-        for element in base {
+    func solo_partition(_ condition: (Element) throws -> Bool) rethrows -> ([Element], [Element]) {
+        var matching = [Element]()
+        var nonMatching = [Element]()
+        for element in self {
             if try condition(element) {
                 matching.append(element)
             } else {
@@ -157,15 +155,15 @@ public extension SoloWrapper where Base: Sequence {
     ///     ```swift
     ///     struct Item { let price: Double }
     ///     let items = [Item(price: 10), Item(price: 20)]
-    ///     items.solo.sum(\.price) // 30.0
+    ///     items.solo_sum(\.price) // 30.0
     ///     ```
-    func sum<T: AdditiveArithmetic>(_ keyPath: KeyPath<Base.Element, T>) -> T {
-        return base.reduce(.zero) { $0 + $1[keyPath: keyPath] }
+    func solo_sum<T: AdditiveArithmetic>(_ keyPath: KeyPath<Element, T>) -> T {
+        return reduce(.zero) { $0 + $1[keyPath: keyPath] }
     }
 }
 
 // MARK: - Element: Hashable
-public extension SoloWrapper where Base: Sequence, Base.Element: Hashable {
+public extension Sequence where Element: Hashable {
     /// 检查当前序列是否包含另一个序列中的所有元素
     ///
     /// - Parameter elements: 要检查的元素序列
@@ -174,10 +172,10 @@ public extension SoloWrapper where Base: Sequence, Base.Element: Hashable {
     ///
     /// - Example:
     ///     ```swift
-    ///     [1, 2, 3].solo.containsAll([1, 3]) // true
+    ///     [1, 2, 3].solo_containsAll([1, 3]) // true
     ///     ```
-    func containsAll(_ elements: some Sequence<Base.Element>) -> Bool {
-        let set = Set(base)
+    func solo_containsAll(_ elements: some Sequence<Element>) -> Bool {
+        let set = Set(self)
         return elements.allSatisfy(set.contains)
     }
 
@@ -187,11 +185,11 @@ public extension SoloWrapper where Base: Sequence, Base.Element: Hashable {
     ///
     /// - Example:
     ///     ```swift
-    ///     [1, 2, 2, 3].solo.hasDuplicates // true
+    ///     [1, 2, 2, 3].solo_hasDuplicates // true
     ///     ```
-    var hasDuplicates: Bool {
-        var seen = Set<Base.Element>()
-        for element in base {
+    var solo_hasDuplicates: Bool {
+        var seen = Set<Element>()
+        for element in self {
             if !seen.insert(element).inserted {
                 return true
             }
@@ -205,12 +203,12 @@ public extension SoloWrapper where Base: Sequence, Base.Element: Hashable {
     ///
     /// - Example:
     ///     ```swift
-    ///     [1, 1, 2, 3, 3].solo.duplicates // [1, 3](顺序不定)
+    ///     [1, 1, 2, 3, 3].solo_duplicates // [1, 3](顺序不定)
     ///     ```
-    var duplicates: [Base.Element] {
-        var seen = Set<Base.Element>()
-        var duplicates = Set<Base.Element>()
-        for element in base {
+    var solo_duplicates: [Element] {
+        var seen = Set<Element>()
+        var duplicates = Set<Element>()
+        for element in self {
             if !seen.insert(element).inserted {
                 duplicates.insert(element)
             }
@@ -220,17 +218,17 @@ public extension SoloWrapper where Base: Sequence, Base.Element: Hashable {
 }
 
 // MARK: - Element: AdditiveArithmetic
-public extension SoloWrapper where Base: Sequence, Base.Element: AdditiveArithmetic {
+public extension Sequence where Element: AdditiveArithmetic {
     /// 计算序列中所有元素的总和
     ///
     /// - Returns: 元素总和
     ///
     /// - Example:
     ///     ```swift
-    ///     [1, 2, 3].solo.sum() // 6
-    ///     [1.5, 2.5].solo.sum() // 4.0
+    ///     [1, 2, 3].solo_sum() // 6
+    ///     [1.5, 2.5].solo_sum() // 4.0
     ///     ```
-    func sum() -> Base.Element {
-        return base.reduce(.zero, +)
+    func solo_sum() -> Element {
+        return reduce(.zero, +)
     }
 }

@@ -1,22 +1,9 @@
 import Foundation
 import os.log
 
-/// 编码器/解码器实例，惰性创建并复用，避免每次读写都重新初始化
-private let _encoder: JSONEncoder = JSONEncoder()
-private let _decoder: JSONDecoder = JSONDecoder()
-
 /// 用 `UserDefaults` 存储属性,自动处理默认值、编码和类型兼容
 @propertyWrapper
 public struct SoloDataStore<T> {
-    /// 复用的 JSONEncoder / JSONDecoder，避免每次读写都重新创建
-    private static var encoder: JSONEncoder {
-        _encoder
-    }
-
-    private static var decoder: JSONDecoder {
-        _decoder
-    }
-
     private let key: String
     private let defaultValue: T
     private let userDefaults: UserDefaults
@@ -64,7 +51,7 @@ public struct SoloDataStore<T> {
             // Codable 类型：转成 Data 存
             if let encodable = newValue as? Encodable {
                 do {
-                    let data = try Self.encoder.encode(encodable)
+                    let data = try JSONEncoder().encode(encodable)
                     userDefaults.set(data, forKey: key)
                 } catch {
                     os_log(.error, "SoloDataStore 编码失败 key=%{public}@ error=%{public}@", key, String(describing: error))
@@ -95,7 +82,7 @@ private extension SoloDataStore {
     func decode(from data: Data) -> T? {
         guard let decodableType = T.self as? Decodable.Type else { return nil }
         do {
-            let decoded = try Self.decoder.decode(decodableType, from: data)
+            let decoded = try JSONDecoder().decode(decodableType, from: data)
             return decoded as? T
         } catch {
             os_log(.error, "SoloDataStore 解码失败 key=%{public}@ error=%{public}@", key, String(describing: error))

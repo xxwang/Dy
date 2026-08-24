@@ -1,7 +1,7 @@
 import Foundation
 
 // MARK: - 定时器创建与调度
-public extension SoloWrapper where Base: Timer {
+public extension Timer {
     /// 在主线程 `RunLoop` 中创建并自动调度的定时器
     ///
     /// - Warning: `RunLoop.main` 强持有 timer，timer 强引用 `block`。
@@ -15,7 +15,7 @@ public extension SoloWrapper where Base: Timer {
     /// - Returns: 已添加到 `RunLoop.main` 的 `Timer` 实例
     /// - Note: 必须在主线程调用；使用后需手动调用 `invalidate()` 或通过 `pause()`/`resume()` 管理生命周期
     @discardableResult
-    static func scheduled(
+    static func solo_scheduled(
         in mode: RunLoop.Mode = .common,
         timeInterval: TimeInterval,
         repeats: Bool,
@@ -32,9 +32,9 @@ public extension SoloWrapper where Base: Timer {
     ///   - delay: 延迟时间（秒），必须 ≥ 0
     ///   - block: 延迟后执行的无参闭包
     /// - Note: 内部使用 `.common` 模式，确保在主线程执行；无需手动管理 timer 生命周期
-    static func after(_ delay: TimeInterval, block: @escaping SoloAction) {
+    static func solo_after(_ delay: TimeInterval, block: @escaping SoloAction) {
         // ⚠️ 必须持有 timer 引用，否则可能被提前释放
-        let timer = self.scheduled(timeInterval: delay, repeats: false) { _ in
+        let timer = self.solo_scheduled(timeInterval: delay, repeats: false) { _ in
             block()
         }
         // 无需外部持有，timer 在触发后自动失效
@@ -52,7 +52,7 @@ public extension SoloWrapper where Base: Timer {
     /// - Precondition: `duration > 0`
     /// - Note: 所有回调均在主线程执行；倒计时基于实际经过时间，避免累积误差
     @discardableResult
-    static func countdown(
+    static func solo_countdown(
         from duration: TimeInterval,
         interval: TimeInterval = 1.0,
         tick: @escaping SoloAction1<TimeInterval>,
@@ -66,7 +66,7 @@ public extension SoloWrapper where Base: Timer {
         let startTime = Date()
         let endTime = startTime.addingTimeInterval(duration)
 
-        return self.scheduled(timeInterval: interval, repeats: true) { timer in
+        return self.solo_scheduled(timeInterval: interval, repeats: true) { timer in
             let now = Date()
             let remaining = endTime.timeIntervalSince(now)
 
@@ -81,29 +81,29 @@ public extension SoloWrapper where Base: Timer {
 }
 
 // MARK: - 定时器控制
-public extension SoloWrapper where Base: Timer {
+public extension Timer {
     /// 暂停定时器
     ///
     /// - Note: 仅对有效（`isValid == true`）的定时器生效；通过设置 `fireDate` 为遥远未来实现暂停
-    func pause() {
-        guard base.isValid else { return }
-        base.fireDate = .distantFuture
+    func solo_pause() {
+        guard self.isValid else { return }
+        self.fireDate = .distantFuture
     }
 
     /// 立即恢复已暂停的定时器
     ///
     /// - Note: 仅对有效定时器生效；恢复后将在下一个周期触发
-    func resume() {
-        guard base.isValid else { return }
-        base.fireDate = Date()
+    func solo_resume() {
+        guard self.isValid else { return }
+        self.fireDate = Date()
     }
 
     /// 延迟一段时间后恢复定时器
     ///
     /// - Parameter delay: 延迟时间（秒），必须 ≥ 0
     /// - Note: 仅对有效定时器生效
-    func resume(after delay: TimeInterval) {
-        guard base.isValid else { return }
-        base.fireDate = Date().addingTimeInterval(delay)
+    func solo_resume(after delay: TimeInterval) {
+        guard self.isValid else { return }
+        self.fireDate = Date().addingTimeInterval(delay)
     }
 }

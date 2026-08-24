@@ -1,5 +1,7 @@
 import Foundation
 
+extension NSObject: SoloExtension {}
+
 // MARK: - 链式方法
 public extension SoloWrapper where Base: NSObject {
     /// 对当前对象执行操作,并返回自身,支持链式调用

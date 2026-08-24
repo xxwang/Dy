@@ -1,9 +1,7 @@
 import MapKit
 
-extension MKMapRect: SoloExtension {}
-
 // MARK: - 方法
-public extension SoloWrapper where Base == MKMapRect {
+public extension MKMapRect {
     /// 将 `MKCoordinateRegion`(经纬度区域)转换为 `MKMapRect`(地图投影矩形)
     ///
     /// 此方法通过计算区域的左上角和右下角地理坐标,再将其转换为地图投影点(`MKMapPoint`),
@@ -22,19 +20,19 @@ public extension SoloWrapper where Base == MKMapRect {
     ///       center: CLLocationCoordinate2D(latitude: 37.7749, longitude: -122.4194),
     ///       span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)
     ///   )
-    ///   let mapRect = MKMapRect.solo.regionToMapRect(region)
+    ///   let mapRect = MKMapRect.solo_regionToMapRect(region)
     ///   mapView.setVisibleMapRect(mapRect, animated: true)
     ///   ```
-    static func regionToMapRect(_ region: MKCoordinateRegion) -> MKMapRect {
+    static func solo_regionToMapRect(_ region: MKCoordinateRegion) -> MKMapRect {
         // 计算左上角和右下角的地理坐标
-        let topLeft = MKMapPoint(region.solo.topLeftCoordinate)
-        let bottomRight = MKMapPoint(region.solo.bottomRightCoordinate)
+        let topLeft = MKMapPoint(region.solo_topLeftCoordinate)
+        let bottomRight = MKMapPoint(region.solo_bottomRightCoordinate)
 
         // 构造 MKMapRect
         let origin = MKMapPoint(x: min(topLeft.x, bottomRight.x), y: min(topLeft.y, bottomRight.y))
         let size = MKMapSize(
-            width: (bottomRight.x - topLeft.x).solo.abs(),
-            height: (bottomRight.y - topLeft.y).solo.abs()
+            width: (bottomRight.x - topLeft.x).solo_abs(),
+            height: (bottomRight.y - topLeft.y).solo_abs()
         )
 
         return MKMapRect(origin: origin, size: size)

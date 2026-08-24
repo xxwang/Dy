@@ -2,9 +2,9 @@ import QuartzCore
 import UIKit
 
 // MARK: - CABasicAnimation
-public extension SoloWrapper where Base: CALayer {
+public extension CALayer {
     /// 表示平移动画的方向轴
-    enum Axis {
+    enum SoloAxis {
         case x
         case y
     }
@@ -23,9 +23,9 @@ public extension SoloWrapper where Base: CALayer {
     ///
     /// - Example:
     ///   ```swift
-    ///   layer.solo.basicAnimationMove(to: CGPoint(x: 100, y: 100), duration: 1.5)
+    ///   layer.solo_basicAnimationMove(to: CGPoint(x: 100, y: 100), duration: 1.5)
     ///   ```
-    func basicAnimationMove(
+    func solo_basicAnimationMove(
         to point: CGPoint,
         duration: TimeInterval = 2.0,
         delay: TimeInterval = 0,
@@ -33,9 +33,9 @@ public extension SoloWrapper where Base: CALayer {
         removedOnCompletion: Bool = false,
         timingFunction: CAMediaTimingFunctionName = .default
     ) {
-        self.addBasicAnimation(
+        self.solo_addBasicAnimation(
             keyPath: "position",
-            fromValue: base.position,
+            fromValue: self.position,
             toValue: point,
             duration: duration,
             delay: delay,
@@ -58,10 +58,10 @@ public extension SoloWrapper where Base: CALayer {
     ///
     /// - Example:
     ///   ```swift
-    ///   layer.solo.basicAnimationTranslation(axis: .x, to: 100, duration: 1.0)
+    ///   layer.solo_basicAnimationTranslation(axis: .x, to: 100, duration: 1.0)
     ///   ```
-    func basicAnimationTranslation(
-        axis: Axis,
+    func solo_basicAnimationTranslation(
+        axis: SoloAxis,
         to value: CGFloat,
         duration: TimeInterval = 2.0,
         delay: TimeInterval = 0,
@@ -75,7 +75,7 @@ public extension SoloWrapper where Base: CALayer {
         case .y:
             "transform.translation.y"
         }
-        self.addBasicAnimation(
+        self.solo_addBasicAnimation(
             keyPath: keyPath,
             fromValue: nil, // Core Animation 自动使用当前值
             toValue: value,
@@ -99,9 +99,9 @@ public extension SoloWrapper where Base: CALayer {
     ///
     /// - Example:
     ///   ```swift
-    ///   layer.solo.basicAnimationCornerRadius(to: 20, duration: 0.5)
+    ///   layer.solo_basicAnimationCornerRadius(to: 20, duration: 0.5)
     ///   ```
-    func basicAnimationCornerRadius(
+    func solo_basicAnimationCornerRadius(
         to radius: CGFloat,
         duration: TimeInterval = 2.0,
         delay: TimeInterval = 0,
@@ -109,7 +109,7 @@ public extension SoloWrapper where Base: CALayer {
         removedOnCompletion: Bool = false,
         timingFunction: CAMediaTimingFunctionName = .default
     ) {
-        self.addBasicAnimation(
+        self.solo_addBasicAnimation(
             keyPath: "cornerRadius",
             fromValue: cornerRadius,
             toValue: radius,
@@ -133,9 +133,9 @@ public extension SoloWrapper where Base: CALayer {
     ///
     /// - Example:
     ///   ```swift
-    ///   layer.solo.basicAnimationScale(to: 1.5, duration: 0.3)
+    ///   layer.solo_basicAnimationScale(to: 1.5, duration: 0.3)
     ///   ```
-    func basicAnimationScale(
+    func solo_basicAnimationScale(
         to scale: CGFloat,
         duration: TimeInterval = 2.0,
         delay: TimeInterval = 0,
@@ -143,7 +143,7 @@ public extension SoloWrapper where Base: CALayer {
         removedOnCompletion: Bool = true,
         timingFunction: CAMediaTimingFunctionName = .default
     ) {
-        self.addBasicAnimation(
+        self.solo_addBasicAnimation(
             keyPath: "transform.scale",
             fromValue: nil,
             toValue: scale,
@@ -167,9 +167,9 @@ public extension SoloWrapper where Base: CALayer {
     ///
     /// - Example:
     ///   ```swift
-    ///   layer.solo.basicAnimationRotation(to: .pi, duration: 1.0)
+    ///   layer.solo_basicAnimationRotation(to: .pi, duration: 1.0)
     ///   ```
-    func basicAnimationRotation(
+    func solo_basicAnimationRotation(
         to angle: CGFloat,
         duration: TimeInterval = 2.0,
         delay: TimeInterval = 0,
@@ -177,7 +177,7 @@ public extension SoloWrapper where Base: CALayer {
         removedOnCompletion: Bool = true,
         timingFunction: CAMediaTimingFunctionName = .default
     ) {
-        self.addBasicAnimation(
+        self.solo_addBasicAnimation(
             keyPath: "transform.rotation",
             fromValue: nil,
             toValue: angle,
@@ -192,7 +192,7 @@ public extension SoloWrapper where Base: CALayer {
     /// 内部通用方法：应用 `CABasicAnimation`
     ///
     /// - Note: 不建议外部直接调用
-    private func addBasicAnimation(
+    private func solo_addBasicAnimation(
         keyPath: String,
         fromValue: Any?,
         toValue: Any?,
@@ -211,12 +211,12 @@ public extension SoloWrapper where Base: CALayer {
         animation.isRemovedOnCompletion = removedOnCompletion
         animation.fillMode = removedOnCompletion ? .removed : .forwards
         animation.timingFunction = CAMediaTimingFunction(name: timingFunction)
-        base.add(animation, forKey: animation.keyPath)
+        self.add(animation, forKey: animation.keyPath)
     }
 }
 
 // MARK: - CAKeyframeAnimation
-public extension SoloWrapper where Base: CALayer {
+public extension CALayer {
     /// 使用关键帧动画沿一系列点移动图层
     ///
     /// - Parameters:
@@ -229,7 +229,7 @@ public extension SoloWrapper where Base: CALayer {
     ///   - timingFunction: 缓动函数,默认为 `.default`
     ///
     /// - Precondition: `positions` 非空
-    func keyframeAnimationMove(
+    func solo_keyframeAnimationMove(
         positions: [CGPoint],
         keyTimes: [NSNumber]? = nil,
         duration: TimeInterval = 2.0,
@@ -239,7 +239,7 @@ public extension SoloWrapper where Base: CALayer {
         timingFunction: CAMediaTimingFunctionName = .default
     ) {
         guard !positions.isEmpty else { return }
-        self.addKeyframeAnimation(
+        self.solo_addKeyframeAnimation(
             keyPath: "position",
             values: positions,
             keyTimes: keyTimes,
@@ -264,11 +264,11 @@ public extension SoloWrapper where Base: CALayer {
     ///   - repeatCount: 重复次数,默认为 1
     ///   - removedOnCompletion: 是否在完成后移除动画,默认为 `true`
     ///   - timingFunction: 缓动函数,默认为 `.linear`(更自然的抖动)
-    func keyframeAnimationShake(
+    func solo_keyframeAnimationShake(
         angles: [CGFloat] = [
-            (-5).solo.toRadians(),
-            5.solo.toRadians(),
-            (-5).solo.toRadians(),
+            (-5).solo_radians(),
+            5.solo_radians(),
+            (-5).solo_radians(),
         ],
         keyTimes: [NSNumber]? = nil,
         duration: TimeInterval = 0.3,
@@ -278,7 +278,7 @@ public extension SoloWrapper where Base: CALayer {
         timingFunction: CAMediaTimingFunctionName = .linear
     ) {
         guard !angles.isEmpty else { return }
-        self.addKeyframeAnimation(
+        self.solo_addKeyframeAnimation(
             keyPath: "transform.rotation",
             values: angles,
             keyTimes: keyTimes,
@@ -302,7 +302,7 @@ public extension SoloWrapper where Base: CALayer {
     ///   - timingFunction: 缓动函数,默认为 `.default`
     ///
     /// - Precondition: `path` 非空
-    func keyframeAnimationAlongPath(
+    func solo_keyframeAnimationAlongPath(
         _ path: CGPath,
         duration: TimeInterval = 2.0,
         delay: TimeInterval = 0,
@@ -310,7 +310,7 @@ public extension SoloWrapper where Base: CALayer {
         removedOnCompletion: Bool = false,
         timingFunction: CAMediaTimingFunctionName = .default
     ) {
-        self.addKeyframeAnimation(
+        self.solo_addKeyframeAnimation(
             keyPath: "position",
             values: nil,
             keyTimes: nil,
@@ -324,7 +324,7 @@ public extension SoloWrapper where Base: CALayer {
     }
 
     /// 内部通用方法：应用 `CAKeyframeAnimation`
-    private func addKeyframeAnimation(
+    private func solo_addKeyframeAnimation(
         keyPath: String,
         values: [Any]? = nil,
         keyTimes: [NSNumber]? = nil,
@@ -357,12 +357,12 @@ public extension SoloWrapper where Base: CALayer {
             animation.rotationMode = .rotateAuto
         }
 
-        base.add(animation, forKey: animation.keyPath)
+        self.add(animation, forKey: animation.keyPath)
     }
 }
 
 // MARK: - CASpringAnimation
-public extension SoloWrapper where Base: CALayer {
+public extension CALayer {
     /// 使用弹簧动画改变图层的 bounds
     ///
     /// - Parameters:
@@ -375,7 +375,7 @@ public extension SoloWrapper where Base: CALayer {
     ///   - repeatCount: 重复次数,默认为 1
     ///   - removedOnCompletion: 是否在完成后移除动画,默认为 `false`
     ///   - timingFunction: 缓动函数,默认为 `.default`
-    func springAnimationBounds(
+    func solo_springAnimationBounds(
         to bounds: CGRect,
         delay: TimeInterval = 0,
         mass: CGFloat = 10.0,
@@ -386,7 +386,7 @@ public extension SoloWrapper where Base: CALayer {
         removedOnCompletion: Bool = false,
         timingFunction: CAMediaTimingFunctionName = .default
     ) {
-        self.addSpringAnimation(
+        self.solo_addSpringAnimation(
             keyPath: "bounds",
             toValue: bounds,
             delay: delay,
@@ -401,7 +401,7 @@ public extension SoloWrapper where Base: CALayer {
     }
 
     /// 内部通用方法：应用 `CASpringAnimation`
-    private func addSpringAnimation(
+    private func solo_addSpringAnimation(
         keyPath: String,
         toValue: Any?,
         delay: TimeInterval,
@@ -424,12 +424,12 @@ public extension SoloWrapper where Base: CALayer {
         animation.isRemovedOnCompletion = removedOnCompletion
         animation.fillMode = removedOnCompletion ? .removed : .forwards
         animation.timingFunction = CAMediaTimingFunction(name: timingFunction)
-        base.add(animation, forKey: animation.keyPath)
+        self.add(animation, forKey: animation.keyPath)
     }
 }
 
 // MARK: - CAAnimationGroup
-public extension SoloWrapper where Base: CALayer {
+public extension CALayer {
     /// 同时执行一组动画
     ///
     /// - Parameters:
@@ -441,7 +441,7 @@ public extension SoloWrapper where Base: CALayer {
     ///   - timingFunction: 缓动函数,默认为 `.default`
     ///
     /// - Precondition: `animations` 非空
-    func addAnimationGroup(
+    func solo_addAnimationGroup(
         _ animations: [CAAnimation],
         duration: TimeInterval = 2.0,
         delay: TimeInterval = 0,
@@ -458,12 +458,12 @@ public extension SoloWrapper where Base: CALayer {
         group.isRemovedOnCompletion = removedOnCompletion
         group.fillMode = removedOnCompletion ? .removed : .forwards
         group.timingFunction = CAMediaTimingFunction(name: timingFunction)
-        base.add(group, forKey: "animationGroup")
+        self.add(group, forKey: "animationGroup")
     }
 }
 
 // MARK: - CATransition
-public extension SoloWrapper where Base: CALayer {
+public extension CALayer {
     /// 添加过渡动画(常用于视图切换)
     ///
     /// - Parameters:
@@ -471,7 +471,7 @@ public extension SoloWrapper where Base: CALayer {
     ///   - subtype: 方向(如 `.fromLeft`),可选
     ///   - duration: 动画时长(秒),默认为 0.35
     ///   - delay: 延迟时间(秒),默认为 0
-    func addTransition(
+    func solo_addTransition(
         type: CATransitionType,
         subtype: CATransitionSubtype? = nil,
         duration: CFTimeInterval = 0.35,
@@ -482,6 +482,6 @@ public extension SoloWrapper where Base: CALayer {
         transition.subtype = subtype
         transition.duration = max(0, duration)
         transition.beginTime = CACurrentMediaTime() + max(0, delay)
-        base.add(transition, forKey: "transition")
+        self.add(transition, forKey: "transition")
     }
 }

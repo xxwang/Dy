@@ -1,7 +1,7 @@
 import Foundation
 
 // MARK: - 方法
-public extension SoloWrapper where Base: NSRegularExpression {
+public extension NSRegularExpression {
     /// 为每个匹配项执行闭包
     ///
     /// - Parameters:
@@ -15,20 +15,20 @@ public extension SoloWrapper where Base: NSRegularExpression {
     ///
     ///     let regex = try! NSRegularExpression(pattern: "\\d+")
     ///     let text = "abc 123 def 456"
-    ///     regex.solo.enumerateMatches(in: text, range: text.startIndex..<text.endIndex) { result, _, stop in
+    ///     regex.solo_enumerateMatches(in: text, range: text.startIndex..<text.endIndex) { result, _, stop in
     ///         if let match = result {
     ///             print("Match: \(text[Range(match.range, in: text)!])")
     ///             stop = true // 只处理第一个匹配
     ///         }
     ///     }
     ///
-    func enumerateMatches(
+    func solo_enumerateMatches(
         in string: String,
         options: NSRegularExpression.MatchingOptions = [],
         range: Range<String.Index>,
         using block: (_ result: NSTextCheckingResult?, _ flags: NSRegularExpression.MatchingFlags, _ stop: inout Bool) -> Void
     ) {
-        base.enumerateMatches(in: string, options: options, range: NSRange(range, in: string)) { result, flags, stop in
+        self.enumerateMatches(in: string, options: options, range: NSRange(range, in: string)) { result, flags, stop in
             var shouldStop = false
             block(result, flags, &shouldStop)
             if shouldStop {
@@ -45,12 +45,12 @@ public extension SoloWrapper where Base: NSRegularExpression {
     ///   - range: 搜索范围
     /// - Returns: 所有匹配的 `NSTextCheckingResult` 数组
     ///
-    func matches(
+    func solo_matches(
         in string: String,
         options: NSRegularExpression.MatchingOptions = [],
         range: Range<String.Index>
     ) -> [NSTextCheckingResult] {
-        return base.matches(in: string, options: options, range: NSRange(range, in: string))
+        return self.matches(in: string, options: options, range: NSRange(range, in: string))
     }
 
     /// 返回匹配项的数量
@@ -61,12 +61,12 @@ public extension SoloWrapper where Base: NSRegularExpression {
     ///   - range: 搜索范围
     /// - Returns: 匹配数量
     ///
-    func numberOfMatches(
+    func solo_numberOfMatches(
         in string: String,
         options: NSRegularExpression.MatchingOptions = [],
         range: Range<String.Index>
     ) -> Int {
-        return base.numberOfMatches(in: string, options: options, range: NSRange(range, in: string))
+        return self.numberOfMatches(in: string, options: options, range: NSRange(range, in: string))
     }
 
     /// 返回第一个匹配项
@@ -77,12 +77,12 @@ public extension SoloWrapper where Base: NSRegularExpression {
     ///   - range: 搜索范围
     /// - Returns: 第一个匹配结果,若无则返回 `nil`
     ///
-    func firstMatch(
+    func solo_firstMatch(
         in string: String,
         options: NSRegularExpression.MatchingOptions = [],
         range: Range<String.Index>
     ) -> NSTextCheckingResult? {
-        return base.firstMatch(in: string, options: options, range: NSRange(range, in: string))
+        return self.firstMatch(in: string, options: options, range: NSRange(range, in: string))
     }
 
     /// 返回第一个匹配项的字符串范围
@@ -93,12 +93,12 @@ public extension SoloWrapper where Base: NSRegularExpression {
     ///   - range: 搜索范围
     /// - Returns: 第一个匹配的 `Range<String.Index>`,若无匹配则返回 `nil`
     ///
-    func firstMatchRange(
+    func solo_firstMatchRange(
         in string: String,
         options: NSRegularExpression.MatchingOptions = [],
         range: Range<String.Index>
     ) -> Range<String.Index>? {
-        let nsRange = base.rangeOfFirstMatch(in: string, options: options, range: NSRange(range, in: string))
+        let nsRange = self.rangeOfFirstMatch(in: string, options: options, range: NSRange(range, in: string))
         return Range(nsRange, in: string)
     }
 
@@ -113,15 +113,15 @@ public extension SoloWrapper where Base: NSRegularExpression {
     ///
     /// - Example:
     ///
-    ///     let replaced = regex.solo.replacingMatches(in: "a1b2", range: ..., with: "X")
+    ///     let replaced = regex.solo_replacingMatches(in: "a1b2", range: ..., with: "X")
     ///
-    func replacingMatches(
+    func solo_replacingMatches(
         in string: String,
         options: NSRegularExpression.MatchingOptions = [],
         range: Range<String.Index>,
         with template: String
     ) -> String {
-        return base.stringByReplacingMatches(
+        return self.stringByReplacingMatches(
             in: string,
             options: options,
             range: NSRange(range, in: string),
@@ -141,17 +141,17 @@ public extension SoloWrapper where Base: NSRegularExpression {
     /// - Example:
     ///
     ///     var text = "a1b2"
-    ///     let count = regex.solo.replaceMatches(in: &text, range: ..., with: "X")
+    ///     let count = regex.solo_replaceMatches(in: &text, range: ..., with: "X")
     ///
     @discardableResult
-    func replaceMatches(
+    func solo_replaceMatches(
         in string: inout String,
         options: NSRegularExpression.MatchingOptions = [],
         range: Range<String.Index>,
         with template: String
     ) -> Int {
         let mutableString = NSMutableString(string: string)
-        let count = base.replaceMatches(
+        let count = self.replaceMatches(
             in: mutableString,
             options: options,
             range: NSRange(range, in: string),

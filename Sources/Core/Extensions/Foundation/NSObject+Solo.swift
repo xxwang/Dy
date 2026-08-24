@@ -1,22 +1,20 @@
 import Foundation
 
-extension NSObject: SoloExtension {}
-
 // MARK: - 获取类信息
-public extension SoloWrapper where Base: NSObject {
+public extension NSObject {
     /// 获取对象的类名
-    var className: String {
-        return SoloHelper.shared.className(Swift.type(of: base))
+    var solo_className: String {
+        return SoloHelper.shared.className(Swift.type(of: self))
     }
 
     /// 获取当前类的名称
-    static var className: String {
-        return SoloHelper.shared.className(Base.self)
+    static var solo_className: String {
+        return SoloHelper.shared.className(Self.self)
     }
 }
 
 // MARK: - 关联对象
-public extension SoloWrapper where Base: NSObject {
+public extension NSObject {
     /// 为当前对象关联一个值
     ///
     /// - Parameters:
@@ -25,27 +23,27 @@ public extension SoloWrapper where Base: NSObject {
     ///   - policy: 内存管理策略，默认为 `.OBJC_ASSOCIATION_RETAIN_NONATOMIC`
     /// - Note: 对于非对象类型（如 `Int`、`Bool`、结构体等），Swift 会自动桥接为 `NSNumber` 或 `NSValue`，
     ///         此时应确保使用兼容的 retain 策略（通常 `.RETAIN` 系列是安全的）
-    func SetAO(
+    func solo_SetAO(
         _ value: Any?,
         forKey key: UnsafeRawPointer,
         policy: objc_AssociationPolicy = .OBJC_ASSOCIATION_RETAIN_NONATOMIC
     ) {
-        objc_setAssociatedObject(base, key, value, policy)
+        objc_setAssociatedObject(self, key, value, policy)
     }
 
     /// 获取关联的值，并尝试转换为指定泛型类型
     ///
     /// - Parameter key: 关联键，必须与设置时使用的键一致
     /// - Returns: 若关联对象存在、非 `nil` 且可转换为类型 `T`，则返回该值；否则返回 `nil`
-    func GetAO<T>(forKey key: UnsafeRawPointer) -> T? {
-        objc_getAssociatedObject(base, key) as? T
+    func solo_GetAO<T>(forKey key: UnsafeRawPointer) -> T? {
+        objc_getAssociatedObject(self, key) as? T
     }
 
     /// 获取关联的原始对象（不进行类型转换）
     ///
     /// - Parameter key: 关联键，必须与设置时使用的键一致
     /// - Returns: 关联的原始对象（类型为 `Any?`），若无关联则返回 `nil`
-    func GetAO(forKey key: UnsafeRawPointer) -> Any? {
-        objc_getAssociatedObject(base, key)
+    func solo_GetAO(forKey key: UnsafeRawPointer) -> Any? {
+        objc_getAssociatedObject(self, key)
     }
 }
