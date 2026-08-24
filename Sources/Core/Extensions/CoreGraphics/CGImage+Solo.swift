@@ -1,12 +1,10 @@
 import CoreGraphics
 import UIKit
 
-extension CGImage: SoloExtension {}
-
 // MARK: - 类型转换
-public extension SoloWrapper where Base: CGImage {
+public extension CGImage {
     /// 将 `CGImage` 转换为 `UIImage`
-    func toUIImage() -> UIImage? {
-        return UIImage(cgImage: base)
+    func solo_uIImage() -> UIImage? {
+        return UIImage(cgImage: self)
     }
 }

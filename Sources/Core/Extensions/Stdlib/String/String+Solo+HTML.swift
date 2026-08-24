@@ -1,18 +1,18 @@
 import Foundation
 
 // MARK: - HTML 与链接处理
-public extension SoloWrapper where Base == String {
+public extension String {
     /// 从简单的 `<a>` 标签中提取链接和文本内容
     /// - 返回值: `(link: String, text: String)` 元组;若匹配失败,返回 `nil`
     /// - 注意: 仅支持单个 `<a>` 标签,且属性顺序固定
     ///
     /// - Example:
-    ///     `"<a href=\"https://example.com\">Click</a>".solo.linkAndText` → `("https://example.com", "Click")`
+    ///     `"<a href=\"https://example.com\">Click</a>".solo_linkAndText` → `("https://example.com", "Click")`
     ///
-    var linkAndText: (link: String, text: String)? {
+    var solo_linkAndText: (link: String, text: String)? {
         let pattern = #"href\s*=\s*["']([^"']+)["'][^>]*>([^<]+)"#
         guard let regex = try? NSRegularExpression(pattern: pattern, options: [.caseInsensitive]),
-              let match = regex.firstMatch(in: base, range: NSRange(base.startIndex..., in: base))
+              let match = regex.firstMatch(in: self, range: NSRange(self.startIndex..., in: self))
         else {
             return nil
         }
@@ -20,13 +20,13 @@ public extension SoloWrapper where Base == String {
         let linkRange = match.range(at: 1)
         let textRange = match.range(at: 2)
 
-        guard let link = Range(linkRange, in: base),
-              let text = Range(textRange, in: base)
+        guard let link = Range(linkRange, in: self),
+              let text = Range(textRange, in: self)
         else {
             return nil
         }
 
-        return (String(base[link]), String(base[text]))
+        return (String(self[link]), String(self[text]))
     }
 
     /// 提取字符串中所有 URL、@提及、#话题 的 `NSRange`
@@ -36,7 +36,7 @@ public extension SoloWrapper where Base == String {
     /// - Example:
     ///     `"看 https://a.com 和 @张三 #热点#"` → 三个 NSRange
     ///
-    var linkRanges: [NSRange]? {
+    var solo_linkRanges: [NSRange]? {
         let patterns = [
             ##"https?://[^\s<>"{}|\\^`\[\]]+"##, // URL
             ##"@\p{Han}*[a-zA-Z0-9_\p{Han}]+"##, // @提及
@@ -49,7 +49,7 @@ public extension SoloWrapper where Base == String {
             guard let regex = try? NSRegularExpression(pattern: pattern, options: []) else {
                 continue
             }
-            let matches = regex.matches(in: base, range: NSRange(base.startIndex..., in: base))
+            let matches = regex.matches(in: self, range: NSRange(self.startIndex..., in: self))
             allRanges.append(contentsOf: matches.map(\.range))
         }
 

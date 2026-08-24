@@ -2,7 +2,7 @@ import Foundation
 import os.log
 
 // MARK: - 字符串写入
-public extension SoloWrapper where Base: FileManager {
+public extension FileManager {
     /// 将字符串以 UTF-8 编码写入指定路径的文件(覆盖原内容)
     ///
     /// 如果目标路径包含 `～`,会自动展开为当前用户的主目录(如 `～/Documents` → `/Users/name/Documents`)
@@ -13,8 +13,8 @@ public extension SoloWrapper where Base: FileManager {
     ///   - path: 目标文件的路径(支持 `～`)
     /// - Returns: 成功写入返回 `true`,否则返回 `false`
     @discardableResult
-    static func writeString(_ string: String, to path: String) -> Bool {
-        self.writeString(string, to: URL(fileURLWithPath: path))
+    static func solo_writeString(_ string: String, to path: String) -> Bool {
+        self.solo_writeString(string, to: URL(fileURLWithPath: path))
     }
 
     /// 将字符串以 UTF-8 编码写入指定 URL 的文件(覆盖原内容)
@@ -27,9 +27,9 @@ public extension SoloWrapper where Base: FileManager {
     ///   - url: 目标文件的 URL
     /// - Returns: 成功写入返回 `true`,否则返回 `false`
     @discardableResult
-    static func writeString(_ string: String, to url: URL) -> Bool {
+    static func solo_writeString(_ string: String, to url: URL) -> Bool {
         do {
-            try string.write(to: url.solo.expandingTildeInUrl, atomically: true, encoding: .utf8)
+            try string.write(to: url.solo_expandingTildeInUrl, atomically: true, encoding: .utf8)
             return true
         } catch {
             os_log(.error, "[Solo] FileManager writeString 失败: %{public}@", error.localizedDescription)
@@ -49,11 +49,11 @@ public extension SoloWrapper where Base: FileManager {
     ///
     /// - Example:
     ///   ```swift
-    ///   _ = FileManager.solo.appendString("New log entry\n", to: "～/Documents/app.log")
+    ///   _ = FileManager.solo_appendString("New log entry\n", to: "～/Documents/app.log")
     ///   ```
     @discardableResult
-    static func appendString(_ string: String, to path: String) -> Bool {
-        self.appendString(string, to: URL(fileURLWithPath: path))
+    static func solo_appendString(_ string: String, to path: String) -> Bool {
+        self.solo_appendString(string, to: URL(fileURLWithPath: path))
     }
 
     /// 在指定 URL 的文件末尾追加字符串内容(UTF-8 编码)
@@ -66,10 +66,10 @@ public extension SoloWrapper where Base: FileManager {
     ///   - url: 目标文件 URL
     /// - Returns: 成功追加返回 `true`,否则返回 `false`
     @discardableResult
-    static func appendString(_ string: String, to url: URL) -> Bool {
-        let fullURL = url.solo.expandingTildeInUrl
+    static func solo_appendString(_ string: String, to url: URL) -> Bool {
+        let fullURL = url.solo_expandingTildeInUrl
         if !FileManager.default.fileExists(atPath: fullURL.path) {
-            return self.writeString(string, to: fullURL)
+            return self.solo_writeString(string, to: fullURL)
         }
 
         guard let data = string.data(using: .utf8) else { return false }
@@ -88,7 +88,7 @@ public extension SoloWrapper where Base: FileManager {
 }
 
 // MARK: - Data 写入
-public extension SoloWrapper where Base: FileManager {
+public extension FileManager {
     /// 将 `Data` 写入指定路径的文件(覆盖原内容)
     ///
     /// 路径中的 `～` 会被自动展开为用户主目录
@@ -99,8 +99,8 @@ public extension SoloWrapper where Base: FileManager {
     ///   - path: 目标文件路径(支持 `～`)
     /// - Returns: 成功写入返回 `true`,否则返回 `false`
     @discardableResult
-    static func writeData(_ data: Data, to path: String) -> Bool {
-        self.writeData(data, to: URL(fileURLWithPath: path))
+    static func solo_writeData(_ data: Data, to path: String) -> Bool {
+        self.solo_writeData(data, to: URL(fileURLWithPath: path))
     }
 
     /// 将 `Data` 写入指定 URL 的文件(覆盖原内容)
@@ -112,9 +112,9 @@ public extension SoloWrapper where Base: FileManager {
     ///   - url: 目标文件 URL
     /// - Returns: 成功写入返回 `true`,否则返回 `false`
     @discardableResult
-    static func writeData(_ data: Data, to url: URL) -> Bool {
+    static func solo_writeData(_ data: Data, to url: URL) -> Bool {
         do {
-            try data.write(to: url.solo.expandingTildeInUrl, options: .atomic)
+            try data.write(to: url.solo_expandingTildeInUrl, options: .atomic)
             return true
         } catch {
             os_log(.error, "[Solo] FileManager writeData 失败: %{public}@", error.localizedDescription)
@@ -132,8 +132,8 @@ public extension SoloWrapper where Base: FileManager {
     ///   - path: 目标文件路径(支持 `～`)
     /// - Returns: 成功追加返回 `true`,否则返回 `false`
     @discardableResult
-    static func appendData(_ data: Data, to path: String) -> Bool {
-        self.appendData(data, to: URL(fileURLWithPath: path))
+    static func solo_appendData(_ data: Data, to path: String) -> Bool {
+        self.solo_appendData(data, to: URL(fileURLWithPath: path))
     }
 
     /// 在指定 URL 的文件末尾追加 `Data`
@@ -146,10 +146,10 @@ public extension SoloWrapper where Base: FileManager {
     ///   - url: 目标文件 URL
     /// - Returns: 成功追加返回 `true`,否则返回 `false`
     @discardableResult
-    static func appendData(_ data: Data, to url: URL) -> Bool {
-        let fullURL = url.solo.expandingTildeInUrl
+    static func solo_appendData(_ data: Data, to url: URL) -> Bool {
+        let fullURL = url.solo_expandingTildeInUrl
         if !FileManager.default.fileExists(atPath: fullURL.path) {
-            return self.writeData(data, to: fullURL)
+            return self.solo_writeData(data, to: fullURL)
         }
 
         do {
@@ -166,7 +166,7 @@ public extension SoloWrapper where Base: FileManager {
 }
 
 // MARK: - 文件与目录操作
-public extension SoloWrapper where Base: FileManager {
+public extension FileManager {
     /// 文件属性结构体,封装常见文件元数据
     struct SoloFileAttributes {
         /// 文件字节大小
@@ -197,10 +197,10 @@ public extension SoloWrapper where Base: FileManager {
     /// - Parameter path: 要创建的目录路径(支持 `～`)
     /// - Returns: 成功创建返回 `true`,若目录已存在也返回 `true`;其他错误返回 `false`
     @discardableResult
-    static func createDirectory(at path: String) -> Bool {
+    static func solo_createDirectory(at path: String) -> Bool {
         do {
             try FileManager.default.createDirectory(
-                atPath: path.solo.expandingTildeInPath,
+                atPath: path.solo_expandingTildeInPath,
                 withIntermediateDirectories: true,
                 attributes: nil
             )
@@ -221,9 +221,9 @@ public extension SoloWrapper where Base: FileManager {
     ///   - data: 初始文件内容(可为 `nil` 表示空文件)
     /// - Returns: 成功创建返回 `true`,否则返回 `false`
     @discardableResult
-    static func createFile(at path: String, data: Data) -> Bool {
+    static func solo_createFile(at path: String, data: Data) -> Bool {
         FileManager.default.createFile(
-            atPath: path.solo.expandingTildeInPath,
+            atPath: path.solo_expandingTildeInPath,
             contents: data,
             attributes: nil
         )
@@ -239,11 +239,11 @@ public extension SoloWrapper where Base: FileManager {
     ///   - destinationPath: 目标路径
     /// - Returns: 成功复制返回 `true`,否则返回 `false`
     @discardableResult
-    static func copyItem(from sourcePath: String, to destinationPath: String) -> Bool {
+    static func solo_copyItem(from sourcePath: String, to destinationPath: String) -> Bool {
         do {
             try FileManager.default.copyItem(
-                atPath: sourcePath.solo.expandingTildeInPath,
-                toPath: destinationPath.solo.expandingTildeInPath
+                atPath: sourcePath.solo_expandingTildeInPath,
+                toPath: destinationPath.solo_expandingTildeInPath
             )
             return true
         } catch {
@@ -261,11 +261,11 @@ public extension SoloWrapper where Base: FileManager {
     ///   - destinationPath: 目标路径
     /// - Returns: 成功移动返回 `true`,否则返回 `false`
     @discardableResult
-    static func moveItem(from sourcePath: String, to destinationPath: String) -> Bool {
+    static func solo_moveItem(from sourcePath: String, to destinationPath: String) -> Bool {
         do {
             try FileManager.default.moveItem(
-                atPath: sourcePath.solo.expandingTildeInPath,
-                toPath: destinationPath.solo.expandingTildeInPath
+                atPath: sourcePath.solo_expandingTildeInPath,
+                toPath: destinationPath.solo_expandingTildeInPath
             )
             return true
         } catch {
@@ -282,9 +282,9 @@ public extension SoloWrapper where Base: FileManager {
     /// - Parameter path: 要删除的路径
     /// - Returns: 成功删除返回 `true`,否则返回 `false`
     @discardableResult
-    static func removeItem(at path: String) -> Bool {
+    static func solo_removeItem(at path: String) -> Bool {
         do {
-            try FileManager.default.removeItem(atPath: path.solo.expandingTildeInPath)
+            try FileManager.default.removeItem(atPath: path.solo_expandingTildeInPath)
             return true
         } catch {
             os_log(.error, "[Solo] FileManager removeItem 失败: %{public}@", error.localizedDescription)
@@ -296,17 +296,17 @@ public extension SoloWrapper where Base: FileManager {
     ///
     /// - Parameter path: 文件路径(支持 `～`)
     /// - Returns: 成功时返回 `Data`,失败或文件不存在时返回 `nil`
-    static func contents(at path: String) -> Data? {
-        FileManager.default.contents(atPath: path.solo.expandingTildeInPath)
+    static func solo_contents(at path: String) -> Data? {
+        FileManager.default.contents(atPath: path.solo_expandingTildeInPath)
     }
 
     /// 获取指定路径文件的属性(大小、创建时间、修改时间)
     ///
     /// - Parameter path: 文件路径(支持 `～`)
     /// - Returns: 成功时返回 `SoloFileAttributes` 实例,失败返回 `nil`
-    static func attributes(ofItemAt path: String) -> SoloFileAttributes? {
+    static func solo_attributes(ofItemAt path: String) -> SoloFileAttributes? {
         do {
-            let attributes = try FileManager.default.attributesOfItem(atPath: path.solo.expandingTildeInPath)
+            let attributes = try FileManager.default.attributesOfItem(atPath: path.solo_expandingTildeInPath)
             return SoloFileAttributes(attributes: attributes)
         } catch {
             os_log(.error, "[Solo] FileManager attributes 失败: %{public}@", error.localizedDescription)
@@ -318,17 +318,17 @@ public extension SoloWrapper where Base: FileManager {
     ///
     /// - Parameter path: 路径(支持 `～`)
     /// - Returns: 存在返回 `true`,否则返回 `false`
-    static func itemExists(at path: String) -> Bool {
-        FileManager.default.fileExists(atPath: path.solo.expandingTildeInPath)
+    static func solo_itemExists(at path: String) -> Bool {
+        FileManager.default.fileExists(atPath: path.solo_expandingTildeInPath)
     }
 
     /// 检查指定路径是否为目录
     ///
     /// - Parameter path: 路径(支持 `～`)
     /// - Returns: 是目录且存在时返回 `true`,否则返回 `false`
-    static func isDirectory(at path: String) -> Bool {
+    static func solo_isDirectory(at path: String) -> Bool {
         var isDirectory: ObjCBool = false
-        let exists = FileManager.default.fileExists(atPath: path.solo.expandingTildeInPath, isDirectory: &isDirectory)
+        let exists = FileManager.default.fileExists(atPath: path.solo_expandingTildeInPath, isDirectory: &isDirectory)
         return exists && isDirectory.boolValue
     }
 
@@ -338,10 +338,10 @@ public extension SoloWrapper where Base: FileManager {
     ///   - path1: 第一个文件路径
     ///   - path2: 第二个文件路径
     /// - Returns: 内容完全一致返回 `true`,否则返回 `false`
-    static func contentsEqual(atPath path1: String, andPath path2: String) -> Bool {
+    static func solo_contentsEqual(atPath path1: String, andPath path2: String) -> Bool {
         FileManager.default.contentsEqual(
-            atPath: path1.solo.expandingTildeInPath,
-            andPath: path2.solo.expandingTildeInPath
+            atPath: path1.solo_expandingTildeInPath,
+            andPath: path2.solo_expandingTildeInPath
         )
     }
 
@@ -351,10 +351,10 @@ public extension SoloWrapper where Base: FileManager {
     ///
     /// - Parameter path: 目录路径(支持 `～`)
     /// - Returns: 子项路径列表,失败时返回空数组
-    static func contentsOfDirectory(at path: String) -> [String] {
+    static func solo_contentsOfDirectory(at path: String) -> [String] {
         do {
-            let items = try FileManager.default.contentsOfDirectory(atPath: path.solo.expandingTildeInPath)
-            let baseURL = URL(fileURLWithPath: path.solo.expandingTildeInPath)
+            let items = try FileManager.default.contentsOfDirectory(atPath: path.solo_expandingTildeInPath)
+            let baseURL = URL(fileURLWithPath: path.solo_expandingTildeInPath)
             return items.map { baseURL.appendingPathComponent($0).path }
         } catch {
             os_log(.error, "[Solo] FileManager contentsOfDirectory 失败: %{public}@", error.localizedDescription)
@@ -368,10 +368,10 @@ public extension SoloWrapper where Base: FileManager {
     ///
     /// - Parameter path: 目录路径(支持 `～`)
     /// - Returns: 所有子项路径列表,失败时返回空数组
-    static func recursiveContentsOfDirectory(at path: String) -> [String] {
+    static func solo_recursiveContentsOfDirectory(at path: String) -> [String] {
         do {
-            let subpaths = try FileManager.default.subpathsOfDirectory(atPath: path.solo.expandingTildeInPath)
-            let baseURL = URL(fileURLWithPath: path.solo.expandingTildeInPath)
+            let subpaths = try FileManager.default.subpathsOfDirectory(atPath: path.solo_expandingTildeInPath)
+            let baseURL = URL(fileURLWithPath: path.solo_expandingTildeInPath)
             return subpaths.map { baseURL.appendingPathComponent($0).path }
         } catch {
             os_log(.error, "[Solo] FileManager recursiveContentsOfDirectory 失败: %{public}@", error.localizedDescription)
@@ -383,23 +383,23 @@ public extension SoloWrapper where Base: FileManager {
     ///
     /// - Parameter path: 输入路径(如 `"～/Documents"`)
     /// - Returns: 展开后的绝对路径(如 `"/Users/name/Documents"`)
-    static func expandingTilde(in path: String) -> String {
-        path.solo.expandingTildeInPath
+    static func solo_expandingTilde(in path: String) -> String {
+        path.solo_expandingTildeInPath
     }
 
     /// 获取指定文件的字节大小
     ///
     /// - Parameter path: 文件路径(支持 `～`)
     /// - Returns: 文件大小(字节),若文件不存在或无法读取则返回 `0`
-    static func fileSize(at path: String) -> UInt64 {
-        self.attributes(ofItemAt: path)?.size ?? 0
+    static func solo_fileSize(at path: String) -> UInt64 {
+        self.solo_attributes(ofItemAt: path)?.size ?? 0
     }
 
     /// 获取指定文件的创建日期
     ///
     /// - Parameter path: 文件路径(支持 `～`)
     /// - Returns: 创建日期,若失败返回 `nil`
-    static func fileCreationDate(at path: String) -> Date? {
-        self.attributes(ofItemAt: path)?.creationDate
+    static func solo_fileCreationDate(at path: String) -> Date? {
+        self.solo_attributes(ofItemAt: path)?.creationDate
     }
 }

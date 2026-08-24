@@ -1,15 +1,7 @@
 import Foundation
 
-public protocol SoloBoundedRange: RangeExpression where Bound: Comparable {
-    var lowerBound: Bound { get }
-    var upperBound: Bound { get }
-}
-
-extension Range: SoloBoundedRange {}
-extension Range: SoloExtension {}
-
 // MARK: - 类型转换
-public extension SoloWrapper where Base == Range<String.Index> {
+public extension Range where Bound == String.Index {
     /// 将 `Range<String.Index>` 转换为 `NSRange`
     ///
     /// - Parameter string: 所属的原始字符串（必须包含此范围,否则行为未定义）
@@ -19,15 +11,15 @@ public extension SoloWrapper where Base == Range<String.Index> {
     ///   ```swift
     ///   let str = "Hello, world!"
     ///   let range = str.startIndex..<str.index(str.startIndex, offsetBy: 5)
-    ///   let nsRange = range.solo.toNSRange(in: str) // {0, 5}
+    ///   let nsRange = range.solo_toNSRange(in: str) // {0, 5}
     ///   ```
-    func toNSRange(in string: String) -> NSRange {
-        return NSRange(base, in: string)
+    func solo_toNSRange(in string: String) -> NSRange {
+        return NSRange(self, in: string)
     }
 }
 
 // MARK: - 整数半开区间（Range<Int>）操作扩展
-public extension SoloWrapper where Base == Range<Int> {
+public extension Range where Bound == Int {
     /// 返回区间内的一个随机整数
     ///
     /// - Returns: 半开区间 `[lowerBound, upperBound)` 内的随机整数值
@@ -35,10 +27,10 @@ public extension SoloWrapper where Base == Range<Int> {
     /// - Example:
     ///   ```swift
     ///   let range = 1..<10
-    ///   let randomValue = range.solo.random() // 如 7
+    ///   let randomValue = range.solo_random() // 如 7
     ///   ```
-    func random() -> Int {
-        Int.random(in: base)
+    func solo_random() -> Int {
+        Int.random(in: self)
     }
 
     /// 根据指定偏移量平移整个区间
@@ -48,15 +40,15 @@ public extension SoloWrapper where Base == Range<Int> {
     /// - Example:
     ///   ```swift
     ///   let range = 1..<5
-    ///   print(range.solo.offset(by: 2)) // 3..<7
+    ///   print(range.solo_offset(by: 2)) // 3..<7
     ///   ```
-    func offset(by offset: Int) -> Range<Int> {
-        return (base.lowerBound + offset) ..< (base.upperBound + offset)
+    func solo_offset(by offset: Int) -> Range<Int> {
+        return (lowerBound + offset) ..< (upperBound + offset)
     }
 }
 
 // MARK: - 通用可比较类型半开区间的集合运算扩展
-public extension SoloWrapper where Base: SoloBoundedRange {
+public extension Range where Bound: Comparable {
     /// 计算与另一个半开区间的交集
     ///
     /// - Parameter other: 另一个半开区间
@@ -66,11 +58,11 @@ public extension SoloWrapper where Base: SoloBoundedRange {
     ///   ```swift
     ///   let r1 = 1..<10
     ///   let r2 = 5..<15
-    ///   print(r1.solo.intersection(with: r2)) // Optional(5..<10)
+    ///   print(r1.solo_intersection(with: r2)) // Optional(5..<10)
     ///   ```
-    func intersection(with other: Range<Base.Bound>) -> Range<Base.Bound>? {
-        let lower = Swift.max(base.lowerBound, other.lowerBound)
-        let upper = Swift.min(base.upperBound, other.upperBound)
+    func solo_intersection(with other: Range<Bound>) -> Range<Bound>? {
+        let lower = Swift.max(lowerBound, other.lowerBound)
+        let upper = Swift.min(upperBound, other.upperBound)
         return lower < upper ? lower ..< upper : nil
     }
 
@@ -83,11 +75,11 @@ public extension SoloWrapper where Base: SoloBoundedRange {
     ///   ```swift
     ///   let r1 = 1..<10
     ///   let r2 = 5..<15
-    ///   print(r1.solo.union(with: r2)) // 1..<15
+    ///   print(r1.solo_union(with: r2)) // 1..<15
     ///   ```
-    func union(with other: Range<Base.Bound>) -> Range<Base.Bound> {
-        let lower = Swift.min(base.lowerBound, other.lowerBound)
-        let upper = Swift.max(base.upperBound, other.upperBound)
+    func solo_union(with other: Range<Bound>) -> Range<Bound> {
+        let lower = Swift.min(lowerBound, other.lowerBound)
+        let upper = Swift.max(upperBound, other.upperBound)
         return lower ..< upper
     }
 
@@ -99,23 +91,23 @@ public extension SoloWrapper where Base: SoloBoundedRange {
     ///   ```swift
     ///   let r1 = 1..<10
     ///   let r2 = 4..<6
-    ///   print(r1.solo.difference(with: r2)) // [1..<4, 6..<10]
+    ///   print(r1.solo_difference(with: r2)) // [1..<4, 6..<10]
     ///   ```
-    func difference(with other: Range<Base.Bound>) -> [Range<Base.Bound>] {
-        guard let intersection = self.intersection(with: other) else {
-            return [base.lowerBound ..< base.upperBound] // 无交集,整个区间保留
+    func solo_difference(with other: Range<Bound>) -> [Range<Bound>] {
+        guard let intersection = solo_intersection(with: other) else {
+            return [self] // 无交集,整个区间保留
         }
 
-        var result: [Range<Base.Bound>] = []
+        var result: [Range<Bound>] = []
 
         // 左侧剩余部分
-        if base.lowerBound < intersection.lowerBound {
-            result.append(base.lowerBound ..< intersection.lowerBound)
+        if lowerBound < intersection.lowerBound {
+            result.append(lowerBound ..< intersection.lowerBound)
         }
 
         // 右侧剩余部分
-        if base.upperBound > intersection.upperBound {
-            result.append(intersection.upperBound ..< base.upperBound)
+        if upperBound > intersection.upperBound {
+            result.append(intersection.upperBound ..< upperBound)
         }
 
         return result

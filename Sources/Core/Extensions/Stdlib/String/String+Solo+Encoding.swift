@@ -1,18 +1,18 @@
 import Foundation
 
 // MARK: - URL 百分号编解码扩展
-public extension SoloWrapper where Base == String {
+public extension String {
     /// 对字符串进行 URL 百分号编码（适用于查询参数、路径片段等通用场景）
     ///
     /// - Returns: 编码后的字符串;若编码失败（理论上不会）,返回原字符串
     /// - Note: 使用 `.urlQueryAllowed` 字符集,保留字母、数字及 `-._～!*'()` 等安全字符
     /// - Example:
     ///   ```swift
-    ///   "it's easy".solo.urlEncoded() // "it's%20easy"
-    ///   "hello world!".solo.urlEncoded() // "hello%20world!"
+    ///   "it's easy".solo_urlEncoded() // "it's%20easy"
+    ///   "hello world!".solo_urlEncoded() // "hello%20world!"
     ///   ```
-    func urlEncoded() -> String {
-        base.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? base
+    func solo_urlEncoded() -> String {
+        self.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? self
     }
 
     /// 对已 URL 编码的字符串进行解码
@@ -20,15 +20,15 @@ public extension SoloWrapper where Base == String {
     /// - Returns: 解码后的字符串;若解码失败（如非法 `%` 序列）,返回原字符串
     /// - Example:
     ///   ```swift
-    ///   "it's%20easy".solo.urlDecoded() // "it's easy"
+    ///   "it's%20easy".solo_urlDecoded() // "it's easy"
     ///   ```
-    func urlDecoded() -> String {
-        base.removingPercentEncoding ?? base
+    func solo_urlDecoded() -> String {
+        self.removingPercentEncoding ?? self
     }
 }
 
 // MARK: - 随机与假文字符串生成扩展
-public extension SoloWrapper where Base == String {
+public extension String {
     /// 生成指定长度的随机字符串（包含大小写字母和数字）
     ///
     /// - Parameter length: 目标长度（必须 > 0）
@@ -37,9 +37,9 @@ public extension SoloWrapper where Base == String {
     ///         如需密码学安全随机,请使用 `CryptoKit` 或 `SecRandomCopyBytes`
     /// - Example:
     ///   ```swift
-    ///   String.solo.random(length: 8) // e.g. "aB3xK9Lm"
+    ///   String.solo_random(length: 8) // e.g. "aB3xK9Lm"
     ///   ```
-    static func random(length: Int) -> String {
+    static func solo_random(length: Int) -> String {
         guard length > 0 else { return "" }
         let charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
         return String((0 ..< length).compactMap { _ in charset.randomElement() })
@@ -52,9 +52,9 @@ public extension SoloWrapper where Base == String {
     /// - Note: 内容为标准 Lorem Ipsum 段落,不含敏感信息
     /// - Example:
     ///   ```swift
-    ///   String.solo.loremIpsum(length: 20) // "Lorem ipsum dolor si"
+    ///   String.solo_loremIpsum(length: 20) // "Lorem ipsum dolor si"
     ///   ```
-    static func loremIpsum(length: Int = 445) -> String {
+    static func solo_loremIpsum(length: Int = 445) -> String {
         guard length > 0 else { return "" }
 
         let lorem = """

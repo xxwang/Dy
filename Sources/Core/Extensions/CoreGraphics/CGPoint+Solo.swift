@@ -1,55 +1,53 @@
 import CoreGraphics
 
-extension CGPoint: SoloExtension {}
-
 // MARK: - 向量属性
-public extension SoloWrapper where Base == CGPoint {
+public extension CGPoint {
     /// 向量长度(到原点的距离)
-    var length: CGFloat {
-        sqrt(base.x * base.x + base.y * base.y)
+    var solo_length: CGFloat {
+        sqrt(self.x * self.x + self.y * self.y)
     }
 
     /// 向量长度的平方
-    var lengthSquared: CGFloat {
-        base.x * base.x + base.y * base.y
+    var solo_lengthSquared: CGFloat {
+        self.x * self.x + self.y * self.y
     }
 
     /// 单位向量(归一化)若长度为 0,返回 `.zero`
-    var normalized: CGPoint {
-        let len = self.length
+    var solo_normalized: CGPoint {
+        let len = self.solo_length
         guard len > 0 else { return .zero }
-        return base / len
+        return self / len
     }
 
     /// 与另一个向量的点积(dot product)
-    func dot(_ other: CGPoint) -> CGFloat {
-        base.x * other.x + base.y * other.y
+    func solo_dot(_ other: CGPoint) -> CGFloat {
+        self.x * other.x + self.y * other.y
     }
 }
 
 // MARK: - 计算
-public extension SoloWrapper where Base == CGPoint {
+public extension CGPoint {
     /// 计算到另一点的欧几里得距离
     /// - Parameter point: 目标点
     /// - Returns: 非负距离值
-    func distance(to point: CGPoint) -> CGFloat {
-        let dx = point.x - base.x
-        let dy = point.y - base.y
+    func solo_distance(to point: CGPoint) -> CGFloat {
+        let dx = point.x - self.x
+        let dy = point.y - self.y
         return sqrt(dx * dx + dy * dy)
     }
 
     /// 计算到另一点的距离平方(避免开方,用于高效比较)
     /// - Parameter point: 目标点
     /// - Returns: 距离的平方
-    func distanceSquared(to point: CGPoint) -> CGFloat {
-        let dx = point.x - base.x
-        let dy = point.y - base.y
+    func solo_distanceSquared(to point: CGPoint) -> CGFloat {
+        let dx = point.x - self.x
+        let dy = point.y - self.y
         return dx * dx + dy * dy
     }
 
     /// 返回当前点与另一点的中点
-    func midpoint(to other: CGPoint) -> CGPoint {
-        CGPoint(x: (base.x + other.x) / 2, y: (base.y + other.y) / 2)
+    func solo_midpoint(to other: CGPoint) -> CGPoint {
+        CGPoint(x: (self.x + other.x) / 2, y: (self.y + other.y) / 2)
     }
 }
 

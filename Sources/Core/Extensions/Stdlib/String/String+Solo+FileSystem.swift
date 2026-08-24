@@ -2,20 +2,20 @@ import Foundation
 import os.log
 
 // MARK: - 文件系统操作
-public extension SoloWrapper where Base == String {
+public extension String {
     /// 删除指定路径的文件或目录
     ///
     /// - Returns: 成功删除或路径不存在时返回 `true`;删除失败返回 `false`
     ///
     /// - Note: 若路径不存在,视为"已删除",返回 `true`
-    func deleteFileOrDirectory() -> Bool {
-        guard FileManager.default.fileExists(atPath: base) else { return true }
+    func solo_deleteFileOrDirectory() -> Bool {
+        guard FileManager.default.fileExists(atPath: self) else { return true }
         do {
-            try FileManager.default.removeItem(atPath: base)
+            try FileManager.default.removeItem(atPath: self)
             return true
         } catch {
             #if DEBUG
-                os_log(.error, "⚠️ 删除失败 [%{public}@]: %{public}@", base, error.localizedDescription)
+                os_log(.error, "⚠️ 删除失败 [%{public}@]: %{public}@", self, error.localizedDescription)
             #endif
             return false
         }
@@ -28,15 +28,15 @@ public extension SoloWrapper where Base == String {
     ///
     /// - Example:
     ///   ```swift
-    ///   "Documents/MyApp/Cache".solo.createDirectories()
+    ///   "Documents/MyApp/Cache".solo_createDirectories()
     ///   ```
-    func createDirectories(in basePath: String = NSHomeDirectory()) -> Bool {
-        let fullPath: String = if base.starts(with: "/") || base.starts(with: "~") {
+    func solo_createDirectories(in basePath: String = NSHomeDirectory()) -> Bool {
+        let fullPath: String = if self.starts(with: "/") || self.starts(with: "~") {
             // 绝对路径或用户路径,直接使用
-            base.replacingOccurrences(of: "~", with: NSHomeDirectory())
+            self.replacingOccurrences(of: "~", with: NSHomeDirectory())
         } else {
             // 相对路径,拼接到 basePath
-            (basePath as NSString).appendingPathComponent(base)
+            (basePath as NSString).appendingPathComponent(self)
         }
 
         // 如果路径以 "/" 结尾,视为目录;否则取其父目录

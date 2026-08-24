@@ -129,7 +129,7 @@ public extension SoloWrapper where Base: UILabel {
         else {
             return []
         }
-        return text.solo.wrappedLines(maxWidth: base.bounds.width, font: font)
+        return text.solo_wrappedLines(maxWidth: base.bounds.width, font: font)
     }
 
     /// 获取第一行显示的文本内容(若存在)
@@ -190,19 +190,19 @@ public extension SoloWrapper where Base: UILabel {
     ///   label.text = "Hello World"
     ///   let size = label.solo.size(maxWidth: 200)
     ///   ```
-    func size(maxWidth: CGFloat = .greatestFiniteMagnitude) -> CGSize {
+    func viewSize(maxWidth: CGFloat = .greatestFiniteMagnitude) -> CGSize {
         return if base.attributedText != nil {
             base.attributedText?.solo.size(maxWidth: maxWidth) ?? .zero
         } else {
-            base.text?.solo.size(maxWidth: maxWidth, font: base.font) ?? .zero
+            base.text?.solo_viewSize(maxWidth: maxWidth, font: base.font) ?? .zero
         }
     }
 
     /// 根据内容计算`CGSize`
     /// - Parameter maxWidth: 最大宽度
     /// - Returns: `CGSize`
-    func sizeThatFits(maxWidth: CGFloat) -> CGSize {
-        return base.sizeThatFits(CGSize(width: maxWidth, height: CGFloat.greatestFiniteMagnitude))
+    func viewSizeThatFits(maxWidth: CGFloat) -> CGSize {
+        return self.sizeThatFits(CGSize(width: maxWidth, height: CGFloat.greatestFiniteMagnitude))
     }
 }
 

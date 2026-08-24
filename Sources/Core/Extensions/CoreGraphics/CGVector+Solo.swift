@@ -1,7 +1,5 @@
 import CoreGraphics
 
-extension CGVector: SoloExtension {}
-
 // MARK: - 构造方法
 public extension CGVector {
     /// 根据角度(弧度)和长度创建一个向量
@@ -14,38 +12,38 @@ public extension CGVector {
 }
 
 // MARK: - 属性
-public extension SoloWrapper where Base == CGVector {
+public extension CGVector {
     /// 向量相对于正 X 轴的旋转角度(弧度),范围为 [-π, π]
-    var angle: CGFloat {
-        atan2(base.dy, base.dx)
+    var solo_angle: CGFloat {
+        atan2(self.dy, self.dx)
     }
 
     /// 向量的长度(模长)
-    var magnitude: CGFloat {
-        sqrt(base.dx * base.dx + base.dy * base.dy)
+    var solo_magnitude: CGFloat {
+        sqrt(self.dx * self.dx + self.dy * self.dy)
     }
 
     /// 向量长度的平方(避免开方,用于高效比较)
-    var magnitudeSquared: CGFloat {
-        base.dx * base.dx + base.dy * base.dy
+    var solo_magnitudeSquared: CGFloat {
+        self.dx * self.dx + self.dy * self.dy
     }
 
     /// 返回单位向量(长度为 1 的方向向量)若原向量长度为 0,则返回 `.zero`
-    var normalized: CGVector {
-        let length = self.magnitude
+    var solo_normalized: CGVector {
+        let length = self.solo_magnitude
         guard length > 0 else { return .zero }
-        return base / length
+        return self / length
     }
 }
 
 // MARK: - 向量运算
-public extension SoloWrapper where Base == CGVector {
+public extension CGVector {
     /// 计算与另一个向量的点积(Dot Product)
     /// 点积可用于判断夹角、投影等
     /// - Parameter other: 另一个向量
     /// - Returns: 两个向量的点积(标量)
-    func dot(_ other: CGVector) -> CGFloat {
-        base.dx * other.dx + base.dy * other.dy
+    func solo_dot(_ other: CGVector) -> CGFloat {
+        self.dx * other.dx + self.dy * other.dy
     }
 }
 

@@ -1,7 +1,7 @@
 import Foundation
 
 // MARK: - 数字与金额格式化
-public extension SoloWrapper where Base == String {
+public extension String {
     /// 将数字字符串格式化为带千分位的形式(如 "1,234,567.89")
     ///
     /// - Parameters:
@@ -9,12 +9,12 @@ public extension SoloWrapper where Base == String {
     ///   - roundingMode: 舍入模式(默认 `.halfEven`)
     ///   - fallback: 格式化失败时的返回值(默认空字符串)
     /// - Returns: 格式化后的字符串
-    func formattedAsThousands(
+    func solo_formattedAsThousands(
         maximumFractionDigits: Int = 2,
         roundingMode: NumberFormatter.RoundingMode = .halfEven,
         fallback: String = ""
     ) -> String {
-        let number = NSDecimalNumber(string: base)
+        let number = NSDecimalNumber(string: self)
         if number == NSDecimalNumber.notANumber {
             return fallback
         }
@@ -31,12 +31,12 @@ public extension SoloWrapper where Base == String {
     /// 移除小数点后多余的零,以及末尾的小数点
     ///
     /// - Returns: 清理后的字符串
-    func trimTrailingZeros() -> String {
-        guard let _ = base.firstIndex(of: ".") else {
-            return base
+    func solo_trimTrailingZeros() -> String {
+        guard let _ = self.firstIndex(of: ".") else {
+            return self
         }
 
-        var result = base
+        var result = self
         while result.last == "0" {
             result.removeLast()
         }
@@ -53,8 +53,8 @@ public extension SoloWrapper where Base == String {
     ///   - mode: 舍入模式(默认 `.halfEven`)
     ///   - fallback: 失败时返回值(默认 "0")
     /// - Returns: 格式化后的字符串
-    func rounded(toDecimalPlaces places: Int = 0, mode: NumberFormatter.RoundingMode = .halfEven, fallback: String = "0") -> String {
-        let number = NSDecimalNumber(string: base)
+    func solo_rounded(toDecimalPlaces places: Int = 0, mode: NumberFormatter.RoundingMode = .halfEven, fallback: String = "0") -> String {
+        let number = NSDecimalNumber(string: self)
         if number == NSDecimalNumber.notANumber {
             return fallback
         }

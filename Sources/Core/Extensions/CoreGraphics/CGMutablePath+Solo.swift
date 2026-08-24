@@ -1,9 +1,9 @@
 import CoreGraphics
 
 // MARK: - 类型转换
-public extension SoloWrapper where Base: CGMutablePath {
+public extension CGMutablePath {
     /// 将当前可变路径转换为不可变的 `CGPath`
-    func toCGPath() -> CGPath {
-        base
+    func solo_cGPath() -> CGPath {
+        self
     }
 }

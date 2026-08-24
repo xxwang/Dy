@@ -210,7 +210,7 @@ public extension SoloWrapper where Base: UILabel {
         base.attributedText = base.attributedText?
             .solo
             .toMutable()
-            .lineSpacing(spacing, for: (base.text ?? "").solo.fullNSRange)
+            .lineSpacing(spacing, for: (base.text ?? "").solo_fullNSRange)
             .build()
         return self
     }
@@ -228,7 +228,7 @@ public extension SoloWrapper where Base: UILabel {
         base.attributedText = base.attributedText?
             .solo
             .toMutable()
-            .characterSpacing(spacing, for: base.text?.solo.fullNSRange)
+            .characterSpacing(spacing, for: base.text?.solo_fullNSRange)
             .build()
         return self
     }

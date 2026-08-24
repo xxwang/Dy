@@ -49,7 +49,7 @@ public extension SoloWrapper where Base == URL {
 
     /// 返回一个将路径中 `～` 展开后的 `URL`
     var expandingTildeInUrl: URL {
-        URL(fileURLWithPath: base.path.solo.expandingTildeInPath)
+        URL(fileURLWithPath: base.path.solo_expandingTildeInPath)
     }
 
     /// 获取 MIME 类型(支持 iOS 14+ 和降级方案)

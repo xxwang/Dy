@@ -1,7 +1,7 @@
 import Foundation
 
 // MARK: - 整数判断
-public extension SoloWrapper where Base: NSDecimalNumber {
+public extension NSDecimalNumber {
     /// 检查当前 `NSDecimalNumber` 是否表示一个数学意义上的整数(即小数部分为零)
     /// 支持负数、零、极大/极小值,且不会因浮点转换丢失精度
     ///
@@ -9,15 +9,15 @@ public extension SoloWrapper where Base: NSDecimalNumber {
     ///
     /// - Example:
     ///   ```swift
-    ///   NSDecimalNumber(string: "10").solo.isInteger       // true
-    ///   NSDecimalNumber(string: "10.0").solo.isInteger     // true
-    ///   NSDecimalNumber(string: "10.1").solo.isInteger     // false
-    ///   NSDecimalNumber(value: -5).solo.isInteger          // true
-    ///   NSDecimalNumber.notANumber.solo.isInteger          // false
+    ///   NSDecimalNumber(string: "10").solo_isInteger       // true
+    ///   NSDecimalNumber(string: "10.0").solo_isInteger     // true
+    ///   NSDecimalNumber(string: "10.1").solo_isInteger     // false
+    ///   NSDecimalNumber(value: -5).solo_isInteger          // true
+    ///   NSDecimalNumber.notANumber.solo_isInteger          // false
     ///   ```
-    var isInteger: Bool {
+    var solo_isInteger: Bool {
         // 特殊值处理：NaN 或无穷大(虽然 NSDecimalNumber 通常不支持无穷,但防御性处理)
-        if base == .notANumber {
+        if self == .notANumber {
             return false
         }
 
@@ -33,19 +33,19 @@ public extension SoloWrapper where Base: NSDecimalNumber {
         )
 
         // 将当前值舍入到整数(去掉所有小数位)
-        let rounded = base.rounding(accordingToBehavior: handler)
+        let rounded = self.rounding(accordingToBehavior: handler)
 
         // 比较原值与舍入后的值是否完全相等
-        return base.compare(rounded) == .orderedSame
+        return self.compare(rounded) == .orderedSame
     }
 
     /// 返回当前数值的绝对值
-    var absoluteValue: NSDecimalNumber {
-        return base.compare(NSDecimalNumber.zero) == .orderedAscending ? base.multiplying(by: -1) : base
+    var solo_absoluteValue: NSDecimalNumber {
+        return self.compare(NSDecimalNumber.zero) == .orderedAscending ? self.multiplying(by: -1) : self
     }
 
     /// 返回当前数值的相反数(正变负,负变正)
-    var negated: NSDecimalNumber {
-        return base.multiplying(by: -1)
+    var solo_negated: NSDecimalNumber {
+        return self.multiplying(by: -1)
     }
 }

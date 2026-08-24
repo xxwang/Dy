@@ -2,7 +2,7 @@ import UIKit
 import os.log
 
 // MARK: - 属性字符串相关
-public extension SoloWrapper where Base == String {
+public extension String {
     /// 将 HTML 源码转换为属性字符串
     /// - Parameters:
     ///   - font: 全局字体(会覆盖 HTML 中的所有字体样式,包括 <b>, <i> 等)
@@ -11,17 +11,17 @@ public extension SoloWrapper where Base == String {
     ///
     /// - 注意: 此实现会丢失 HTML 的原始文本样式(如粗体、斜体),仅保留结构(换行等)
     ///
-    func htmlToAttributedString(
+    func solo_htmlToAttributedString(
         font: UIFont? = .systemFont(ofSize: 12),
         lineSpacing: CGFloat? = 10
     ) -> NSMutableAttributedString {
         // 预处理：将 \n 替换为 <br/> 以保留换行
-        let processedHTML = base.replacingOccurrences(of: "\n", with: "<br/>")
+        let processedHTML = self.replacingOccurrences(of: "\n", with: "<br/>")
         // 包裹在 <span> 中避免解析异常
         let fullHTML = "<span>\(processedHTML)</span>"
 
         guard let data = fullHTML.data(using: .utf8) else {
-            return self.fallbackAttributedString(font: font, lineSpacing: lineSpacing)
+            return self.solo_fallbackAttributedString(font: font, lineSpacing: lineSpacing)
         }
 
         do {
@@ -52,31 +52,31 @@ public extension SoloWrapper where Base == String {
             return attributedString
         } catch {
             os_log(.error, "HTML to Attributed String failed: %{public}@", String(describing: error))
-            return self.fallbackAttributedString(font: font, lineSpacing: lineSpacing)
+            return self.solo_fallbackAttributedString(font: font, lineSpacing: lineSpacing)
         }
     }
 
     /// 高亮显示关键字
-    func highlightKeyword(
+    func solo_highlightKeyword(
         keyword: String,
         highlightColor: UIColor,
         normalColor: UIColor,
         options: NSRegularExpression.Options = []
     ) -> NSMutableAttributedString {
         guard !keyword.isEmpty else {
-            let attr = NSMutableAttributedString(string: base)
+            let attr = NSMutableAttributedString(string: self)
             attr.addAttribute(.foregroundColor, value: normalColor, range: NSRange(location: 0, length: attr.length))
             return attr
         }
 
-        let attributedString = NSMutableAttributedString(string: base)
+        let attributedString = NSMutableAttributedString(string: self)
         attributedString.addAttribute(.foregroundColor, value: normalColor, range: NSRange(location: 0, length: attributedString.length))
 
         do {
             let escapedKeyword = NSRegularExpression.escapedPattern(for: keyword)
             let regex = try NSRegularExpression(pattern: escapedKeyword, options: options)
-            let nsRange = NSRange(location: 0, length: base.utf16.count)
-            let matches = regex.matches(in: base, options: [], range: nsRange)
+            let nsRange = NSRange(location: 0, length: self.utf16.count)
+            let matches = regex.matches(in: self, options: [], range: nsRange)
 
             // 从后往前高亮,避免 range 偏移
             for match in matches.reversed() {
@@ -90,8 +90,8 @@ public extension SoloWrapper where Base == String {
     }
 
     // MARK: - 私有辅助方法
-    private func fallbackAttributedString(font: UIFont?, lineSpacing: CGFloat?) -> NSMutableAttributedString {
-        let attr = NSMutableAttributedString(string: base)
+    private func solo_fallbackAttributedString(font: UIFont?, lineSpacing: CGFloat?) -> NSMutableAttributedString {
+        let attr = NSMutableAttributedString(string: self)
         if let font {
             attr.addAttribute(.font, value: font, range: NSRange(location: 0, length: attr.length))
         }

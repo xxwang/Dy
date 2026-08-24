@@ -23,21 +23,21 @@ public extension String {
     ///   "abc" =～ "^\\d+$"   // false
     ///   ```
     static func =~ (lhs: String, rhs: String) -> Bool {
-        lhs.solo.isMatch(pattern: rhs)
+        lhs.solo_isMatch(pattern: rhs)
     }
 }
 
 // MARK: - 正则扩展
-public extension SoloWrapper where Base == String {
+public extension String {
     /// 将字符串中的正则元字符转义为字面量
     /// - Returns: 转义后的安全正则字符串
     ///
     /// - Example:
     ///   ```swift
-    ///   "hello ^$ there".solo.regexEscaped() // "hello \\^\\$ there"
+    ///   "hello ^$ there".solo_regexEscaped() // "hello \\^\\$ there"
     ///   ```
-    func regexEscaped() -> String {
-        NSRegularExpression.escapedPattern(for: base)
+    func solo_regexEscaped() -> String {
+        NSRegularExpression.escapedPattern(for: self)
     }
 
     /// 检查字符串是否`包含`匹配指定正则表达式的内容
@@ -50,16 +50,16 @@ public extension SoloWrapper where Base == String {
     ///
     /// - Example:
     ///   ```swift
-    ///   "123abc".solo.isMatch(pattern: "\\d+")                          // true
-    ///   "example@example.com".solo.isMatch(pattern: "^[\\w.-]+@")       // true
-    ///   "invalid-email".solo.isMatch(pattern: "invalid[", options: [])  // false(无效正则)
+    ///   "123abc".solo_isMatch(pattern: "\\d+")                          // true
+    ///   "example@example.com".solo_isMatch(pattern: "^[\\w.-]+@")       // true
+    ///   "invalid-email".solo_isMatch(pattern: "invalid[", options: [])  // false(无效正则)
     ///   ```
-    func isMatch(pattern: String, options: NSRegularExpression.Options = []) -> Bool {
+    func solo_isMatch(pattern: String, options: NSRegularExpression.Options = []) -> Bool {
         guard let regex = try? NSRegularExpression(pattern: pattern, options: options) else {
             return false // 无效正则视为不匹配(安全策略)
         }
-        let range = NSRange(location: 0, length: base.utf16.count)
-        return regex.firstMatch(in: base, options: [], range: range) != nil
+        let range = NSRange(location: 0, length: self.utf16.count)
+        return regex.firstMatch(in: self, options: [], range: range) != nil
     }
 
     /// 获取正则表达式的`所有捕获组内容`
@@ -70,18 +70,18 @@ public extension SoloWrapper where Base == String {
     ///
     /// - Example:
     ///   ```swift
-    ///   "abc123xyz".solo.captures(pattern: "(\\d+)")               // ["123"]
-    ///   "John Doe, age 30".solo.captures(pattern: "(\\w+) (\\w+), age (\\d+)") // ["John", "Doe", "30"]
+    ///   "abc123xyz".solo_captures(pattern: "(\\d+)")               // ["123"]
+    ///   "John Doe, age 30".solo_captures(pattern: "(\\w+) (\\w+), age (\\d+)") // ["John", "Doe", "30"]
     ///   ```
-    func captures(pattern: String, options: NSRegularExpression.Options = []) -> [String]? {
+    func solo_captures(pattern: String, options: NSRegularExpression.Options = []) -> [String]? {
         guard let regex = try? NSRegularExpression(pattern: pattern, options: options),
-              let match = regex.firstMatch(in: base, range: NSRange(location: 0, length: base.utf16.count))
+              let match = regex.firstMatch(in: self, range: NSRange(location: 0, length: self.utf16.count))
         else {
             return nil
         }
         // 跳过第 0 个(完整匹配),从 1 开始取捕获组
         return (1 ..< match.numberOfRanges).compactMap { index in
-            Range(match.range(at: index), in: base).map { String(base[$0]) }
+            Range(match.range(at: index), in: self).map { String(self[$0]) }
         }
     }
 
@@ -93,13 +93,13 @@ public extension SoloWrapper where Base == String {
     ///
     /// - Example:
     ///   ```swift
-    ///   "a1b2c3".solo.matchRanges(pattern: "\\d") // [NSRange(1,1), NSRange(3,1), NSRange(5,1)]
+    ///   "a1b2c3".solo_matchRanges(pattern: "\\d") // [NSRange(1,1), NSRange(3,1), NSRange(5,1)]
     ///   ```
-    func matchRanges(pattern: String, options: NSRegularExpression.Options = []) -> [NSRange] {
+    func solo_matchRanges(pattern: String, options: NSRegularExpression.Options = []) -> [NSRange] {
         guard let regex = try? NSRegularExpression(pattern: pattern, options: options) else {
             return []
         }
-        let range = NSRange(location: 0, length: base.utf16.count)
-        return regex.matches(in: base, options: [], range: range).map(\.range)
+        let range = NSRange(location: 0, length: self.utf16.count)
+        return regex.matches(in: self, options: [], range: range).map(\.range)
     }
 }

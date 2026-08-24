@@ -7,18 +7,18 @@ import CoreGraphics
 #endif
 
 // MARK: - String行处理
-public extension SoloWrapper where Base == String {
+public extension String {
     /// 将字符串按系统换行符(\n, \r\n 等)分割为行数组
     ///
     /// - Returns: 每行内容组成的数组,不包含换行符
     ///
     /// - Example:
     ///   ```swift
-    ///   "Hello\nWorld".solo.lines // ["Hello", "World"]
+    ///   "Hello\nWorld".solo_lines // ["Hello", "World"]
     ///   ```
-    var lines: [String] {
+    var solo_lines: [String] {
         var result: [String] = []
-        base.enumerateLines { line, _ in
+        self.enumerateLines { line, _ in
             result.append(line)
         }
         return result
@@ -36,16 +36,16 @@ public extension SoloWrapper where Base == String {
     /// - Example:
     ///   ```swift
     ///   let text = "这是一个测试字符串"
-    ///   let lines = text.solo.wrappedLines(maxWidth: 100, font: .systemFont(ofSize: 16))
+    ///   let lines = text.solo_wrappedLines(maxWidth: 100, font: .systemFont(ofSize: 16))
     ///   ```
-    func wrappedLines(maxWidth: CGFloat, font: UIFont) -> [String] {
-        guard !base.isEmpty, maxWidth > 0 else { return [] }
+    func solo_wrappedLines(maxWidth: CGFloat, font: UIFont) -> [String] {
+        guard !self.isEmpty, maxWidth > 0 else { return [] }
 
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineBreakMode = .byCharWrapping // 或 .byWordWrapping,根据需求调整
 
         let attributedString = NSAttributedString(
-            string: base,
+            string: self,
             attributes: [
                 .font: font,
                 .paragraphStyle: paragraphStyle,
@@ -61,8 +61,8 @@ public extension SoloWrapper where Base == String {
         return ctLines.compactMap { line in
             let range = CTLineGetStringRange(line)
             let nsRange = NSRange(location: range.location, length: range.length)
-            if nsRange.location + nsRange.length <= base.utf16.count {
-                return (base as NSString).substring(with: nsRange)
+            if nsRange.location + nsRange.length <= self.utf16.count {
+                return (self as NSString).substring(with: nsRange)
             }
             return nil
         }
@@ -80,27 +80,27 @@ public extension SoloWrapper where Base == String {
     ///
     /// - Example:
     ///   ```swift
-    ///   let lines = longText.solo.truncatedLines(
+    ///   let lines = longText.solo_truncatedLines(
     ///       maxWidth: 200,
     ///       font: .systemFont(ofSize: 14),
     ///       maxLines: 3,
     ///       suffix: "...查看全文"
     ///   )
     ///   ```
-    func truncatedLines(
+    func solo_truncatedLines(
         maxWidth: CGFloat,
         font: UIFont,
         maxLines: Int,
         suffix: String,
         suffixFont: UIFont? = nil
     ) -> [String] {
-        guard !base.isEmpty, maxLines > 0, maxWidth > 0 else { return [] }
+        guard !self.isEmpty, maxLines > 0, maxWidth > 0 else { return [] }
 
         let mainAttributes: [NSAttributedString.Key: Any] = [.font: font]
         let effectiveSuffixFont = suffixFont ?? font
         let suffixAttributes: [NSAttributedString.Key: Any] = [.font: effectiveSuffixFont]
 
-        let mainAttributedString = NSAttributedString(string: base, attributes: mainAttributes)
+        let mainAttributedString = NSAttributedString(string: self, attributes: mainAttributes)
         let typesetter = CTTypesetterCreateWithAttributedString(mainAttributedString)
         let totalLength = mainAttributedString.length
 
@@ -121,7 +121,7 @@ public extension SoloWrapper where Base == String {
             guard lineLength > 0 else { break }
 
             let lineRange = NSRange(location: currentIndex, length: lineLength)
-            let lineSubstring = (base as NSString).substring(with: lineRange)
+            let lineSubstring = (self as NSString).substring(with: lineRange)
 
             if isLastLine {
                 // 先尝试完整拼接

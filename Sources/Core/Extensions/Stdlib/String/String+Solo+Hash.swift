@@ -22,29 +22,29 @@ public extension String {
 }
 
 // MARK: - Base64 编解码扩展
-public extension SoloWrapper where Base == String {
+public extension String {
     /// 将字符串以 UTF-8 编码后进行 Base64 编码
     ///
     /// - Returns: Base64 编码字符串,或 `nil`（理论上 UTF-8 不会失败）
-    var base64Encoded: String? {
-        self.toData()?.base64EncodedString()
+    var solo_base64Encoded: String? {
+        self.solo_data()?.base64EncodedString()
     }
 
     /// 尝试将字符串作为 Base64 进行解码（自动处理缺失的填充符 `=`）
     ///
     /// - Returns: 解码后的 UTF-8 字符串,或 `nil`
-    var base64Decoded: String? {
+    var solo_base64Decoded: String? {
         // 第一次尝试：标准解码
-        if let data = Data(base64Encoded: base, options: .ignoreUnknownCharacters),
+        if let data = Data(base64Encoded: self, options: .ignoreUnknownCharacters),
            let str = String(data: data, encoding: .utf8)
         {
             return str
         }
 
         // 自动补全填充
-        let remainder = base.count % 4
+        let remainder = self.count % 4
         if remainder != 0 {
-            let padded = base + String(repeating: "=", count: 4 - remainder)
+            let padded = self + String(repeating: "=", count: 4 - remainder)
             if let data = Data(base64Encoded: padded, options: .ignoreUnknownCharacters),
                let str = String(data: data, encoding: .utf8)
             {

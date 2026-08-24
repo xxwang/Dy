@@ -1,59 +1,57 @@
 import CoreGraphics
 import UIKit
 
-extension CGSize: SoloExtension {}
-
 // MARK: - 属性
-public extension SoloWrapper where Base == CGSize {
+public extension CGSize {
     /// 宽高比(width / height)
-    var aspectRatio: CGFloat {
-        guard base.height != 0 else { return 0 }
-        return base.width / base.height
+    var solo_aspectRatio: CGFloat {
+        guard self.height != 0 else { return 0 }
+        return self.width / self.height
     }
 
     /// 较长的一边(max(width, height))
-    var longestSide: CGFloat {
-        max(base.width, base.height)
+    var solo_longestSide: CGFloat {
+        max(self.width, self.height)
     }
 
     /// 较短的一边(min(width, height))
-    var shortestSide: CGFloat {
-        min(base.width, base.height)
+    var solo_shortestSide: CGFloat {
+        min(self.width, self.height)
     }
 }
 
 // MARK: - 方法
-public extension SoloWrapper where Base == CGSize {
+public extension CGSize {
     /// 对宽高进行四舍五入
-    func rounded() -> CGSize {
-        CGSize(width: Darwin.round(base.width), height: Darwin.round(base.height))
+    func solo_rounded() -> CGSize {
+        CGSize(width: Darwin.round(self.width), height: Darwin.round(self.height))
     }
 
     /// 将尺寸限制在最大尺寸内
-    func clamped(to maxSize: CGSize) -> CGSize {
+    func solo_clamped(to maxSize: CGSize) -> CGSize {
         CGSize(
-            width: min(base.width, maxSize.width),
-            height: min(base.height, maxSize.height)
+            width: min(self.width, maxSize.width),
+            height: min(self.height, maxSize.height)
         )
     }
 }
 
 // MARK: - 缩放
-public extension SoloWrapper where Base == CGSize {
+public extension CGSize {
     /// 按宽高比缩放,使内容`完全适配`目标区域(不超出)
-    func aspectFit(to targetSize: CGSize) -> CGSize {
-        guard base.width > 0, base.height > 0, targetSize.width > 0, targetSize.height > 0 else {
+    func solo_aspectFit(to targetSize: CGSize) -> CGSize {
+        guard self.width > 0, self.height > 0, targetSize.width > 0, targetSize.height > 0 else {
             return .zero
         }
-        let scale = min(targetSize.width / base.width, targetSize.height / base.height)
-        return CGSize(width: base.width * scale, height: base.height * scale)
+        let scale = min(targetSize.width / self.width, targetSize.height / self.height)
+        return CGSize(width: self.width * scale, height: self.height * scale)
     }
 
     /// 按宽高比缩放,使内容`完全覆盖`目标区域(可能超出)
-    func aspectFill(to targetSize: CGSize) -> CGSize {
-        guard base.width > 0, base.height > 0 else { return .zero }
-        let scale = max(targetSize.width / base.width, targetSize.height / base.height)
-        return CGSize(width: base.width * scale, height: base.height * scale)
+    func solo_aspectFill(to targetSize: CGSize) -> CGSize {
+        guard self.width > 0, self.height > 0 else { return .zero }
+        let scale = max(targetSize.width / self.width, targetSize.height / self.height)
+        return CGSize(width: self.width * scale, height: self.height * scale)
     }
 }
 

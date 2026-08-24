@@ -4,11 +4,11 @@ import CoreLocation
 private extension CLGeocoder {
     /// 正在进行的地理编码实例集合,用于在回调结束前保持实例存活(避免提前释放)
     /// 同时避免复用同一实例并发请求(Apple 明确禁止单实例并发地理编码)
-    static var activeGeocoders: Set<CLGeocoder> = []
+    static var solo_activeGeocoders: Set<CLGeocoder> = []
 }
 
 // MARK: - 方法
-public extension SoloWrapper where Base == CLGeocoder {
+public extension CLGeocoder {
     /// 反向地理编码：将经纬度转换为地址信息
     ///
     /// - Parameters:
@@ -22,20 +22,20 @@ public extension SoloWrapper where Base == CLGeocoder {
     /// - Example:
     ///   ```swift
     ///   let loc = CLLocation(latitude: 39.9042, longitude: 116.4074)
-    ///   CLGeocoder.solo.reverseGeocodeLocation(loc) { marks, error in
+    ///   CLGeocoder.solo_reverseGeocodeLocation(loc) { marks, error in
     ///       if let name = marks?.first?.name {
     ///           print("地点: \(name)")
     ///       }
     ///   }
     ///   ```
-    static func reverseGeocodeLocation(
+    static func solo_reverseGeocodeLocation(
         _ location: CLLocation,
         completionHandler: @escaping CLGeocodeCompletionHandler
     ) {
         let geocoder = CLGeocoder()
-        Base.activeGeocoders.insert(geocoder)
+        Self.solo_activeGeocoders.insert(geocoder)
         geocoder.reverseGeocodeLocation(location) { placemarks, error in
-            defer { Base.activeGeocoders.remove(geocoder) }
+            defer { Self.solo_activeGeocoders.remove(geocoder) }
             completionHandler(placemarks, error)
         }
     }
@@ -48,20 +48,20 @@ public extension SoloWrapper where Base == CLGeocoder {
     ///
     /// - Example:
     ///   ```swift
-    ///   CLGeocoder.solo.geocodeAddressString("北京市") { marks, error in
+    ///   CLGeocoder.solo_geocodeAddressString("北京市") { marks, error in
     ///       if let coord = marks?.first?.location?.coordinate {
     ///           print("坐标: \(coord.latitude), \(coord.longitude)")
     ///       }
     ///   }
     ///   ```
-    static func geocodeAddressString(
+    static func solo_geocodeAddressString(
         _ addressString: String,
         completionHandler: @escaping CLGeocodeCompletionHandler
     ) {
         let geocoder = CLGeocoder()
-        Base.activeGeocoders.insert(geocoder)
+        Self.solo_activeGeocoders.insert(geocoder)
         geocoder.geocodeAddressString(addressString) { placemarks, error in
-            defer { Base.activeGeocoders.remove(geocoder) }
+            defer { Self.solo_activeGeocoders.remove(geocoder) }
             completionHandler(placemarks, error)
         }
     }

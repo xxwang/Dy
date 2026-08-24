@@ -1,28 +1,26 @@
 import Foundation
 
-extension Decimal: SoloExtension {}
-
 // MARK: - 数值判断
-public extension SoloWrapper where Base == Decimal {
+public extension Decimal {
     /// 判断当前值是否大于零
     ///
     /// - Returns: 如果值 > 0,返回 `true`;否则返回 `false`
-    var isPositive: Bool {
-        base > 0
+    var solo_isPositive: Bool {
+        self > 0
     }
 
     /// 判断当前值是否小于零
     ///
     /// - Returns: 如果值 < 0,返回 `true`;否则返回 `false`
-    var isNegative: Bool {
-        base < 0
+    var solo_isNegative: Bool {
+        self < 0
     }
 
     /// 判断当前值是否等于零
     ///
     /// - Returns: 如果值 == 0,返回 `true`;否则返回 `false`
-    var isZero: Bool {
-        base == 0
+    var solo_isZero: Bool {
+        self == 0
     }
 
     /// 检查当前数值是否为整数(即小数部分为零)
@@ -31,20 +29,20 @@ public extension SoloWrapper where Base == Decimal {
     ///
     /// - Example:
     ///   ```swift
-    ///   Decimal(5).solo.isInteger        // true
-    ///   Decimal("5.00")!.solo.isInteger  // true
-    ///   Decimal("5.01")!.solo.isInteger  // false
+    ///   Decimal(5).solo_isInteger        // true
+    ///   Decimal("5.00")!.solo_isInteger  // true
+    ///   Decimal("5.01")!.solo_isInteger  // false
     ///   ```
-    var isInteger: Bool {
-        var selfCopy = base
+    var solo_isInteger: Bool {
+        var selfCopy = self
         var rounded = Decimal()
         NSDecimalRound(&rounded, &selfCopy, 0, .plain)
-        return base == rounded
+        return self == rounded
     }
 }
 
 // MARK: - 安全初始化与转换
-public extension SoloWrapper where Base == Decimal {
+public extension Decimal {
     /// 从可选字符串安全创建 `Decimal`,失败时返回默认值
     ///
     /// - Parameters:
@@ -54,10 +52,10 @@ public extension SoloWrapper where Base == Decimal {
     ///
     /// - Example:
     ///   ```swift
-    ///   let valid = Decimal.solo.from("123.45")          // 123.45
-    ///   let invalid = Decimal.solo.from("abc", default: 0) // 0
+    ///   let valid = Decimal.solo_from("123.45")          // 123.45
+    ///   let invalid = Decimal.solo_from("abc", default: 0) // 0
     ///   ```
-    static func from(_ string: String?, default defaultValue: Decimal = 0) -> Decimal {
+    static func solo_from(_ string: String?, default defaultValue: Decimal = 0) -> Decimal {
         guard let str = string,
               let decimal = Decimal(string: str)
         else {
@@ -74,20 +72,20 @@ public extension SoloWrapper where Base == Decimal {
     ///
     /// - Example:
     ///   ```swift
-    ///   Decimal(42).solo.intValue         // Optional(42)
-    ///   Decimal("42.0")!.solo.intValue    // Optional(42)
-    ///   Decimal("42.1")!.solo.intValue    // nil
+    ///   Decimal(42).solo_intValue         // Optional(42)
+    ///   Decimal("42.0")!.solo_intValue    // Optional(42)
+    ///   Decimal("42.1")!.solo_intValue    // nil
     ///   ```
-    var intValue: Int? {
+    var solo_intValue: Int? {
         // 先检查是否为整数
-        guard self.isInteger else { return nil }
+        guard self.solo_isInteger else { return nil }
 
         // 转为 NSDecimalNumber 再转 Int(注意：可能溢出)
-        let nsdn = NSDecimalNumber(decimal: base)
+        let nsdn = NSDecimalNumber(decimal: self)
         let intVal = nsdn.intValue
 
         // 验证是否可逆(防止溢出)
-        if NSDecimalNumber(value: intVal).decimalValue == base {
+        if NSDecimalNumber(value: intVal).decimalValue == self {
             return Int(intVal)
         }
         return nil
@@ -95,7 +93,7 @@ public extension SoloWrapper where Base == Decimal {
 }
 
 // MARK: - 格式化
-public extension SoloWrapper where Base == Decimal {
+public extension Decimal {
     /// 将当前值格式化为本地化货币字符串
     ///
     /// - Parameters:
@@ -106,17 +104,17 @@ public extension SoloWrapper where Base == Decimal {
     /// - Example:
     ///   ```swift
     ///   let amount = Decimal(1234.56)
-    ///   print(amount.solo.asCurrency()) // "$1,234.56" (en_US)
-    ///   print(amount.solo.asCurrency(currencyCode: "JPY")) // "¥1,235"
+    ///   print(amount.solo_asCurrency()) // "$1,234.56" (en_US)
+    ///   print(amount.solo_asCurrency(currencyCode: "JPY")) // "¥1,235"
     ///   ```
-    func asCurrency(locale: Locale = .current, currencyCode: String? = nil) -> String {
+    func solo_asCurrency(locale: Locale = .current, currencyCode: String? = nil) -> String {
         let formatter = NumberFormatter()
         formatter.numberStyle = .currency
         formatter.locale = locale
         if let code = currencyCode {
             formatter.currencyCode = code
         }
-        return formatter.string(from: NSDecimalNumber(decimal: base)) ?? "\(base)"
+        return formatter.string(from: NSDecimalNumber(decimal: self)) ?? "\(self)"
     }
 
     /// 将当前值截断(非四舍五入)到指定小数位数
@@ -128,20 +126,20 @@ public extension SoloWrapper where Base == Decimal {
     ///
     /// - Example:
     ///   ```swift
-    ///   Decimal("12.3456")!.solo.truncated(to: 2) // 12.34
-    ///   Decimal("-12.999")!.solo.truncated(to: 1) // -12.9
+    ///   Decimal("12.3456")!.solo_truncated(to: 2) // 12.34
+    ///   Decimal("-12.999")!.solo_truncated(to: 1) // -12.9
     ///   ```
-    func truncated(to scale: Int) -> Decimal {
+    func solo_truncated(to scale: Int) -> Decimal {
         precondition(scale >= 0, "scale must be non-negative")
         var result = Decimal()
-        var selfCopy = base
+        var selfCopy = self
         NSDecimalRound(&result, &selfCopy, scale, .plain)
         return result
     }
 }
 
 // MARK: - 数学运算
-public extension SoloWrapper where Base == Decimal {
+public extension Decimal {
     /// 计算当前值的整数次幂(仅支持非负指数)
     ///
     /// - Parameter exponent: 幂指数(必须 ≥ 0)
@@ -151,20 +149,20 @@ public extension SoloWrapper where Base == Decimal {
     ///
     /// - Example:
     ///   ```swift
-    ///   Decimal(2).solo.power(10) // 1024
-    ///   Decimal("1.5")!.solo.power(3) // 3.375
+    ///   Decimal(2).solo_power(10) // 1024
+    ///   Decimal("1.5")!.solo_power(3) // 3.375
     ///   ```
-    func power(_ exponent: Int) -> Decimal? {
+    func solo_power(_ exponent: Int) -> Decimal? {
         guard exponent >= 0 else { return nil }
         if exponent == 0 {
             return 1
         }
         if exponent == 1 {
-            return base
+            return self
         }
 
         var result = Decimal(1)
-        var base = base
+        var base = self
         var exp = exponent
 
         while exp > 0 {
@@ -184,11 +182,11 @@ public extension SoloWrapper where Base == Decimal {
     ///
     /// - Example:
     ///   ```swift
-    ///   Decimal(25).solo.percentageRate(of: 200) // 12.5
+    ///   Decimal(25).solo_percentageRate(of: 200) // 12.5
     ///   ```
-    func percentageRate(of total: Decimal) -> Decimal? {
+    func solo_percentageRate(of total: Decimal) -> Decimal? {
         guard !total.isZero else { return nil }
-        return (base / total) * 100
+        return (self / total) * 100
     }
 
     /// 计算 `percentage`% 对应的数值(例如 15 表示 15%)
@@ -198,19 +196,19 @@ public extension SoloWrapper where Base == Decimal {
     ///
     /// - Example:
     ///   ```swift
-    ///   Decimal(100).solo.percentage(15) // 15.0
+    ///   Decimal(100).solo_percentage(15) // 15.0
     ///   ```
-    func percentage(_ percentage: Decimal) -> Decimal {
-        return (percentage * base) / 100
+    func solo_percentage(_ percentage: Decimal) -> Decimal {
+        return (percentage * self) / 100
     }
 
     /// 安全除法：除数为零时返回 `nil`
     ///
     /// - Parameter divisor: 除数
     /// - Returns: 商,若 `divisor == 0` 则返回 `nil`
-    func divided(by divisor: Decimal) -> Decimal? {
+    func solo_divided(by divisor: Decimal) -> Decimal? {
         guard !divisor.isZero else { return nil }
-        return base / divisor
+        return self / divisor
     }
 
     /// 计算余数(模运算),符合数学定义：`dividend = divisor × quotient + remainder`
@@ -220,24 +218,24 @@ public extension SoloWrapper where Base == Decimal {
     ///
     /// - Example:
     ///   ```swift
-    ///   Decimal(10.5).solo.remainder(dividingBy: 3) // 1.5
-    ///   Decimal(-10).solo.remainder(dividingBy: 3)  // -1
-    ///   Decimal("0.3")!.solo.remainder(dividingBy: Decimal("0.1")!) // 0.0
+    ///   Decimal(10.5).solo_remainder(dividingBy: 3) // 1.5
+    ///   Decimal(-10).solo_remainder(dividingBy: 3)  // -1
+    ///   Decimal("0.3")!.solo_remainder(dividingBy: Decimal("0.1")!) // 0.0
     ///   ```
-    func remainder(dividingBy divisor: Decimal) -> Decimal? {
+    func solo_remainder(dividingBy divisor: Decimal) -> Decimal? {
         guard !divisor.isZero else { return nil }
 
-        let division = base / divisor
+        let division = self / divisor
         var divisionCopy = division
         var quotient = Decimal()
         NSDecimalRound(&quotient, &divisionCopy, 0, .plain) // 向零取整
 
-        return base - divisor * quotient
+        return self - divisor * quotient
     }
 }
 
 // MARK: - 边界控制
-public extension SoloWrapper where Base == Decimal {
+public extension Decimal {
     /// 将值限制在指定闭区间内
     ///
     /// - Parameter limits: 有效范围(如 `0...100`)
@@ -245,16 +243,16 @@ public extension SoloWrapper where Base == Decimal {
     ///
     /// - Example:
     ///   ```swift
-    ///   Decimal(-5).solo.clamped(to: 0...100) // 0
-    ///   Decimal(150).solo.clamped(to: 0...100) // 100
+    ///   Decimal(-5).solo_clamped(to: 0...100) // 0
+    ///   Decimal(150).solo_clamped(to: 0...100) // 100
     ///   ```
-    func clamped(to limits: ClosedRange<Decimal>) -> Decimal {
-        if base < limits.lowerBound {
+    func solo_clamped(to limits: ClosedRange<Decimal>) -> Decimal {
+        if self < limits.lowerBound {
             return limits.lowerBound
         }
-        if base > limits.upperBound {
+        if self > limits.upperBound {
             return limits.upperBound
         }
-        return base
+        return self
     }
 }

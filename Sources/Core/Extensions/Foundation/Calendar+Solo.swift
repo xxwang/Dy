@@ -1,20 +1,18 @@
 import Foundation
 
-extension Calendar: SoloExtension {}
-
 // MARK: - 月份与年份操作
-public extension SoloWrapper where Base == Calendar {
+public extension Calendar {
     /// 获取指定日期所在月份的总天数
     /// - Parameter date: 目标日期,默认为当前时间
     /// - Returns: 该月的天数(如 28, 29, 30, 31);若无法计算则返回 0
     ///
     /// - Example:
     ///   ```swift
-    ///   let days = Calendar.current.solo.daysInMonth(for: someDate)
+    ///   let days = Calendar.current.solo_daysInMonth(for: someDate)
     ///   print("当月有 \(days) 天")
     ///   ```
-    func daysInMonth(for date: Date = Date()) -> Int {
-        guard let range = base.range(of: .day, in: .month, for: date) else {
+    func solo_daysInMonth(for date: Date = Date()) -> Int {
+        guard let range = self.range(of: .day, in: .month, for: date) else {
             return 0
         }
         return range.count
@@ -28,13 +26,13 @@ public extension SoloWrapper where Base == Calendar {
     ///
     /// - Example:
     ///   ```swift
-    ///   if let start = Calendar.current.solo.startOfMonth(year: 2024, month: 12) {
+    ///   if let start = Calendar.current.solo_startOfMonth(year: 2024, month: 12) {
     ///       print("2024年12月开始: \(start)")
     ///   }
     ///   ```
-    func startOfMonth(year: Int, month: Int) -> Date? {
-        let comps = DateComponents(calendar: base, year: year, month: month, day: 1)
-        return base.date(from: comps)
+    func solo_startOfMonth(year: Int, month: Int) -> Date? {
+        let comps = DateComponents(calendar: self, year: year, month: month, day: 1)
+        return self.date(from: comps)
     }
 
     /// 获取指定年份和月份的最后一天(23:59:59)
@@ -45,13 +43,13 @@ public extension SoloWrapper where Base == Calendar {
     ///
     /// - Example:
     ///   ```swift
-    ///   if let end = Calendar.current.solo.endOfMonth(year: 2024, month: 2) {
+    ///   if let end = Calendar.current.solo_endOfMonth(year: 2024, month: 2) {
     ///       print("2024年2月结束: \(end)")
     ///   }
     ///   ```
-    func endOfMonth(year: Int, month: Int) -> Date? {
-        guard let start = self.startOfMonth(year: year, month: month),
-              let next = base.date(byAdding: .month, value: 1, to: start)
+    func solo_endOfMonth(year: Int, month: Int) -> Date? {
+        guard let start = self.solo_startOfMonth(year: year, month: month),
+              let next = self.date(byAdding: .month, value: 1, to: start)
         else {
             return nil
         }
@@ -64,17 +62,17 @@ public extension SoloWrapper where Base == Calendar {
     ///
     /// - Example:
     ///   ```swift
-    ///   let isLeap = Calendar.current.solo.isLeapYear(for: Date())
+    ///   let isLeap = Calendar.current.solo_isLeapYear(for: Date())
     ///   print("今年是闰年吗？\(isLeap)")
     ///   ```
-    func isLeapYear(for date: Date = Date()) -> Bool {
-        let daysInYear = base.range(of: .day, in: .year, for: date)?.count ?? 0
+    func solo_isLeapYear(for date: Date = Date()) -> Bool {
+        let daysInYear = self.range(of: .day, in: .year, for: date)?.count ?? 0
         return daysInYear == 366
     }
 }
 
 // MARK: - 周相关操作
-public extension SoloWrapper where Base == Calendar {
+public extension Calendar {
     /// 获取指定日期所在周的起始日(根据日历的 firstWeekday 设置,如周日或周一)
     /// - Parameter date: 目标日期,默认为当前时间
     /// - Returns: 本周第一天的 `Date`,失败时返回 `nil`
@@ -83,13 +81,13 @@ public extension SoloWrapper where Base == Calendar {
     ///
     /// - Example:
     ///   ```swift
-    ///   if let weekStart = Calendar.current.solo.startOfWeek() {
+    ///   if let weekStart = Calendar.current.solo_startOfWeek() {
     ///       print("本周从: \(weekStart)")
     ///   }
     ///   ```
-    func startOfWeek(for date: Date = Date()) -> Date? {
-        let components = base.dateComponents([.yearForWeekOfYear, .weekOfYear], from: date)
-        return base.date(from: components)
+    func solo_startOfWeek(for date: Date = Date()) -> Date? {
+        let components = self.dateComponents([.yearForWeekOfYear, .weekOfYear], from: date)
+        return self.date(from: components)
     }
 
     /// 强制获取指定日期所在周的周一(忽略系统日历设置)
@@ -98,12 +96,12 @@ public extension SoloWrapper where Base == Calendar {
     ///
     /// - Example:
     ///   ```swift
-    ///   if let monday = Calendar.current.solo.mondayOfWeek() {
+    ///   if let monday = Calendar.current.solo_mondayOfWeek() {
     ///       print("本周一是: \(monday)")
     ///   }
     ///   ```
-    func mondayOfWeek(for date: Date = Date()) -> Date? {
-        var cal = base
+    func solo_mondayOfWeek(for date: Date = Date()) -> Date? {
+        var cal = self
         cal.firstWeekday = 2 // Monday
         let components = cal.dateComponents([.yearForWeekOfYear, .weekOfYear], from: date)
         return cal.date(from: components)
@@ -115,19 +113,19 @@ public extension SoloWrapper where Base == Calendar {
     ///
     /// - Example:
     ///   ```swift
-    ///   let weekDates = Calendar.current.solo.datesInWeek()
+    ///   let weekDates = Calendar.current.solo_datesInWeek()
     ///   weekDates.forEach { print($0) }
     ///   ```
-    func datesInWeek(for date: Date = Date()) -> [Date] {
-        guard let start = self.startOfWeek(for: date) else { return [] }
+    func solo_datesInWeek(for date: Date = Date()) -> [Date] {
+        guard let start = self.solo_startOfWeek(for: date) else { return [] }
         return (0 ..< 7).compactMap { offset in
-            base.date(byAdding: .day, value: offset, to: start)
+            self.date(byAdding: .day, value: offset, to: start)
         }
     }
 }
 
 // MARK: - 日期比较与判断
-public extension SoloWrapper where Base == Calendar {
+public extension Calendar {
     /// 判断两个日期是否是同一天(忽略时间部分)
     /// - Parameters:
     ///   - date1: 第一个日期
@@ -136,68 +134,68 @@ public extension SoloWrapper where Base == Calendar {
     ///
     /// - Example:
     ///   ```swift
-    ///   let same = Calendar.current.solo.isSameDay(date1, date2)
+    ///   let same = Calendar.current.solo_isSameDay(date1, date2)
     ///   ```
-    func isSameDay(_ date1: Date, _ date2: Date) -> Bool {
-        return base.isDate(date1, equalTo: date2, toGranularity: .day)
+    func solo_isSameDay(_ date1: Date, _ date2: Date) -> Bool {
+        return self.isDate(date1, equalTo: date2, toGranularity: .day)
     }
 
     /// 判断指定日期是否是今天
     /// - Parameter date: 要判断的日期
     /// - Returns: `true` 表示是今天
-    func isToday(_ date: Date) -> Bool {
-        return base.isDateInToday(date)
+    func solo_isToday(_ date: Date) -> Bool {
+        return self.isDateInToday(date)
     }
 
     /// 判断指定日期是否是昨天
     /// - Parameter date: 要判断的日期
     /// - Returns: `true` 表示是昨天
-    func isYesterday(_ date: Date) -> Bool {
-        return base.isDateInYesterday(date)
+    func solo_isYesterday(_ date: Date) -> Bool {
+        return self.isDateInYesterday(date)
     }
 
     /// 判断指定日期是否是明天
     /// - Parameter date: 要判断的日期
     /// - Returns: `true` 表示是明天
-    func isTomorrow(_ date: Date) -> Bool {
-        return base.isDateInTomorrow(date)
+    func solo_isTomorrow(_ date: Date) -> Bool {
+        return self.isDateInTomorrow(date)
     }
 
     /// 判断指定日期是否在本周内
     /// - Parameter date: 要判断的日期
     /// - Returns: `true` 表示在本周
-    func isThisWeek(_ date: Date) -> Bool {
-        return base.isDate(date, equalTo: Date(), toGranularity: .weekOfYear)
+    func solo_isThisWeek(_ date: Date) -> Bool {
+        return self.isDate(date, equalTo: Date(), toGranularity: .weekOfYear)
     }
 
     /// 判断指定日期是否在本月内
     /// - Parameter date: 要判断的日期
     /// - Returns: `true` 表示在本月
-    func isThisMonth(_ date: Date) -> Bool {
-        return base.isDate(date, equalTo: Date(), toGranularity: .month)
+    func solo_isThisMonth(_ date: Date) -> Bool {
+        return self.isDate(date, equalTo: Date(), toGranularity: .month)
     }
 
     /// 判断指定日期是否在今年内
     /// - Parameter date: 要判断的日期
     /// - Returns: `true` 表示在今年
-    func isThisYear(_ date: Date) -> Bool {
-        return base.isDate(date, equalTo: Date(), toGranularity: .year)
+    func solo_isThisYear(_ date: Date) -> Bool {
+        return self.isDate(date, equalTo: Date(), toGranularity: .year)
     }
 }
 
 // MARK: - 序数与范围
-public extension SoloWrapper where Base == Calendar {
+public extension Calendar {
     /// 获取指定日期在当月中的第几周
     /// - Parameter date: 目标日期,默认为当前时间
     /// - Returns: 周序号(1 表示第一周)
     ///
     /// - Example:
     ///   ```swift
-    ///   let week = Calendar.current.solo.weekOfMonth()
+    ///   let week = Calendar.current.solo_weekOfMonth()
     ///   print("今天是本月第 \(week) 周")
     ///   ```
-    func weekOfMonth(for date: Date = Date()) -> Int {
-        return base.component(.weekOfMonth, from: date)
+    func solo_weekOfMonth(for date: Date = Date()) -> Int {
+        return self.component(.weekOfMonth, from: date)
     }
 
     /// 获取某月第 N 周的起止日期(时间范围)
@@ -209,17 +207,17 @@ public extension SoloWrapper where Base == Calendar {
     ///
     /// - Example:
     ///   ```swift
-    ///   if let range = Calendar.current.solo.rangeOfWeek(2, inMonth: 2024, 12) {
+    ///   if let range = Calendar.current.solo_rangeOfWeek(2, inMonth: 2024, 12) {
     ///       print("第2周: \(range.start) ～ \(range.end)")
     ///   }
     ///   ```
-    func rangeOfWeek(_ week: Int, inMonth year: Int, _ month: Int) -> (start: Date, end: Date)? {
-        guard let firstDay = DateComponents(calendar: base, year: year, month: month, day: 1).date,
-              let weekStart = base.date(byAdding: .weekOfMonth, value: week - 1, to: firstDay)
+    func solo_rangeOfWeek(_ week: Int, inMonth year: Int, _ month: Int) -> (start: Date, end: Date)? {
+        guard let firstDay = DateComponents(calendar: self, year: year, month: month, day: 1).date,
+              let weekStart = self.date(byAdding: .weekOfMonth, value: week - 1, to: firstDay)
         else {
             return nil
         }
-        guard let weekEndBase = base.date(byAdding: .day, value: 6, to: weekStart) else {
+        guard let weekEndBase = self.date(byAdding: .day, value: 6, to: weekStart) else {
             return (weekStart, weekStart)
         }
         let weekEnd = weekEndBase.addingTimeInterval(86399) // 23:59:59
@@ -228,7 +226,7 @@ public extension SoloWrapper where Base == Calendar {
 }
 
 // MARK: - 迭代与生成
-public extension SoloWrapper where Base == Calendar {
+public extension Calendar {
     /// 生成从指定日期开始的连续 N 天(包含起始日)
     /// - Parameters:
     ///   - date: 起始日期,默认为当前时间
@@ -237,12 +235,12 @@ public extension SoloWrapper where Base == Calendar {
     ///
     /// - Example:
     ///   ```swift
-    ///   let next7Days = Calendar.current.solo.nextDays(count: 7)
+    ///   let next7Days = Calendar.current.solo_nextDays(count: 7)
     ///   ```
-    func nextDays(from date: Date = Date(), count: Int) -> [Date] {
+    func solo_nextDays(from date: Date = Date(), count: Int) -> [Date] {
         guard count > 0 else { return [] }
         return (0 ..< count).compactMap { offset in
-            base.date(byAdding: .day, value: offset, to: date)
+            self.date(byAdding: .day, value: offset, to: date)
         }
     }
 
@@ -254,12 +252,12 @@ public extension SoloWrapper where Base == Calendar {
     ///
     /// - Example:
     ///   ```swift
-    ///   let last7Days = Calendar.current.solo.previousDays(count: 7)
+    ///   let last7Days = Calendar.current.solo_previousDays(count: 7)
     ///   ```
-    func previousDays(from date: Date = Date(), count: Int) -> [Date] {
+    func solo_previousDays(from date: Date = Date(), count: Int) -> [Date] {
         guard count > 0 else { return [] }
         return (0 ..< count).compactMap { offset in
-            base.date(byAdding: .day, value: -offset, to: date)
+            self.date(byAdding: .day, value: -offset, to: date)
         }.reversed()
     }
 
@@ -269,17 +267,17 @@ public extension SoloWrapper where Base == Calendar {
     ///
     /// - Example:
     ///   ```swift
-    ///   let months = Calendar.current.solo.next12Months()
+    ///   let months = Calendar.current.solo_next12Months()
     ///   months.forEach { print("\($0.year)-\($0.month)") }
     ///   ```
-    func next12Months(from date: Date = Date()) -> [(year: Int, month: Int)] {
+    func solo_next12Months(from date: Date = Date()) -> [(year: Int, month: Int)] {
         return (0 ..< 12).compactMap { offset in
-            guard let future = base.date(byAdding: .month, value: offset, to: date),
-                  let comp = base.dateComponents([.year, .month], from: future).date
+            guard let future = self.date(byAdding: .month, value: offset, to: date),
+                  let comp = self.dateComponents([.year, .month], from: future).date
             else {
                 return nil
             }
-            let c = base.dateComponents([.year, .month], from: comp)
+            let c = self.dateComponents([.year, .month], from: comp)
             guard let year = c.year, let month = c.month else {
                 return nil
             }
@@ -289,7 +287,7 @@ public extension SoloWrapper where Base == Calendar {
 }
 
 // MARK: - 高级计算
-public extension SoloWrapper where Base == Calendar {
+public extension Calendar {
     /// 计算从出生日期到参考日期的年龄(整年)
     /// - Parameters:
     ///   - birthDate: 出生日期
@@ -298,10 +296,10 @@ public extension SoloWrapper where Base == Calendar {
     ///
     /// - Example:
     ///   ```swift
-    ///   let age = Calendar.current.solo.age(from: birthday)
+    ///   let age = Calendar.current.solo_age(from: birthday)
     ///   ```
-    func age(from birthDate: Date, at referenceDate: Date = Date()) -> Int {
-        return base.dateComponents([.year], from: birthDate, to: referenceDate).year ?? 0
+    func solo_age(from birthDate: Date, at referenceDate: Date = Date()) -> Int {
+        return self.dateComponents([.year], from: birthDate, to: referenceDate).year ?? 0
     }
 
     /// 获取指定日期所在季度的起止日期
@@ -310,18 +308,18 @@ public extension SoloWrapper where Base == Calendar {
     ///
     /// - Example:
     ///   ```swift
-    ///   if let q = Calendar.current.solo.quarterRange() {
+    ///   if let q = Calendar.current.solo_quarterRange() {
     ///       print("本季度: \(q.start) ～ \(q.end)")
     ///   }
     ///   ```
-    func quarterRange(for date: Date = Date()) -> (start: Date, end: Date)? {
-        let month = base.component(.month, from: date)
+    func solo_quarterRange(for date: Date = Date()) -> (start: Date, end: Date)? {
+        let month = self.component(.month, from: date)
         let quarter = ((month - 1) / 3) + 1
         let startMonth = (quarter - 1) * 3 + 1
-        let year = base.component(.year, from: date)
+        let year = self.component(.year, from: date)
 
-        guard let start = DateComponents(calendar: base, year: year, month: startMonth, day: 1).date,
-              let nextQuarter = base.date(byAdding: .month, value: 3, to: start)
+        guard let start = DateComponents(calendar: self, year: year, month: startMonth, day: 1).date,
+              let nextQuarter = self.date(byAdding: .month, value: 3, to: start)
         else {
             return nil
         }
@@ -331,7 +329,7 @@ public extension SoloWrapper where Base == Calendar {
 }
 
 // MARK: - 工具方法
-public extension SoloWrapper where Base == Calendar {
+public extension Calendar {
     /// 安全获取多个日期组件(语法糖,减少样板代码)
     /// - Parameters:
     ///   - components: 要获取的组件集合
@@ -340,26 +338,26 @@ public extension SoloWrapper where Base == Calendar {
     ///
     /// - Example:
     ///   ```swift
-    ///   let comps = Calendar.current.solo.components([.year, .month], from: Date())
+    ///   let comps = Calendar.current.solo_components([.year, .month], from: Date())
     ///   ```
-    func components(_ components: Set<Calendar.Component>, from date: Date) -> DateComponents {
-        return base.dateComponents(components, from: date)
+    func solo_components(_ components: Set<Calendar.Component>, from date: Date) -> DateComponents {
+        return self.dateComponents(components, from: date)
     }
 
     /// 获取指定日期是星期几(1=星期日,2=星期一,..., 7=星期六)
-    func weekday(for date: Date = Date()) -> Int {
-        return base.component(.weekday, from: date)
+    func solo_weekday(for date: Date = Date()) -> Int {
+        return self.component(.weekday, from: date)
     }
 
     /// 获取指定日期所在月的第一天(00:00:00)
-    func startOfMonth(for date: Date = Date()) -> Date? {
-        return base.date(from: base.dateComponents([.year, .month], from: date))
+    func solo_startOfMonth(for date: Date = Date()) -> Date? {
+        return self.date(from: self.dateComponents([.year, .month], from: date))
     }
 
     /// 获取指定日期所在月的最后一天(23:59:59)
-    func endOfMonth(for date: Date = Date()) -> Date? {
-        guard let startOfMonth = self.startOfMonth(for: date),
-              let startOfNextMonth = base.date(byAdding: .month, value: 1, to: startOfMonth)
+    func solo_endOfMonth(for date: Date = Date()) -> Date? {
+        guard let startOfMonth = self.solo_startOfMonth(for: date),
+              let startOfNextMonth = self.date(byAdding: .month, value: 1, to: startOfMonth)
         else {
             return nil
         }
@@ -368,17 +366,17 @@ public extension SoloWrapper where Base == Calendar {
 
     /// 计算两个日期之间的天数差(endDate - startDate)
     /// - Returns: 正数表示 endDate 在 startDate 之后,负数表示之前
-    func daysBetween(startDate: Date, endDate: Date) -> Int {
-        return base.dateComponents([.day], from: startDate, to: endDate).day ?? 0
+    func solo_daysBetween(startDate: Date, endDate: Date) -> Int {
+        return self.dateComponents([.day], from: startDate, to: endDate).day ?? 0
     }
 
     /// 获取上一个月的同一天(自动调整无效日期)
-    func previousMonth(for date: Date = Date()) -> Date? {
-        return base.date(byAdding: .month, value: -1, to: date)
+    func solo_previousMonth(for date: Date = Date()) -> Date? {
+        return self.date(byAdding: .month, value: -1, to: date)
     }
 
     /// 获取下一个月的同一天(自动调整无效日期)
-    func nextMonth(for date: Date = Date()) -> Date? {
-        return base.date(byAdding: .month, value: 1, to: date)
+    func solo_nextMonth(for date: Date = Date()) -> Date? {
+        return self.date(byAdding: .month, value: 1, to: date)
     }
 }

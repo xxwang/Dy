@@ -2,7 +2,7 @@ import Foundation
 import CoreGraphics
 
 // MARK: - 字符串尺寸计算
-public extension SoloWrapper where Base == String {
+public extension String {
     /// 计算普通字符串在指定宽度和字体下的实际尺寸
     ///
     /// - Parameters:
@@ -14,9 +14,9 @@ public extension SoloWrapper where Base == String {
     ///
     /// - Example:
     ///   ```swift
-    ///   let size = "Hello".solo.size(maxWidth: 200, font: .systemFont(ofSize: 16))
+    ///   let size = "Hello".solo_viewSize(maxWidth: 200, font: .systemFont(ofSize: 16))
     ///   ```
-    func size(
+    func solo_viewSize(
         maxWidth: CGFloat = .greatestFiniteMagnitude,
         font: SoloFont,
         usesLineFragmentOrigin: Bool = true,
@@ -27,7 +27,7 @@ public extension SoloWrapper where Base == String {
             : [.usesFontLeading]
 
         let constraint = CGSize(width: maxWidth, height: .greatestFiniteMagnitude)
-        let rect = base.boundingRect(
+        let rect = self.boundingRect(
             with: constraint,
             options: options,
             attributes: [.font: font],
@@ -52,14 +52,14 @@ public extension SoloWrapper where Base == String {
     ///
     /// - Example:
     ///   ```swift
-    ///   let size = "Multi-line text".solo.sizeWithAttributes(
+    ///   let size = "Multi-line text".solo_viewSizeWithAttributes(
     ///       maxWidth: 150,
     ///       font: .systemFont(ofSize: 14),
     ///       lineSpacing: 4,
     ///       wordSpacing: 0.5
     ///   )
     ///   ```
-    func sizeWithAttributes(
+    func solo_viewSizeWithAttributes(
         maxWidth: CGFloat = .greatestFiniteMagnitude,
         font: SoloFont,
         lineSpacing: CGFloat = 0,
@@ -81,7 +81,7 @@ public extension SoloWrapper where Base == String {
             .paragraphStyle: paragraphStyle,
         ]
 
-        let attributedString = NSAttributedString(string: base, attributes: attributes)
+        let attributedString = NSAttributedString(string: self, attributes: attributes)
         let constraint = CGSize(width: maxWidth, height: .greatestFiniteMagnitude)
 
         let rect = attributedString.boundingRect(

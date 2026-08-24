@@ -1,7 +1,5 @@
 import Foundation
 
-extension Character: SoloExtension {}
-
 // MARK: - 构造方法
 public extension Character {
     /// 使用 `ASCII` 码值`(0–127)`创建一个 `Character`
@@ -75,39 +73,39 @@ public extension Character {
 }
 
 // MARK: - 类型转换
-public extension SoloWrapper where Base == Character {
+public extension Character {
     /// 将当前字符转换为`String`
-    func toString() -> String {
-        return String(base)
+    func solo_string() -> String {
+        return String(self)
     }
 
     /// 返回当前字符的大写形式
-    func toUppercase() -> Character {
-        return base.uppercased().first ?? base
+    func solo_uppercase() -> Character {
+        return self.uppercased().first ?? self
     }
 
     /// 返回当前字符的小写形式
-    func toLowercase() -> Character {
-        return base.lowercased().first ?? base
+    func solo_lowercase() -> Character {
+        return self.lowercased().first ?? self
     }
 
     /// 尝试将当前字符转换为其对应的 ASCII 码值(`UInt8`)
-    func toASCII() -> UInt8? {
-        guard let scalar = base.unicodeScalars.first, scalar.isASCII else { return nil }
+    func solo_ASCII() -> UInt8? {
+        guard let scalar = self.unicodeScalars.first, scalar.isASCII else { return nil }
         return UInt8(scalar.value)
     }
 
     /// 返回当前字符的 `Swift` 风格 `Unicode` 转义序列(如 `\u{1F60A}`)
-    func toUnicodeEscapeSequence() -> String {
-        return base.unicodeScalars.map { "\\u{\(String($0.value, radix: 16, uppercase: true))}" }.joined()
+    func solo_unicodeEscapeSequence() -> String {
+        return self.unicodeScalars.map { "\\u{\(String($0.value, radix: 16, uppercase: true))}" }.joined()
     }
 }
 
 // MARK: - 内容判断
-public extension SoloWrapper where Base == Character {
+public extension Character {
     /// 判断当前字符是否为 `Emoji`(包括`简单Emoji `和`组合 Emoji`)
-    var isEmoji: Bool {
-        let scalars = base.unicodeScalars
+    var solo_isEmoji: Bool {
+        let scalars = self.unicodeScalars
 
         // 单标量：直接检查 isEmoji 属性
         if let first = scalars.first, scalars.count == 1 {
@@ -133,12 +131,12 @@ public extension SoloWrapper where Base == Character {
 }
 
 // MARK: - 字符生成
-public extension SoloWrapper where Base == Character {
+public extension Character {
     /// 生成一个随机 `ASCII` 字符
     ///
     /// - Parameter includeSpecialChars: 是否包含特殊符号(默认 `false`)
     /// - Returns: 一个随机 `Character`
-    static func random(includeSpecialChars: Bool = false) -> Character {
+    static func solo_random(includeSpecialChars: Bool = false) -> Character {
         let letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
         let digits = "0123456789"
         let special = includeSpecialChars ? "!@#$%^&*()-_=+[]{}|;:'\",.<>?/" : ""

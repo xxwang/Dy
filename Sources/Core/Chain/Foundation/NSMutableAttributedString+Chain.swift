@@ -339,7 +339,7 @@ public extension SoloWrapper where Base: NSMutableAttributedString {
     /// - Returns: `Self`
     @discardableResult
     func string(_ string: String) -> Self {
-        base.setAttributedString(string.solo.toNSAttributedString())
+        base.setAttributedString(string.solo_nSAttributedString())
         return self
     }
 

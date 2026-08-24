@@ -1,12 +1,10 @@
 import CoreGraphics
 import UIKit
 
-extension CGColor: SoloExtension {}
-
 // MARK: - 类型转换
-public extension SoloWrapper where Base == CGColor {
+public extension CGColor {
     /// 将 `CGColor` 转换为 `UIColor`
-    func toUIColor() -> UIColor {
-        return UIColor(cgColor: base)
+    func solo_uIColor() -> UIColor {
+        return UIColor(cgColor: self)
     }
 }

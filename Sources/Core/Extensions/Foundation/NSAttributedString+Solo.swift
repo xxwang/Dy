@@ -2,26 +2,26 @@ import UIKit
 import Foundation
 
 // MARK: - 属性
-public extension SoloWrapper where Base: NSAttributedString {
+public extension NSAttributedString {
     /// 获取属性字符串起始位置(索引 0)处的有效属性字典
     ///
     /// 如果字符串为空,返回空字典
-    var attributes: [NSAttributedString.Key: Any] {
-        guard base.length > 0 else { return [:] }
-        return base.attributes(at: 0, effectiveRange: nil)
+    var solo_attributes: [NSAttributedString.Key: Any] {
+        guard self.length > 0 else { return [:] }
+        return self.attributes(at: 0, effectiveRange: nil)
     }
 
     /// 返回覆盖整个属性字符串的 `NSRange`
-    var fullNSRange: NSRange {
-        Foundation.NSRange(location: 0, length: base.length)
+    var solo_fullNSRange: NSRange {
+        Foundation.NSRange(location: 0, length: self.length)
     }
 }
 
 // MARK: - 类型转换
-public extension SoloWrapper where Base: NSAttributedString {
+public extension NSAttributedString {
     /// 将当前不可变属性字符串转换为可变属性字符串
-    func toMutable() -> NSMutableAttributedString {
-        NSMutableAttributedString(attributedString: base)
+    func solo_nSMutableAttributedString() -> NSMutableAttributedString {
+        NSMutableAttributedString(attributedString: self)
     }
 }
 
@@ -34,7 +34,7 @@ public extension SoloWrapper where Base: NSAttributedString {
     ///
     /// - Parameter substring: 要查找的子字符串
     /// - Returns: 对应的 `NSRange`
-    func nsRange(of substring: String) -> NSRange {
+    func solo_nsRange(of substring: String) -> NSRange {
         let str = base.string
         guard let range = str.range(of: substring) else {
             return Foundation.NSRange(location: NSNotFound, length: 0)
@@ -52,7 +52,7 @@ public extension SoloWrapper where Base: NSAttributedString {
     ///
     /// - Parameter substrings: 要查找的子字符串数组
     /// - Returns: 所有匹配的 `NSRange`
-    func allNSRanges(of substrings: [String]) -> [NSRange] {
+    func solo_allNSRanges(of substrings: [String]) -> [NSRange] {
         var allRanges: [NSRange] = []
         let baseString = base.string
 
@@ -77,7 +77,7 @@ public extension SoloWrapper where Base: NSAttributedString {
 }
 
 // MARK: - 尺寸计算
-public extension SoloWrapper where Base: NSAttributedString {
+public extension NSAttributedString {
     /// 计算属性字符串在指定最大宽度下的包围尺寸(向上取整)
     ///
     /// 使用 `.usesLineFragmentOrigin` 和 `.usesFontLeading` 选项,
@@ -86,9 +86,9 @@ public extension SoloWrapper where Base: NSAttributedString {
     /// - Parameter maxWidth: 最大允许宽度默认为 `.greatestFiniteMagnitude`(无宽度限制)
     /// - Parameter ceilResult: 是否对结果向上取整(默认 `true`)
     /// - Returns: 计算出的 `CGSize`(宽高均向上取整)
-    func size(maxWidth: CGFloat = .greatestFiniteMagnitude, ceilResult: Bool = true) -> CGSize {
+    func solo_viewSize(maxWidth: CGFloat = .greatestFiniteMagnitude, ceilResult: Bool = true) -> CGSize {
         let constraint = CGSize(width: maxWidth, height: .greatestFiniteMagnitude)
-        let rect = base.boundingRect(
+        let rect = self.boundingRect(
             with: constraint,
             options: [.usesLineFragmentOrigin, .usesFontLeading],
             context: nil

@@ -1,12 +1,12 @@
 import Foundation
 
 // MARK: - JSON
-public extension SoloWrapper where Base == String {
+public extension String {
     /// 将字符串解析为 JSON 并格式化输出(美化缩进)
     /// - Note: 同时将 JSON 中的转义斜杠 `\/` 替换为 `/`
     /// - Returns: `成功`:格式化后的JSON字符串 `失败`:返回原字符串
-    func jsonFormat() -> String {
-        guard let data = self.toData() else { return base }
+    func solo_jsonFormat() -> String {
+        guard let data = self.solo_data() else { return self }
 
         do {
             let jsonObject = try JSONSerialization.jsonObject(with: data)
@@ -15,9 +15,9 @@ public extension SoloWrapper where Base == String {
                 options: [.prettyPrinted]
             )
             return String(data: prettyData, encoding: .utf8)?
-                .replacingOccurrences(of: "\\/", with: "/") ?? base
+                .replacingOccurrences(of: "\\/", with: "/") ?? self
         } catch {
-            return base
+            return self
         }
     }
 }

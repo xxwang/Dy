@@ -1,7 +1,5 @@
 import CoreGraphics
 
-extension CGRect: SoloExtension {}
-
 // MARK: - 构造方法
 public extension CGRect {
     /// 使用中心点和尺寸初始化矩形
@@ -35,21 +33,21 @@ public extension CGRect {
 }
 
 // MARK: - 属性
-public extension SoloWrapper where Base == CGRect {
+public extension CGRect {
     /// 矩形的中心点(基于 origin + size 计算)
-    var center: CGPoint {
-        CGPoint(x: base.midX, y: base.midY)
+    var solo_center: CGPoint {
+        CGPoint(x: self.midX, y: self.midY)
     }
 
     /// 矩形自身的中心偏移量(基于自身 bounds 坐标系)
     /// 主要用于锚点计算,通常不直接使用
-    var localCenter: CGPoint {
-        CGPoint(x: base.width / 2, y: base.height / 2)
+    var solo_localCenter: CGPoint {
+        CGPoint(x: self.width / 2, y: self.height / 2)
     }
 }
 
 // MARK: - 变换
-public extension SoloWrapper where Base == CGRect {
+public extension CGRect {
     /// 返回以指定锚点缩放至目标尺寸的新矩形
     ///
     /// 锚点 `(0, 0)` 表示左上角,`(1, 1)` 表示右下角
@@ -62,15 +60,15 @@ public extension SoloWrapper where Base == CGRect {
     /// - Example:
     ///     ```swift
     ///     let rect = CGRect(x: 0, y: 0, width: 100, height: 100)
-    ///     let resized = rect.solo.resizing(to: CGSize(width: 150, height: 150), anchorPoint: CGPoint(x: 0, y: 1))
+    ///     let resized = rect.solo_resizing(to: CGSize(width: 150, height: 150), anchorPoint: CGPoint(x: 0, y: 1))
     ///     // Result: CGRect(x: 0, y: -50, width: 150, height: 150)
     ///     ```
-    func resizing(to size: CGSize, anchorPoint: CGPoint = CGPoint(x: 0.5, y: 0.5)) -> CGRect {
-        let deltaWidth = size.width - base.width
-        let deltaHeight = size.height - base.height
+    func solo_resizing(to size: CGSize, anchorPoint: CGPoint = CGPoint(x: 0.5, y: 0.5)) -> CGRect {
+        let deltaWidth = size.width - self.width
+        let deltaHeight = size.height - self.height
         let newOrigin = CGPoint(
-            x: base.minX - deltaWidth * anchorPoint.x,
-            y: base.minY - deltaHeight * anchorPoint.y
+            x: self.minX - deltaWidth * anchorPoint.x,
+            y: self.minY - deltaHeight * anchorPoint.y
         )
         return CGRect(origin: newOrigin, size: size)
     }
@@ -80,9 +78,9 @@ public extension SoloWrapper where Base == CGRect {
     ///   - scale: 缩放因子(1.0 = 原尺寸)
     ///   - anchorPoint: 归一化锚点
     /// - Returns: 缩放后的矩形
-    func scaled(by scale: CGFloat, anchorPoint: CGPoint = CGPoint(x: 0.5, y: 0.5)) -> CGRect {
-        self.resizing(
-            to: CGSize(width: base.width * scale, height: base.height * scale),
+    func solo_scaled(by scale: CGFloat, anchorPoint: CGPoint = CGPoint(x: 0.5, y: 0.5)) -> CGRect {
+        self.solo_resizing(
+            to: CGSize(width: self.width * scale, height: self.height * scale),
             anchorPoint: anchorPoint
         )
     }

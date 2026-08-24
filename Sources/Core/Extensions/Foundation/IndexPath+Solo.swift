@@ -1,9 +1,7 @@
 import Foundation
 
-extension IndexPath: SoloExtension {}
-
 // MARK: - 方法
-public extension SoloWrapper where Base == IndexPath {
+public extension IndexPath {
     /// 返回适合日志打印的可读字符串(仅适用于二维结构,如 UITableView / UICollectionView)
     ///
     /// - Returns: 格式如 `"[section: 0, row: 5]"`;若为多维 IndexPath,则返回标准描述
@@ -13,14 +11,14 @@ public extension SoloWrapper where Base == IndexPath {
     /// - Example:
     ///   ```swift
     ///   let ip = IndexPath(row: 2, section: 1)
-    ///   print(ip.solo.toString()) // [section: 1, row: 2]
+    ///   print(ip.solo_string()) // [section: 1, row: 2]
     ///   ```
-    func toString() -> String {
-        if base.count == 2 {
-            return "[section: \(base.section), row: \(base.row)]"
+    func solo_string() -> String {
+        if self.count == 2 {
+            return "[section: \(self.section), row: \(self.row)]"
         } else {
             // 多维情况：如 (0, 1, 2) 表示 section=0, row=1, item=2
-            let components = base.map(String.init).joined(separator: ", ")
+            let components = self.map(String.init).joined(separator: ", ")
             return "IndexPath(\(components))"
         }
     }
@@ -37,10 +35,10 @@ public extension SoloWrapper where Base == IndexPath {
     /// - Example:
     ///   ```swift
     ///   let current = IndexPath(row: 3, section: 1)
-    ///   let next = current.solo.offset(row: 1)          // (row: 4, section: 1)
-    ///   let prevSection = current.solo.offset(section: -1) // (row: 3, section: 0)
+    ///   let next = current.solo_offset(row: 1)          // (row: 4, section: 1)
+    ///   let prevSection = current.solo_offset(section: -1) // (row: 3, section: 0)
     ///   ```
-    func offset(row: Int = 0, section: Int = 0) -> IndexPath {
-        return IndexPath(row: base.row + row, section: base.section + section)
+    func solo_offset(row: Int = 0, section: Int = 0) -> IndexPath {
+        return IndexPath(row: self.row + row, section: self.section + section)
     }
 }

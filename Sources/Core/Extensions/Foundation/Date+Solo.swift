@@ -5,12 +5,12 @@ extension Date: SoloExtension {}
 // MARK: - 共享对象
 extension Date {
     /// 日历
-    var calendar: Calendar {
+    var solo_calendar: Calendar {
         Calendar.current
     }
 
     /// 时区
-    var timeZone: TimeZone {
+    var solo_timeZone: TimeZone {
         TimeZone.autoupdatingCurrent
     }
 }
@@ -37,9 +37,9 @@ public extension Date {
     /// - Returns: 若字符串能被成功解析,则返回 `Date`;否则返回 `nil`
     init?(string: String, dateFormat: String? = nil) {
         let formatter: DateFormatter = if let format = dateFormat {
-            DateFormatter.solo.formatter(format: format)
+            DateFormatter.solo_formatter(format: format)
         } else {
-            DateFormatter.solo.iso8601()
+            DateFormatter.solo_iso8601()
         }
         guard let date = formatter.date(from: string) else { return nil }
         self = date
@@ -58,22 +58,22 @@ public extension Date {
 }
 
 // MARK: - 组件访问与设置
-public extension SoloWrapper where Base == Date {
+public extension Date {
     /// 获取或设置当前日期的年份
     ///
     /// - 注意: 设置时若新值 ≤ 0,则忽略操作
     /// - Example:
     ///   ```swift
     ///   var date = Date()
-    ///   date.solo.year = 2030  // 将年份设为 2030
-    ///   print(date.solo.year)  // 输出：2030
+    ///   date.solo_year = 2030  // 将年份设为 2030
+    ///   print(date.solo_year)  // 输出：2030
     ///   ```
-    var year: Int {
-        get { base.calendar.component(.year, from: base) }
+    var solo_year: Int {
+        get { self.solo_calendar.component(.year, from: self) }
         set {
             guard newValue > 0 else { return }
-            if let newDate = base.calendar.date(bySetting: .year, value: newValue, of: base) {
-                base = newDate
+            if let newDate = self.solo_calendar.date(bySetting: .year, value: newValue, of: self) {
+                self = newDate
             }
         }
     }
@@ -84,14 +84,14 @@ public extension SoloWrapper where Base == Date {
     /// - Example:
     ///   ```swift
     ///   var date = Date()
-    ///   date.solo.month = 5  // 设置为五月
+    ///   date.solo_month = 5  // 设置为五月
     ///   ```
-    var month: Int {
-        get { base.calendar.component(.month, from: base) }
+    var solo_month: Int {
+        get { self.solo_calendar.component(.month, from: self) }
         set {
             guard (1 ... 12).contains(newValue) else { return }
-            if let newDate = base.calendar.date(bySetting: .month, value: newValue, of: base) {
-                base = newDate
+            if let newDate = self.solo_calendar.date(bySetting: .month, value: newValue, of: self) {
+                self = newDate
             }
         }
     }
@@ -102,15 +102,15 @@ public extension SoloWrapper where Base == Date {
     /// - Example:
     ///   ```swift
     ///   var date = Date()
-    ///   date.solo.day = 15  // 设置为当月 15 日
+    ///   date.solo_day = 15  // 设置为当月 15 日
     ///   ```
-    var day: Int {
-        get { base.calendar.component(.day, from: base) }
+    var solo_day: Int {
+        get { self.solo_calendar.component(.day, from: self) }
         set {
-            let dayRange = base.calendar.range(of: .day, in: .month, for: base) ?? (1 ..< 32)
+            let dayRange = self.solo_calendar.range(of: .day, in: .month, for: self) ?? (1 ..< 32)
             guard dayRange.contains(newValue) else { return }
-            if let newDate = base.calendar.date(bySetting: .day, value: newValue, of: base) {
-                base = newDate
+            if let newDate = self.solo_calendar.date(bySetting: .day, value: newValue, of: self) {
+                self = newDate
             }
         }
     }
@@ -121,14 +121,14 @@ public extension SoloWrapper where Base == Date {
     /// - Example:
     ///   ```swift
     ///   var date = Date()
-    ///   date.solo.hour = 14  // 设置为下午 2 点
+    ///   date.solo_hour = 14  // 设置为下午 2 点
     ///   ```
-    var hour: Int {
-        get { base.calendar.component(.hour, from: base) }
+    var solo_hour: Int {
+        get { self.solo_calendar.component(.hour, from: self) }
         set {
             guard (0 ... 23).contains(newValue) else { return }
-            if let newDate = base.calendar.date(bySetting: .hour, value: newValue, of: base) {
-                base = newDate
+            if let newDate = self.solo_calendar.date(bySetting: .hour, value: newValue, of: self) {
+                self = newDate
             }
         }
     }
@@ -139,14 +139,14 @@ public extension SoloWrapper where Base == Date {
     /// - Example:
     ///   ```swift
     ///   var date = Date()
-    ///   date.solo.minute = 30  // 设置为 30 分
+    ///   date.solo_minute = 30  // 设置为 30 分
     ///   ```
-    var minute: Int {
-        get { base.calendar.component(.minute, from: base) }
+    var solo_minute: Int {
+        get { self.solo_calendar.component(.minute, from: self) }
         set {
             guard (0 ... 59).contains(newValue) else { return }
-            if let newDate = base.calendar.date(bySetting: .minute, value: newValue, of: base) {
-                base = newDate
+            if let newDate = self.solo_calendar.date(bySetting: .minute, value: newValue, of: self) {
+                self = newDate
             }
         }
     }
@@ -157,14 +157,14 @@ public extension SoloWrapper where Base == Date {
     /// - Example:
     ///   ```swift
     ///   var date = Date()
-    ///   date.solo.second = 45  // 设置为 45 秒
+    ///   date.solo_second = 45  // 设置为 45 秒
     ///   ```
-    var second: Int {
-        get { base.calendar.component(.second, from: base) }
+    var solo_second: Int {
+        get { self.solo_calendar.component(.second, from: self) }
         set {
             guard (0 ... 59).contains(newValue) else { return }
-            if let newDate = base.calendar.date(bySetting: .second, value: newValue, of: base) {
-                base = newDate
+            if let newDate = self.solo_calendar.date(bySetting: .second, value: newValue, of: self) {
+                self = newDate
             }
         }
     }
@@ -176,18 +176,18 @@ public extension SoloWrapper where Base == Date {
     /// - Example:
     ///   ```swift
     ///   var date = Date()
-    ///   date.solo.millisecond = 500  // 设置为 500 毫秒
+    ///   date.solo_millisecond = 500  // 设置为 500 毫秒
     ///   ```
-    var millisecond: Int {
+    var solo_millisecond: Int {
         get {
-            let nanoseconds = base.calendar.component(.nanosecond, from: base)
+            let nanoseconds = self.solo_calendar.component(.nanosecond, from: self)
             return nanoseconds / 1000000
         }
         set {
             let clampedValue = min(max(newValue, 0), 999)
             let nanoseconds = clampedValue * 1000000
-            if let newDate = base.calendar.date(bySetting: .nanosecond, value: nanoseconds, of: base) {
-                base = newDate
+            if let newDate = self.solo_calendar.date(bySetting: .nanosecond, value: nanoseconds, of: self) {
+                self = newDate
             }
         }
     }
@@ -198,47 +198,47 @@ public extension SoloWrapper where Base == Date {
     /// - Example:
     ///   ```swift
     ///   var date = Date()
-    ///   date.solo.nanosecond = 123_456_789
+    ///   date.solo_nanosecond = 123_456_789
     ///   ```
-    var nanosecond: Int {
-        get { base.calendar.component(.nanosecond, from: base) }
+    var solo_nanosecond: Int {
+        get { self.solo_calendar.component(.nanosecond, from: self) }
         set {
             let clampedValue = min(max(newValue, 0), 999999999)
-            if let newDate = base.calendar.date(bySetting: .nanosecond, value: clampedValue, of: base) {
-                base = newDate
+            if let newDate = self.solo_calendar.date(bySetting: .nanosecond, value: clampedValue, of: self) {
+                self = newDate
             }
         }
     }
 }
 
 // MARK: - 格式化
-public extension SoloWrapper where Base == Date {
+public extension Date {
     /// 将日期格式化为字符串
     /// - Parameters:
     ///   - format: 日期格式模板,默认为 `"yyyy-MM-dd HH:mm:ss"`
     ///   - locale: 指定地区
     ///   - timeZone: 指定时区,默认使用当前自动更新时区
     /// - Returns: 格式化后的字符串
-    func toString(_ format: String = "yyyy-MM-dd HH:mm:ss",
-                  locale: Locale = .current,
-                  timeZone: TimeZone = .autoupdatingCurrent) -> String
+    func solo_string(_ format: String = "yyyy-MM-dd HH:mm:ss",
+                     locale: Locale = .current,
+                     timeZone: TimeZone = .autoupdatingCurrent) -> String
     {
-        let formatter = DateFormatter.solo.formatter(format: format, locale: locale, timeZone: timeZone)
-        return formatter.string(from: base)
+        let formatter = DateFormatter.solo_formatter(format: format, locale: locale, timeZone: timeZone)
+        return formatter.string(from: self)
     }
 
     /// 将日期格式化为标准 ISO8601 字符串(UTC 时区)
     ///
     /// - Returns: 形如 `"2024-01-01T12:00:00.000Z"` 的字符串
-    func toISO8601String() -> String {
-        DateFormatter.solo.iso8601().string(from: base)
+    func solo_iso8601String() -> String {
+        DateFormatter.solo_iso8601().string(from: self)
     }
 }
 
 // MARK: - 随机时间
-public extension SoloWrapper where Base == Date {
+public extension Date {
     /// 在开区间 `(lower, upper)` 内生成随机日期
-    static func random(in range: Range<Date>) -> Date {
+    static func solo_random(in range: Range<Date>) -> Date {
         let lower = range.lowerBound.timeIntervalSinceReferenceDate
         let upper = range.upperBound.timeIntervalSinceReferenceDate
         let randomInterval = TimeInterval.random(in: lower ..< upper)
@@ -246,7 +246,7 @@ public extension SoloWrapper where Base == Date {
     }
 
     /// 在闭区间 `[lower, upper]` 内生成随机日期
-    static func random(in range: ClosedRange<Date>) -> Date {
+    static func solo_random(in range: ClosedRange<Date>) -> Date {
         let lower = range.lowerBound.timeIntervalSinceReferenceDate
         let upper = range.upperBound.timeIntervalSinceReferenceDate
         let randomInterval = TimeInterval.random(in: lower ... upper)
@@ -254,7 +254,7 @@ public extension SoloWrapper where Base == Date {
     }
 
     /// 使用自定义随机数生成器生成随机日期(开区间)
-    static func random(
+    static func solo_random(
         in range: Range<Date>,
         using generator: inout some RandomNumberGenerator
     ) -> Date {
@@ -265,7 +265,7 @@ public extension SoloWrapper where Base == Date {
     }
 
     /// 使用自定义随机数生成器生成随机日期(闭区间)
-    static func random(
+    static func solo_random(
         in range: ClosedRange<Date>,
         using generator: inout some RandomNumberGenerator
     ) -> Date {
@@ -277,79 +277,79 @@ public extension SoloWrapper where Base == Date {
 }
 
 // MARK: - 日期判断
-public extension SoloWrapper where Base == Date {
+public extension Date {
     /// 是否在未来(相对于调用时刻)
     /// - Returns: 若晚于当前时间,返回 `true`
-    func isInFuture() -> Bool {
-        base > Date()
+    func solo_isInFuture() -> Bool {
+        self > Date()
     }
 
     /// 是否在过去(相对于调用时刻)
     /// - Returns: 若早于当前时间,返回 `true`
-    func isInPast() -> Bool {
-        base < Date()
+    func solo_isInPast() -> Bool {
+        self < Date()
     }
 
     /// 是否是今天
     /// - Returns: 若落在当前日历日,返回 `true`
-    func isToday() -> Bool {
-        base.calendar.isDateInToday(base)
+    func solo_isToday() -> Bool {
+        self.solo_calendar.isDateInToday(self)
     }
 
     /// 是否是昨天
     /// - Returns: 若落在昨天,返回 `true`
-    func isYesterday() -> Bool {
-        base.calendar.isDateInYesterday(base)
+    func solo_isYesterday() -> Bool {
+        self.solo_calendar.isDateInYesterday(self)
     }
 
     /// 是否是明天
     /// - Returns: 若落在明天,返回 `true`
-    func isTomorrow() -> Bool {
-        base.calendar.isDateInTomorrow(base)
+    func solo_isTomorrow() -> Bool {
+        self.solo_calendar.isDateInTomorrow(self)
     }
 
     /// 是否是周末
     /// - Returns: 若被系统日历视为周末(如周六/周日),返回 `true`
     /// - Note: 周末定义因地区而异
-    func isWeekend() -> Bool {
-        base.calendar.isDateInWeekend(base)
+    func solo_isWeekend() -> Bool {
+        self.solo_calendar.isDateInWeekend(self)
     }
 
     /// 是否是工作日(非周末)
     /// - Returns: 若不是周末,返回 `true`
     /// - Note: 不考虑法定节假日
-    func isWorkday() -> Bool {
-        !base.calendar.isDateInWeekend(base)
+    func solo_isWorkday() -> Bool {
+        !self.solo_calendar.isDateInWeekend(self)
     }
 
     /// 是否在本周
     /// - Returns: 若与当前日期属于同一周(按 `.weekOfYear` 粒度),返回 `true`
-    func isThisWeek() -> Bool {
-        base.calendar.isDate(base, equalTo: Date(), toGranularity: .weekOfYear)
+    func solo_isThisWeek() -> Bool {
+        self.solo_calendar.isDate(self, equalTo: Date(), toGranularity: .weekOfYear)
     }
 
     /// 是否在本月
     /// - Returns: 若与当前日期属于同一月,返回 `true`
-    func isThisMonth() -> Bool {
-        base.calendar.isDate(base, equalTo: Date(), toGranularity: .month)
+    func solo_isThisMonth() -> Bool {
+        self.solo_calendar.isDate(self, equalTo: Date(), toGranularity: .month)
     }
 
     /// 是否在本年
     /// - Returns: 若与当前日期属于同年,返回 `true`
-    func isThisYear() -> Bool {
-        base.calendar.isDate(base, equalTo: Date(), toGranularity: .year)
+    func solo_isThisYear() -> Bool {
+        self.solo_calendar.isDate(self, equalTo: Date(), toGranularity: .year)
     }
 
     /// 所在年份是否为闰年
     /// - Returns: 若年份满足闰年规则(能被4整除且不被100整除,或能被400整除),返回 `true`
-    func isLeapYear() -> Bool {
-        let year = Calendar.current.component(.year, from: base)
+    func solo_isLeapYear() -> Bool {
+        let year = Calendar.current.component(.year, from: self)
         return (year % 400 == 0) || (year % 4 == 0 && year % 100 != 0)
     }
 
     /// 判断是否与另一日期处于同一天
-    func isSameDay(as date: Date) -> Bool {
-        base.calendar.isDate(base, inSameDayAs: date)
+    func solo_isSameDay(as date: Date) -> Bool {
+        self.solo_calendar.isDate(self, inSameDayAs: date)
     }
 
     /// 判断是否在 `[startDate, endDate]` 区间内
@@ -358,71 +358,71 @@ public extension SoloWrapper where Base == Date {
     ///   - startDate: 起始日期
     ///   - endDate: 结束日期
     ///   - includeBounds: 是否包含边界(默认 `false`)
-    func isBetween(_ startDate: Date, _ endDate: Date, includeBounds: Bool = false) -> Bool {
+    func solo_isBetween(_ startDate: Date, _ endDate: Date, includeBounds: Bool = false) -> Bool {
         if includeBounds {
-            return base >= startDate && base <= endDate
+            return self >= startDate && self <= endDate
         } else {
-            return base > startDate && base < endDate
+            return self > startDate && self < endDate
         }
     }
 
     /// 判断年、月、日是否完全相同
-    func isSameYearMonthDay(as date: Date) -> Bool {
-        let comps1 = base.calendar.dateComponents([.year, .month, .day], from: base)
-        let comps2 = base.calendar.dateComponents([.year, .month, .day], from: date)
+    func solo_isSameYearMonthDay(as date: Date) -> Bool {
+        let comps1 = self.solo_calendar.dateComponents([.year, .month, .day], from: self)
+        let comps2 = self.solo_calendar.dateComponents([.year, .month, .day], from: date)
         return comps1 == comps2
     }
 
     /// 判断是否与当前时间在指定日历粒度上相等(如同年、同月)
-    func isInCurrent(_ component: Calendar.Component) -> Bool {
-        base.calendar.isDate(base, equalTo: Date(), toGranularity: component)
+    func solo_isInCurrent(_ component: Calendar.Component) -> Bool {
+        self.solo_calendar.isDate(self, equalTo: Date(), toGranularity: component)
     }
 
     /// 判断与另一日期在指定组件上的绝对差值是否 ≤ 给定值
-    func isWithin(_ value: Int, of component: Calendar.Component, comparedTo date: Date) -> Bool {
-        guard let diff = self.componentDifference(to: date, in: component) else { return false }
+    func solo_isWithin(_ value: Int, of component: Calendar.Component, comparedTo date: Date) -> Bool {
+        guard let diff = self.solo_componentDifference(to: date, in: component) else { return false }
         return Swift.abs(diff) <= value
     }
 }
 
 // MARK: - 时间戳(Timestamp)
-public extension SoloWrapper where Base == Date {
+public extension Date {
     /// 获取当前时间的秒级 Unix 时间戳
     /// - Returns: 自 1970-01-01 UTC 起的秒数(整数)
-    static func nowSecond() -> Int64 {
+    static func solo_nowSecond() -> Int64 {
         Int64(Date().timeIntervalSince1970)
     }
 
     /// 返回当前日期的秒级 Unix 时间戳(UTC)
     /// - Returns: 秒级时间戳
-    func secondsSince1970() -> TimeInterval {
-        base.timeIntervalSince1970
+    func solo_secondsSince1970() -> TimeInterval {
+        self.timeIntervalSince1970
     }
 
     /// 获取当前时间的毫秒级时间戳
     /// - Returns: 自 1970-01-01 UTC 起的毫秒数(四舍五入)
-    static func nowMillisecond() -> Int64 {
+    static func solo_nowMillisecond() -> Int64 {
         Int64(Darwin.round(Date().timeIntervalSince1970 * 1000))
     }
 
     /// 返回当前日期的毫秒级时间戳(UTC)
     /// - Returns: 毫秒级时间戳(四舍五入)
-    func millisecondsSince1970() -> TimeInterval {
-        base.timeIntervalSince1970 * 1000
+    func solo_millisecondsSince1970() -> TimeInterval {
+        self.timeIntervalSince1970 * 1000
     }
 
     /// 返回本地日历下的“伪秒级时间戳”(非标准,仅用于显示逻辑)
     /// - Returns: 假设当前时区为 UTC+0 时的时间戳
     /// - Warning: 此值`不是标准 Unix 时间戳`,不可用于网络传输
-    func localSec() -> TimeInterval {
-        let offset = TimeZone.current.secondsFromGMT(for: base)
-        return base.timeIntervalSince1970 - offset.solo.toDouble()
+    func solo_localSec() -> TimeInterval {
+        let offset = TimeZone.current.secondsFromGMT(for: self)
+        return self.timeIntervalSince1970 - offset.solo_double()
     }
 
     /// 从时间戳字符串创建 `Date`
     /// - Parameter timestamp: 支持 10 位(秒)或 13 位(毫秒)字符串
     /// - Returns: 成功解析则返回 `Date`,否则返回 `nil`
-    static func toDate(from timestamp: String) -> Date? {
+    static func solo_date(from timestamp: String) -> Date? {
         guard let value = Int64(timestamp) else { return nil }
         let interval: TimeInterval
         if timestamp.count == 10 {
@@ -440,24 +440,24 @@ public extension SoloWrapper where Base == Date {
     ///   - timestamp: 时间戳字符串(10 或 13 位)
     ///   - format: 日期格式,默认 `"yyyy-MM-dd HH:mm:ss"`
     /// - Returns: 格式化后的字符串;若时间戳无效,返回空字符串
-    static func toString(from timestamp: String, format: String = "yyyy-MM-dd HH:mm:ss") -> String {
-        guard let date = self.toDate(from: timestamp) else { return "" }
+    static func solo_string(from timestamp: String, format: String = "yyyy-MM-dd HH:mm:ss") -> String {
+        guard let date = self.solo_date(from: timestamp) else { return "" }
 
-        let formatter = DateFormatter.solo.formatter(format: format)
+        let formatter = DateFormatter.solo_formatter(format: format)
         return formatter.string(from: date)
     }
 }
 
 // MARK: - 常用方法
-public extension SoloWrapper where Base == Date {
+public extension Date {
     /// 将当前日期`视为 UTC 时间`,并返回其在本地时区下的等效显示值
     ///
     /// - 注意：此方法会按当前时区偏移量调整绝对时间点(`timeIntervalSince1970`),并非仅调整显示
     ///   适用于将 API 返回的 UTC 字符串按本地时间展示(如 `"2024-01-01T08:00:00Z"` 显示为本地 16:00)
     /// - Returns: 本地时区下对应的日期对象(绝对时间点已偏移)
-    func toLocal() -> Date {
-        let offset = base.timeZone.secondsFromGMT(for: base)
-        return base.addingTimeInterval(TimeInterval(offset))
+    func solo_local() -> Date {
+        let offset = self.solo_timeZone.secondsFromGMT(for: self)
+        return self.addingTimeInterval(TimeInterval(offset))
     }
 
     /// 将当前日期`视为本地时间`,并返回其在 UTC 下的等效表示
@@ -465,18 +465,18 @@ public extension SoloWrapper where Base == Date {
     /// - 注意：此方法会按当前时区偏移量调整绝对时间点(`timeIntervalSince1970`)
     ///   适用于将用户选择的本地日历时间(如“今天 10:00”)转换为 UTC 存储
     /// - Returns: UTC 时区下对应的日期对象(绝对时间点已偏移)
-    func toUTC() -> Date {
-        let offset = base.timeZone.secondsFromGMT(for: base)
-        return base.addingTimeInterval(-TimeInterval(offset))
+    func solo_UTC() -> Date {
+        let offset = self.solo_timeZone.secondsFromGMT(for: self)
+        return self.addingTimeInterval(-TimeInterval(offset))
     }
 
     /// 返回当前日期相对于现在的自然语言描述(中文)
     ///
     /// 支持“刚刚”、“3分钟前”、“明天”、“2个月后”等表达
     /// - Returns: 中文相对时间字符串
-    func relativeString() -> String {
+    func solo_relativeString() -> String {
         let now = Date()
-        let interval = now.timeIntervalSince(base)
+        let interval = now.timeIntervalSince(self)
         let isPast = interval > 0
         let absInterval = Swift.abs(interval)
 
@@ -493,13 +493,13 @@ public extension SoloWrapper where Base == Date {
         }
 
         // 精确判断“昨天/今天/明天”
-        if self.isToday() {
+        if self.solo_isToday() {
             return "今天"
         }
-        if self.isYesterday() {
+        if self.solo_isYesterday() {
             return "昨天"
         }
-        if self.isTomorrow() {
+        if self.solo_isTomorrow() {
             return "明天"
         }
 
@@ -517,135 +517,127 @@ public extension SoloWrapper where Base == Date {
     }
 
     /// 获取星期几(1=星期日, 2=星期一, ..., 7=星期六)
-    var weekday: Int {
-        base.calendar.component(.weekday, from: base)
+    var solo_weekday: Int {
+        self.solo_calendar.component(.weekday, from: self)
     }
 
     /// 获取中文星期名称(如“星期一”)
-    var weekdayString: String {
+    var solo_weekdayString: String {
         let weekdays = ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"]
-        let idx = self.weekday - 1
+        let idx = self.solo_weekday - 1
         guard idx >= 0, idx < weekdays.count else { return "" }
         return weekdays[idx]
     }
 
     /// 获取英文月份全称(如 "January")
-    var monthString: String {
-        self.toString("MMMM")
+    var solo_monthString: String {
+        self.solo_string("MMMM")
     }
 
     /// 获取本年第几周(ISO 周数,取决于日历配置)
-    var weekOfYear: Int {
-        base.calendar.component(.weekOfYear, from: base)
+    var solo_weekOfYear: Int {
+        self.solo_calendar.component(.weekOfYear, from: self)
     }
 
     /// 获取本月第几周
-    var weekOfMonth: Int {
-        base.calendar.component(.weekOfMonth, from: base)
+    var solo_weekOfMonth: Int {
+        self.solo_calendar.component(.weekOfMonth, from: self)
     }
 
     /// 获取当前日期所属的季度(1–4)
-    var quarter: Int {
-        (self.month - 1) / 3 + 1
+    var solo_quarter: Int {
+        (self.solo_month - 1) / 3 + 1
     }
 
     /// 获取当前日期所属哪个年代
-    var era: Int {
-        return base.calendar.component(.era, from: base)
+    var solo_era: Int {
+        return self.solo_calendar.component(.era, from: self)
     }
 }
 
 // MARK: - 日期计算
-public extension SoloWrapper where Base == Date {
+public extension Date {
     /// 返回昨天的日期
-    func yesterday() -> Date? {
-        base.calendar.date(byAdding: .day, value: -1, to: base)
+    func solo_yesterday() -> Date? {
+        self.solo_calendar.date(byAdding: .day, value: -1, to: self)
     }
 
     /// 返回明天的日期
-    func tomorrow() -> Date? {
-        base.calendar.date(byAdding: .day, value: 1, to: base)
+    func solo_tomorrow() -> Date? {
+        self.solo_calendar.date(byAdding: .day, value: 1, to: self)
     }
 
     /// 返回指定天数偏移后的日期
-    func adding(days: Int) -> Date? {
-        base.calendar.date(byAdding: .day, value: days, to: base)
+    func solo_adding(days: Int) -> Date? {
+        self.solo_calendar.date(byAdding: .day, value: days, to: self)
     }
 
     /// 返回最接近的 N 分钟整点(向上或向下取整,以更近为准)
     ///
     /// - Parameter minutes: 分钟间隔(必须 > 0),如 5、15、30
     /// - Returns: 对齐后的日期(秒和纳秒归零)
-    func nearest(minutes: Int) -> Date? {
+    func solo_nearest(minutes: Int) -> Date? {
         guard minutes > 0 else { return nil }
-        var comps = base.calendar.dateComponents([.year, .month, .day, .hour, .minute], from: base)
+        var comps = self.solo_calendar.dateComponents([.year, .month, .day, .hour, .minute], from: self)
         guard let min = comps.minute else { return nil }
         let remainder = min % minutes
         let newMinute = remainder < minutes / 2 ? min - remainder : min + (minutes - remainder)
         comps.minute = newMinute
         comps.second = 0
         comps.nanosecond = 0
-        return base.calendar.date(from: comps)
+        return self.solo_calendar.date(from: comps)
     }
 
     /// 最近的 5 分钟整点
-    func nearest5Minutes() -> Date? {
-        self.nearest(minutes: 5)
+    func solo_nearest5Minutes() -> Date? {
+        self.solo_nearest(minutes: 5)
     }
 
     /// 最近的 10 分钟整点
-    func nearest10Minutes() -> Date? {
-        self.nearest(minutes: 10)
+    func solo_nearest10Minutes() -> Date? {
+        self.solo_nearest(minutes: 10)
     }
 
     /// 最近的 15 分钟整点(一刻钟)
-    func nearest15Minutes() -> Date? {
-        self.nearest(minutes: 15)
+    func solo_nearest15Minutes() -> Date? {
+        self.solo_nearest(minutes: 15)
     }
 
     /// 最近的 30 分钟整点
-    func nearest30Minutes() -> Date? {
-        self.nearest(minutes: 30)
+    func solo_nearest30Minutes() -> Date? {
+        self.solo_nearest(minutes: 30)
     }
 
     /// 最近的整点小时(以 30 分钟为界：≤30 分 → 当前小时,>30 分 → 下一小时)
-    func nearestHour() -> Date? {
-        let min = self.minute
-        let base = base.calendar.startOfDay(for: base)
-        return min < 30 ? base : base.calendar.date(byAdding: .hour, value: 1, to: base)
+    func solo_nearestHour() -> Date? {
+        let min = self.solo_minute
+        let base = self.solo_calendar.startOfDay(for: self)
+        return min < 30 ? base : base.solo_calendar.date(byAdding: .hour, value: 1, to: self)
     }
 
     /// 今天的起始时间(即当前日期,但通常配合其他方法使用)
-    static var today: Date {
+    static var solo_today: Date {
         Date()
     }
 
     /// 昨天
-    static var yesterday: Date? {
-        Date()
-            .solo
-            .yesterday()
+    static var solo_yesterday: Date? {
+        Date().solo_yesterday()
     }
 
     /// 明天
-    static var tomorrow: Date? {
-        Date()
-            .solo
-            .tomorrow()
+    static var solo_tomorrow: Date? {
+        Date().solo_tomorrow()
     }
 
     /// 前天
-    static var dayBeforeYesterday: Date? {
-        Date()
-            .solo
-            .adding(days: -2)
+    static var solo_dayBeforeYesterday: Date? {
+        Date().solo_adding(days: -2)
     }
 
     /// 后天
-    static var dayAfterTomorrow: Date? {
-        Date()
-            .solo
-            .adding(days: 2)
+    static var solo_dayAfterTomorrow: Date? {
+        Date().solo_adding(days: 2)
     }
 
     /// 获取指定年月的天数
@@ -654,7 +646,7 @@ public extension SoloWrapper where Base == Date {
     ///   - year: 年份
     ///   - month: 月份(1–12)
     /// - Returns: 该月的总天数
-    static func daysInMonth(year: Int, month: Int) -> Int {
+    static func solo_daysInMonth(year: Int, month: Int) -> Int {
         switch month {
         case 1, 3, 5, 7, 8, 10, 12: return 31
         case 4, 6, 9, 11: return 30
@@ -664,29 +656,29 @@ public extension SoloWrapper where Base == Date {
     }
 
     /// 获取当前月份的天数
-    static var currentMonthDays: Int {
+    static var solo_currentMonthDays: Int {
         let now = Date()
-        return self.daysInMonth(year: now.solo.year, month: now.solo.month)
+        return self.solo_daysInMonth(year: now.solo_year, month: now.solo_month)
     }
 
     /// 返回与另一日期相差的秒数(可正可负)
-    func seconds(since date: Date) -> Double {
-        base.timeIntervalSince(date)
+    func solo_seconds(since date: Date) -> Double {
+        self.timeIntervalSince(date)
     }
 
     /// 返回与另一日期相差的分钟数
-    func minutes(since date: Date) -> Double {
-        self.seconds(since: date) / 60
+    func solo_minutes(since date: Date) -> Double {
+        self.solo_seconds(since: date) / 60
     }
 
     /// 返回与另一日期相差的小时数
-    func hours(since date: Date) -> Double {
-        self.seconds(since: date) / 3600
+    func solo_hours(since date: Date) -> Double {
+        self.solo_seconds(since: date) / 3600
     }
 
     /// 返回与另一日期相差的天数
-    func days(since date: Date) -> Double {
-        self.seconds(since: date) / 86400
+    func solo_days(since date: Date) -> Double {
+        self.solo_seconds(since: date) / 86400
     }
 
     /// 返回两个日期在指定日历单位下的整数差值(如完整天数、月数等)
@@ -695,14 +687,14 @@ public extension SoloWrapper where Base == Date {
     ///   - date: 比较基准日期
     ///   - unit: 日历单位(如 `.day`, `.month`)
     /// - Returns: 差值(可能为 `nil`,如跨时区异常)
-    func componentDifference(to date: Date, in unit: Calendar.Component) -> Int? {
-        let components = base.calendar.dateComponents([unit], from: date, to: base)
+    func solo_componentDifference(to date: Date, in unit: Calendar.Component) -> Int? {
+        let components = self.solo_calendar.dateComponents([unit], from: date, to: self)
         return components.value(for: unit)
     }
 }
 
 // MARK: - 常用方法
-public extension SoloWrapper where Base == Date {
+public extension Date {
     /// 日期名称的显示样式
     ///
     /// - note: 此枚举用于统一控制月份和星期名称的格式,
@@ -721,14 +713,14 @@ public extension SoloWrapper where Base == Date {
     ///   - 使用 `standalone` 形式的符号(如 `veryShortStandaloneMonthSymbols`),
     ///     因为这些名称是独立显示的(例如在日历或选择器中),而非嵌入句子
     ///   - 在 iOS 13 之前,系统不提供 `veryShort...` 符号,窄样式会回退到缩写形式
-    func monthName(style: SoloDateNameStyle = .wide) -> String {
+    func solo_monthName(style: SoloDateNameStyle = .wide) -> String {
         let formatter = DateFormatter()
         formatter.locale = Locale.current
-        formatter.calendar = base.calendar
-        formatter.timeZone = base.timeZone
+        formatter.calendar = self.solo_calendar
+        formatter.timeZone = self.solo_timeZone
 
         // 提取当前月份(1 = January, ..., 12 = December)
-        let month = base.calendar.component(.month, from: base)
+        let month = self.solo_calendar.component(.month, from: self)
         guard month >= 1, month <= 12 else { return "???" }
         let index = month - 1
 
@@ -760,14 +752,14 @@ public extension SoloWrapper where Base == Date {
     ///   - 同样优先使用 `standalone` 形式的窄符号(iOS 13+)
     ///   - 若需“周一作为一周开始”的逻辑,请勿在此处理——名称数组顺序由 locale 决定,
     ///     而非业务逻辑
-    func dayName(style: SoloDateNameStyle = .wide) -> String {
+    func solo_dayName(style: SoloDateNameStyle = .wide) -> String {
         let formatter = DateFormatter()
         formatter.locale = Locale.current
-        formatter.calendar = base.calendar
-        formatter.timeZone = base.timeZone
+        formatter.calendar = self.solo_calendar
+        formatter.timeZone = self.solo_timeZone
 
         // weekday 组件：1=Sunday, 2=Monday, ..., 7=Saturday(由 calendar 决定)
-        let weekday = base.calendar.component(.weekday, from: base)
+        let weekday = self.solo_calendar.component(.weekday, from: self)
         let index = weekday - 1
 
         // 根据样式选择对应的星期符号数组
@@ -788,14 +780,14 @@ public extension SoloWrapper where Base == Date {
     /// 在当前日期上增加指定日历组件的值
     ///
     /// - Returns: 新日期,若无法计算则返回 `nil`
-    func adding(_ component: Calendar.Component, value: Int) -> Date? {
-        base.calendar.date(byAdding: component, value: value, to: base)
+    func solo_adding(_ component: Calendar.Component, value: Int) -> Date? {
+        self.solo_calendar.date(byAdding: component, value: value, to: self)
     }
 
     /// 将当前日期的指定组件设置为给定值(如将分钟设为 30)
     ///
     /// - Returns: 新日期,若值非法或无法设置则返回 `nil`
-    func setting(_ component: Calendar.Component, to value: Int) -> Date? {
+    func solo_setting(_ component: Calendar.Component, to value: Int) -> Date? {
         let parent: Calendar.Component? = {
             switch component {
             case .second: return .minute
@@ -810,20 +802,20 @@ public extension SoloWrapper where Base == Date {
 
         // 如果有父单位,校验范围
         if let parent,
-           let range = base.calendar.range(of: component, in: parent, for: base),
+           let range = self.solo_calendar.range(of: component, in: parent, for: self),
            !range.contains(value)
         {
             return nil // 提前失败
         }
 
         // 否则直接尝试设置(让系统判断)
-        return base.calendar.date(bySetting: component, value: value, of: base)
+        return self.solo_calendar.date(bySetting: component, value: value, of: self)
     }
 
     /// 获取指定日历组件的起始时刻(如 `.day` → 00:00:00)
-    func beginning(of component: Calendar.Component) -> Date? {
+    func solo_beginning(of component: Calendar.Component) -> Date? {
         if component == .day {
-            return base.calendar.startOfDay(for: base)
+            return self.solo_calendar.startOfDay(for: self)
         }
 
         var neededComponents: Set<Calendar.Component> = []
@@ -837,14 +829,14 @@ public extension SoloWrapper where Base == Date {
         default: return nil
         }
 
-        let comps = base.calendar.dateComponents(neededComponents, from: base)
-        return base.calendar.date(from: comps)
+        let comps = self.solo_calendar.dateComponents(neededComponents, from: self)
+        return self.solo_calendar.date(from: comps)
     }
 
     /// 获取指定日历组件的结束时刻(如 `.day` → 23:59:59)
-    func end(of component: Calendar.Component) -> Date? {
-        guard let next = self.adding(component, value: 1) else { return nil }
-        guard let beginningOfNext = next.solo.beginning(of: component) else { return nil }
-        return beginningOfNext.solo.adding(.second, value: -1)
+    func solo_end(of component: Calendar.Component) -> Date? {
+        guard let next = self.solo_adding(component, value: 1) else { return nil }
+        guard let beginningOfNext = next.solo_beginning(of: component) else { return nil }
+        return beginningOfNext.solo_adding(.second, value: -1)
     }
 }

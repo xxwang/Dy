@@ -1,50 +1,50 @@
 import Foundation
 
 // MARK: - 字符提取、统计与分析
-public extension SoloWrapper where Base == String {
+public extension String {
     /// 提取所有数字字符（Unicode 十进制数字）
     ///
     /// - Returns: 仅包含数字的字符串
     /// - Note: 使用 `Character.isNumber`,支持全角数字、罗马数字等（若需仅 0-9,请用 `CharacterSet.decimalDigits`）
-    var numerics: String {
-        base.filter(\.isNumber)
+    var solo_numerics: String {
+        self.filter(\.isNumber)
     }
 
     /// 获取第一个字符（作为字符串）
     ///
     /// - Returns: 第一个字符的字符串形式;若为空串,返回 `nil`
-    var firstCharacter: String? {
-        base.first.map { String($0) }
+    var solo_firstCharacter: String? {
+        self.first.map { String($0) }
     }
 
     /// 获取最后一个字符（作为字符串）
     ///
     /// - Returns: 最后一个字符的字符串形式;若为空串,返回 `nil`
-    var lastCharacter: String? {
-        base.last.map { String($0) }
+    var solo_lastCharacter: String? {
+        self.last.map { String($0) }
     }
 
     /// 统计单词数量（以空白符和标点符号为分隔）
     ///
     /// - Returns: 非空单词的数量
-    var wordCount: Int {
+    var solo_wordCount: Int {
         let separators = CharacterSet.whitespacesAndNewlines.union(.punctuationCharacters)
-        return base.components(separatedBy: separators).count { !$0.isEmpty }
+        return self.components(separatedBy: separators).count { !$0.isEmpty }
     }
 
     /// 统计数字字符个数
     ///
     /// - Returns: 满足 `isNumber` 的字符数量
-    var numericCount: Int {
-        base.count(where: \.isNumber)
+    var solo_numericCount: Int {
+        self.count(where: \.isNumber)
     }
 
     /// 计算"显示宽度"：英文/数字占 1,常见汉字占 2（适用于终端对齐）
     ///
     /// - Returns: 加权字符数
     /// - Limitation: 仅检测基本汉字范围 `U+4E00–U+9FFF`,不覆盖扩展汉字、日韩汉字等
-    var displayWidth: Int {
-        base.reduce(0) { width, char in
+    var solo_displayWidth: Int {
+        self.reduce(0) { width, char in
             if let scalar = char.unicodeScalars.first,
                (0x4E00 ... 0x9FFF).contains(scalar.value)
             {
@@ -61,9 +61,9 @@ public extension SoloWrapper where Base == String {
     ///   - caseSensitive: 是否区分大小写,默认为 `true`
     /// - Returns: 出现次数
     /// - Note: 使用 `components(separatedBy:)` 实现,简单高效
-    func countOccurrences(of substring: String, caseSensitive: Bool = true) -> Int {
+    func solo_countOccurrences(of substring: String, caseSensitive: Bool = true) -> Int {
         guard !substring.isEmpty else { return 0 }
-        let source = caseSensitive ? base : base.lowercased()
+        let source = caseSensitive ? self : self.lowercased()
         let target = caseSensitive ? substring : substring.lowercased()
         return source.components(separatedBy: target).count - 1
     }
@@ -72,8 +72,8 @@ public extension SoloWrapper where Base == String {
     ///
     /// - Returns: 最常见字符;若无有效字符（如全为空白）,返回 `nil`
     /// - Note: 空格、制表符、换行等均被过滤
-    var mostFrequentCharacter: Character? {
-        let nonWhitespace = base.filter { !$0.isWhitespace }
+    var solo_mostFrequentCharacter: Character? {
+        let nonWhitespace = self.filter { !$0.isWhitespace }
         guard !nonWhitespace.isEmpty else { return nil }
 
         let frequency = nonWhitespace.reduce(into: [:]) { dict, char in
@@ -85,16 +85,16 @@ public extension SoloWrapper where Base == String {
     /// 获取每个 Unicode 标量的数值（十进制）
     ///
     /// - Returns: `Int` 类型的 Unicode 码点数组
-    var unicodeScalarValues: [Int] {
-        base.unicodeScalars.map { Int($0.value) }
+    var solo_unicodeScalarValues: [Int] {
+        self.unicodeScalars.map { Int($0.value) }
     }
 
     /// 提取所有单词（以空白符和标点符号分割）
     ///
     /// - Returns: 非空单词数组
-    var words: [String] {
+    var solo_words: [String] {
         let separators = CharacterSet.whitespacesAndNewlines.union(.punctuationCharacters)
-        return base.components(separatedBy: separators).filter { !$0.isEmpty }
+        return self.components(separatedBy: separators).filter { !$0.isEmpty }
     }
 
     /// 将整数 UTF-16 索引安全转换为 `String.Index`
@@ -102,26 +102,26 @@ public extension SoloWrapper where Base == String {
     /// - Parameter offset: UTF-16 索引（从 0 开始）
     /// - Returns: 对应的 `String.Index`;若越界,返回最近边界（`startIndex` 或 `endIndex`）
     /// - Note: 使用 `samePosition(in:)` 确保在复杂 Unicode 下仍安全
-    func index(at offset: Int) -> String.Index {
+    func solo_index(at offset: Int) -> String.Index {
         if offset <= 0 {
-            return base.startIndex
-        } else if offset >= base.utf16.count {
-            return base.endIndex
+            return self.startIndex
+        } else if offset >= self.utf16.count {
+            return self.endIndex
         } else {
-            let utf16Index = base.utf16.index(base.utf16.startIndex, offsetBy: offset)
-            return utf16Index.samePosition(in: base) ?? base.endIndex
+            let utf16Index = self.utf16.index(self.utf16.startIndex, offsetBy: offset)
+            return utf16Index.samePosition(in: self) ?? self.endIndex
         }
     }
 }
 
 // MARK: - Unicode编解码
-public extension SoloWrapper where Base == String {
+public extension String {
     /// 将字符串编码为 `JavaScript/JSON` 兼容的 `\uXXXX` 转义格式
     ///
     /// - Returns: 所有字符转换为 UTF-16 单元的 `\uXXXX` 序列拼接结果
-    var unicodeEncoded: String {
+    var solo_unicodeEncoded: String {
         var result = ""
-        for char in base {
+        for char in self {
             // 使用 UTF-16 单元确保与 JS/JSON 行为一致
             for unit in String(char).utf16 {
                 result += "\\u" + String(format: "%04x", unit)
@@ -133,20 +133,20 @@ public extension SoloWrapper where Base == String {
     /// 将 `JavaScript/JSON` 风格的 `\uXXXX` 转义字符串解码为原始字符串
     ///
     /// - Returns: 解码后的字符串;无法识别的 `\uXXXX` 序列将被保留原样
-    var unicodeDecoded: String {
+    var solo_unicodeDecoded: String {
         // 先提取所有 \uXXXX 序列(不区分大小写)
         let pattern = #"\\u([0-9a-fA-F]{4})"#
         guard let regex = try? NSRegularExpression(pattern: pattern, options: .caseInsensitive) else {
-            return base // 正则失败,原样返回
+            return self // 正则失败,原样返回
         }
 
-        let nsString = base as NSString
+        let nsString = self as NSString
         let fullRange = NSRange(location: 0, length: nsString.length)
-        let matches = regex.matches(in: base, range: fullRange)
+        let matches = regex.matches(in: self, range: fullRange)
 
         // 如果没有匹配项,直接返回
         if matches.isEmpty {
-            return base
+            return self
         }
 
         var result = ""

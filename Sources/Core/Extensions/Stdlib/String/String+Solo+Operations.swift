@@ -5,26 +5,26 @@ import Foundation
 #endif
 
 // MARK: - 字符串操作
-public extension SoloWrapper where Base == String {
+public extension String {
     /// 首字母大写,其余保持不变
     /// - 返回值: 首字母大写后的字符串;若为空,返回 `nil`
     ///
     /// - Example:
-    ///     `"hello world".solo.capitalizeFirst()` → `"Hello world"`
+    ///     `"hello world".solo_capitalizeFirst()` → `"Hello world"`
     ///
-    func capitalizeFirst() -> String? {
-        guard let first = base.first else { return nil }
-        return String(first).uppercased() + base.dropFirst()
+    func solo_capitalizeFirst() -> String? {
+        guard let first = self.first else { return nil }
+        return String(first).uppercased() + self.dropFirst()
     }
 
     /// 返回反转的字符串(非 mutating)
     /// - 返回值: 反转结果
     ///
     /// - Example:
-    ///     `"Hello".solo.reverse()` → `"olleH"`
+    ///     `"Hello".solo_reverse()` → `"olleH"`
     ///
-    func reverse() -> String {
-        String(base.reversed())
+    func solo_reverse() -> String {
+        String(self.reversed())
     }
 
     /// 在字符串前添加前缀(若尚未包含)
@@ -32,10 +32,10 @@ public extension SoloWrapper where Base == String {
     /// - 返回值: 添加后的字符串
     ///
     /// - Example:
-    ///     `"www.apple.com".solo.withPrefix("https://")` → `"https://www.apple.com"`
+    ///     `"www.apple.com".solo_withPrefix("https://")` → `"https://www.apple.com"`
     ///
-    func withPrefix(_ prefix: String) -> String {
-        base.hasPrefix(prefix) ? base : prefix + base
+    func solo_withPrefix(_ prefix: String) -> String {
+        self.hasPrefix(prefix) ? self : prefix + self
     }
 
     /// 在字符串后添加后缀(若尚未包含)
@@ -43,10 +43,10 @@ public extension SoloWrapper where Base == String {
     /// - 返回值: 添加后的字符串
     ///
     /// - Example:
-    ///     `"www.apple".solo.withSuffix(".com")` → `"www.apple.com"`
+    ///     `"www.apple".solo_withSuffix(".com")` → `"www.apple.com"`
     ///
-    func withSuffix(_ suffix: String) -> String {
-        base.hasSuffix(suffix) ? base : base + suffix
+    func solo_withSuffix(_ suffix: String) -> String {
+        self.hasSuffix(suffix) ? self : self + suffix
     }
 
     /// 在指定 UTF-16 位置插入字符串
@@ -55,15 +55,15 @@ public extension SoloWrapper where Base == String {
     /// - 返回值: 新字符串;若位置越界,插入到末尾
     ///
     /// - Example:
-    ///     `"HelloWorld!".solo.insert(" ", at: 5)` → `"Hello World!"`
+    ///     `"HelloWorld!".solo_insert(" ", at: 5)` → `"Hello World!"`
     ///
-    func insert(_ content: String, at position: Int) -> String {
-        let safePos = max(0, min(position, base.utf16.count))
-        let idx = base.utf16.index(base.utf16.startIndex, offsetBy: safePos)
-        guard let stringIdx = String.Index(idx, within: base) else {
-            return base + content // fallback
+    func solo_insert(_ content: String, at position: Int) -> String {
+        let safePos = max(0, min(position, self.utf16.count))
+        let idx = self.utf16.index(self.utf16.startIndex, offsetBy: safePos)
+        guard let stringIdx = String.Index(idx, within: self) else {
+            return self + content // fallback
         }
-        return String(base[..<stringIdx]) + content + String(base[stringIdx...])
+        return String(self[..<stringIdx]) + content + String(self[stringIdx...])
     }
 
     /// 重复当前字符串指定次数
@@ -71,11 +71,11 @@ public extension SoloWrapper where Base == String {
     /// - 返回值: 重复后的字符串;若 `times ≤ 0`,返回空串
     ///
     /// - Example:
-    ///     `"abc".solo.repeated(3)` → `"abcabcabc"`
+    ///     `"abc".solo_repeated(3)` → `"abcabcabc"`
     ///
-    func repeated(_ times: Int) -> String {
+    func solo_repeated(_ times: Int) -> String {
         guard times > 0 else { return "" }
-        return String(repeating: base, count: times)
+        return String(repeating: self, count: times)
     }
 
     /// 获取与另一字符串的最长公共后缀
@@ -83,10 +83,10 @@ public extension SoloWrapper where Base == String {
     /// - 返回值: 公共后缀字符串
     ///
     /// - Example:
-    ///     `"apple".solo.commonSuffix(with: "maple")` → `"ple"`
+    ///     `"apple".solo_commonSuffix(with: "maple")` → `"ple"`
     ///
-    func commonSuffix(with other: String) -> String {
-        let common = zip(base.reversed(), other.reversed())
+    func solo_commonSuffix(with other: String) -> String {
+        let common = zip(self.reversed(), other.reversed())
             .prefix(while: { pair in pair.0 == pair.1 })
             .map(\.0)
         return String(common.reversed())
@@ -94,52 +94,52 @@ public extension SoloWrapper where Base == String {
 }
 
 // MARK: - 字符判断(高效、无正则)
-public extension SoloWrapper where Base == String {
+public extension String {
     // MARK: - 基础字符检测
 
     /// 是否包含任意字母
-    var hasLetters: Bool {
-        base.rangeOfCharacter(from: .letters) != nil
+    var solo_hasLetters: Bool {
+        self.rangeOfCharacter(from: .letters) != nil
     }
 
     /// 是否只包含字母(无数字、符号等)
-    var isAlphabetic: Bool {
-        !base.isEmpty && base.allSatisfy(\.isLetter)
+    var solo_isAlphabetic: Bool {
+        !self.isEmpty && self.allSatisfy(\.isLetter)
     }
 
     /// 是否包含任意数字
-    var hasDigits: Bool {
-        base.rangeOfCharacter(from: .decimalDigits) != nil
+    var solo_hasDigits: Bool {
+        self.rangeOfCharacter(from: .decimalDigits) != nil
     }
 
     /// 是否只包含数字(0-9)
-    var isDigits: Bool {
-        !base.isEmpty && base.allSatisfy(\.isNumber)
+    var solo_isDigits: Bool {
+        !self.isEmpty && self.allSatisfy(\.isNumber)
     }
 
     /// 是否同时包含字母和数字
-    var hasAlphanumeric: Bool {
-        self.hasLetters && self.hasDigits
+    var solo_hasAlphanumeric: Bool {
+        self.solo_hasLetters && self.solo_hasDigits
     }
 
     /// 是否只包含字母或数字(即：字母数字混合,无符号)
-    var isAlphanumeric: Bool {
-        !base.isEmpty && base.allSatisfy { $0.isLetter || $0.isNumber }
+    var solo_isAlphanumeric: Bool {
+        !self.isEmpty && self.allSatisfy { $0.isLetter || $0.isNumber }
     }
 
     /// 是否只包含空格或换行符
-    var isWhitespace: Bool {
-        base.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+    var solo_isWhitespace: Bool {
+        self.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
 
     /// 是否所有字符唯一(无重复)
-    var hasUniqueCharacters: Bool {
-        Set(base).count == base.count
+    var solo_hasUniqueCharacters: Bool {
+        Set(self).count == self.count
     }
 
     /// 是否包含中文字符(支持扩展汉字)
-    var containsChinese: Bool {
-        base.unicodeScalars.contains { scalar in
+    var solo_containsChinese: Bool {
+        self.unicodeScalars.contains { scalar in
             let v = scalar.value
             return (v >= 0x4E00 && v <= 0x9FFF) ||
                 (v >= 0x3400 && v <= 0x4DBF) ||
@@ -150,8 +150,8 @@ public extension SoloWrapper where Base == String {
     }
 
     /// 是否只包含中文字符
-    var isChinese: Bool {
-        !base.isEmpty && base.allSatisfy { char in
+    var solo_isChinese: Bool {
+        !self.isEmpty && self.allSatisfy { char in
             guard let scalar = char.unicodeScalars.first else { return false }
             let v = scalar.value
             return (v >= 0x4E00 && v <= 0x9FFF) ||
@@ -162,9 +162,9 @@ public extension SoloWrapper where Base == String {
     // MARK: - 连续数字检测
 
     /// 是否包含连续 ≥2 位的数字
-    var hasContinuousDigits: Bool {
+    var solo_hasContinuousDigits: Bool {
         var count = 0
-        for c in base {
+        for c in self {
             if c.isNumber {
                 count += 1
                 if count >= 2 {
@@ -179,19 +179,19 @@ public extension SoloWrapper where Base == String {
 }
 
 // MARK: - 回文 & 拼写
-public extension SoloWrapper where Base == String {
+public extension String {
     /// 是否为回文(忽略大小写,仅比较字母)
-    var isPalindrome: Bool {
-        let letters = base.filter(\.isLetter).lowercased()
+    var solo_isPalindrome: Bool {
+        let letters = self.filter(\.isLetter).lowercased()
         return letters == String(letters.reversed())
     }
 
     /// 是否拼写正确(仅 iOS/macOS)
-    var isSpelledCorrectly: Bool {
+    var solo_isSpelledCorrectly: Bool {
         let checker = UITextChecker()
-        let range = NSRange(location: 0, length: base.utf16.count)
+        let range = NSRange(location: 0, length: self.utf16.count)
         let misspelled = checker.rangeOfMisspelledWord(
-            in: base,
+            in: self,
             range: range,
             startingAt: 0,
             wrap: false,

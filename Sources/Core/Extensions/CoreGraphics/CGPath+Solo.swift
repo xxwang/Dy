@@ -1,12 +1,10 @@
 import CoreGraphics
 
-extension CGPath: SoloExtension {}
-
-public extension SoloWrapper where Base == CGPath {
+public extension CGPath {
     /// 创建当前路径的可变副本
-    func toMutable() -> CGMutablePath {
+    func solo_cGMutablePath() -> CGMutablePath {
         let copy = CGMutablePath()
-        copy.addPath(base)
+        copy.addPath(self)
         return copy
     }
 }
