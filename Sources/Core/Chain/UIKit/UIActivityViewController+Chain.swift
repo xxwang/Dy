@@ -1,7 +1,7 @@
 import UIKit
 
 // MARK: - 链式属性
-public extension SoloWrapper where Base: UIActivityViewController {
+public extension DyWrapper where Base: UIActivityViewController {
     /// 设置完整的排除类型列表(覆盖原有值)
     ///
     /// - Parameter types: 要排除的类型数组

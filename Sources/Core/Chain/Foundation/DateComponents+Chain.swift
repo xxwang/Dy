@@ -1,7 +1,7 @@
 import Foundation
 
 // MARK: - 链式设置
-public extension SoloWrapper where Base == DateComponents {
+public extension DyWrapper where Base == DateComponents {
     /// 设置日历
     /// - Parameter calendar: 要设置的日历对象
     /// - Returns: `Self`

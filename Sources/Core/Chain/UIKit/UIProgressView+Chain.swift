@@ -1,7 +1,7 @@
 import UIKit
 
 // MARK: - 链式设置属性
-public extension SoloWrapper where Base: UIProgressView {
+public extension DyWrapper where Base: UIProgressView {
     /// 设置当前进度值
     ///
     /// - Parameter progress: 进度值,建议范围 `0.0` ～ `1.0`

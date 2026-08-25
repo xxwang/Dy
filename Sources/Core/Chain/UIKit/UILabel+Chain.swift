@@ -1,7 +1,7 @@
 import UIKit
 
 // MARK: - 链式设置属性
-public extension SoloWrapper where Base: UILabel {
+public extension DyWrapper where Base: UILabel {
     /// 设置文字内容
     /// - Parameter text: 文字内容
     /// - Returns:`Self`
@@ -156,7 +156,7 @@ public extension SoloWrapper where Base: UILabel {
 }
 
 // MARK: - 链式设置属性(自定义)
-public extension SoloWrapper where Base: UILabel {
+public extension DyWrapper where Base: UILabel {
     /// 设置特定范围的字体
     /// - Parameters:
     ///   - font: 字体
@@ -165,12 +165,12 @@ public extension SoloWrapper where Base: UILabel {
     ///
     /// - Example:
     ///
-    ///     label.solo.attributedFont(.boldSystemFont(ofSize: 18), for: NSRange(location: 0, length: 5))
+    ///     label.dy.attributedFont(.boldSystemFont(ofSize: 18), for: NSRange(location: 0, length: 5))
     ///
     @discardableResult
     func attributedFont(_ font: UIFont, for range: NSRange) -> Self {
         base.attributedText = base.attributedText?
-            .solo
+            .dy
             .toMutable()
             .font(font, for: range)
             .build()
@@ -185,12 +185,12 @@ public extension SoloWrapper where Base: UILabel {
     ///
     /// - Example:
     ///
-    ///     label.solo.attributedColor(.red, for: NSRange(location: 0, length: 5))
+    ///     label.dy.attributedColor(.red, for: NSRange(location: 0, length: 5))
     ///
     @discardableResult
     func attributedColor(_ color: UIColor, for range: NSRange) -> Self {
         base.attributedText = base.attributedText?
-            .solo
+            .dy
             .toMutable()
             .foregroundColor(color, for: range)
             .build()
@@ -203,14 +203,14 @@ public extension SoloWrapper where Base: UILabel {
     ///
     /// - Example:
     ///
-    ///     label.solo.lineSpacing(5)
+    ///     label.dy.lineSpacing(5)
     ///
     @discardableResult
     func lineSpacing(_ spacing: CGFloat) -> Self {
         base.attributedText = base.attributedText?
-            .solo
+            .dy
             .toMutable()
-            .lineSpacing(spacing, for: (base.text ?? "").solo_fullNSRange)
+            .lineSpacing(spacing, for: (base.text ?? "").dy_fullNSRange)
             .build()
         return self
     }
@@ -221,14 +221,14 @@ public extension SoloWrapper where Base: UILabel {
     ///
     /// - Example:
     ///
-    ///     label.solo.wordSpacing(2)
+    ///     label.dy.wordSpacing(2)
     ///
     @discardableResult
     func wordSpacing(_ spacing: CGFloat) -> Self {
         base.attributedText = base.attributedText?
-            .solo
+            .dy
             .toMutable()
-            .characterSpacing(spacing, for: base.text?.solo_fullNSRange)
+            .characterSpacing(spacing, for: base.text?.dy_fullNSRange)
             .build()
         return self
     }
@@ -242,7 +242,7 @@ public extension SoloWrapper where Base: UILabel {
     ///
     /// - Example:
     ///
-    ///     label.solo.attributedUnderLine(.blue, style: .double, for: NSRange(location: 0, length: 5))
+    ///     label.dy.attributedUnderLine(.blue, style: .double, for: NSRange(location: 0, length: 5))
     ///
     @discardableResult
     func attributedUnderLine(
@@ -251,7 +251,7 @@ public extension SoloWrapper where Base: UILabel {
         for range: NSRange
     ) -> Self {
         base.attributedText = base.attributedText?
-            .solo
+            .dy
             .toMutable()
             .underline(color: color, style: style, for: range)
             .build()
@@ -266,12 +266,12 @@ public extension SoloWrapper where Base: UILabel {
     ///
     /// - Example:
     ///
-    ///     label.solo.attributedDeleteLine(.red, for: NSRange(location: 0, length: 5))
+    ///     label.dy.attributedDeleteLine(.red, for: NSRange(location: 0, length: 5))
     ///
     @discardableResult
     func attributedDeleteLine(_ color: UIColor, for range: NSRange) -> Self {
         base.attributedText = base.attributedText?
-            .solo
+            .dy
             .toMutable()
             .strikethrough(color: color, for: range)
             .build()
@@ -284,12 +284,12 @@ public extension SoloWrapper where Base: UILabel {
     ///
     /// - Example:
     ///
-    ///     label.solo.attributedFirstLineHeadIndent(10)
+    ///     label.dy.attributedFirstLineHeadIndent(10)
     ///
     @discardableResult
     func attributedFirstLineHeadIndent(_ indent: CGFloat) -> Self {
         base.attributedText = base.attributedText?
-            .solo
+            .dy
             .toMutable()
             .firstLineHeadIndent(indent)
             .build()
@@ -304,12 +304,12 @@ public extension SoloWrapper where Base: UILabel {
     ///
     /// - Example:
     ///
-    ///     label.solo.attributedObliqueness(0.3, for: NSRange(location: 0, length: 5))
+    ///     label.dy.attributedObliqueness(0.3, for: NSRange(location: 0, length: 5))
     ///
     @discardableResult
     func attributedObliqueness(_ inclination: Float = 0, for range: NSRange) -> Self {
         base.attributedText = base.attributedText?
-            .solo
+            .dy
             .toMutable()
             .obliqueness(inclination, for: range)
             .build()
@@ -325,7 +325,7 @@ public extension SoloWrapper where Base: UILabel {
     ///
     /// - Example:
     ///
-    ///     label.solo.attachment("image_name".image, bounds: CGRect(x: 0, y: -5, width: 20, height: 20))
+    ///     label.dy.attachment("image_name".image, bounds: CGRect(x: 0, y: -5, width: 20, height: 20))
     ///
     @discardableResult
     func attachment(
@@ -334,7 +334,7 @@ public extension SoloWrapper where Base: UILabel {
         at index: Int = 0
     ) -> Self {
         base.attributedText = base.attributedText?
-            .solo
+            .dy
             .toMutable()
             .attachment(image, bounds: bounds, at: index)
             .build()

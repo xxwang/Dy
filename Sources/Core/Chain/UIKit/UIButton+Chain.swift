@@ -1,7 +1,7 @@
 import UIKit
 
 // MARK: - 链式设置属性(UIButton.Configuration)
-public extension SoloWrapper where Base: UIButton {
+public extension DyWrapper where Base: UIButton {
     /// 设置按钮的 `UIButton.Configuration`
     /// - Parameter configuration: 按钮的新配置对象
     /// - Returns: `Self`
@@ -223,7 +223,7 @@ public extension SoloWrapper where Base: UIButton {
 }
 
 // MARK: - 链式方法
-public extension SoloWrapper where Base: UIButton {
+public extension DyWrapper where Base: UIButton {
     /// 设置按钮在指定状态下的普通文本标题
     /// - Parameters:
     ///   - title: 标题字符串
@@ -279,7 +279,7 @@ public extension SoloWrapper where Base: UIButton {
 
     /// 设置按钮在指定状态下的背景图片
     ///
-    /// - Note: iOS 15+ 且按钮使用了 `UIButton.Configuration`(如 `SoloFactory` 创建的按钮)时,
+    /// - Note: iOS 15+ 且按钮使用了 `UIButton.Configuration`(如 `DyFactory` 创建的按钮)时,
     ///   传统的 `setBackgroundImage(_:for:)` 会被 `configuration.background` 覆盖而无效,
     ///   此方法会自动改走配置路径。
     /// - Parameters:
@@ -301,7 +301,7 @@ public extension SoloWrapper where Base: UIButton {
 
     /// 设置按钮在指定状态下的纯色背景(通过生成纯色图片实现)
     ///
-    /// - Note: iOS 15+ 且按钮使用了 `UIButton.Configuration`(如 `SoloFactory` 创建的按钮)时,
+    /// - Note: iOS 15+ 且按钮使用了 `UIButton.Configuration`(如 `DyFactory` 创建的按钮)时,
     ///   传统的 `setBackgroundImage(_:for:)` 会被 `configuration.background` 覆盖而无效,
     ///   此方法会自动改走配置路径(设置 `configuration.background.backgroundColor`)。
     /// - Parameters:
@@ -366,13 +366,13 @@ public extension SoloWrapper where Base: UIButton {
 }
 
 // MARK: - 链式方法(自定义)
-public extension SoloWrapper where Base: UIButton {
+public extension DyWrapper where Base: UIButton {
     /// 扩大按钮的点击区域
     /// - Parameter size: 向四周扩展的像素大小
     /// - Returns: `Self`
     @discardableResult
     func expandClickArea(_ size: CGFloat = 10) -> Self {
-        base.solo_expandClickArea(size)
+        base.dy_expandClickArea(size)
         return self
     }
 

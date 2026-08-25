@@ -1,7 +1,7 @@
 import UIKit
 
 // MARK: - 链式设置属性
-public extension SoloWrapper where Base: UINavigationBar {
+public extension DyWrapper where Base: UINavigationBar {
     /// 设置导航栏是否半透明
     /// - Parameter isTranslucent: 是否半透明
     /// - Returns: `Self`

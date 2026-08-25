@@ -2,7 +2,7 @@ import QuartzCore
 import UIKit
 
 // MARK: - 链式设置属性
-public extension SoloWrapper where Base: CAShapeLayer {
+public extension DyWrapper where Base: CAShapeLayer {
     /// 设置绘制路径
     /// - Parameter path: 要绘制的 `CGPath`(可由 `UIBezierPath` 转换而来)
     /// - Returns: `Self`
@@ -17,7 +17,7 @@ public extension SoloWrapper where Base: CAShapeLayer {
     /// - Important: 若不设置,高分辨率设备上路径可能模糊
     /// - Returns: `Self`
     @discardableResult
-    func contentsScale(_ scale: CGFloat = SoloScreen.screenScale) -> Self {
+    func contentsScale(_ scale: CGFloat = DyScreen.screenScale) -> Self {
         base.contentsScale = scale
         return self
     }

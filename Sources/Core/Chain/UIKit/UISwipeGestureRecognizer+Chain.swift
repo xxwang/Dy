@@ -1,7 +1,7 @@
 import UIKit
 
 // MARK: - 链式设置属性
-public extension SoloWrapper where Base: UISwipeGestureRecognizer {
+public extension DyWrapper where Base: UISwipeGestureRecognizer {
     /// 设置滑动手势的方向
     /// - Parameter direction: 滑动方向
     /// - Returns: `Self`

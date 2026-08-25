@@ -2,7 +2,7 @@ import QuartzCore
 import UIKit
 
 // MARK: - 链式属性设置
-public extension SoloWrapper where Base: CAGradientLayer {
+public extension DyWrapper where Base: CAGradientLayer {
     /// 设置渐变类型
     /// - Parameter type: 渐变类型
     ///   - `.axial`：线性渐变(默认)

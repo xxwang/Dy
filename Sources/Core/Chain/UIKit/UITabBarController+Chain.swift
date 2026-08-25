@@ -1,7 +1,7 @@
 import UIKit
 
 // MARK: - 链式设置属性
-public extension SoloWrapper where Base: UITabBarController {
+public extension DyWrapper where Base: UITabBarController {
     /// 设置代理
     /// - Parameter delegate: 代理对象
     /// - Returns: `Self`

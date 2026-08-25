@@ -1,12 +1,12 @@
 import UIKit
 
 // MARK: - Cell 注册与复用
-public extension SoloWrapper where Base: UITableView {
+public extension DyWrapper where Base: UITableView {
     /// 使用类名注册`纯代码` `Cell`
     /// - Parameter cellType: `Cell` 类型(需继承 `UITableViewCell`)
     @discardableResult
     func register(withCellClass cellType: (some UITableViewCell).Type) -> Self {
-        base.register(cellType, forCellReuseIdentifier: cellType.solo_identifier)
+        base.register(cellType, forCellReuseIdentifier: cellType.dy_identifier)
         return self
     }
 
@@ -16,7 +16,7 @@ public extension SoloWrapper where Base: UITableView {
     ///   - cellType: Cell 类型
     @discardableResult
     func register(nib: UINib?, withCellClass cellType: (some UITableViewCell).Type) -> Self {
-        base.register(nib, forCellReuseIdentifier: cellType.solo_identifier)
+        base.register(nib, forCellReuseIdentifier: cellType.dy_identifier)
         return self
     }
 
@@ -27,15 +27,15 @@ public extension SoloWrapper where Base: UITableView {
     @discardableResult
     func register(nibWithCellClass cellType: (some UITableViewCell).Type, at bundleClass: AnyClass? = nil) -> Self {
         let bundle = bundleClass.map { Bundle(for: $0) } ?? Bundle(for: cellType)
-        let nib = UINib(nibName: cellType.solo_identifier, bundle: bundle)
-        base.register(nib, forCellReuseIdentifier: cellType.solo_identifier)
+        let nib = UINib(nibName: cellType.dy_identifier, bundle: bundle)
+        base.register(nib, forCellReuseIdentifier: cellType.dy_identifier)
         return self
     }
 
     /// 使用类名注册 `Header/Footer View`(纯代码)
     @discardableResult
     func register(withHeaderFooterViewClass viewType: (some UITableViewHeaderFooterView).Type) -> Self {
-        base.register(viewType, forHeaderFooterViewReuseIdentifier: viewType.solo_identifier)
+        base.register(viewType, forHeaderFooterViewReuseIdentifier: viewType.dy_identifier)
         return self
     }
 
@@ -45,13 +45,13 @@ public extension SoloWrapper where Base: UITableView {
         nib: UINib?,
         withHeaderFooterViewClass viewType: (some UITableViewHeaderFooterView).Type
     ) -> Self {
-        base.register(nib, forHeaderFooterViewReuseIdentifier: viewType.solo_identifier)
+        base.register(nib, forHeaderFooterViewReuseIdentifier: viewType.dy_identifier)
         return self
     }
 }
 
 // MARK: - 链式设置属性
-public extension SoloWrapper where Base: UITableView {
+public extension DyWrapper where Base: UITableView {
     /// 设置 `delegate`
     /// - Parameter delegate: 代理对象
     /// - Returns: `Self`
@@ -197,7 +197,7 @@ public extension SoloWrapper where Base: UITableView {
 }
 
 // MARK: - 链式方法
-public extension SoloWrapper where Base: UITableView {
+public extension DyWrapper where Base: UITableView {
     /// 滚动到最近选中的行
     /// - Parameters:
     ///   - position: 位置
@@ -222,7 +222,7 @@ public extension SoloWrapper where Base: UITableView {
 }
 
 // MARK: - 链式方法(自定义)
-public extension SoloWrapper where Base: UITableView {
+public extension DyWrapper where Base: UITableView {
     /// 滚动到顶部
     /// - Parameter animated: 是否动画
     /// - Returns: `Self`

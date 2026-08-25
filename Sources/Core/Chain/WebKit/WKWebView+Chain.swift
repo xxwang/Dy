@@ -2,7 +2,7 @@ import WebKit
 import os.log
 
 // MARK: - 链式属性
-public extension SoloWrapper where Base: WKWebView {
+public extension DyWrapper where Base: WKWebView {
     /// 设置网页导航代理
     /// - Parameter delegate: 导航代理对象
     /// - Returns: `Self`
@@ -23,7 +23,7 @@ public extension SoloWrapper where Base: WKWebView {
 }
 
 // MARK: - 链式方法
-public extension SoloWrapper where Base: WKWebView {
+public extension DyWrapper where Base: WKWebView {
     /// 手动刷新当前网页
     /// - Returns: `Self`
     @discardableResult
@@ -63,7 +63,7 @@ public extension SoloWrapper where Base: WKWebView {
 }
 
 // MARK: - 链式方法(自定义)
-public extension SoloWrapper where Base: WKWebView {
+public extension DyWrapper where Base: WKWebView {
     /// 使用`URL`字符串加载网页
     /// - Parameter string: 网页`URL`字符串
     /// - Returns: `Self`
@@ -123,7 +123,7 @@ public extension SoloWrapper where Base: WKWebView {
 }
 
 // MARK: - 链式脚本
-public extension SoloWrapper where Base: WKWebView {
+public extension DyWrapper where Base: WKWebView {
     /// 向 `WKWebView` 注入 `JavaScript` 脚本
     /// - Parameters:
     ///   - script: 要注入的 JavaScript 代码
@@ -151,7 +151,7 @@ public extension SoloWrapper where Base: WKWebView {
     ///   - completion: 完成回调
     /// - Returns: `Self`
     @discardableResult
-    func execScript(script: String, completion: @escaping SoloAction1<Result<Any?, Error>>) -> Self {
+    func execScript(script: String, completion: @escaping DyAction1<Result<Any?, Error>>) -> Self {
         base.evaluateJavaScript(script) { result, error in
             if let error {
                 completion(.failure(error))

@@ -1,7 +1,7 @@
 import UIKit
 
 // MARK: - 链式设置属性
-public extension SoloWrapper where Base: UITextField {
+public extension DyWrapper where Base: UITextField {
     /// 设置普通文本内容
     /// - Parameter text: 要显示的文本
     /// - Returns: `Self`
@@ -220,7 +220,7 @@ public extension SoloWrapper where Base: UITextField {
 }
 
 // MARK: - 链式方法(自定义)
-public extension SoloWrapper where Base: UITextField {
+public extension DyWrapper where Base: UITextField {
     /// 清空文本和富文本内容
     /// - Returns: `Self`
     @discardableResult

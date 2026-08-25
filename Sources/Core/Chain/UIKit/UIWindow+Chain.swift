@@ -1,7 +1,7 @@
 import UIKit
 
 // MARK: - 链式设置属性
-public extension SoloWrapper where Base: UIWindow {
+public extension DyWrapper where Base: UIWindow {
     /// 设置窗口的根视图控制器(root view controller)
     ///
     /// - Parameter rootViewController: 要设置为根视图控制器的 `UIViewController` 实例
@@ -42,7 +42,7 @@ public extension SoloWrapper where Base: UIWindow {
 }
 
 // MARK: - 链式方法
-public extension SoloWrapper where Base: UIWindow {
+public extension DyWrapper where Base: UIWindow {
     /// 将当前窗口设为应用的主窗口并显示出来
     /// - Returns: `Self`
     @discardableResult

@@ -1,9 +1,9 @@
 import Foundation
 
-extension NSObject: SoloExtension {}
+extension NSObject: DyExtension {}
 
 // MARK: - 链式方法
-public extension SoloWrapper where Base: NSObject {
+public extension DyWrapper where Base: NSObject {
     /// 对当前对象执行操作,并返回自身,支持链式调用
     /// 适用于引用类型(如 `NSObject` 子类、`UIView` 等)
     ///
@@ -13,7 +13,7 @@ public extension SoloWrapper where Base: NSObject {
     /// - Example:
     /// ```
     /// let label = UILabel()
-    /// .solo
+    /// .dy
     /// .then {
     ///     $0.text = "Hello"
     ///     $0.textColor = .red

@@ -2,7 +2,7 @@ import QuartzCore
 import UIKit
 
 // MARK: - 链式设置属性
-public extension SoloWrapper where Base: CALayer {
+public extension DyWrapper where Base: CALayer {
     /// 设置图层的 frame(位置与尺寸)
     /// - Parameter frame: 新的 frame
     /// - Returns: `Self`
@@ -156,7 +156,7 @@ public extension SoloWrapper where Base: CALayer {
     /// 启用或禁用光栅化(将图层预渲染为位图)
     /// - Parameter shouldRasterize: 是否启用光栅化
     /// - Returns: `Self`
-    /// - Important: 启用后建议调用 `.solo.rasterizationScale(SoloScreen.screenScale)` 以适配 Retina 屏幕
+    /// - Important: 启用后建议调用 `.dy.rasterizationScale(DyScreen.screenScale)` 以适配 Retina 屏幕
     @discardableResult
     func shouldRasterize(_ shouldRasterize: Bool) -> Self {
         base.shouldRasterize = shouldRasterize
@@ -164,7 +164,7 @@ public extension SoloWrapper where Base: CALayer {
     }
 
     /// 设置光栅化缩放比例(通常等于屏幕 scale)
-    /// - Parameter scale: 缩放因子(如 `SoloScreen.screenScale`)
+    /// - Parameter scale: 缩放因子(如 `DyScreen.screenScale`)
     /// - Returns: `Self`
     @discardableResult
     func rasterizationScale(_ scale: CGFloat) -> Self {

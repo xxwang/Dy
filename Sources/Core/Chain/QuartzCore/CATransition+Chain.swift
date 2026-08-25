@@ -1,7 +1,7 @@
 import QuartzCore
 
 // MARK: - 属性
-public extension SoloWrapper where Base: CATransition {
+public extension DyWrapper where Base: CATransition {
     /// 设置转场动画的类型
     /// - Parameter type: 动画类型(如 `.fade`, `.push`, `.moveIn`, `.reveal`)
     ///   - `.fade`: 淡入淡出(最常用,兼容性最好)

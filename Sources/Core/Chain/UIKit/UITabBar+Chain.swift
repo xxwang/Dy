@@ -1,7 +1,7 @@
 import UIKit
 
 // MARK: - 链式设置属性
-public extension SoloWrapper where Base: UITabBar {
+public extension DyWrapper where Base: UITabBar {
     /// 设置代理
     /// - Parameter tabBarDelegate: 代理对象
     /// - Returns: `Self`
@@ -178,7 +178,7 @@ public extension SoloWrapper where Base: UITabBar {
 }
 
 // MARK: - 链式方法
-public extension SoloWrapper where Base: UITabBar {
+public extension DyWrapper where Base: UITabBar {
     /// 设置圆角
     /// - Parameters:
     ///   - corners: 需要设置圆角的角
@@ -186,7 +186,7 @@ public extension SoloWrapper where Base: UITabBar {
     /// - Returns: `Self`
     @discardableResult
     func corner(maskedCorners: CACornerMask, radius: CGFloat) -> Self {
-        base.solo
+        base.dy
             .maskedCorners(maskedCorners)
             .cornerRadius(radius)
             .masksToBounds(true)

@@ -1,7 +1,7 @@
 import UIKit
 
 // MARK: - 链式属性
-public extension SoloWrapper where Base: UIActivityIndicatorView {
+public extension DyWrapper where Base: UIActivityIndicatorView {
     /// 设置是否在暂停的时候隐藏
     /// - Parameter hidesWhenStopped: 是否在暂停的时候隐藏
     /// - Returns: `Self`

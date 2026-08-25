@@ -1,7 +1,7 @@
 import UIKit
 
 // MARK: - 链式设置属性
-public extension SoloWrapper where Base: UIGestureRecognizer {
+public extension DyWrapper where Base: UIGestureRecognizer {
     /// 启用或禁用手势识别器
     /// - Parameter enabled: 是否启用
     /// - Returns: `Self`
@@ -85,7 +85,7 @@ public extension SoloWrapper where Base: UIGestureRecognizer {
 }
 
 // MARK: - 链式方法
-public extension SoloWrapper where Base: UIGestureRecognizer {
+public extension DyWrapper where Base: UIGestureRecognizer {
     /// 添加`target-action`
     /// - Parameters:
     ///   - target: 响应对象
@@ -119,7 +119,7 @@ public extension SoloWrapper where Base: UIGestureRecognizer {
 }
 
 // MARK: - 链式方法自定义
-public extension SoloWrapper where Base: UIGestureRecognizer {
+public extension DyWrapper where Base: UIGestureRecognizer {
     /// 将手势识别器添加到指定视图
     /// - Parameter view: 目标视图
     /// - Returns: `Self`
@@ -145,8 +145,8 @@ public extension SoloWrapper where Base: UIGestureRecognizer {
     /// - Parameter block: 回调闭包
     /// - Returns: `Self`
     @discardableResult
-    func onRecognized(_ block: @escaping SoloAction1<UIGestureRecognizer>) -> Self {
-        base.solo_recognizedBlock = block
+    func onRecognized(_ block: @escaping DyAction1<UIGestureRecognizer>) -> Self {
+        base.dy_recognizedBlock = block
         base.removeTarget(base, action: #selector(UIGestureRecognizer.stateChangeHandler))
         base.addTarget(base, action: #selector(UIGestureRecognizer.stateChangeHandler))
         return self
@@ -158,8 +158,8 @@ public extension SoloWrapper where Base: UIGestureRecognizer {
     /// - Parameter block: 回调闭包
     /// - Returns: `Self`
     @discardableResult
-    func onStateChanged(_ block: @escaping SoloAction1<UIGestureRecognizer.State>) -> Self {
-        base.solo_stateChangedBlock = block
+    func onStateChanged(_ block: @escaping DyAction1<UIGestureRecognizer.State>) -> Self {
+        base.dy_stateChangedBlock = block
         base.removeTarget(base, action: #selector(UIGestureRecognizer.stateChangeHandler))
         base.addTarget(base, action: #selector(UIGestureRecognizer.stateChangeHandler))
         return self

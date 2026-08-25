@@ -1,7 +1,7 @@
 import UIKit
 
 // MARK: - 链式设置属性
-public extension SoloWrapper where Base: UIPageControl {
+public extension DyWrapper where Base: UIPageControl {
     /// 设置当前选中指示器的颜色
     ///
     /// - Parameter color: 当前页指示器的颜色,传入 `nil` 将恢复默认颜色
@@ -109,7 +109,7 @@ public extension SoloWrapper where Base: UIPageControl {
 }
 
 // MARK: - 链式方法
-public extension SoloWrapper where Base: UIPageControl {
+public extension DyWrapper where Base: UIPageControl {
     /// 设置某一页的自定义指示器图像
     ///
     /// - Parameters:

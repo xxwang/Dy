@@ -1,7 +1,7 @@
 import Foundation
 
 // MARK: - 链式设置
-public extension SoloWrapper where Base: DateFormatter {
+public extension DyWrapper where Base: DateFormatter {
     /// 设置日期格式字符串
     /// - Parameter dateFormat: 日期格式（如 `"yyyy-MM-dd HH:mm"`）
     /// - Returns: `Self`，支持链式调用

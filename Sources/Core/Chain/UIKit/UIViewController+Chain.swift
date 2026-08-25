@@ -1,7 +1,7 @@
 import UIKit
 
 // MARK: - 链式设置属性
-public extension SoloWrapper where Base: UIViewController {
+public extension DyWrapper where Base: UIViewController {
     /// 强制覆盖用户界面样式(亮色/暗色模式)
     /// - Parameter style: 样式
     /// - Returns: `Self`
@@ -40,7 +40,7 @@ public extension SoloWrapper where Base: UIViewController {
 }
 
 // MARK: - 链式方法(自定义)
-public extension SoloWrapper where Base: UIViewController {
+public extension DyWrapper where Base: UIViewController {
     /// 安全地将子控制器添加到指定容器视图
     ///
     /// - Parameters:

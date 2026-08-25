@@ -1,7 +1,7 @@
 import UIKit
 
 // MARK: - 链式设置属性
-public extension SoloWrapper where Base: UIDatePicker {
+public extension DyWrapper where Base: UIDatePicker {
     /// 设置时区
     /// - Parameter timeZone: 时区
     /// - Returns: `Self`

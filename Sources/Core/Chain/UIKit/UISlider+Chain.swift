@@ -1,7 +1,7 @@
 import UIKit
 
 // MARK: - 链式设置属性
-public extension SoloWrapper where Base: UISlider {
+public extension DyWrapper where Base: UISlider {
     /// 设置滑块的当前值
     ///
     /// - Parameter value: 要设置的值若超出 `[minimumValue, maximumValue]` 范围,

@@ -2,7 +2,7 @@ import UIKit
 import os.log
 
 // MARK: - 链式设置属性
-public extension SoloWrapper where Base: UIAlertController {
+public extension DyWrapper where Base: UIAlertController {
     /// 设置标题
     /// - Parameter title: 标题文本
     /// - Returns: `Self`
@@ -40,7 +40,7 @@ public extension SoloWrapper where Base: UIAlertController {
     func addAction(
         title: String,
         style: UIAlertAction.Style = .default,
-        handler: SoloAction1<UIAlertAction>? = nil
+        handler: DyAction1<UIAlertAction>? = nil
     ) -> Self {
         let action = UIAlertAction(title: title, style: style, handler: handler)
         base.addAction(action)
@@ -51,14 +51,14 @@ public extension SoloWrapper where Base: UIAlertController {
     /// - Parameter configurationHandler: 配置 `UITextField` 的闭包
     /// - Returns: `Self`
     @discardableResult
-    func addTextField(configurationHandler: SoloAction1<UITextField>? = nil) -> Self {
+    func addTextField(configurationHandler: DyAction1<UITextField>? = nil) -> Self {
         base.addTextField(configurationHandler: configurationHandler)
         return self
     }
 }
 
 // MARK: - 链式方法(自定义)
-public extension SoloWrapper where Base: UIAlertController {
+public extension DyWrapper where Base: UIAlertController {
     /// 从指定的`viewController` 弹出`UIAlertController`
     /// - Parameters:
     ///   - viewController: 指定的来源控制器
@@ -75,7 +75,7 @@ public extension SoloWrapper where Base: UIAlertController {
                 vc.present(self.base, animated: animated)
             }
         } else {
-            guard let topVC = UIWindow.solo_topViewController else {
+            guard let topVC = UIWindow.dy_topViewController else {
                 os_log(.error, "⚠️ [UIAlertController.show] 无法找到顶层 ViewController,弹窗未显示")
                 return self
             }

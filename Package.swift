@@ -3,44 +3,44 @@
 import PackageDescription
 
 let package = Package(
-    name: "Solo",
+    name: "Dy",
     platforms: [
         .iOS(.v13),
     ],
     products: [
-        .library(name: "Solo", targets: ["Solo"]),
-        .library(name: "SoloTemplate", targets: ["SoloTemplate"]),
-        .library(name: "SoloComponent", targets: ["SoloComponent"]),
-        .library(name: "SoloCore", targets: ["SoloCore"]),
-        .library(name: "SoloCombineCocoa", targets: ["SoloCombineCocoa"]),
-        .library(name: "SoloLogger", targets: ["SoloLogger"]),
+        .library(name: "Dy", targets: ["Dy"]),
+        .library(name: "DyTemplate", targets: ["DyTemplate"]),
+        .library(name: "DyComponent", targets: ["DyComponent"]),
+        .library(name: "DyCore", targets: ["DyCore"]),
+        .library(name: "DyCombineCocoa", targets: ["DyCombineCocoa"]),
+        .library(name: "DyLogger", targets: ["DyLogger"]),
 
     ],
     dependencies: [],
     targets: [
         .target(
-            name: "Solo",
+            name: "Dy",
             dependencies: [
-                .target(name: "SoloTemplate"),
-                .target(name: "SoloComponent"),
-                .target(name: "SoloCore"),
-                .target(name: "SoloCombineCocoa"),
-                .target(name: "SoloLogger"),
+                .target(name: "DyTemplate"),
+                .target(name: "DyComponent"),
+                .target(name: "DyCore"),
+                .target(name: "DyCombineCocoa"),
+                .target(name: "DyLogger"),
             ],
-            path: "Sources/Solo"
+            path: "Sources/Dy"
         ),
         .target(
-            name: "SoloTemplate",
+            name: "DyTemplate",
             dependencies: [
-                .target(name: "SoloComponent"),
-                .target(name: "SoloCore"),
+                .target(name: "DyComponent"),
+                .target(name: "DyCore"),
             ],
             path: "Sources/Template"
         ),
         .target(
-            name: "SoloComponent",
+            name: "DyComponent",
             dependencies: [
-                .target(name: "SoloCore"),
+                .target(name: "DyCore"),
             ],
             path: "Sources/Component",
             resources: [
@@ -48,15 +48,15 @@ let package = Package(
             ]
         ),
         .target(
-            name: "SoloCore",
+            name: "DyCore",
             path: "Sources/Core"
         ),
         .target(
-            name: "SoloCombineCocoa",
+            name: "DyCombineCocoa",
             path: "Sources/CombineCocoa"
         ),
         .target(
-            name: "SoloLogger",
+            name: "DyLogger",
             path: "Sources/Logger"
         ),
     ]

@@ -1,7 +1,7 @@
 import UIKit
 
 // MARK: - 链式设置属性
-public extension SoloWrapper where Base: UIImageView {
+public extension DyWrapper where Base: UIImageView {
     /// 设置图像的`tintColor`(自动将图像转为模板模式)
     /// - Parameter color: 主色调
     /// - Returns: `Self`
@@ -79,7 +79,7 @@ public extension SoloWrapper where Base: UIImageView {
 }
 
 // MARK: - 链式方法(自定义)
-public extension SoloWrapper where Base: UIImageView {
+public extension DyWrapper where Base: UIImageView {
     /// 添加模糊背景
     /// - Parameter style: 模糊样式
     /// - Returns: `Self`

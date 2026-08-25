@@ -37,7 +37,7 @@ final class ControlEventSubscription: Subscription {
     }
 }
 
-// MARK: - 关联对象（模块内私有，避免依赖 SoloCore）
+// MARK: - 关联对象（模块内私有，避免依赖 DyCore）
 extension NSObject {
     /// 以 RETAIN 策略存储关联对象
     func cc_setAssociatedObject(

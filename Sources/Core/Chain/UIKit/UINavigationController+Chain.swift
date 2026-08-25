@@ -1,7 +1,7 @@
 import UIKit
 
 // MARK: - 链式设置属性
-public extension SoloWrapper where Base: UINavigationController {
+public extension DyWrapper where Base: UINavigationController {
     /// 设置导航控制器的代理
     ///
     /// - Parameter delegate: 代理对象,传入 `nil` 可移除代理
@@ -23,7 +23,7 @@ public extension SoloWrapper where Base: UINavigationController {
 }
 
 // MARK: - 链式方法
-public extension SoloWrapper where Base: UINavigationController {
+public extension DyWrapper where Base: UINavigationController {
     /// 设置导航栏是否隐藏
     ///
     /// - Parameters:

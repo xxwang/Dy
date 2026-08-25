@@ -1,7 +1,7 @@
 import UIKit
 
 // MARK: - 链式设置属性
-public extension SoloWrapper where Base: UIRefreshControl {
+public extension DyWrapper where Base: UIRefreshControl {
     /// 设置富文本标题
     /// - Parameters:
     ///   - title: 标题文本
@@ -35,7 +35,7 @@ public extension SoloWrapper where Base: UIRefreshControl {
 }
 
 // MARK: - 链式方法(自定义)
-public extension SoloWrapper where Base: UIRefreshControl {
+public extension DyWrapper where Base: UIRefreshControl {
     /// 将刷新控件添加到滚动视图或者其子类
     /// - Parameter scrollView: 滚动视图或者其子类
     /// - Returns: `Self`
