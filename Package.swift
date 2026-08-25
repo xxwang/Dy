@@ -27,10 +27,7 @@ let package = Package(
                 .target(name: "SoloCombineCocoa"),
                 .target(name: "SoloLogger"),
             ],
-            path: "Sources/Solo",
-            swiftSettings: [
-                .define("SPM_MODE"),
-            ]
+            path: "Sources/Solo"
         ),
         .target(
             name: "SoloTemplate",
@@ -38,10 +35,7 @@ let package = Package(
                 .target(name: "SoloComponent"),
                 .target(name: "SoloCore"),
             ],
-            path: "Sources/Template",
-            swiftSettings: [
-                .define("SPM_MODE"),
-            ]
+            path: "Sources/Template"
         ),
         .target(
             name: "SoloComponent",
@@ -51,31 +45,19 @@ let package = Package(
             path: "Sources/Component",
             resources: [
                 .process("Resources"),
-            ],
-            swiftSettings: [
-                .define("SPM_MODE"),
             ]
         ),
         .target(
             name: "SoloCore",
-            path: "Sources/Core",
-            swiftSettings: [
-                .define("SPM_MODE"),
-            ]
+            path: "Sources/Core"
         ),
         .target(
             name: "SoloCombineCocoa",
-            path: "Sources/CombineCocoa",
-            swiftSettings: [
-                .define("SPM_MODE"),
-            ]
+            path: "Sources/CombineCocoa"
         ),
         .target(
             name: "SoloLogger",
-            path: "Sources/Logger",
-            swiftSettings: [
-                .define("SPM_MODE"),
-            ]
+            path: "Sources/Logger"
         ),
     ]
 )

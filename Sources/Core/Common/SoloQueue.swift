@@ -295,11 +295,15 @@ public extension SoloQueue {
         on queue: DispatchQueue = .main,
         execute work: @escaping SoloAction
     ) -> SoloAction {
+        let lock = NSLock()
         var pendingWorkItem: DispatchWorkItem?
         return {
+            // 用锁保护 pendingWorkItem，避免多线程并发调用时 cancel/替换产生竞态
+            lock.lock()
             pendingWorkItem?.cancel()
             let newWorkItem = DispatchWorkItem(block: work)
             pendingWorkItem = newWorkItem
+            lock.unlock()
             queue.asyncAfter(deadline: .now() + delay, execute: newWorkItem)
         }
     }

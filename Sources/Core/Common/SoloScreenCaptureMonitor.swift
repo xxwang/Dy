@@ -1,8 +1,9 @@
 import UIKit
+import os.log
 
-// MARK: - 屏幕捕获监控器(主线程隔离)
+// MARK: - 屏幕捕获监控器
 public final class SoloScreenCaptureMonitor {
-    static let shared = SoloScreenCaptureMonitor()
+    public static let shared = SoloScreenCaptureMonitor()
 
     private var isMonitoring = false
     private var screenshotObserver: NSObjectProtocol?
@@ -13,14 +14,16 @@ public final class SoloScreenCaptureMonitor {
     private var onRecordingStop: SoloAction?
 
     private init() {}
+}
 
+public extension SoloScreenCaptureMonitor {
     func start(
         onScreenshot: SoloAction?,
         onRecordingStart: SoloAction?,
         onRecordingStop: SoloAction?
     ) {
         guard !isMonitoring else {
-            debugPrint("⚠️ UIScreen.startMonitoring 已在监听中,忽略重复调用")
+            os_log("⚠️ UIScreen.startMonitoring 已在监听中,忽略重复调用")
             return
         }
 

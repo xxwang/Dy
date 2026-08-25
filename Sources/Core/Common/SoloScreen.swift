@@ -1,20 +1,14 @@
 import UIKit
 
 /// 屏幕尺寸信息
-/// 因为包含可通过 `setupSketch` 修改的可变静态属性 `sketchSize`，
-/// 读写通过 `NSLock` 保护。
 public final class SoloScreen {
-    private static let lock = NSLock()
-
     /// 设计稿参考尺寸。读写通过 lock 保护
     public private(set) static var sketchSize: CGSize = .init(width: 375, height: 812)
 
     /// 配置设计稿尺寸,用于后续的自动适配计算
     /// - Parameter size: 设计稿的逻辑尺寸(单位：`pt`)
     public static func setupSketch(size: CGSize) {
-        lock.lock()
         sketchSize = size
-        lock.unlock()
     }
 }
 
@@ -86,9 +80,8 @@ public extension SoloScreen {
     }
 
     /// 导航栏高度
-    static var navigationBarHeight: CGFloat {
-        max(UINavigationBar.appearance().frame.height, 44)
-    }
+    /// - Note: `UINavigationBar.appearance().frame` 恒为 `.zero`，故直接用系统标准高度 44
+    static let navigationBarHeight: CGFloat = 44
 
     /// 导航栏总高度 = 状态栏 + 导航栏
     static var navBarTotalHeight: CGFloat {
@@ -99,9 +92,7 @@ public extension SoloScreen {
 // MARK: - 标签栏(TabBar)高度
 public extension SoloScreen {
     /// 标签栏高度
-    static var tabBarHeight: CGFloat {
-        max(UITabBar.appearance().frame.height, 49)
-    }
+    static var tabBarHeight: CGFloat = 49
 
     /// 标签栏总高度 = 标签栏 + 底部安全区
     static var tabBarTotalHeight: CGFloat {
@@ -115,39 +106,36 @@ public extension SoloScreen {
     /// - Note: 供 `fitWidth` / `fitLarger` / `fitSmaller` 等扩展使用，采用"短边/长边自适应"策略：
     ///   - 竖屏：屏幕短边 / 设计稿短边
     ///   - 横屏：屏幕长边 / 设计稿长边
-    ///   即横屏时它实际按"长边"计算，并非字面的宽度比例。如需严格按当前宽度缩放，请用 `screenWidth / sketchSize.width`。
+    /// 即横屏时它实际按"长边"计算，并非字面的宽度比例。如需严格按当前宽度缩放，请用 `screenWidth / sketchSize.width`。
     static var widthRatio: CGFloat {
-        let isLandscape = self.screenWidth > self.screenHeight
-        lock.lock()
+        // 一次性取屏幕宽高，避免在布局热路径上多次遍历 connectedScenes
+        let screenW = self.screenWidth
+        let screenH = self.screenHeight
+        let isLandscape = screenW > screenH
         let sketch = sketchSize
-        lock.unlock()
 
         if isLandscape {
             let sketchLongSide = max(sketch.width, sketch.height)
-            let screenLongSide = max(self.screenWidth, self.screenHeight)
-            return screenLongSide / sketchLongSide
+            return max(screenW, screenH) / sketchLongSide
         } else {
             let sketchShortSide = min(sketch.width, sketch.height)
-            let screenShortSide = min(self.screenWidth, self.screenHeight)
-            return screenShortSide / sketchShortSide
+            return min(screenW, screenH) / sketchShortSide
         }
     }
 
     /// 高度方向的缩放比例
     static var heightRatio: CGFloat {
-        let isLandscape = self.screenWidth > self.screenHeight
-        lock.lock()
+        let screenW = self.screenWidth
+        let screenH = self.screenHeight
+        let isLandscape = screenW > screenH
         let sketch = sketchSize
-        lock.unlock()
 
         if isLandscape {
             let sketchShortSide = min(sketch.width, sketch.height)
-            let screenShortSide = min(self.screenWidth, self.screenHeight)
-            return screenShortSide / sketchShortSide
+            return min(screenW, screenH) / sketchShortSide
         } else {
             let sketchLongSide = max(sketch.width, sketch.height)
-            let screenLongSide = max(self.screenWidth, self.screenHeight)
-            return screenLongSide / sketchLongSide
+            return max(screenW, screenH) / sketchLongSide
         }
     }
 }
@@ -169,40 +157,23 @@ public extension SoloScreen {
 // MARK: - 内部适配计算方法
 private extension SoloScreen {
     /// 根据设计图宽度计算适配后的宽度
-    static func calcWidth(from value: Any) -> CGFloat {
-        return self.widthRatio * self.anyToCGFloat(from: value)
+    static func calcWidth(from value: CGFloat) -> CGFloat {
+        return self.widthRatio * value
     }
 
     /// 根据设计图高度计算适配后的高度
-    static func calcHeight(from value: Any) -> CGFloat {
-        return self.heightRatio * self.anyToCGFloat(from: value)
+    static func calcHeight(from value: CGFloat) -> CGFloat {
+        return self.heightRatio * value
     }
 
     /// 计算适配后的最大值(根据设计图的宽度和高度,选择较大的值
-    static func calcMax(from value: Any) -> CGFloat {
+    static func calcMax(from value: CGFloat) -> CGFloat {
         return max(self.calcWidth(from: value), self.calcHeight(from: value))
     }
 
     /// 计算适配后的最小值(根据设计图的宽度和高度,选择较小的值)
-    static func calcMin(from value: Any) -> CGFloat {
+    static func calcMin(from value: CGFloat) -> CGFloat {
         return min(self.calcWidth(from: value), self.calcHeight(from: value))
-    }
-
-    /// 将输入的值转换为 `CGFloat` 类型
-    static func anyToCGFloat(from value: Any) -> CGFloat {
-        if let value = value as? CGFloat {
-            return value
-        }
-        if let value = value as? Double {
-            return CGFloat(value)
-        }
-        if let value = value as? Float {
-            return CGFloat(value)
-        }
-        if let value = value as? Int {
-            return CGFloat(value)
-        }
-        return 0
     }
 }
 
@@ -210,22 +181,22 @@ private extension SoloScreen {
 public extension BinaryInteger {
     /// 适配宽度(将整数值按设计图宽度比例适配)
     var fitWidth: CGFloat {
-        SoloScreen.calcWidth(from: self)
+        SoloScreen.calcWidth(from: self.solo_cGFloat())
     }
 
     /// 适配高度(将整数值按设计图高度比例适配)
     var fitHeight: CGFloat {
-        SoloScreen.calcHeight(from: self)
+        SoloScreen.calcHeight(from: self.solo_cGFloat())
     }
 
     /// 适配最大值(根据设计图宽度和高度适配后的最大值)
     var fitLarger: CGFloat {
-        SoloScreen.calcMax(from: self)
+        SoloScreen.calcMax(from: self.solo_cGFloat())
     }
 
     /// 适配最小值(根据设计图宽度和高度适配后的最小值)
     var fitSmaller: CGFloat {
-        SoloScreen.calcMin(from: self)
+        SoloScreen.calcMin(from: self.solo_cGFloat())
     }
 }
 
@@ -233,21 +204,21 @@ public extension BinaryInteger {
 public extension BinaryFloatingPoint {
     /// 适配宽度(将浮动数字按设计图宽度比例适配)
     var fitWidth: CGFloat {
-        SoloScreen.calcWidth(from: self)
+        SoloScreen.calcWidth(from: self.solo_cGFloat())
     }
 
     /// 适配高度(将浮动数字按设计图高度比例适配)
     var fitHeight: CGFloat {
-        SoloScreen.calcHeight(from: self)
+        SoloScreen.calcHeight(from: self.solo_cGFloat())
     }
 
     /// 适配最大值(根据设计图宽度和高度适配后的最大值)
     var fitLarger: CGFloat {
-        SoloScreen.calcMax(from: self)
+        SoloScreen.calcMax(from: self.solo_cGFloat())
     }
 
     /// 适配最小值(根据设计图宽度和高度适配后的最小值)
     var fitSmaller: CGFloat {
-        SoloScreen.calcMin(from: self)
+        SoloScreen.calcMin(from: self.solo_cGFloat())
     }
 }

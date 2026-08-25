@@ -3,7 +3,7 @@ import AdSupport
 import AppTrackingTransparency
 
 /// 提供常用辅助信息
-public final class SoloHelper: Sendable {
+public final class SoloHelper {
     public static let shared = SoloHelper()
     private init() {}
 }

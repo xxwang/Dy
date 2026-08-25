@@ -2,13 +2,23 @@ import Foundation
 
 // MARK: - SoloLogger
 public final class SoloLogger {
-    /// 最低日志级别，低于此级别的日志将被忽略。读取通过队列同步保证线程安全
+    /// 最低日志级别，低于此级别的日志将被忽略。
+    /// 用独立锁保护，避免在 `log()` 热路径上同步等待串行队列（否则连被过滤的日志都阻塞调用线程）。
     public var minimumLevel: SoloLogLevel {
-        get { queue.sync { _minimumLevel } }
-        set { queue.sync { _minimumLevel = newValue } }
+        get {
+            levelLock.lock()
+            defer { levelLock.unlock() }
+            return _minimumLevel
+        }
+        set {
+            levelLock.lock()
+            _minimumLevel = newValue
+            levelLock.unlock()
+        }
     }
 
     private var _minimumLevel: SoloLogLevel = .debug
+    private let levelLock = NSLock()
 
     /// 所有输出目标
     private var destinations: [SoloLogDestination] = []

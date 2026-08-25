@@ -1,7 +1,7 @@
 import UIKit
 
 /// 应用专属的 UI 外观与默认行为配置中心
-public final class SoloAppearance: Sendable {
+public final class SoloAppearance {
     public static let shared = SoloAppearance()
     private init() {}
 }

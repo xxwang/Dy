@@ -2,97 +2,48 @@ import Foundation
 import os.log
 
 /// 沙盒路径管理工具
-public final class SoloPath: Sendable {
+public final class SoloPath {
     /// 应用主目录路径
-    public let homePath: String = NSHomeDirectory()
-
+    public let homeDirPath: String = NSHomeDirectory()
     /// 临时目录路径
-    public let tempPath: String = NSTemporaryDirectory()
+    public let tempDirPath: String = NSTemporaryDirectory()
+
+    /// `Documents` 目录路径(用于用户可见文件,会被 iCloud 备份)
+    public lazy var documentsDirPath = Self.resolvePath(.documentDirectory)
+    /// `Library` 目录路径
+    public lazy var libraryDirPath = Self.resolvePath(.libraryDirectory)
+    /// `Caches` 目录路径(用于可再生缓存,系统可能清除)
+    public lazy var cachesDirPath = Self.resolvePath(.cachesDirectory)
+    /// `Application Support` 目录路径(用于应用支持文件,会被备份)
+    public lazy var applicationSupportDirPath = Self.resolvePath(.applicationSupportDirectory)
+
+    /// `Documents` 目录 URL
+    public lazy var documentsDirURL = Self.resolveURL(.documentDirectory)
+    /// `Library` 目录 URL
+    public lazy var libraryDirURL = Self.resolveURL(.libraryDirectory)
+    /// `Caches` 目录 URL
+    public lazy var cachesDirURL = Self.resolveURL(.cachesDirectory)
+    /// `Application Support` 目录 URL
+    public lazy var applicationSupportDirURL = Self.resolveURL(.applicationSupportDirectory)
 
     public static let shared = SoloPath()
     private init() {}
 }
 
-// MARK: - 目录路径
+// MARK: - 工具
 public extension SoloPath {
-    /// `Documents` 目录路径(用于用户可见文件,会被 iCloud 备份)
-    var documentsPath: String {
-        guard let path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first else {
-            assertionFailure("Failed to resolve Documents directory")
-            return homePath
-        }
-        return path
+    /// 解析路径字符串
+    /// - Parameter directory: `SearchPathDirectory`枚举
+    /// - Returns: 路径字符串
+    static func resolvePath(_ directory: FileManager.SearchPathDirectory) -> String {
+        NSSearchPathForDirectoriesInDomains(directory, .userDomainMask, true).first ?? NSHomeDirectory()
     }
 
-    /// `Library` 目录路径
-    var libraryPath: String {
-        guard let path = NSSearchPathForDirectoriesInDomains(.libraryDirectory, .userDomainMask, true).first else {
-            assertionFailure("Failed to resolve Library directory")
-            return homePath
-        }
-        return path
-    }
-
-    /// `Caches` 目录路径(用于可再生缓存,系统可能清除)
-    var cachesPath: String {
-        guard let path = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true).first else {
-            assertionFailure("Failed to resolve Caches directory")
-            return homePath
-        }
-        return path
-    }
-
-    /// `Application Support` 目录路径(用于应用支持文件,会被备份)
-    var applicationSupportPath: String {
-        guard let path = NSSearchPathForDirectoriesInDomains(.applicationSupportDirectory, .userDomainMask, true).first else {
-            assertionFailure("Failed to resolve Application Support directory")
-            return homePath
-        }
-        return path
-    }
-}
-
-// MARK: - 目录URL
-public extension SoloPath {
-    /// `Documents` 目录 URL
-    var documentsURL: URL {
-        guard let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
-            assertionFailure("Cannot resolve Documents directory.")
-            return URL(fileURLWithPath: documentsPath)
-        }
-        return url
-    }
-
-    /// `Library` 目录 URL
-    var libraryURL: URL {
-        guard let url = FileManager.default.urls(for: .libraryDirectory, in: .userDomainMask).first else {
-            assertionFailure("Cannot resolve Library directory.")
-            return URL(fileURLWithPath: libraryPath)
-        }
-        return url
-    }
-
-    /// `Caches` 目录 URL
-    var cachesURL: URL {
-        guard let url = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first else {
-            assertionFailure("Cannot resolve Caches directory.")
-            return URL(fileURLWithPath: cachesPath)
-        }
-        return url
-    }
-
-    /// `Application Support` 目录 URL
-    var applicationSupportURL: URL {
-        guard let url = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first else {
-            assertionFailure("Cannot resolve Application Support directory.")
-            return URL(fileURLWithPath: applicationSupportPath)
-        }
-        return url
-    }
-
-    /// 临时目录 URL
-    var tempURL: URL {
-        URL(fileURLWithPath: tempPath, isDirectory: true)
+    /// 解析路径`URL`
+    /// - Parameter directory: `SearchPathDirectory`枚举
+    /// - Returns: 路径`URL`
+    static func resolveURL(_ directory: FileManager.SearchPathDirectory) -> URL {
+        FileManager.default.urls(for: directory, in: .userDomainMask).first ?? URL(fileURLWithPath: NSHomeDirectory(), isDirectory: true)
     }
 }
 
@@ -103,27 +54,27 @@ public extension SoloPath {
     /// - Returns: 绝对路径字符串
     /// - Note: 仅做路径拼接，**不会**创建父目录。如需写入文件请先调用 `createParentDirectoryIfNeeded(at:)` 或 `createFile(at:)`。
     func path(inDocuments relativePath: String) -> String {
-        buildPath(in: documentsPath, relativePath: relativePath)
+        buildPath(in: documentsDirPath, relativePath: relativePath)
     }
 
     /// 在 `Library` 目录下构建完整路径
     func path(inLibrary relativePath: String) -> String {
-        buildPath(in: libraryPath, relativePath: relativePath)
+        buildPath(in: libraryDirPath, relativePath: relativePath)
     }
 
     /// 在 `Caches` 目录下构建完整路径
     func path(inCaches relativePath: String) -> String {
-        buildPath(in: cachesPath, relativePath: relativePath)
+        buildPath(in: cachesDirPath, relativePath: relativePath)
     }
 
     /// 在 `Application Support` 目录下构建完整路径
     func path(inApplicationSupport relativePath: String) -> String {
-        buildPath(in: applicationSupportPath, relativePath: relativePath)
+        buildPath(in: applicationSupportDirPath, relativePath: relativePath)
     }
 
     /// 在临时目录下构建完整路径
     func path(inTemp relativePath: String) -> String {
-        buildPath(in: tempPath, relativePath: relativePath)
+        buildPath(in: tempDirPath, relativePath: relativePath)
     }
 
     /// 内部通用路径拼接
@@ -139,17 +90,17 @@ public extension SoloPath {
     /// - Parameter relativePath: 相对路径组件
     /// - Returns: 文件 URL
     func url(inDocuments relativePath: String) -> URL {
-        documentsURL.appendingPathComponent(relativePath)
+        documentsDirURL.appendingPathComponent(relativePath)
     }
 
     /// 在 `Library` 目录下构建文件 URL
     func url(inLibrary relativePath: String) -> URL {
-        libraryURL.appendingPathComponent(relativePath)
+        libraryDirURL.appendingPathComponent(relativePath)
     }
 
     /// 在 `Caches` 目录下构建文件 URL
     func url(inCaches relativePath: String) -> URL {
-        cachesURL.appendingPathComponent(relativePath)
+        cachesDirURL.appendingPathComponent(relativePath)
     }
 
     /// 在 `Application Support` 目录下构建文件 URL
@@ -157,12 +108,18 @@ public extension SoloPath {
     /// - Returns: 文件 URL
     /// - Note: 仅做路径拼接，**不会**创建父目录。写入前请先调用 `createParentDirectoryIfNeeded(at:)`。
     func url(inApplicationSupport relativePath: String) -> URL {
-        applicationSupportURL.appendingPathComponent(relativePath)
+        applicationSupportDirURL.appendingPathComponent(relativePath)
     }
 
     /// 在临时目录下构建文件 URL
     func url(inTemp relativePath: String) -> URL {
-        tempURL.appendingPathComponent(relativePath)
+        if #available(iOS 16.0, *) {
+            let tempDirUrl = URL(filePath: tempDirPath, directoryHint: .isDirectory)
+            return tempDirUrl.appendingPathComponent(relativePath)
+        } else {
+            let tempDirUrl = URL(fileURLWithPath: tempDirPath, isDirectory: true)
+            return tempDirUrl.appendingPathComponent(relativePath)
+        }
     }
 }
 

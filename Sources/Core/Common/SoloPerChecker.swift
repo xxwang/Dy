@@ -360,6 +360,15 @@ private extension SoloPerChecker {
 // MARK: - CLLocationManagerDelegate
 extension SoloPerChecker: CLLocationManagerDelegate {
     public func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        finishLocationAuth(status)
+    }
+
+    @available(iOS 14.0, *)
+    public func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+        finishLocationAuth(manager.authorizationStatus)
+    }
+
+    private func finishLocationAuth(_ status: CLAuthorizationStatus) {
         locationCallbackLock.lock()
         latestLocationCallback?(locationResult(for: status))
         latestLocationCallback = nil

@@ -1,6 +1,10 @@
 import Foundation
 import os.log
 
+/// `JSONEncoder` / `JSONDecoder` 是线程安全的，可全局复用，避免每次读写都新建
+private let soloSharedEncoder = JSONEncoder()
+private let soloSharedDecoder = JSONDecoder()
+
 /// 用 `UserDefaults` 存储属性,自动处理默认值、编码和类型兼容
 @propertyWrapper
 public struct SoloDataStore<T> {
@@ -51,7 +55,7 @@ public struct SoloDataStore<T> {
             // Codable 类型：转成 Data 存
             if let encodable = newValue as? Encodable {
                 do {
-                    let data = try JSONEncoder().encode(encodable)
+                    let data = try soloSharedEncoder.encode(encodable)
                     userDefaults.set(data, forKey: key)
                 } catch {
                     os_log(.error, "SoloDataStore 编码失败 key=%{public}@ error=%{public}@", key, String(describing: error))
@@ -82,7 +86,7 @@ private extension SoloDataStore {
     func decode(from data: Data) -> T? {
         guard let decodableType = T.self as? Decodable.Type else { return nil }
         do {
-            let decoded = try JSONDecoder().decode(decodableType, from: data)
+            let decoded = try soloSharedDecoder.decode(decodableType, from: data)
             return decoded as? T
         } catch {
             os_log(.error, "SoloDataStore 解码失败 key=%{public}@ error=%{public}@", key, String(describing: error))
