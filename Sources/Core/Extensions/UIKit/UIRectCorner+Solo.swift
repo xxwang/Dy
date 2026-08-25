@@ -1,23 +1,21 @@
 import UIKit
 
-extension UIRectCorner: SoloExtension {}
-
 // MARK: - 方法
-public extension SoloWrapper where Base == UIRectCorner {
+public extension UIRectCorner {
     /// 将 `CACornerMask` 转换为 `UIRectCorner`
     /// - Returns: `UIRectCorner`
-    func toCACornerMask() -> CACornerMask {
+    func solo_cACornerMask() -> CACornerMask {
         var corners: CACornerMask = []
-        if base.contains(.topLeft) {
+        if self.contains(.topLeft) {
             corners.insert(.layerMinXMinYCorner)
         }
-        if base.contains(.topRight) {
+        if self.contains(.topRight) {
             corners.insert(.layerMaxXMinYCorner)
         }
-        if base.contains(.bottomLeft) {
+        if self.contains(.bottomLeft) {
             corners.insert(.layerMinXMaxYCorner)
         }
-        if base.contains(.bottomRight) {
+        if self.contains(.bottomRight) {
             corners.insert(.layerMaxXMaxYCorner)
         }
         return corners

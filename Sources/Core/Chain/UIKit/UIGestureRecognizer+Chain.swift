@@ -146,7 +146,7 @@ public extension SoloWrapper where Base: UIGestureRecognizer {
     /// - Returns: `Self`
     @discardableResult
     func onRecognized(_ block: @escaping SoloAction1<UIGestureRecognizer>) -> Self {
-        base.recognizedBlock = block
+        base.solo_recognizedBlock = block
         base.removeTarget(base, action: #selector(UIGestureRecognizer.stateChangeHandler))
         base.addTarget(base, action: #selector(UIGestureRecognizer.stateChangeHandler))
         return self
@@ -159,7 +159,7 @@ public extension SoloWrapper where Base: UIGestureRecognizer {
     /// - Returns: `Self`
     @discardableResult
     func onStateChanged(_ block: @escaping SoloAction1<UIGestureRecognizer.State>) -> Self {
-        base.stateChangedBlock = block
+        base.solo_stateChangedBlock = block
         base.removeTarget(base, action: #selector(UIGestureRecognizer.stateChangeHandler))
         base.addTarget(base, action: #selector(UIGestureRecognizer.stateChangeHandler))
         return self

@@ -37,7 +37,7 @@ public extension SoloSheetView {
 @objc extension SoloSheetView {
     /// 显示底部弹窗
     open func show(in container: UIView? = nil) {
-        let container = container ?? UIWindow.solo.keyWindow ?? UIWindow.solo.windows.first
+        let container = container ?? UIWindow.solo_keyWindow ?? UIWindow.solo_windows.first
         guard let container else { return }
         container.addSubview(self)
 
@@ -54,13 +54,13 @@ public extension SoloSheetView {
         // 内容容器
         self.contentView
             .solo
-            .left((container.solo.width - self.contentView.solo.width) / 2)
-            .top(self.solo.height - self.contentView.solo.height)
+            .left((container.solo_width - self.contentView.solo_width) / 2)
+            .top(self.solo_height - self.contentView.solo_height)
 
         // 设置初始化状态
         self.shadeView.alpha = 0.01
         self.contentView.alpha = 0.01
-        self.contentView.transform = CGAffineTransform(translationX: 0, y: self.contentView.solo.height)
+        self.contentView.transform = CGAffineTransform(translationX: 0, y: self.contentView.solo_height)
 
         // 从底部滑入
         UIView.animate(withDuration: animationDuration(), delay: 0, options: .curveEaseOut) {
@@ -76,7 +76,7 @@ public extension SoloSheetView {
         UIView.animate(withDuration: animationDuration(), delay: 0, options: .curveEaseIn) {
             self.shadeView.alpha = 0.01
             self.contentView.alpha = 0.01
-            self.contentView.transform = CGAffineTransform(translationX: 0, y: self.contentView.solo.height)
+            self.contentView.transform = CGAffineTransform(translationX: 0, y: self.contentView.solo_height)
         } completion: { [weak self] _ in
             self?.removeFromSuperview()
         }
@@ -105,7 +105,7 @@ public extension SoloSheetView {
         self.contentView
             .solo
             .backgroundColor(contentViewBackgroundColor())
-            .maskedCorners([.solo.topLeft, .solo.topRight])
+            .maskedCorners([.solo_topLeft, .solo_topRight])
             .cornerRadius(contentViewCornerRadius())
             .masksToBounds(true)
 

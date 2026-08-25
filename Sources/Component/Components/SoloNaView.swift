@@ -20,7 +20,7 @@ open class SoloNaView: UIView {
     /// 底部分割线(默认半透明黑线)
     open lazy var lineView = UIView.view()
         .solo
-        .backgroundColor(.black.solo.alpha(0.25))
+        .backgroundColor(.black.solo_alpha(0.25))
         .build()
 
     /// 返回按钮(UIButton)
@@ -228,7 +228,7 @@ public extension SoloWrapper where Base: SoloNaView {
     /// 控制导航栏阴影(模拟系统导航栏阴影)
     @discardableResult
     func showShadow(_ isShow: Bool) -> Self {
-        base.layer.shadowColor = UIColor(hex: "#DBDADA").solo.alpha(0.25).cgColor
+        base.layer.shadowColor = UIColor(hex: "#DBDADA").solo_alpha(0.25).cgColor
         base.layer.shadowRadius = 0
         base.layer.shadowOffset = CGSize(width: 0, height: 1)
         base.layer.shadowOpacity = isShow ? 1 : 0

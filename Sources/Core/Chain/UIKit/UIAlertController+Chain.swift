@@ -75,7 +75,7 @@ public extension SoloWrapper where Base: UIAlertController {
                 vc.present(self.base, animated: animated)
             }
         } else {
-            guard let topVC = UIWindow.solo.topViewController else {
+            guard let topVC = UIWindow.solo_topViewController else {
                 os_log(.error, "⚠️ [UIAlertController.show] 无法找到顶层 ViewController,弹窗未显示")
                 return self
             }

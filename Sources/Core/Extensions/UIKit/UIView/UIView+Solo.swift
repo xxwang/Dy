@@ -132,96 +132,96 @@ public extension UIView {
 
 extension UIView {
     /// 关联属性键
-    fileprivate enum Keys {
+    fileprivate enum SoloKeys {
         static var badgeLabel: UInt8 = 0
         static var watermark: UInt8 = 0
     }
 
     /// 角标Label
-    var badgeLabel: UILabel? {
-        get { self.solo.GetAO(forKey: &Keys.badgeLabel) }
-        set { self.solo.SetAO(newValue, forKey: &Keys.badgeLabel, policy: .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
+    var solo_badgeLabel: UILabel? {
+        get { self.solo_GetAO(forKey: &SoloKeys.badgeLabel) }
+        set { self.solo_SetAO(newValue, forKey: &SoloKeys.badgeLabel, policy: .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
     }
 
     /// 水印配置属性
-    var watermarkConfig: SoloWatermarkConfig? {
-        get { self.solo.GetAO(forKey: &Keys.watermark) }
-        set { self.solo.SetAO(newValue, forKey: &Keys.watermark, policy: .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
+    var solo_watermarkConfig: SoloWatermarkConfig? {
+        get { self.solo_GetAO(forKey: &SoloKeys.watermark) }
+        set { self.solo_SetAO(newValue, forKey: &SoloKeys.watermark, policy: .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
     }
 }
 
 // MARK: - 属性
-public extension SoloWrapper where Base: UIView {
+public extension UIView {
     /// 视图的大小
-    var size: CGSize {
-        get { return base.frame.size }
-        set { base.frame = CGRect(origin: self.origin, size: newValue) }
+    var solo_size: CGSize {
+        get { return self.frame.size }
+        set { self.frame = CGRect(origin: self.solo_origin, size: newValue) }
     }
 
     /// 视图的位置坐标
-    var origin: CGPoint {
-        get { return base.frame.origin }
-        set { base.frame = CGRect(origin: newValue, size: self.size) }
+    var solo_origin: CGPoint {
+        get { return self.frame.origin }
+        set { self.frame = CGRect(origin: newValue, size: self.solo_size) }
     }
 
     /// 视图中心
-    var center: CGPoint {
-        get { return base.center }
-        set { base.center = newValue }
+    var solo_center: CGPoint {
+        get { return self.center }
+        set { self.center = newValue }
     }
 
     /// 视图的宽度
-    var width: CGFloat {
-        get { return base.frame.width }
-        set { base.frame = CGRect(origin: self.origin, size: CGSize(width: newValue, height: self.height)) }
+    var solo_width: CGFloat {
+        get { return self.frame.width }
+        set { self.frame = CGRect(origin: self.solo_origin, size: CGSize(width: newValue, height: self.solo_height)) }
     }
 
     /// 视图的高度
-    var height: CGFloat {
-        get { return base.frame.height }
-        set { base.frame = CGRect(origin: self.origin, size: CGSize(width: self.width, height: newValue)) }
+    var solo_height: CGFloat {
+        get { return self.frame.height }
+        set { self.frame = CGRect(origin: self.solo_origin, size: CGSize(width: self.solo_width, height: newValue)) }
     }
 
     /// 视图的顶部位置 (等同于 `y`)
-    var top: CGFloat {
-        get { return base.frame.origin.y }
-        set { base.frame = CGRect(origin: CGPoint(x: self.left, y: newValue), size: self.size) }
+    var solo_top: CGFloat {
+        get { return self.frame.origin.y }
+        set { self.frame = CGRect(origin: CGPoint(x: self.solo_left, y: newValue), size: self.solo_size) }
     }
 
     /// 视图的左侧位置 (等同于 `x`)
-    var left: CGFloat {
-        get { return base.frame.origin.x }
-        set { base.frame = CGRect(origin: CGPoint(x: newValue, y: self.top), size: self.size) }
+    var solo_left: CGFloat {
+        get { return self.frame.origin.x }
+        set { self.frame = CGRect(origin: CGPoint(x: newValue, y: self.solo_top), size: self.solo_size) }
     }
 
     /// 视图中心点的 x 坐标
-    var centerX: CGFloat {
-        get { return base.center.x }
-        set { base.center = CGPoint(x: newValue, y: self.centerY) }
+    var solo_centerX: CGFloat {
+        get { return self.center.x }
+        set { self.center = CGPoint(x: newValue, y: self.solo_centerY) }
     }
 
     /// 视图中心点的 y 坐标
-    var centerY: CGFloat {
-        get { return base.center.y }
-        set { base.center = CGPoint(x: self.centerX, y: newValue) }
+    var solo_centerY: CGFloat {
+        get { return self.center.y }
+        set { self.center = CGPoint(x: self.solo_centerX, y: newValue) }
     }
 
     /// 视图的中心点 (基于自身 bounds 坐标系)
-    var middle: CGPoint {
-        return CGPoint(x: self.width / 2, y: self.height / 2)
+    var solo_middle: CGPoint {
+        return CGPoint(x: self.solo_width / 2, y: self.solo_height / 2)
     }
 }
 
 // MARK: - 视图信息与查找
-public extension SoloWrapper where Base: UIView {
+public extension UIView {
     /// 当前视图的有效布局方向
-    var layoutDirection: UIUserInterfaceLayoutDirection {
-        return base.effectiveUserInterfaceLayoutDirection
+    var solo_layoutDirection: UIUserInterfaceLayoutDirection {
+        return self.effectiveUserInterfaceLayoutDirection
     }
 
     /// 查找该视图所属的视图控制器(通过响应者链)
-    var viewController: UIViewController? {
-        var responder: UIResponder? = base.next
+    var solo_viewController: UIViewController? {
+        var responder: UIResponder? = self.next
         while responder != nil {
             if let viewController = responder as? UIViewController {
                 return viewController
@@ -232,10 +232,10 @@ public extension SoloWrapper where Base: UIView {
     }
 
     /// 递归查找当前视图层级中的第一响应者
-    var firstResponder: UIView? {
-        guard !base.isFirstResponder else { return base }
-        for subview in base.subviews {
-            if let first = subview.solo.firstResponder {
+    var solo_firstResponder: UIView? {
+        guard !self.isFirstResponder else { return self }
+        for subview in self.subviews {
+            if let first = subview.solo_firstResponder {
                 return first
             }
         }
@@ -243,25 +243,25 @@ public extension SoloWrapper where Base: UIView {
     }
 
     /// 获取所有子视图(深度优先,包含所有后代)
-    var allSubviews: [UIView] {
-        base.subviews + base.subviews.flatMap(\.solo.allSubviews)
+    var solo_allSubviews: [UIView] {
+        self.subviews + self.subviews.flatMap(\.solo_allSubviews)
     }
 }
 
 // MARK: - 视图类型查找
-public extension SoloWrapper where Base: UIView {
+public extension UIView {
     /// 判断当前视图层级中是否包含指定类型的子视图(深度优先)
     /// - Parameter type: 要查找的视图类型
     /// - Returns: 若存在则返回 `true`
-    func containsSubview(ofType type: (some UIView).Type) -> Bool {
-        self.findSubview(ofType: type) != nil
+    func solo_containsSubview(ofType type: (some UIView).Type) -> Bool {
+        self.solo_findSubview(ofType: type) != nil
     }
 
     /// 递归查找指定类型的最近父视图
     /// - Parameter type: 要查找的父视图类型
     /// - Returns: 找到的第一个匹配父视图,若无则返回 `nil`
-    func findSuperview<T: UIView>(ofType type: T.Type) -> T? {
-        var current = base.superview
+    func solo_findSuperview<T: UIView>(ofType type: T.Type) -> T? {
+        var current = self.superview
         while let view = current {
             if let matched = view as? T {
                 return matched
@@ -274,8 +274,8 @@ public extension SoloWrapper where Base: UIView {
     /// 递归查找满足条件的最近父视图
     /// - Parameter predicate: 判断闭包
     /// - Returns: 找到的第一个匹配父视图,若无则返回 `nil`
-    func findSuperview(where predicate: (UIView) -> Bool) -> UIView? {
-        var current = base.superview
+    func solo_findSuperview(where predicate: (UIView) -> Bool) -> UIView? {
+        var current = self.superview
         while let view = current {
             if predicate(view) {
                 return view
@@ -288,12 +288,12 @@ public extension SoloWrapper where Base: UIView {
     /// 递归查找指定类型的第一个子视图(深度优先)
     /// - Parameter type: 要查找的子视图类型
     /// - Returns: 找到的第一个匹配子视图,若无则返回 `nil`
-    func findSubview<T: UIView>(ofType type: T.Type) -> T? {
-        for subview in base.subviews {
+    func solo_findSubview<T: UIView>(ofType type: T.Type) -> T? {
+        for subview in self.subviews {
             if let matched = subview as? T {
                 return matched
             }
-            if let found = subview.solo.findSubview(ofType: type) {
+            if let found = subview.solo_findSubview(ofType: type) {
                 return found
             }
         }
@@ -303,12 +303,12 @@ public extension SoloWrapper where Base: UIView {
     /// 递归查找满足条件的第一个子视图(深度优先)
     /// - Parameter predicate: 判断闭包
     /// - Returns: 找到的第一个匹配子视图,若无则返回 `nil`
-    func findSubview(where predicate: (UIView) -> Bool) -> UIView? {
-        for subview in base.subviews {
+    func solo_findSubview(where predicate: (UIView) -> Bool) -> UIView? {
+        for subview in self.subviews {
             if predicate(subview) {
                 return subview
             }
-            if let found = subview.solo.findSubview(where: predicate) {
+            if let found = subview.solo_findSubview(where: predicate) {
                 return found
             }
         }
@@ -318,13 +318,13 @@ public extension SoloWrapper where Base: UIView {
     /// 递归查找所有指定类型的子视图
     /// - Parameter type: 要查找的子视图类型
     /// - Returns: 所有匹配的子视图数组(深度优先顺序)
-    func findSubviews<T: UIView>(ofType type: T.Type) -> [T] {
+    func solo_findSubviews<T: UIView>(ofType type: T.Type) -> [T] {
         var result: [T] = []
-        for subview in base.subviews {
+        for subview in self.subviews {
             if let matched = subview as? T {
                 result.append(matched)
             }
-            result.append(contentsOf: subview.solo.findSubviews(ofType: type))
+            result.append(contentsOf: subview.solo_findSubviews(ofType: type))
         }
         return result
     }
@@ -332,39 +332,39 @@ public extension SoloWrapper where Base: UIView {
     /// 递归查找所有满足条件的子视图
     /// - Parameter predicate: 判断闭包
     /// - Returns: 所有匹配的子视图数组(深度优先顺序)
-    func findSubviews(where predicate: (UIView) -> Bool) -> [UIView] {
+    func solo_findSubviews(where predicate: (UIView) -> Bool) -> [UIView] {
         var result: [UIView] = []
-        for subview in base.subviews {
+        for subview in self.subviews {
             if predicate(subview) {
                 result.append(subview)
             }
-            result.append(contentsOf: subview.solo.findSubviews(where: predicate))
+            result.append(contentsOf: subview.solo_findSubviews(where: predicate))
         }
         return result
     }
 }
 
 // MARK: - 视图调试与操作
-public extension SoloWrapper where Base: UIView {
+public extension UIView {
     /// 为当前视图及其所有子视图添加调试边框和背景色(仅在 `DEBUG` 模式生效)
     /// - Parameters:
     ///   - borderWidth: 边框宽度,默认为 1
     ///   - borderColor: 边框颜色,默认为随机色
     ///   - backgroundColor: 背景色,默认为随机色(半透明以保留内容可见性)
-    func debugHighlight(
+    func solo_debugHighlight(
         borderWidth: CGFloat = 1,
-        borderColor: UIColor = .solo.random,
-        backgroundColor: UIColor = .solo.random.withAlphaComponent(0.2)
+        borderColor: UIColor = .solo_random,
+        backgroundColor: UIColor = .solo_random.solo_alpha(0.2)
     ) {
         #if DEBUG
             // 高亮当前视图
-            base.layer.borderWidth = borderWidth
-            base.layer.borderColor = borderColor.cgColor
-            base.backgroundColor = backgroundColor
+            self.layer.borderWidth = borderWidth
+            self.layer.borderColor = borderColor.cgColor
+            self.backgroundColor = backgroundColor
 
             // 递归高亮子视图
-            for subview in base.subviews {
-                subview.solo.debugHighlight(
+            for subview in self.subviews {
+                subview.solo_debugHighlight(
                     borderWidth: borderWidth,
                     borderColor: borderColor,
                     backgroundColor: backgroundColor
@@ -374,30 +374,30 @@ public extension SoloWrapper where Base: UIView {
     }
 
     /// 移除当前视图的所有直接子视图
-    func removeAllSubviews() {
-        base.subviews.forEach { $0.removeFromSuperview() }
+    func solo_removeAllSubviews() {
+        self.subviews.forEach { $0.removeFromSuperview() }
     }
 
     /// 强制收起当前视图层级中的键盘(等效于 `resignFirstResponder`)
-    func hideKeyboard() {
-        base.endEditing(true)
+    func solo_hideKeyboard() {
+        self.endEditing(true)
     }
 }
 
 // MARK: - 视图位置判断
-public extension SoloWrapper where Base: UIView {
+public extension UIView {
     /// 判断给定点是否在当前视图的 bounds 范围内(点需位于当前视图的本地坐标系中)
     /// - Parameter point: 待检测的点(坐标系：self)
     /// - Returns: 若点在视图内容区域内则返回 `true`
-    func containsLocalPoint(_ point: CGPoint) -> Bool {
-        base.bounds.contains(point)
+    func solo_containsLocalPoint(_ point: CGPoint) -> Bool {
+        self.bounds.contains(point)
     }
 
     /// 判断给定点是否在当前视图的 frame 范围内(点需位于父视图的坐标系中)
     /// - Parameter point: 待检测的点(坐标系：superview)
     /// - Returns: 若点在视图 frame 区域内则返回 `true`
-    func containsFramePoint(_ point: CGPoint) -> Bool {
-        base.frame.contains(point)
+    func solo_containsFramePoint(_ point: CGPoint) -> Bool {
+        self.frame.contains(point)
     }
 
     /// 判断在指定坐标系中的点是否落在当前视图内
@@ -405,10 +405,10 @@ public extension SoloWrapper where Base: UIView {
     ///   - point: 待检测的点
     ///   - coordinateSpace: 该点所在的坐标系(如 window、另一个 view 等)
     /// - Returns: 若点落在当前视图 bounds 内则返回 true
-    func containsPoint(_ point: CGPoint, in coordinateSpace: UICoordinateSpace) -> Bool {
-        guard base.window != nil else { return false }
+    func solo_containsPoint(_ point: CGPoint, in coordinateSpace: UICoordinateSpace) -> Bool {
+        guard self.window != nil else { return false }
 
-        let localPoint = base.convert(point, from: coordinateSpace)
-        return base.bounds.contains(localPoint)
+        let localPoint = self.convert(point, from: coordinateSpace)
+        return self.bounds.contains(localPoint)
     }
 }

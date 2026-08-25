@@ -52,15 +52,15 @@ open class SoloScrollViewController: SoloViewController {
             .frame(CGRect(
                 x: 0,
                 y: topMargin,
-                width: self.view.solo.width,
-                height: self.view.solo.height - topMargin
+                width: self.view.solo_width,
+                height: self.view.solo_height - topMargin
             ))
 
         // 内容容器
         self.contentView
             .solo
-            .width(self.scrollView.solo.width)
-            .height(max(self.scrollView.contentSize.height, self.scrollView.solo.height))
+            .width(self.scrollView.solo_width)
+            .height(max(self.scrollView.contentSize.height, self.scrollView.solo_height))
     }
 }
 

@@ -54,7 +54,7 @@ public extension SoloScreen {
 public extension SoloScreen {
     /// 当前 `keyWindow` 的安全区域插值
     static var safeAreaInsets: UIEdgeInsets {
-        return UIWindow.solo.keyWindow?.safeAreaInsets ?? .zero
+        return UIWindow.solo_keyWindow?.safeAreaInsets ?? .zero
     }
 
     /// 安全区顶部高度(通常为状态栏 + 导航栏下方留白)
@@ -82,7 +82,7 @@ public extension SoloScreen {
 public extension SoloScreen {
     /// 状态栏高度
     static var statusBarHeight: CGFloat {
-        UIWindow.solo.keyWindow?.windowScene?.statusBarManager?.statusBarFrame.height ?? 0
+        UIWindow.solo_keyWindow?.windowScene?.statusBarManager?.statusBarFrame.height ?? 0
     }
 
     /// 导航栏高度

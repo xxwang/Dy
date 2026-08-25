@@ -91,9 +91,9 @@ open class SoloViewController: UIViewController {
     open func onBackActionHandler() {
         let count = self.navigationController?.children.count ?? 0
         if count > 1 {
-            self.solo.pop()
+            self.solo_pop()
         } else {
-            self.solo.dismiss()
+            self.solo_dismiss()
         }
     }
 }
@@ -129,13 +129,13 @@ extension SoloViewController {
 // MARK: - UIViewController生命周期
 extension SoloViewController {
     /// 侧滑手势原始代理(用于退出页面时还原,避免覆盖其它控制器/协调器设置的代理)
-    private enum Keys {
+    private enum SoloKeys {
         static var originalPopDelegate: UInt8 = 0
     }
 
     private var originalPopDelegate: UIGestureRecognizerDelegate? {
-        get { self.solo.GetAO(forKey: &Keys.originalPopDelegate) as? UIGestureRecognizerDelegate }
-        set { self.solo.SetAO(newValue, forKey: &Keys.originalPopDelegate) }
+        get { self.solo_GetAO(forKey: &SoloKeys.originalPopDelegate) as? UIGestureRecognizerDelegate }
+        set { self.solo_SetAO(newValue, forKey: &SoloKeys.originalPopDelegate) }
     }
 
     override open func viewWillAppear(_ animated: Bool) {

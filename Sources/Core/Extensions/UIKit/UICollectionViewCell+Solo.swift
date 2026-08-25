@@ -14,6 +14,6 @@ public extension UICollectionViewCell {
 
     /// 获取当前`Cell` 在 `UICollectionView` 中的 `IndexPath`
     var solo_indexPath: IndexPath? {
-        self.collectionView?.indexPath(for: self)
+        self.solo_collectionView?.indexPath(for: self)
     }
 }

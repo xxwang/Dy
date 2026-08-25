@@ -49,8 +49,8 @@ open class SoloTableViewController: SoloViewController {
             .frame(CGRect(
                 x: 0,
                 y: topMargin,
-                width: self.view.solo.width,
-                height: self.view.solo.height - topMargin
+                width: self.view.solo_width,
+                height: self.view.solo_height - topMargin
             ))
     }
 }

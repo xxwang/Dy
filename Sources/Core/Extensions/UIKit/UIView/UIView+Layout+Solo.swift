@@ -1,68 +1,68 @@
 import UIKit
 
 // MARK: - 约束查找
-public extension SoloWrapper where Base: UIView {
+public extension UIView {
     /// 获取当前视图的第一个宽度约束(仅限直接作用于 self 的约束)
-    var widthConstraint: NSLayoutConstraint? {
-        self.constraint(for: .width)
+    var solo_widthConstraint: NSLayoutConstraint? {
+        self.solo_constraint(for: .width)
     }
 
     /// 获取当前视图的第一个高度约束
-    var heightConstraint: NSLayoutConstraint? {
-        self.constraint(for: .height)
+    var solo_heightConstraint: NSLayoutConstraint? {
+        self.solo_constraint(for: .height)
     }
 
     /// 获取当前视图的第一个 leading 约束
-    var leadingConstraint: NSLayoutConstraint? {
-        self.constraint(for: .leading)
+    var solo_leadingConstraint: NSLayoutConstraint? {
+        self.solo_constraint(for: .leading)
     }
 
     /// 获取当前视图的第一个 trailing 约束
-    var trailingConstraint: NSLayoutConstraint? {
-        self.constraint(for: .trailing)
+    var solo_trailingConstraint: NSLayoutConstraint? {
+        self.solo_constraint(for: .trailing)
     }
 
     /// 获取当前视图的第一个 top 约束
-    var topConstraint: NSLayoutConstraint? {
-        self.constraint(for: .top)
+    var solo_topConstraint: NSLayoutConstraint? {
+        self.solo_constraint(for: .top)
     }
 
     /// 获取当前视图的第一个 bottom 约束
-    var bottomConstraint: NSLayoutConstraint? {
-        self.constraint(for: .bottom)
+    var solo_bottomConstraint: NSLayoutConstraint? {
+        self.solo_constraint(for: .bottom)
     }
 
     /// 获取当前视图的第一个 centerX 约束
-    var centerXConstraint: NSLayoutConstraint? {
-        self.constraint(for: .centerX)
+    var solo_centerXConstraint: NSLayoutConstraint? {
+        self.solo_constraint(for: .centerX)
     }
 
     /// 获取当前视图的第一个 centerY 约束
-    var centerYConstraint: NSLayoutConstraint? {
-        self.constraint(for: .centerY)
+    var solo_centerYConstraint: NSLayoutConstraint? {
+        self.solo_constraint(for: .centerY)
     }
 
     /// 查找作用于当前视图的、指定布局属性的第一个 NSLayoutConstraint
     /// - Parameter attribute: 布局属性(如 .width, .leading 等)
     /// - Returns: 匹配的约束,若无则返回 nil
-    private func constraint(for attribute: NSLayoutConstraint.Attribute) -> NSLayoutConstraint? {
+    private func solo_constraint(for attribute: NSLayoutConstraint.Attribute) -> NSLayoutConstraint? {
         // 检查自身的 constraints(通常为空,除非用 addConstraint 添加到自己)
-        if let constraint = base.constraints.first(where: { constraint in
-            self.isConstraint(constraint, affecting: base, with: attribute)
+        if let constraint = self.constraints.first(where: { constraint in
+            self.solo_isConstraint(constraint, affecting: self, with: attribute)
         }) {
             return constraint
         }
 
         // 检查父视图中的约束(绝大多数约束都在 superview.constraints 中)
-        return base.superview?.constraints.first(where: { constraint in
-            self.isConstraint(constraint, affecting: base, with: attribute)
+        return self.superview?.constraints.first(where: { constraint in
+            self.solo_isConstraint(constraint, affecting: self, with: attribute)
         })
     }
 
     /// 判断一个约束是否作用于指定视图的指定属性
-    private func isConstraint(_ constraint: NSLayoutConstraint,
-                              affecting view: UIView,
-                              with attribute: NSLayoutConstraint.Attribute) -> Bool
+    private func solo_isConstraint(_ constraint: NSLayoutConstraint,
+                                   affecting view: UIView,
+                                   with attribute: NSLayoutConstraint.Attribute) -> Bool
     {
         // 检查 firstItem 是否为 view 且属性匹配
         if constraint.firstItem as? NSObject == view, constraint.firstAttribute == attribute {
@@ -77,7 +77,7 @@ public extension SoloWrapper where Base: UIView {
 }
 
 // MARK: - 约束添加
-public extension SoloWrapper where Base: UIView {
+public extension UIView {
     /// 使用视觉格式语言 (VFL) 添加约束
     /// - Parameters:
     ///   - format: VFL 格式字符串(如 "H:|-[v0]-|")
@@ -87,13 +87,13 @@ public extension SoloWrapper where Base: UIView {
     ///
     /// - Example:
     ///   ```swift
-    ///   view.solo.addConstraints(
+    ///   view.solo_addConstraints(
     ///       withFormat: "H:|-[v0]-|",
     ///       views: [label],
     ///       options: .alignAllCenterY
     ///   )
     ///   ```
-    func addConstraints(
+    func solo_addConstraints(
         withFormat format: String,
         views: [UIView],
         options: NSLayoutConstraint.FormatOptions = [],
@@ -123,20 +123,20 @@ public extension SoloWrapper where Base: UIView {
     ///
     /// - Example:
     ///   ```swift
-    ///   subview.solo.fillSuperview(insets: .init(top: 10, left: 10, bottom: 10, right: 10))
+    ///   subview.solo_fillSuperview(insets: .init(top: 10, left: 10, bottom: 10, right: 10))
     ///   ```
     @discardableResult
-    func fillSuperview(
+    func solo_fillSuperview(
         insets: UIEdgeInsets = .zero,
         priority: UILayoutPriority = .required
     ) -> [NSLayoutConstraint] {
-        guard let superview = base.superview else { return [] }
-        base.translatesAutoresizingMaskIntoConstraints = false
+        guard let superview = self.superview else { return [] }
+        self.translatesAutoresizingMaskIntoConstraints = false
 
-        let top = base.topAnchor.constraint(equalTo: superview.topAnchor, constant: insets.top)
-        let leading = base.leadingAnchor.constraint(equalTo: superview.leadingAnchor, constant: insets.left)
-        let bottom = base.bottomAnchor.constraint(equalTo: superview.bottomAnchor, constant: -insets.bottom)
-        let trailing = base.trailingAnchor.constraint(equalTo: superview.trailingAnchor, constant: -insets.right)
+        let top = self.topAnchor.constraint(equalTo: superview.topAnchor, constant: insets.top)
+        let leading = self.leadingAnchor.constraint(equalTo: superview.leadingAnchor, constant: insets.left)
+        let bottom = self.bottomAnchor.constraint(equalTo: superview.bottomAnchor, constant: -insets.bottom)
+        let trailing = self.trailingAnchor.constraint(equalTo: superview.trailingAnchor, constant: -insets.right)
 
         let constraints = [top, leading, bottom, trailing]
         for constraint in constraints {
@@ -154,18 +154,18 @@ public extension SoloWrapper where Base: UIView {
     ///
     /// - Example:
     ///   ```swift
-    ///   view.solo.centerInSuperview(offset: CGPoint(x: 0, y: 10))
+    ///   view.solo_centerInSuperview(offset: CGPoint(x: 0, y: 10))
     ///   ```
     @discardableResult
-    func centerInSuperview(
+    func solo_centerInSuperview(
         offset: CGPoint = .zero,
         priority: UILayoutPriority = .required
     ) -> [NSLayoutConstraint] {
-        guard let superview = base.superview else { return [] }
-        base.translatesAutoresizingMaskIntoConstraints = false
+        guard let superview = self.superview else { return [] }
+        self.translatesAutoresizingMaskIntoConstraints = false
 
-        let centerX = base.centerXAnchor.constraint(equalTo: superview.centerXAnchor, constant: offset.x)
-        let centerY = base.centerYAnchor.constraint(equalTo: superview.centerYAnchor, constant: offset.y)
+        let centerX = self.centerXAnchor.constraint(equalTo: superview.centerXAnchor, constant: offset.x)
+        let centerY = self.centerYAnchor.constraint(equalTo: superview.centerYAnchor, constant: offset.y)
 
         let constraints = [centerX, centerY]
         for constraint in constraints {
@@ -181,14 +181,14 @@ public extension SoloWrapper where Base: UIView {
     ///   - priority: 约束优先级,默认 `.required`
     /// - Returns: 创建的约束
     @discardableResult
-    func centerXInSuperview(
+    func solo_centerXInSuperview(
         offset: CGFloat = 0,
         priority: UILayoutPriority = .required
     ) -> NSLayoutConstraint? {
-        guard let superview = base.superview else { return nil }
-        base.translatesAutoresizingMaskIntoConstraints = false
+        guard let superview = self.superview else { return nil }
+        self.translatesAutoresizingMaskIntoConstraints = false
 
-        let constraint = base.centerXAnchor.constraint(equalTo: superview.centerXAnchor, constant: offset)
+        let constraint = self.centerXAnchor.constraint(equalTo: superview.centerXAnchor, constant: offset)
         constraint.priority = priority
         constraint.isActive = true
         return constraint
@@ -200,14 +200,14 @@ public extension SoloWrapper where Base: UIView {
     ///   - priority: 约束优先级,默认 `.required`
     /// - Returns: 创建的约束
     @discardableResult
-    func centerYInSuperview(
+    func solo_centerYInSuperview(
         offset: CGFloat = 0,
         priority: UILayoutPriority = .required
     ) -> NSLayoutConstraint? {
-        guard let superview = base.superview else { return nil }
-        base.translatesAutoresizingMaskIntoConstraints = false
+        guard let superview = self.superview else { return nil }
+        self.translatesAutoresizingMaskIntoConstraints = false
 
-        let constraint = base.centerYAnchor.constraint(equalTo: superview.centerYAnchor, constant: offset)
+        let constraint = self.centerYAnchor.constraint(equalTo: superview.centerYAnchor, constant: offset)
         constraint.priority = priority
         constraint.isActive = true
         return constraint
@@ -219,14 +219,14 @@ public extension SoloWrapper where Base: UIView {
     ///   - priority: 约束优先级,默认 `.required`
     /// - Returns: 宽度和高度两个约束
     @discardableResult
-    func constraintSize(
+    func solo_constraintSize(
         _ size: CGSize,
         priority: UILayoutPriority = .required
     ) -> [NSLayoutConstraint] {
-        base.translatesAutoresizingMaskIntoConstraints = false
+        self.translatesAutoresizingMaskIntoConstraints = false
 
-        let width = base.widthAnchor.constraint(equalToConstant: size.width)
-        let height = base.heightAnchor.constraint(equalToConstant: size.height)
+        let width = self.widthAnchor.constraint(equalToConstant: size.width)
+        let height = self.heightAnchor.constraint(equalToConstant: size.height)
 
         let constraints = [width, height]
         for constraint in constraints {
@@ -242,12 +242,12 @@ public extension SoloWrapper where Base: UIView {
     ///   - priority: 约束优先级,默认 `.required`
     /// - Returns: 创建的宽度约束
     @discardableResult
-    func constraintWidth(
+    func solo_constraintWidth(
         _ width: CGFloat,
         priority: UILayoutPriority = .required
     ) -> NSLayoutConstraint? {
-        base.translatesAutoresizingMaskIntoConstraints = false
-        let constraint = base.widthAnchor.constraint(equalToConstant: width)
+        self.translatesAutoresizingMaskIntoConstraints = false
+        let constraint = self.widthAnchor.constraint(equalToConstant: width)
         constraint.priority = priority
         constraint.isActive = true
         return constraint
@@ -259,12 +259,12 @@ public extension SoloWrapper where Base: UIView {
     ///   - priority: 约束优先级,默认 `.required`
     /// - Returns: 创建的高度约束
     @discardableResult
-    func constraintHeight(
+    func solo_constraintHeight(
         _ height: CGFloat,
         priority: UILayoutPriority = .required
     ) -> NSLayoutConstraint? {
-        base.translatesAutoresizingMaskIntoConstraints = false
-        let constraint = base.heightAnchor.constraint(equalToConstant: height)
+        self.translatesAutoresizingMaskIntoConstraints = false
+        let constraint = self.heightAnchor.constraint(equalToConstant: height)
         constraint.priority = priority
         constraint.isActive = true
         return constraint
@@ -272,7 +272,7 @@ public extension SoloWrapper where Base: UIView {
 }
 
 // MARK: - 高级布局
-public extension SoloWrapper where Base: UIView {
+public extension UIView {
     /// 灵活锚定视图到任意布局锚点
     /// - Parameters:
     ///   - top: 顶部对齐目标(如 superview.topAnchor)
@@ -287,7 +287,7 @@ public extension SoloWrapper where Base: UIView {
     ///
     /// - Example:
     ///   ```swift
-    ///   button.solo.anchor(
+    ///   button.solo_anchor(
     ///       top: container.topAnchor,
     ///       leading: container.leadingAnchor,
     ///       width: 100,
@@ -295,7 +295,7 @@ public extension SoloWrapper where Base: UIView {
     ///   )
     ///   ```
     @discardableResult
-    func anchor(
+    func solo_anchor(
         top: NSLayoutYAxisAnchor? = nil,
         leading: NSLayoutXAxisAnchor? = nil,
         bottom: NSLayoutYAxisAnchor? = nil,
@@ -312,47 +312,47 @@ public extension SoloWrapper where Base: UIView {
         centerYOffset: CGFloat = 0,
         priority: UILayoutPriority = .required
     ) -> [NSLayoutConstraint] {
-        base.translatesAutoresizingMaskIntoConstraints = false
+        self.translatesAutoresizingMaskIntoConstraints = false
         var constraints: [NSLayoutConstraint] = []
 
         if let top {
-            let c = base.topAnchor.constraint(equalTo: top, constant: topOffset)
+            let c = self.topAnchor.constraint(equalTo: top, constant: topOffset)
             c.priority = priority
             constraints.append(c)
         }
         if let leading {
-            let c = base.leadingAnchor.constraint(equalTo: leading, constant: leadingOffset)
+            let c = self.leadingAnchor.constraint(equalTo: leading, constant: leadingOffset)
             c.priority = priority
             constraints.append(c)
         }
         if let bottom {
             // 注意：bottom 约束是 bottomAnchor = superview.bottomAnchor - offset
-            let c = base.bottomAnchor.constraint(equalTo: bottom, constant: -bottomOffset)
+            let c = self.bottomAnchor.constraint(equalTo: bottom, constant: -bottomOffset)
             c.priority = priority
             constraints.append(c)
         }
         if let trailing {
-            let c = base.trailingAnchor.constraint(equalTo: trailing, constant: -trailingOffset)
+            let c = self.trailingAnchor.constraint(equalTo: trailing, constant: -trailingOffset)
             c.priority = priority
             constraints.append(c)
         }
         if let centerX {
-            let c = base.centerXAnchor.constraint(equalTo: centerX, constant: centerXOffset)
+            let c = self.centerXAnchor.constraint(equalTo: centerX, constant: centerXOffset)
             c.priority = priority
             constraints.append(c)
         }
         if let centerY {
-            let c = base.centerYAnchor.constraint(equalTo: centerY, constant: centerYOffset)
+            let c = self.centerYAnchor.constraint(equalTo: centerY, constant: centerYOffset)
             c.priority = priority
             constraints.append(c)
         }
         if let width {
-            let c = base.widthAnchor.constraint(equalToConstant: width)
+            let c = self.widthAnchor.constraint(equalToConstant: width)
             c.priority = priority
             constraints.append(c)
         }
         if let height {
-            let c = base.heightAnchor.constraint(equalToConstant: height)
+            let c = self.heightAnchor.constraint(equalToConstant: height)
             c.priority = priority
             constraints.append(c)
         }

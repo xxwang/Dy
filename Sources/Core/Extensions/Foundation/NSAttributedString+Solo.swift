@@ -26,7 +26,7 @@ public extension NSAttributedString {
 }
 
 // MARK: - 查找子字符串范围(返回 NSRange)
-public extension SoloWrapper where Base: NSAttributedString {
+public extension NSAttributedString {
     /// 返回子字符串 `substring` 在属性字符串中`首次出现`的 `NSRange`
     ///
     /// - 注意：返回的 `NSRange` 基于 `UTF-16 码元(code units)`,与 `NSAttributedString.length` 一致
@@ -35,7 +35,7 @@ public extension SoloWrapper where Base: NSAttributedString {
     /// - Parameter substring: 要查找的子字符串
     /// - Returns: 对应的 `NSRange`
     func solo_nsRange(of substring: String) -> NSRange {
-        let str = base.string
+        let str = self.string
         guard let range = str.range(of: substring) else {
             return Foundation.NSRange(location: NSNotFound, length: 0)
         }
@@ -54,7 +54,7 @@ public extension SoloWrapper where Base: NSAttributedString {
     /// - Returns: 所有匹配的 `NSRange`
     func solo_allNSRanges(of substrings: [String]) -> [NSRange] {
         var allRanges: [NSRange] = []
-        let baseString = base.string
+        let baseString = self.string
 
         for text in substrings {
             guard !text.isEmpty else { continue }

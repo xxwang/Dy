@@ -28,7 +28,7 @@ public extension SoloWrapper where Base: UICollectionView {
     /// - Returns: `Self`
     @discardableResult
     func register(_ cell: (some UICollectionViewCell).Type) -> Self {
-        base.register(cell, forCellWithReuseIdentifier: cell.identifier)
+        base.register(cell, forCellWithReuseIdentifier: cell.solo_identifier)
         return self
     }
 
@@ -38,7 +38,7 @@ public extension SoloWrapper where Base: UICollectionView {
     ///   - cellType: `Cell` 类型
     @discardableResult
     func register(nib: UINib?, forCellWithClass cellType: (some UICollectionViewCell).Type) -> Self {
-        base.register(nib, forCellWithReuseIdentifier: cellType.identifier)
+        base.register(nib, forCellWithReuseIdentifier: cellType.solo_identifier)
         return self
     }
 
@@ -49,8 +49,8 @@ public extension SoloWrapper where Base: UICollectionView {
     @discardableResult
     func register(nibWithCellClass cellType: (some UICollectionViewCell).Type, at bundleClass: AnyClass? = nil) -> Self {
         let bundle = bundleClass.map { Bundle(for: $0) } ?? Bundle(for: cellType)
-        let nib = UINib(nibName: cellType.identifier, bundle: bundle)
-        base.register(nib, forCellWithReuseIdentifier: cellType.identifier)
+        let nib = UINib(nibName: cellType.solo_identifier, bundle: bundle)
+        base.register(nib, forCellWithReuseIdentifier: cellType.solo_identifier)
         return self
     }
 
@@ -60,7 +60,7 @@ public extension SoloWrapper where Base: UICollectionView {
     ///   - viewType: 视图类型
     @discardableResult
     func register(supplementaryViewOfKind kind: String, withClass viewType: (some UICollectionReusableView).Type) -> Self {
-        base.register(viewType, forSupplementaryViewOfKind: kind, withReuseIdentifier: viewType.identifier)
+        base.register(viewType, forSupplementaryViewOfKind: kind, withReuseIdentifier: viewType.solo_identifier)
         return self
     }
 
@@ -74,7 +74,7 @@ public extension SoloWrapper where Base: UICollectionView {
         forSupplementaryViewOfKind kind: String,
         withClass viewType: (some UICollectionReusableView).Type
     ) -> Self {
-        base.register(nib, forSupplementaryViewOfKind: kind, withReuseIdentifier: viewType.identifier)
+        base.register(nib, forSupplementaryViewOfKind: kind, withReuseIdentifier: viewType.solo_identifier)
         return self
     }
 

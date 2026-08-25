@@ -5,7 +5,7 @@ import CoreImage.CIFilterBuiltins
 import ImageIO
 
 /// 共享 `CIContext`（线程安全），避免每次滤镜操作重复创建昂贵实例。
-private let sharedCIContext: CIContext = CIContext(options: [
+private let solo_sharedCIContext: CIContext = CIContext(options: [
     .workingColorSpace: CGColorSpaceCreateDeviceRGB(),
     .useSoftwareRenderer: false,
 ])
@@ -62,43 +62,43 @@ public extension UIImage {
 }
 
 // MARK: - UIImage属性
-public extension SoloWrapper where Base: UIImage {
+public extension UIImage {
     /// 获取图片解码后的位图大小(单位:字节),O(1) 估算,避免每次全量 JPEG 编码
-    var sizeInBytes: Int {
-        guard let cg = base.cgImage else { return 0 }
+    var solo_sizeInBytes: Int {
+        guard let cg = self.cgImage else { return 0 }
         return cg.bytesPerRow * cg.height
     }
 
     /// 获取图片解码后的位图大小(单位:KB)
-    var sizeInKB: Double {
-        return Double(sizeInBytes) / 1024.0
+    var solo_sizeInKB: Double {
+        return Double(self.solo_sizeInBytes) / 1024.0
     }
 
     /// 返回使用原始渲染模式的图片实例
-    var withOriginalRenderingMode: UIImage {
-        return base.withRenderingMode(.alwaysOriginal)
+    var solo_withOriginalRenderingMode: UIImage {
+        return self.withRenderingMode(.alwaysOriginal)
     }
 
     /// 返回使用模板渲染模式的图片实例
-    var withTemplateRenderingMode: UIImage {
-        return base.withRenderingMode(.alwaysTemplate)
+    var solo_withTemplateRenderingMode: UIImage {
+        return self.withRenderingMode(.alwaysTemplate)
     }
 }
 
 // MARK: - Base64 编码
-public extension SoloWrapper where Base: UIImage {
+public extension UIImage {
     /// 获取图像的 PNG 格式 Base64 编码字符串
     ///
     /// - Returns: Base64 字符串,若 PNG 数据生成失败则返回 `nil`
     ///
     /// - Example:
     ///   ```swift
-    ///   if let base64 = image.solo.pngBase64String {
+    ///   if let base64 = image.solo_pngBase64String {
     ///       print("data:image/png;base64,\(base64)")
     ///   }
     ///   ```
-    var pngBase64String: String? {
-        return base.pngData()?.base64EncodedString()
+    var solo_pngBase64String: String? {
+        return self.pngData()?.base64EncodedString()
     }
 
     /// 获取图像的 JPEG 格式 Base64 编码字符串
@@ -108,18 +108,18 @@ public extension SoloWrapper where Base: UIImage {
     ///
     /// - Example:
     ///   ```swift
-    ///   if let base64 = image.solo.jpegBase64String(compressionQuality: 0.8) {
+    ///   if let base64 = image.solo_jpegBase64String(compressionQuality: 0.8) {
     ///       print("data:image/jpeg;base64,\(base64)")
     ///   }
     ///   ```
-    func jpegBase64String(compressionQuality: CGFloat) -> String? {
+    func solo_jpegBase64String(compressionQuality: CGFloat) -> String? {
         let quality = min(max(compressionQuality, 0), 1)
-        return base.jpegData(compressionQuality: quality)?.base64EncodedString()
+        return self.jpegData(compressionQuality: quality)?.base64EncodedString()
     }
 }
 
 // MARK: - 动态图片扩展
-public extension SoloWrapper where Base: UIImage {
+public extension UIImage {
     /// 创建适配深色/浅色模式的动态图片(通过图片名称)
     /// - Parameters:
     ///   - lightName: 浅色模式下的图片名称
@@ -128,9 +128,9 @@ public extension SoloWrapper where Base: UIImage {
     ///
     /// - Example:
     ///
-    ///     let dynamicImage = UIImage.solo.dynamic(lightImageName: "light_icon", darkImageName: "dark_icon")
+    ///     let dynamicImage = UIImage.solo_dynamic(lightImageName: "light_icon", darkImageName: "dark_icon")
     ///
-    static func dynamic(lightImageName: String, darkImageName: String? = nil) -> UIImage? {
+    static func solo_dynamic(lightImageName: String, darkImageName: String? = nil) -> UIImage? {
         return UIImage(lightImageName: lightImageName, darkImageName: darkImageName)
     }
 
@@ -142,9 +142,9 @@ public extension SoloWrapper where Base: UIImage {
     ///
     /// - Example:
     ///
-    ///     let dynamicImage = UIImage.solo.dynamic(light: lightImage, dark: darkImage)
+    ///     let dynamicImage = UIImage.solo_dynamic(light: lightImage, dark: darkImage)
     ///
-    static func dynamic(light: UIImage, dark: UIImage? = nil) -> UIImage? {
+    static func solo_dynamic(light: UIImage, dark: UIImage? = nil) -> UIImage? {
         return UIImage(lightImage: light, darkImage: dark)
     }
 }
@@ -186,7 +186,7 @@ public enum SoloCompressionMode {
         case .medium: return Self.dataSizeRule.default
         case .high: return Self.dataSizeRule.high
         case let .custom(_, fileSize):
-            return fileSize.solo.clamped(to: Self.dataSizeRule.min ... Self.dataSizeRule.max)
+            return fileSize.solo_clamped(to: Self.dataSizeRule.min ... Self.dataSizeRule.max)
         }
     }
 
@@ -197,7 +197,7 @@ public enum SoloCompressionMode {
         case .medium: return Self.resolutionRule.default
         case .high: return Self.resolutionRule.high
         case let .custom(resolution, _):
-            return resolution.solo.clamped(to: Self.resolutionRule.min ... Self.resolutionRule.max)
+            return resolution.solo_clamped(to: Self.resolutionRule.min ... Self.resolutionRule.max)
         }
     }
 
@@ -215,23 +215,23 @@ public enum SoloCompressionMode {
         guard longestEdge > maxResolution else { return originalSize }
 
         let scale = maxResolution / longestEdge
-        return CGSize(width: originalSize.width * scale, height: originalSize.height * scale).solo.rounded()
+        return CGSize(width: originalSize.width * scale, height: originalSize.height * scale).solo_rounded()
     }
 }
 
 // MARK: - 图像压缩功能扩展
-public extension SoloWrapper where Base: UIImage {
+public extension UIImage {
     /// 同步压缩图片
     /// - Parameters:
     ///   - mode: 压缩模式(默认为.medium)
     ///   - qualityRange: JPEG压缩质量范围(0.0-1.0,默认为0.6-0.8)
     /// - Returns: 压缩后的JPEG数据
-    func compress(
+    func solo_compress(
         mode: SoloCompressionMode = .medium,
         qualityRange: ClosedRange<CGFloat> = UIImage.defaultQualityRange
     ) -> UIImage? {
-        guard let resizedImage = self.resized(to: mode.resizedSize(for: base.size)) else { return nil }
-        guard let data = resizedImage.solo.compressedData(maxFileSize: mode.maxFileSize, qualityRange: qualityRange) else { return nil }
+        guard let resizedImage = self.solo_resized(to: mode.resizedSize(for: self.size)) else { return nil }
+        guard let data = resizedImage.solo_compressedData(maxFileSize: mode.maxFileSize, qualityRange: qualityRange) else { return nil }
         return UIImage(data: data)
     }
 
@@ -241,14 +241,14 @@ public extension SoloWrapper where Base: UIImage {
     ///   - qualityRange: 质量范围
     ///   - queue: 执行队列(默认后台队列)
     ///   - completion: 完成后回调(自动返回主线程)
-    func asyncCompress(
+    func solo_asyncCompress(
         mode: SoloCompressionMode = .medium,
         qualityRange: ClosedRange<CGFloat> = UIImage.defaultQualityRange,
         queue: DispatchQueue = .global(qos: .userInitiated),
         completion: @escaping SoloAction1<UIImage?>
     ) {
         queue.async {
-            guard let result = self.compress(mode: mode, qualityRange: qualityRange) else {
+            guard let result = self.solo_compress(mode: mode, qualityRange: qualityRange) else {
                 DispatchQueue.main.async { completion(nil) }
                 return
             }
@@ -261,7 +261,7 @@ public extension SoloWrapper where Base: UIImage {
     ///   - maxFileSize: 最大文件大小(字节)
     ///   - qualityRange: 质量范围
     /// - Returns: 压缩后的图片`Data`
-    func compressedData(
+    func solo_compressedData(
         maxFileSize: Int,
         qualityRange: ClosedRange<CGFloat> = UIImage.defaultQualityRange
     ) -> Data? {
@@ -269,7 +269,7 @@ public extension SoloWrapper where Base: UIImage {
         var result: Data?
 
         while quality >= qualityRange.lowerBound {
-            guard let data = base.jpegData(compressionQuality: quality), data.count <= maxFileSize else {
+            guard let data = self.jpegData(compressionQuality: quality), data.count <= maxFileSize else {
                 quality -= 0.05
                 continue
             }
@@ -277,22 +277,22 @@ public extension SoloWrapper where Base: UIImage {
             break
         }
 
-        return result ?? base.jpegData(compressionQuality: qualityRange.lowerBound)
+        return result ?? self.jpegData(compressionQuality: qualityRange.lowerBound)
     }
 
     /// 调整图片尺寸
-    private func resized(to newSize: CGSize) -> UIImage? {
-        if base.size == newSize {
-            return base
+    private func solo_resized(to newSize: CGSize) -> UIImage? {
+        if self.size == newSize {
+            return self
         }
-        return self.resizedUsingImageIO(newSize) ?? self.resizedUsingCoreGraphics(newSize)
+        return self.solo_resizedUsingImageIO(newSize) ?? self.solo_resizedUsingCoreGraphics(newSize)
     }
 
     /// 使用`ImageIO`调整尺寸(最佳性能)
     /// - Parameter newSize: 目标大小
     /// - Returns: `UIImage?`
-    private func resizedUsingImageIO(_ newSize: CGSize) -> UIImage? {
-        guard let data = base.pngData(), let source = CGImageSourceCreateWithData(data as CFData, nil) else { return nil }
+    private func solo_resizedUsingImageIO(_ newSize: CGSize) -> UIImage? {
+        guard let data = self.pngData(), let source = CGImageSourceCreateWithData(data as CFData, nil) else { return nil }
 
         let options: [CFString: Any] = [
             kCGImageSourceCreateThumbnailWithTransform: true,
@@ -307,79 +307,79 @@ public extension SoloWrapper where Base: UIImage {
     /// 使用`CoreGraphics`调整尺寸(兼容方案)
     /// - Parameter newSize: 目标大小
     /// - Returns: `UIImage?`
-    private func resizedUsingCoreGraphics(_ newSize: CGSize) -> UIImage? {
+    private func solo_resizedUsingCoreGraphics(_ newSize: CGSize) -> UIImage? {
         let renderer = UIGraphicsImageRenderer(size: newSize)
         return renderer.image { context in
             context.cgContext.interpolationQuality = .high
-            base.draw(in: CGRect(origin: .zero, size: newSize))
+            self.draw(in: CGRect(origin: .zero, size: newSize))
         }
     }
 }
 
 // MARK: - 裁剪相关
-public extension SoloWrapper where Base: UIImage {
+public extension UIImage {
     /// 裁剪图片到指定矩形区域
     /// - Parameter rect: 裁剪区域(基于图片坐标系)
     /// - Returns: 裁剪后的图片,如果区域无效返回nil
-    func crop(to rect: CGRect) -> UIImage? {
-        let scaledRect = rect.applying(CGAffineTransform(scaleX: base.scale, y: base.scale))
+    func solo_crop(to rect: CGRect) -> UIImage? {
+        let scaledRect = rect.applying(CGAffineTransform(scaleX: self.scale, y: self.scale))
 
-        guard let cgImage = base.cgImage?.cropping(to: scaledRect) else {
+        guard let cgImage = self.cgImage?.cropping(to: scaledRect) else {
             return nil
         }
 
-        return UIImage(cgImage: cgImage, scale: base.scale, orientation: base.imageOrientation)
+        return UIImage(cgImage: cgImage, scale: self.scale, orientation: self.imageOrientation)
     }
 
     /// 限制图片不超过最大尺寸(保持宽高比)
     /// - Parameter maxSize: 最大允许尺寸
     /// - Returns: 调整后的图片(如不需调整则返回原图)
-    func limit(to maxSize: CGSize) -> UIImage {
-        if base.size.width <= maxSize.width, base.size.height <= maxSize.height {
-            return base
+    func solo_limit(to maxSize: CGSize) -> UIImage {
+        if self.size.width <= maxSize.width, self.size.height <= maxSize.height {
+            return self
         }
 
-        let aspectRatio = min(maxSize.width / base.size.width, maxSize.height / base.size.height)
-        let newSize = CGSize(width: base.size.width * aspectRatio, height: base.size.height * aspectRatio)
+        let aspectRatio = min(maxSize.width / self.size.width, maxSize.height / self.size.height)
+        let newSize = CGSize(width: self.size.width * aspectRatio, height: self.size.height * aspectRatio)
 
         return UIGraphicsImageRenderer(size: newSize).image { _ in
-            base.draw(in: CGRect(origin: .zero, size: newSize))
+            self.draw(in: CGRect(origin: .zero, size: newSize))
         }
     }
 }
 
 // MARK: - 拉伸相关
-public extension SoloWrapper where Base: UIImage {
+public extension UIImage {
     /// 创建可拉伸图片(从中心点拉伸)
-    func makeResizableFromCenter() -> UIImage {
+    func solo_makeResizableFromCenter() -> UIImage {
         let insets = UIEdgeInsets(
-            top: (base.size.height / 2).solo.floor(),
-            left: (base.size.width / 2).solo.floor(),
-            bottom: (base.size.height / 2).solo.ceil(),
-            right: (base.size.width / 2).solo.ceil()
+            top: (self.size.height / 2).solo_floor(),
+            left: (self.size.width / 2).solo_floor(),
+            bottom: (self.size.height / 2).solo_ceil(),
+            right: (self.size.width / 2).solo_ceil()
         )
-        return base.resizableImage(withCapInsets: insets, resizingMode: .stretch)
+        return self.resizableImage(withCapInsets: insets, resizingMode: .stretch)
     }
 
     /// 创建自定义可拉伸图片
     /// - Parameters:
     ///   - insets: 不拉伸的区域
     ///   - mode: 拉伸模式(默认.stretch)
-    func makeResizable(insets: UIEdgeInsets, mode: UIImage.ResizingMode = .stretch) -> UIImage {
-        return base.resizableImage(withCapInsets: insets, resizingMode: mode)
+    func solo_makeResizable(insets: UIEdgeInsets, mode: UIImage.ResizingMode = .stretch) -> UIImage {
+        return self.resizableImage(withCapInsets: insets, resizingMode: mode)
     }
 }
 
 // MARK: - 缩放相关
-public extension SoloWrapper where Base: UIImage {
+public extension UIImage {
     /// 等比缩放图片到指定尺寸(可能留有空白)
     /// - Parameter size: 目标尺寸
-    func scaleAspectFit(to size: CGSize) -> UIImage {
-        let aspectRatio = min(size.width / base.size.width, size.height / base.size.height)
-        let newSize = CGSize(width: base.size.width * aspectRatio, height: base.size.height * aspectRatio)
+    func solo_scaleAspectFit(to size: CGSize) -> UIImage {
+        let aspectRatio = min(size.width / self.size.width, size.height / self.size.height)
+        let newSize = CGSize(width: self.size.width * aspectRatio, height: self.size.height * aspectRatio)
 
         return UIGraphicsImageRenderer(size: size).image { _ in
-            base.draw(in: CGRect(x: (size.width - newSize.width) / 2,
+            self.draw(in: CGRect(x: (size.width - newSize.width) / 2,
                                  y: (size.height - newSize.height) / 2,
                                  width: newSize.width,
                                  height: newSize.height))
@@ -388,12 +388,12 @@ public extension SoloWrapper where Base: UIImage {
 
     /// 等比填充缩放图片到指定尺寸(可能裁剪)
     /// - Parameter size: 目标尺寸
-    func scaleAspectFill(to size: CGSize) -> UIImage {
-        let aspectRatio = max(size.width / base.size.width, size.height / base.size.height)
-        let scaledSize = CGSize(width: base.size.width * aspectRatio, height: base.size.height * aspectRatio)
+    func solo_scaleAspectFill(to size: CGSize) -> UIImage {
+        let aspectRatio = max(size.width / self.size.width, size.height / self.size.height)
+        let scaledSize = CGSize(width: self.size.width * aspectRatio, height: self.size.height * aspectRatio)
 
         return UIGraphicsImageRenderer(size: size).image { _ in
-            base.draw(in: CGRect(x: (size.width - scaledSize.width) / 2,
+            self.draw(in: CGRect(x: (size.width - scaledSize.width) / 2,
                                  y: (size.height - scaledSize.height) / 2,
                                  width: scaledSize.width,
                                  height: scaledSize.height))
@@ -404,14 +404,14 @@ public extension SoloWrapper where Base: UIImage {
     /// - Parameters:
     ///   - newWidth: 目标宽度
     ///   - opaque: 是否不透明背景
-    func scale(toWidth newWidth: CGFloat, opaque: Bool = false) -> UIImage? {
-        let scaleFactor = newWidth / base.size.width
-        let newSize = CGSize(width: newWidth, height: base.size.height * scaleFactor)
+    func solo_scale(toWidth newWidth: CGFloat, opaque: Bool = false) -> UIImage? {
+        let scaleFactor = newWidth / self.size.width
+        let newSize = CGSize(width: newWidth, height: self.size.height * scaleFactor)
 
-        UIGraphicsBeginImageContextWithOptions(newSize, opaque, base.scale)
+        UIGraphicsBeginImageContextWithOptions(newSize, opaque, self.scale)
         defer { UIGraphicsEndImageContext() }
 
-        base.draw(in: CGRect(origin: .zero, size: newSize))
+        self.draw(in: CGRect(origin: .zero, size: newSize))
         return UIGraphicsGetImageFromCurrentImageContext()
     }
 
@@ -419,36 +419,36 @@ public extension SoloWrapper where Base: UIImage {
     /// - Parameters:
     ///   - newHeight: 目标高度
     ///   - opaque: 是否不透明背景
-    func scale(toHeight newHeight: CGFloat, opaque: Bool = false) -> UIImage? {
-        let scaleFactor = newHeight / base.size.height
-        let newSize = CGSize(width: base.size.width * scaleFactor, height: newHeight)
+    func solo_scale(toHeight newHeight: CGFloat, opaque: Bool = false) -> UIImage? {
+        let scaleFactor = newHeight / self.size.height
+        let newSize = CGSize(width: self.size.width * scaleFactor, height: newHeight)
 
-        UIGraphicsBeginImageContextWithOptions(newSize, opaque, base.scale)
+        UIGraphicsBeginImageContextWithOptions(newSize, opaque, self.scale)
         defer { UIGraphicsEndImageContext() }
 
-        base.draw(in: CGRect(origin: .zero, size: newSize))
+        self.draw(in: CGRect(origin: .zero, size: newSize))
         return UIGraphicsGetImageFromCurrentImageContext()
     }
 }
 
 // MARK: - 图片旋转与翻转
-public extension SoloWrapper where Base: UIImage {
+public extension UIImage {
     /// 修正图片方向(确保总是 .up 方向)
     /// - Returns: 方向修正后的图片
     ///
     /// - Example:
     ///
-    ///     let fixedImage = capturedImage.solo.fixOrientation()
+    ///     let fixedImage = capturedImage.solo_fixOrientation()
     ///
-    func fixOrientation() -> UIImage {
-        guard base.imageOrientation != .up, let _ = base.cgImage else { return base }
+    func solo_fixOrientation() -> UIImage {
+        guard self.imageOrientation != .up, let _ = self.cgImage else { return self }
 
-        let drawRect = CGRect(origin: .zero, size: base.size)
-        UIGraphicsBeginImageContextWithOptions(base.size, false, base.scale)
-        base.draw(in: drawRect)
+        let drawRect = CGRect(origin: .zero, size: self.size)
+        UIGraphicsBeginImageContextWithOptions(self.size, false, self.scale)
+        self.draw(in: drawRect)
         let image = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
-        return image ?? base
+        return image ?? self
     }
 
     /// 按角度旋转图片(正数顺时针,负数逆时针)
@@ -457,11 +457,11 @@ public extension SoloWrapper where Base: UIImage {
     ///
     /// - Example:
     ///
-    ///     let rotatedImage = image.solo.rotate(degrees: 90)
+    ///     let rotatedImage = image.solo_rotate(degrees: 90)
     ///
-    func rotate(degrees: CGFloat) -> UIImage? {
+    func solo_rotate(degrees: CGFloat) -> UIImage? {
         let radians = degrees * .pi / 180
-        return self.rotate(radians: radians)
+        return self.solo_rotate(radians: radians)
     }
 
     /// 按弧度旋转图片
@@ -470,17 +470,17 @@ public extension SoloWrapper where Base: UIImage {
     ///
     /// - Example:
     ///
-    ///     let rotatedImage = image.solo.rotate(radians: -.pi / 2)
+    ///     let rotatedImage = image.solo_rotate(radians: -.pi / 2)
     ///
-    func rotate(radians: CGFloat) -> UIImage? {
-        guard let cgImage = base.cgImage else { return nil }
+    func solo_rotate(radians: CGFloat) -> UIImage? {
+        guard let cgImage = self.cgImage else { return nil }
 
         // 计算旋转后所需画布尺寸
-        let rect = CGRect(origin: .zero, size: base.size)
+        let rect = CGRect(origin: .zero, size: self.size)
         let rotatedRect = rect.applying(CGAffineTransform(rotationAngle: radians))
         let boundingSize = CGSize(
-            width: (rotatedRect.width).solo.ceil(),
-            height: (rotatedRect.height).solo.ceil()
+            width: (rotatedRect.width).solo_ceil(),
+            height: (rotatedRect.height).solo_ceil()
         )
 
         let renderer = UIGraphicsImageRenderer(size: boundingSize)
@@ -491,10 +491,10 @@ public extension SoloWrapper where Base: UIImage {
 
             // 绘制原始图像(居中)
             let drawRect = CGRect(
-                x: -base.size.width / 2,
-                y: -base.size.height / 2,
-                width: base.size.width,
-                height: base.size.height
+                x: -self.size.width / 2,
+                y: -self.size.height / 2,
+                width: self.size.width,
+                height: self.size.height
             )
             context.cgContext.draw(cgImage, in: drawRect)
         }
@@ -505,10 +505,10 @@ public extension SoloWrapper where Base: UIImage {
     ///
     /// - Example:
     ///
-    ///     let mirroredImage = image.solo.flipHorizontal()
+    ///     let mirroredImage = image.solo_flipHorizontal()
     ///
-    func flipHorizontal() -> UIImage? {
-        return self.apply(orientation: .upMirrored)
+    func solo_flipHorizontal() -> UIImage? {
+        return self.solo_apply(orientation: .upMirrored)
     }
 
     /// 垂直翻转图片
@@ -516,17 +516,17 @@ public extension SoloWrapper where Base: UIImage {
     ///
     /// - Example:
     ///
-    ///     let flippedImage = image.solo.flipVertical()
+    ///     let flippedImage = image.solo_flipVertical()
     ///
-    func flipVertical() -> UIImage? {
-        return self.apply(orientation: .downMirrored)
+    func solo_flipVertical() -> UIImage? {
+        return self.solo_apply(orientation: .downMirrored)
     }
 
     /// 应用指定的 `UIImage.Orientation` 并返回新图像
     /// - Parameter orientation: 目标方向
     /// - Returns: 转换后的 `UIImage`,失败时返回 nil
-    private func apply(orientation: UIImage.Orientation) -> UIImage? {
-        guard let cgImage = base.cgImage else { return nil }
+    private func solo_apply(orientation: UIImage.Orientation) -> UIImage? {
+        guard let cgImage = self.cgImage else { return nil }
 
         let rect = CGRect(x: 0, y: 0, width: cgImage.width, height: cgImage.height)
         var drawRect = rect
@@ -535,7 +535,7 @@ public extension SoloWrapper where Base: UIImage {
         // 构建变换矩阵
         switch orientation {
         case .up:
-            return base
+            return self
         case .upMirrored:
             transform = transform.translatedBy(x: rect.width, y: 0).scaledBy(x: -1, y: 1)
         case .down:
@@ -582,18 +582,18 @@ public extension SoloWrapper where Base: UIImage {
 }
 
 // MARK: - 图片圆角处理
-public extension SoloWrapper where Base: UIImage {
+public extension UIImage {
     /// 为图片添加圆角
     /// - Parameter radius: 圆角半径(nil时生成圆形图片)
     /// - Returns: 带圆角的图片
-    func roundedCorner(radius: CGFloat? = nil) -> UIImage? {
-        let maxRadius = min(base.size.width, base.size.height) / 2
+    func solo_roundedCorner(radius: CGFloat? = nil) -> UIImage? {
+        let maxRadius = min(self.size.width, self.size.height) / 2
         let cornerRadius = radius ?? maxRadius
 
-        return UIGraphicsImageRenderer(size: base.size).image { _ in
-            let rect = CGRect(origin: .zero, size: base.size)
+        return UIGraphicsImageRenderer(size: self.size).image { _ in
+            let rect = CGRect(origin: .zero, size: self.size)
             UIBezierPath(roundedRect: rect, cornerRadius: cornerRadius).addClip()
-            base.draw(in: rect)
+            self.draw(in: rect)
         }
     }
 
@@ -603,17 +603,17 @@ public extension SoloWrapper where Base: UIImage {
     ///   - radius: 圆角半径
     ///   - corners: 需要添加圆角的方位
     /// - Returns: 处理后的图片
-    func roundedCorner(targetSize: CGSize? = nil,
-                       radius: CGFloat,
-                       corners: UIRectCorner = .allCorners) -> UIImage?
+    func solo_roundedCorner(targetSize: CGSize? = nil,
+                            radius: CGFloat,
+                            corners: UIRectCorner = .allCorners) -> UIImage?
     {
-        let targetSize = targetSize ?? base.size
+        let targetSize = targetSize ?? self.size
 
         return UIGraphicsImageRenderer(size: targetSize).image { _ in
             let rect = CGRect(origin: .zero, size: targetSize)
             let path = UIBezierPath(roundedRect: rect, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
             path.addClip()
-            base.draw(in: rect)
+            self.draw(in: rect)
         }
     }
 
@@ -626,12 +626,12 @@ public extension SoloWrapper where Base: UIImage {
     ///   - borderColor: 边框颜色
     ///   - backgroundColor: 背景颜色
     /// - Returns: `UIImage`
-    func roundedCorner(targetSize: CGSize,
-                       radius: CGFloat,
-                       corners: UIRectCorner = .allCorners,
-                       borderWidth: CGFloat = 0,
-                       borderColor: UIColor? = nil,
-                       backgroundColor: UIColor? = nil) -> UIImage?
+    func solo_roundedCorner(targetSize: CGSize,
+                            radius: CGFloat,
+                            corners: UIRectCorner = .allCorners,
+                            borderWidth: CGFloat = 0,
+                            borderColor: UIColor? = nil,
+                            backgroundColor: UIColor? = nil) -> UIImage?
     {
         return UIGraphicsImageRenderer(size: targetSize).image { context in
             // 设置背景色
@@ -645,7 +645,7 @@ public extension SoloWrapper where Base: UIImage {
             path.addClip()
 
             // 绘制图片
-            base.draw(in: rect)
+            self.draw(in: rect)
 
             // 绘制边框
             if borderWidth > 0, let borderColor {
@@ -658,14 +658,14 @@ public extension SoloWrapper where Base: UIImage {
 
     /// 生成圆形图片
     /// - Returns: 圆形裁剪后的图片
-    func circularImage() -> UIImage? {
-        let diameter = min(base.size.width, base.size.height)
-        return self.roundedCorner(radius: diameter / 2)
+    func solo_circularImage() -> UIImage? {
+        let diameter = min(self.size.width, self.size.height)
+        return self.solo_roundedCorner(radius: diameter / 2)
     }
 }
 
 // MARK: - 颜色分析
-public extension SoloWrapper where Base: UIImage {
+public extension UIImage {
     /// 表示一种被统计的颜色及其出现次数
     struct SoloCountedColor {
         public let color: UIColor
@@ -708,12 +708,12 @@ public extension SoloWrapper where Base: UIImage {
     /// - Example:
     ///   ```swift
     ///   if let image = UIImage(named: "avatar") {
-    ///       let palette = image.solo.analyzeColors(maxSize: CGSize(width: 100, height: 100))
+    ///       let palette = image.solo_analyzeColors(maxSize: CGSize(width: 100, height: 100))
     ///       view.backgroundColor = palette.background
     ///   }
     ///   ```
-    func analyzeColors(maxSize: CGSize = CGSize(width: 250, height: 250)) -> SoloColorPalette {
-        guard let cgImage = base.cgImage else {
+    func solo_analyzeColors(maxSize: CGSize = CGSize(width: 250, height: 250)) -> SoloColorPalette {
+        guard let cgImage = self.cgImage else {
             let fallbackColor = UIColor.black
             return SoloColorPalette(
                 background: fallbackColor,
@@ -724,10 +724,10 @@ public extension SoloWrapper where Base: UIImage {
         }
 
         // 计算缩放尺寸,保持宽高比,且不超过 maxSize
-        let scale = min(maxSize.width / base.size.width, maxSize.height / base.size.height, 1.0)
+        let scale = min(maxSize.width / self.size.width, maxSize.height / self.size.height, 1.0)
         let targetSize = CGSize(
-            width: base.size.width * scale,
-            height: base.size.height * scale
+            width: self.size.width * scale,
+            height: self.size.height * scale
         )
 
         // 创建位图上下文(RGBA8,Premultiplied Last,即 BGRA)
@@ -826,7 +826,7 @@ public extension SoloWrapper where Base: UIImage {
             background.getRed(&r2, green: &g2, blue: &b2, alpha: nil)
             let l1 = 0.299 * r1 + 0.587 * g1 + 0.114 * b1
             let l2 = 0.299 * r2 + 0.587 * g2 + 0.114 * b2
-            return (l1 - l2).solo.abs() > 0.3
+            return (l1 - l2).solo_abs() > 0.3
         }
 
         // 筛选背景色：从边缘颜色中找出现频率最高的非随机色
@@ -917,14 +917,14 @@ public extension SoloWrapper where Base: UIImage {
     ///
     /// - Example:
     ///   ```swift
-    ///   image.solo.extractThemeColor { color in
+    ///   image.solo_extractThemeColor { color in
     ///       DispatchQueue.main.async {
     ///           self.titleLabel.textColor = color ?? .label
     ///       }
     ///   }
     ///   ```
-    func extractThemeColor(_ completion: @escaping SoloAction1<UIColor?>) {
-        guard let cgImage = base.cgImage else {
+    func solo_extractThemeColor(_ completion: @escaping SoloAction1<UIColor?>) {
+        guard let cgImage = self.cgImage else {
             DispatchQueue.main.async { completion(nil) }
             return
         }
@@ -1020,16 +1020,16 @@ public extension SoloWrapper where Base: UIImage {
     ///
     /// - Example:
     ///   ```swift
-    ///   if let avgColor = image.solo.averageColor() {
+    ///   if let avgColor = image.solo_averageColor() {
     ///       view.backgroundColor = avgColor
     ///   }
     ///   ```
-    func averageColor() -> UIColor? {
+    func solo_averageColor() -> UIColor? {
         // 尝试获取有效的 CIImage
         var ciImage: CIImage?
-        if let existingCI = base.ciImage {
+        if let existingCI = self.ciImage {
             ciImage = existingCI
-        } else if let cg = base.cgImage {
+        } else if let cg = self.cgImage {
             ciImage = CIImage(cgImage: cg)
         }
 
@@ -1052,7 +1052,7 @@ public extension SoloWrapper where Base: UIImage {
 
         // 复用共享 CIContext(线程安全)
         var bitmap = [UInt8](repeating: 0, count: 4)
-        sharedCIContext.render(
+        solo_sharedCIContext.render(
             outputImage,
             toBitmap: &bitmap,
             rowBytes: 4,
@@ -1085,19 +1085,19 @@ public extension SoloWrapper where Base: UIImage {
     ///
     /// - Example:
     ///   ```swift
-    ///   if let color = image.solo.color(at: CGPoint(x: 10, y: 20)) {
+    ///   if let color = image.solo_color(at: CGPoint(x: 10, y: 20)) {
     ///       print("Color: \(color)")
     ///   }
     ///   ```
-    func color(at point: CGPoint) -> UIColor? {
-        guard let cgImage = base.cgImage else { return nil }
-        guard point.x >= 0, point.y >= 0, point.x < base.size.width, point.y < base.size.height else {
+    func solo_color(at point: CGPoint) -> UIColor? {
+        guard let cgImage = self.cgImage else { return nil }
+        guard point.x >= 0, point.y >= 0, point.x < self.size.width, point.y < self.size.height else {
             return nil
         }
 
         // 将 point 转换为像素坐标(考虑 scale)
-        let scaleX = CGFloat(cgImage.width) / base.size.width
-        let scaleY = CGFloat(cgImage.height) / base.size.height
+        let scaleX = CGFloat(cgImage.width) / self.size.width
+        let scaleY = CGFloat(cgImage.height) / self.size.height
         let pixelX = Int(point.x * scaleX)
         let pixelY = Int(point.y * scaleY)
 
@@ -1152,15 +1152,15 @@ public extension SoloWrapper where Base: UIImage {
     ///
     /// - Example:
     ///   ```swift
-    ///   image.solo.color(at: CGPoint(x: 50, y: 50)) { color in
+    ///   image.solo_color(at: CGPoint(x: 50, y: 50)) { color in
     ///       DispatchQueue.main.async {
     ///           self.indicatorView.backgroundColor = color
     ///       }
     ///   }
     ///   ```
-    func color(at point: CGPoint, completion: @escaping SoloAction1<UIColor?>) {
+    func solo_color(at point: CGPoint, completion: @escaping SoloAction1<UIColor?>) {
         DispatchQueue.global(qos: .userInteractive).async {
-            let color = self.color(at: point)
+            let color = self.solo_color(at: point)
             DispatchQueue.main.async {
                 completion(color)
             }
@@ -1169,12 +1169,12 @@ public extension SoloWrapper where Base: UIImage {
 }
 
 // MARK: - 颜色调整
-public extension SoloWrapper where Base: UIImage {
+public extension UIImage {
     /// 修改图像的渲染模式
     /// - Parameter renderingMode: 目标渲染模式(如 `.alwaysTemplate`)
     /// - Returns: 应用新渲染模式后的 `UIImage`
-    func renderingMode(_ renderingMode: UIImage.RenderingMode) -> UIImage {
-        return base.withRenderingMode(renderingMode)
+    func solo_renderingMode(_ renderingMode: UIImage.RenderingMode) -> UIImage {
+        return self.withRenderingMode(renderingMode)
     }
 
     /// 使用指定颜色对图像进行着色(适用于模板图像)
@@ -1184,15 +1184,15 @@ public extension SoloWrapper where Base: UIImage {
     /// - Returns: 着色后的新图像;若失败则返回原图
     ///
     /// > ⚠️ 注意：此方法在 iOS 13+ 才可用低版本请使用 `tint` 或确保图像为 `.alwaysTemplate` 模式
-    func tintColor(with color: UIColor, renderingMode: UIImage.RenderingMode = .alwaysOriginal) -> UIImage {
-        return base.withTintColor(color).withRenderingMode(renderingMode)
+    func solo_tintColor(with color: UIColor, renderingMode: UIImage.RenderingMode = .alwaysOriginal) -> UIImage {
+        return self.withTintColor(color).withRenderingMode(renderingMode)
     }
 
     /// 为 SF Symbol 图像应用符号配置(如粗细、层级、尺寸等)
     /// - Parameter configuration: 符号配置对象
     /// - Returns: 应用配置后的新图像;若失败返回 `nil`
-    func symbolConfiguration(_ configuration: UIImage.SymbolConfiguration) -> UIImage? {
-        return base.withConfiguration(configuration)
+    func solo_symbolConfiguration(_ configuration: UIImage.SymbolConfiguration) -> UIImage? {
+        return self.withConfiguration(configuration)
     }
 
     /// 设置图像的整体透明度(Alpha 值)
@@ -1202,19 +1202,19 @@ public extension SoloWrapper where Base: UIImage {
     /// - Example:
     ///   ```swift
     ///   let image = UIImage(named: "example.png")
-    ///   let newImage = image?.solo.imageAlpha(0.5)
+    ///   let newImage = image?.solo_imageAlpha(0.5)
     ///   // newImage: 透明度为 50% 的图像
     ///   ```
-    func imageAlpha(_ alpha: CGFloat) -> UIImage {
+    func solo_imageAlpha(_ alpha: CGFloat) -> UIImage {
         // 边界检查
-        guard alpha >= 0.0, alpha <= 1.0 else { return base }
+        guard alpha >= 0.0, alpha <= 1.0 else { return self }
 
         let format = UIGraphicsImageRendererFormat.default()
-        format.scale = base.scale
-        let renderer = UIGraphicsImageRenderer(size: base.size, format: format)
+        format.scale = self.scale
+        let renderer = UIGraphicsImageRenderer(size: self.size, format: format)
 
         return renderer.image { context in
-            base.draw(at: .zero, blendMode: .normal, alpha: alpha)
+            self.draw(at: .zero, blendMode: .normal, alpha: alpha)
         }
     }
 
@@ -1225,21 +1225,21 @@ public extension SoloWrapper where Base: UIImage {
     /// - Example:
     ///   ```swift
     ///   let image = UIImage(named: "icon")?.withRenderingMode(.alwaysTemplate)
-    ///   let filled = image?.solo.filled(with: .red)
+    ///   let filled = image?.solo_filled(with: .red)
     ///   ```
-    func filled(with color: UIColor) -> UIImage {
-        guard let cgImage = base.cgImage else { return base }
+    func solo_filled(with color: UIColor) -> UIImage {
+        guard let cgImage = self.cgImage else { return self }
 
         let format = UIGraphicsImageRendererFormat.default()
-        format.scale = base.scale
-        let renderer = UIGraphicsImageRenderer(size: base.size, format: format)
+        format.scale = self.scale
+        let renderer = UIGraphicsImageRenderer(size: self.size, format: format)
 
         return renderer.image { context in
             // 先绘制原始图像作为遮罩(仅取 Alpha 通道)
-            context.cgContext.clip(to: CGRect(origin: .zero, size: base.size), mask: cgImage)
+            context.cgContext.clip(to: CGRect(origin: .zero, size: self.size), mask: cgImage)
             // 再用指定颜色填充裁剪区域
             color.setFill()
-            context.fill(CGRect(origin: .zero, size: base.size))
+            context.fill(CGRect(origin: .zero, size: self.size))
         }
     }
 
@@ -1250,17 +1250,17 @@ public extension SoloWrapper where Base: UIImage {
     /// - Example:
     ///   ```swift
     ///   let image = UIImage(named: "logo-transparent.png")
-    ///   let withBg = image?.solo.backgroundColor(.systemBlue)
+    ///   let withBg = image?.solo_backgroundColor(.systemBlue)
     ///   ```
-    func backgroundColor(_ color: UIColor) -> UIImage {
+    func solo_backgroundColor(_ color: UIColor) -> UIImage {
         let format = UIGraphicsImageRendererFormat.default()
-        format.scale = base.scale
-        let renderer = UIGraphicsImageRenderer(size: base.size, format: format)
+        format.scale = self.scale
+        let renderer = UIGraphicsImageRenderer(size: self.size, format: format)
 
         return renderer.image { context in
             color.setFill()
             context.fill(context.format.bounds)
-            base.draw(at: .zero)
+            self.draw(at: .zero)
         }
     }
 
@@ -1274,73 +1274,73 @@ public extension SoloWrapper where Base: UIImage {
     /// - Example:
     ///   ```swift
     ///   let image = UIImage(named: "texture.png")
-    ///   let tinted = image?.solo.tint(.red, blendMode: .multiply)
+    ///   let tinted = image?.solo_tint(.red, blendMode: .multiply)
     ///   ```
-    func tint(_ color: UIColor, blendMode: CGBlendMode, alpha: CGFloat = 1.0) -> UIImage {
+    func solo_tint(_ color: UIColor, blendMode: CGBlendMode, alpha: CGFloat = 1.0) -> UIImage {
         let format = UIGraphicsImageRendererFormat.default()
-        format.scale = base.scale
-        let renderer = UIGraphicsImageRenderer(size: base.size, format: format)
+        format.scale = self.scale
+        let renderer = UIGraphicsImageRenderer(size: self.size, format: format)
 
         return renderer.image { context in
             // 先绘制底色
             color.setFill()
-            context.fill(CGRect(origin: .zero, size: base.size))
+            context.fill(CGRect(origin: .zero, size: self.size))
             // 再以指定混合模式叠加原图
-            base.draw(in: CGRect(origin: .zero, size: base.size), blendMode: blendMode, alpha: alpha)
+            self.draw(in: CGRect(origin: .zero, size: self.size), blendMode: blendMode, alpha: alpha)
         }
     }
 }
 
 // MARK: - 背景透明化
-public extension SoloWrapper where Base: UIImage {
+public extension UIImage {
     /// 移除接近白色的背景,使其变为透明
     /// - Returns: 白色背景区域透明化后的新图像;若失败返回 `nil`
     ///
     /// - Example:
     ///   ```swift
     ///   let logo = UIImage(named: "company_logo")
-    ///   let transparentLogo = logo?.solo.removeWhiteBackground()
+    ///   let transparentLogo = logo?.solo_removeWhiteBackground()
     ///   ```
-    func removeWhiteBackground() -> UIImage? {
+    func solo_removeWhiteBackground() -> UIImage? {
         // 允许一定容差(222～255 表示浅灰到纯白)
         let colorRange: [CGFloat] = [222, 255, 222, 255, 222, 255]
-        return self.makeBackgroundTransparent(colorRange: colorRange)
+        return self.solo_makeBackgroundTransparent(colorRange: colorRange)
     }
 
     /// 移除接近黑色的背景,使其变为透明
     /// - Returns: 黑色背景区域透明化后的新图像;若失败返回 `nil`
-    func removeBlackBackground() -> UIImage? {
+    func solo_removeBlackBackground() -> UIImage? {
         // 容差范围：0～32(深灰到纯黑)
         let colorRange: [CGFloat] = [0, 32, 0, 32, 0, 32]
-        return self.makeBackgroundTransparent(colorRange: colorRange)
+        return self.solo_makeBackgroundTransparent(colorRange: colorRange)
     }
 
     /// 将指定 RGB 范围内的像素设为透明
     /// - Parameter colorRange: `[Rmin, Rmax, Gmin, Gmax, Bmin, Bmax]`,每个分量 0～255
     /// - Returns: 透明化后的新图像;若输入无效或处理失败,返回 `nil`
-    private func makeBackgroundTransparent(colorRange: [CGFloat]) -> UIImage? {
+    private func solo_makeBackgroundTransparent(colorRange: [CGFloat]) -> UIImage? {
         guard colorRange.count == 6,
-              let cgImage = base.cgImage,
+              let cgImage = self.cgImage,
               let maskedCGImage = cgImage.copy(maskingColorComponents: colorRange)
         else {
             return nil
         }
 
         let format = UIGraphicsImageRendererFormat.default()
-        format.scale = base.scale
-        let renderer = UIGraphicsImageRenderer(size: base.size, format: format)
+        format.scale = self.scale
+        let renderer = UIGraphicsImageRenderer(size: self.size, format: format)
 
         return renderer.image { context in
             // Core Graphics 原点在左下,UIKit 在左上 → 需翻转 Y 轴
-            context.cgContext.translateBy(x: 0, y: base.size.height)
+            context.cgContext.translateBy(x: 0, y: self.size.height)
             context.cgContext.scaleBy(x: 1, y: -1)
-            context.cgContext.draw(maskedCGImage, in: CGRect(origin: .zero, size: base.size))
+            context.cgContext.draw(maskedCGImage, in: CGRect(origin: .zero, size: self.size))
         }
     }
 }
 
 // MARK: - 特效处理
-public extension SoloWrapper where Base: UIImage {
+public extension UIImage {
     /// 应用高斯模糊效果
     /// - Parameter radius: 模糊半径(建议 0～100),默认 20
     /// - Returns: 模糊后的新图像;若失败返回 `nil`
@@ -1348,19 +1348,19 @@ public extension SoloWrapper where Base: UIImage {
     /// - Example:
     ///   ```swift
     ///   let portrait = UIImage(named: "profile")
-    ///   let blurred = portrait?.solo.gaussianBlur(radius: 15)
+    ///   let blurred = portrait?.solo_gaussianBlur(radius: 15)
     ///   ```
-    func gaussianBlur(radius: CGFloat = 20) -> UIImage? {
+    func solo_gaussianBlur(radius: CGFloat = 20) -> UIImage? {
         guard radius >= 0 else { return nil }
-        return self.applyCoreImageFilter(filterName: "CIGaussianBlur", parameters: [kCIInputRadiusKey: radius])
+        return self.solo_applyCoreImageFilter(filterName: "CIGaussianBlur", parameters: [kCIInputRadiusKey: radius])
     }
 
     /// 应用像素化(马赛克)效果
     /// - Parameter scale: 像素块大小(越大越模糊),默认 20
     /// - Returns: 像素化后的新图像;若失败返回 `nil`
-    func pixelation(scale: CGFloat = 20) -> UIImage? {
+    func solo_pixelation(scale: CGFloat = 20) -> UIImage? {
         guard scale > 0 else { return nil }
-        return self.applyCoreImageFilter(filterName: "CIPixellate", parameters: [kCIInputScaleKey: scale])
+        return self.solo_applyCoreImageFilter(filterName: "CIPixellate", parameters: [kCIInputScaleKey: scale])
     }
 
     /// 通用 Core Image 滤镜应用方法
@@ -1368,8 +1368,8 @@ public extension SoloWrapper where Base: UIImage {
     ///   - filterName: CIFilter 名称(如 "CIGaussianBlur")
     ///   - parameters: 滤镜参数字典
     /// - Returns: 处理后的新图像;若失败返回 `nil`
-    private func applyCoreImageFilter(filterName: String, parameters: [String: Any]) -> UIImage? {
-        guard let ciImage = CIImage(image: base) else { return nil }
+    private func solo_applyCoreImageFilter(filterName: String, parameters: [String: Any]) -> UIImage? {
+        guard let ciImage = CIImage(image: self) else { return nil }
 
         // 合并用户参数与输入图像
         var finalParams = parameters
@@ -1382,17 +1382,17 @@ public extension SoloWrapper where Base: UIImage {
         }
 
         // 使用共享 CIContext 提升性能(线程安全)
-        guard let cgImage = sharedCIContext.createCGImage(outputImage, from: outputImage.extent) else {
+        guard let cgImage = solo_sharedCIContext.createCGImage(outputImage, from: outputImage.extent) else {
             return nil
         }
 
         // 根据原始 UIImage 的 scale 和 orientation 创建新的 UIImage
-        return UIImage(cgImage: cgImage, scale: base.scale, orientation: base.imageOrientation)
+        return UIImage(cgImage: cgImage, scale: self.scale, orientation: self.imageOrientation)
     }
 }
 
 // MARK: - 滤镜效果
-public extension SoloWrapper where Base: UIImage {
+public extension UIImage {
     /// 内置照片滤镜类型
     enum SoloPhotoFilter {
         case sepia(intensity: CGFloat = 1.0) // 棕褐色调
@@ -1408,9 +1408,9 @@ public extension SoloWrapper where Base: UIImage {
     /// - Example:
     ///   ```swift
     ///   let photo = UIImage(named: "vacation")
-    ///   let vintagePhoto = photo?.solo.filter(.sepia(intensity: 0.8))
+    ///   let vintagePhoto = photo?.solo_filter(.sepia(intensity: 0.8))
     ///   ```
-    func filter(_ filter: SoloPhotoFilter) -> UIImage? {
+    func solo_filter(_ filter: SoloPhotoFilter) -> UIImage? {
         let filterName: String
         var parameters: [String: Any] = [:]
 
@@ -1428,22 +1428,22 @@ public extension SoloWrapper where Base: UIImage {
             filterName = "CIPhotoEffectTonal"
         }
 
-        return self.applyCoreImageFilter(filterName: filterName, parameters: parameters)
+        return self.solo_applyCoreImageFilter(filterName: filterName, parameters: parameters)
     }
 }
 
 // MARK: - 人脸处理
-public extension SoloWrapper where Base: UIImage {
+public extension UIImage {
     /// 检测图像中的人脸位置
     /// - Returns: 人脸边界框数组(UIKit 坐标系,原点左上);若无结果或失败返回 `nil`
     ///
     /// - Example:
     ///   ```swift
     ///   let groupPhoto = UIImage(named: "team")
-    ///   let faces = groupPhoto?.solo.detectFaces()
+    ///   let faces = groupPhoto?.solo_detectFaces()
     ///   ```
-    func detectFaces() -> [CGRect]? {
-        guard let ciImage = CIImage(image: base) else { return nil }
+    func solo_detectFaces() -> [CGRect]? {
+        guard let ciImage = CIImage(image: self) else { return nil }
 
         let options: [String: Any] = [
             CIDetectorAccuracy: CIDetectorAccuracyHigh,
@@ -1458,7 +1458,7 @@ public extension SoloWrapper where Base: UIImage {
         // 将 Core Image 坐标(原点左下)转换为 UIKit 坐标(原点左上)
         return features.compactMap { feature in
             var rect = feature.bounds
-            rect.origin.y = base.size.height - rect.maxY
+            rect.origin.y = self.size.height - rect.maxY
             return rect
         }
     }
@@ -1466,20 +1466,20 @@ public extension SoloWrapper where Base: UIImage {
     /// 对检测到的人脸区域应用马赛克(像素化)效果
     /// - Parameter pixelScale: 像素块大小,默认 10.0
     /// - Returns: 人脸打码后的新图像;若无人脸或失败,返回原图
-    func pixelateFaces(pixelScale: CGFloat = 10.0) -> UIImage? {
+    func solo_pixelateFaces(pixelScale: CGFloat = 10.0) -> UIImage? {
         guard pixelScale > 0,
-              let ciImage = CIImage(image: base),
-              let faces = self.detectFaces(),
+              let ciImage = CIImage(image: self),
+              let faces = self.solo_detectFaces(),
               !faces.isEmpty
         else {
-            return base
+            return self
         }
 
         // 创建全图马赛克版本
-        guard let pixelFilter = CIFilter(name: "CIPixellate") else { return base }
+        guard let pixelFilter = CIFilter(name: "CIPixellate") else { return self }
         pixelFilter.setValue(ciImage, forKey: kCIInputImageKey)
         pixelFilter.setValue(pixelScale, forKey: kCIInputScaleKey)
-        guard let pixelatedImage = pixelFilter.outputImage else { return base }
+        guard let pixelatedImage = pixelFilter.outputImage else { return self }
 
         // 创建人脸区域的合成蒙版(白色为人脸,黑色为其他)
         let maskSize = ciImage.extent.size
@@ -1515,27 +1515,27 @@ public extension SoloWrapper where Base: UIImage {
         }
 
         // 若未生成有效蒙版,直接返回原图
-        guard let finalMask = compositeMask else { return base }
+        guard let finalMask = compositeMask else { return self }
 
         // 使用蒙版混合：原图(背景) + 马赛克图(前景)
-        guard let blendFilter = CIFilter(name: "CIBlendWithMask") else { return base }
+        guard let blendFilter = CIFilter(name: "CIBlendWithMask") else { return self }
         blendFilter.setValue(pixelatedImage, forKey: kCIInputImageKey)
         blendFilter.setValue(ciImage, forKey: kCIInputBackgroundImageKey)
         blendFilter.setValue(finalMask, forKey: kCIInputMaskImageKey)
 
-        guard let outputImage = blendFilter.outputImage else { return base }
+        guard let outputImage = blendFilter.outputImage else { return self }
 
         // 渲染为 UIImage
-        guard let cgImage = sharedCIContext.createCGImage(outputImage, from: ciImage.extent) else {
-            return base
+        guard let cgImage = solo_sharedCIContext.createCGImage(outputImage, from: ciImage.extent) else {
+            return self
         }
 
-        return UIImage(cgImage: cgImage, scale: base.scale, orientation: base.imageOrientation)
+        return UIImage(cgImage: cgImage, scale: self.scale, orientation: self.imageOrientation)
     }
 }
 
 // MARK: - 渐变图像
-public extension SoloWrapper where Base: UIImage {
+public extension UIImage {
     /// 渐变方向选项
     enum SoloGradientDirection {
         case horizontal // 左 → 右
@@ -1572,13 +1572,13 @@ public extension SoloWrapper where Base: UIImage {
     ///
     /// - Example:
     ///   ```swift
-    ///   let gradient = UIImage.solo.gradientImage(
+    ///   let gradient = UIImage.solo_gradientImage(
     ///       colors: [.red, .blue],
     ///       size: CGSize(width: 100, height: 100),
     ///       cornerRadius: 10
     ///   )
     ///   ```
-    static func gradientImage(
+    static func solo_gradientImage(
         colors: [UIColor],
         size: CGSize = CGSize(width: 1, height: 1),
         cornerRadius: CGFloat = 0,
@@ -1621,7 +1621,7 @@ public extension SoloWrapper where Base: UIImage {
 }
 
 // MARK: - 图像加载(仅限本地资源)
-public extension SoloWrapper where Base: UIImage {
+public extension UIImage {
     /// 从本地资源名称加载静态图像
     ///
     /// 此方法从主 `Bundle` 中查找指定名称的图像资源(支持 Asset Catalog 和文件系统)
@@ -1634,9 +1634,9 @@ public extension SoloWrapper where Base: UIImage {
     ///
     /// - Example:
     ///   ```swift
-    ///   let icon = UIImage.solo.fromResource(named: "app_icon")
+    ///   let icon = UIImage.solo_fromResource(named: "app_icon")
     ///   ```
-    static func fromResource(named name: String) -> UIImage? {
+    static func solo_fromResource(named name: String) -> UIImage? {
         guard !name.isEmpty else { return nil }
         return UIImage(named: name)
     }
@@ -1652,16 +1652,16 @@ public extension SoloWrapper where Base: UIImage {
     ///   ```swift
     ///   let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first!
     ///   let imagePath = (documentsPath as NSString).appendingPathComponent("photo.jpg")
-    ///   let image = UIImage.solo.fromFile(at: imagePath)
+    ///   let image = UIImage.solo_fromFile(at: imagePath)
     ///   ```
-    static func fromFile(at path: String) -> UIImage? {
+    static func solo_fromFile(at path: String) -> UIImage? {
         guard !path.isEmpty, FileManager.default.fileExists(atPath: path) else { return nil }
         return UIImage(contentsOfFile: path)
     }
 }
 
 // MARK: - GIF 动画支持
-public extension SoloWrapper where Base: UIImage {
+public extension UIImage {
     /// GIF 资源来源类型
     ///
     /// 用于指定 GIF 数据的获取方式,支持从 `Data`、`Bundle` 资源或 `NSDataAsset` 加载
@@ -1685,22 +1685,22 @@ public extension SoloWrapper where Base: UIImage {
     ///
     /// - Example:
     ///   ```swift
-    ///   let gif = UIImage.solo.animatedGIF(from: .resource("loading"))
+    ///   let gif = UIImage.solo_animatedGIF(from: .resource("loading"))
     ///   imageView.image = gif
     ///   ```
-    static func animatedGIF(from source: SoloGIFSource) -> UIImage? {
-        guard let data = self.gifData(from: source) else { return nil }
-        return self.animatedGIF(from: data)
+    static func solo_animatedGIF(from source: SoloGIFSource) -> UIImage? {
+        guard let data = self.solo_gifData(from: source) else { return nil }
+        return self.solo_animatedGIF(from: data)
     }
 
     /// 从原始数据创建 GIF 动画图像
     ///
     /// - Parameter data: GIF 格式的原始二进制数据
     /// - Returns: 动画图像对象,失败时返回 `nil`
-    private static func animatedGIF(from data: Data) -> UIImage? {
+    private static func solo_animatedGIF(from data: Data) -> UIImage? {
         guard !data.isEmpty,
               let source = CGImageSourceCreateWithData(data as CFData, nil),
-              let (images, duration) = self.extractGIFFrames(from: source),
+              let (images, duration) = self.solo_extractGIFFrames(from: source),
               !images.isEmpty
         else {
             return nil
@@ -1709,7 +1709,7 @@ public extension SoloWrapper where Base: UIImage {
     }
 
     /// 从 `SoloGIFSource` 提取原始数据
-    private static func gifData(from source: SoloGIFSource) -> Data? {
+    private static func solo_gifData(from source: SoloGIFSource) -> Data? {
         switch source {
         case let .data(data):
             return data.isEmpty ? nil : data
@@ -1739,7 +1739,7 @@ public extension SoloWrapper where Base: UIImage {
     ///
     /// - Parameter source: 已创建的 GIF 图像源
     /// - Returns: 包含帧图像数组和总时长的元组,若无有效帧则返回 `nil`
-    private static func extractGIFFrames(from source: CGImageSource) -> (images: [UIImage], duration: TimeInterval)? {
+    private static func solo_extractGIFFrames(from source: CGImageSource) -> (images: [UIImage], duration: TimeInterval)? {
         let frameCount = CGImageSourceGetCount(source)
         guard frameCount > 0 else { return nil }
 
@@ -1751,7 +1751,7 @@ public extension SoloWrapper where Base: UIImage {
                 continue
             }
 
-            let delay = self.gifFrameDelay(from: source, at: index)
+            let delay = self.solo_gifFrameDelay(from: source, at: index)
             totalDuration += max(delay, 0.01) // 防止零延迟导致播放异常
 
             images.append(UIImage(cgImage: cgImage))
@@ -1769,7 +1769,7 @@ public extension SoloWrapper where Base: UIImage {
     ///   - source: GIF 图像源
     ///   - index: 帧索引(从 0 开始)
     /// - Returns: 延迟时间(秒)
-    private static func gifFrameDelay(from source: CGImageSource, at index: Int) -> TimeInterval {
+    private static func solo_gifFrameDelay(from source: CGImageSource, at index: Int) -> TimeInterval {
         guard let properties = CGImageSourceCopyPropertiesAtIndex(source, index, nil) as? [String: Any],
               let gifDict = properties[kCGImagePropertyGIFDictionary as String] as? [String: Any]
         else {
@@ -1788,7 +1788,7 @@ public extension SoloWrapper where Base: UIImage {
 }
 
 // MARK: - 水印处理
-public extension SoloWrapper where Base: UIImage {
+public extension UIImage {
     /// 水印位置枚举
     ///
     /// 支持预设位置(如左上、右下、居中)或自定义坐标点
@@ -1857,39 +1857,39 @@ public extension SoloWrapper where Base: UIImage {
     ///       .foregroundColor: UIColor.white.withAlphaComponent(0.8),
     ///       .backgroundColor: UIColor.black.withAlphaComponent(0.3)
     ///   ]
-    ///   let result = image.solo.addTextWatermark(
+    ///   let result = image.solo_addTextWatermark(
     ///       text: "机密",
     ///       attributes: attributes,
     ///       position: .topLeft,
     ///       margin: 16
     ///   )
     ///   ```
-    func addTextWatermark(
+    func solo_addTextWatermark(
         text: String,
         attributes: [NSAttributedString.Key: Any]? = nil,
         position: SoloWatermarkPosition = .bottomRight,
         margin: CGFloat = 20
     ) -> UIImage {
         // 快速返回：空文本或无效尺寸
-        guard !text.isEmpty, base.size.width > 0, base.size.height > 0 else {
-            return base
+        guard !text.isEmpty, self.size.width > 0, self.size.height > 0 else {
+            return self
         }
 
         let format = UIGraphicsImageRendererFormat()
-        format.scale = base.scale
+        format.scale = self.scale
         format.opaque = false // 支持透明背景
-        let renderer = UIGraphicsImageRenderer(size: base.size, format: format)
+        let renderer = UIGraphicsImageRenderer(size: self.size, format: format)
 
         return renderer.image { context in
             // 绘制原始图像
-            base.draw(at: .zero)
+            self.draw(at: .zero)
 
             // 计算文本尺寸
             let textSize = text.size(withAttributes: attributes)
             guard textSize.width > 0, textSize.height > 0 else { return }
 
             // 计算水印位置
-            let textRect = position.rect(forSize: textSize, inImageSize: base.size, margin: margin)
+            let textRect = position.rect(forSize: textSize, inImageSize: self.size, margin: margin)
             text.draw(in: textRect, withAttributes: attributes)
         }
     }
@@ -1907,14 +1907,14 @@ public extension SoloWrapper where Base: UIImage {
     ///
     /// - Example:
     ///   ```swift
-    ///   let result = image.solo.addImageWatermark(
+    ///   let result = image.solo_addImageWatermark(
     ///       watermarkImage: logo,
     ///       position: .center,
     ///       margin: 0,
     ///       alpha: 0.6
     ///   )
     ///   ```
-    func addImageWatermark(
+    func solo_addImageWatermark(
         watermarkImage: UIImage?,
         position: SoloWatermarkPosition = .bottomRight,
         margin: CGFloat = 20,
@@ -1923,22 +1923,22 @@ public extension SoloWrapper where Base: UIImage {
         guard let watermarkImage,
               watermarkImage.size.width > 0,
               watermarkImage.size.height > 0,
-              base.size.width > 0,
-              base.size.height > 0
+              self.size.width > 0,
+              self.size.height > 0
         else {
-            return base
+            return self
         }
 
         let format = UIGraphicsImageRendererFormat()
-        format.scale = base.scale
+        format.scale = self.scale
         format.opaque = false
-        let renderer = UIGraphicsImageRenderer(size: base.size, format: format)
+        let renderer = UIGraphicsImageRenderer(size: self.size, format: format)
 
         return renderer.image { context in
-            base.draw(at: .zero)
+            self.draw(at: .zero)
 
             let watermarkSize = watermarkImage.size
-            let watermarkRect = position.rect(forSize: watermarkSize, inImageSize: base.size, margin: margin)
+            let watermarkRect = position.rect(forSize: watermarkSize, inImageSize: self.size, margin: margin)
             watermarkImage.draw(in: watermarkRect, blendMode: .normal, alpha: min(max(alpha, 0), 1))
         }
     }
@@ -1958,13 +1958,13 @@ public extension SoloWrapper where Base: UIImage {
     ///
     /// - Example:
     ///   ```swift
-    ///   let placeholder = UIImage.solo.placeholder(
+    ///   let placeholder = UIImage.solo_placeholder(
     ///       with: "A",
     ///       size: CGSize(width: 60, height: 60),
     ///       isCircular: true
     ///   )
     ///   ```
-    static func placeholder(
+    static func solo_placeholder(
         with text: String,
         size: CGSize,
         backgroundColor: UIColor = .systemGray,
@@ -2005,7 +2005,7 @@ public extension SoloWrapper where Base: UIImage {
 }
 
 // MARK: - 实用功能
-public extension SoloWrapper where Base: UIImage {
+public extension UIImage {
     /// 将图像平铺至指定尺寸
     ///
     /// 适用于生成背景纹理、图案填充等场景
@@ -2015,18 +2015,18 @@ public extension SoloWrapper where Base: UIImage {
     ///
     /// - Example:
     ///   ```swift
-    ///   let tiled = patternImage.solo.tiled(to: view.bounds.size)
+    ///   let tiled = patternImage.solo_tiled(to: view.bounds.size)
     ///   ```
-    func tiled(to size: CGSize) -> UIImage {
-        guard size.width > 0, size.height > 0 else { return base }
+    func solo_tiled(to size: CGSize) -> UIImage {
+        guard size.width > 0, size.height > 0 else { return self }
 
         let format = UIGraphicsImageRendererFormat()
-        format.scale = base.scale
+        format.scale = self.scale
         format.opaque = false
         let renderer = UIGraphicsImageRenderer(size: size, format: format)
 
         return renderer.image { _ in
-            UIColor(patternImage: base).setFill()
+            UIColor(patternImage: self).setFill()
             UIRectFill(CGRect(origin: .zero, size: size))
         }
     }
@@ -2045,11 +2045,11 @@ public extension SoloWrapper where Base: UIImage {
     /// - Example:
     ///   ```swift
     ///   DispatchQueue.global().async {
-    ///       let size = UIImage.solo.sizeOfRemoteImage(at: url, maximumDimension: 1024)
+    ///       let size = UIImage.solo_sizeOfRemoteImage(at: url, maximumDimension: 1024)
     ///       print("Image size: \(size)")
     ///   }
     ///   ```
-    static func sizeOfRemoteImage(at url: URL, maximumDimension: CGFloat? = nil) -> CGSize {
+    static func solo_sizeOfRemoteImage(at url: URL, maximumDimension: CGFloat? = nil) -> CGSize {
         guard let source = CGImageSourceCreateWithURL(url as CFURL, nil),
               let properties = CGImageSourceCopyPropertiesAtIndex(source, 0, nil) as? [CFString: Any],
               let width = properties[kCGImagePropertyPixelWidth] as? CGFloat,

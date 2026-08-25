@@ -60,7 +60,7 @@ public extension UIApplication {
 public extension UIApplication {
     /// 在应用内打开应用的`App Store评价`弹窗(一年最多3次)
     @MainActor func solo_requestAppReview() {
-        if let windowScene = UIWindow.solo.keyWindow?.windowScene {
+        if let windowScene = UIWindow.solo_keyWindow?.windowScene {
             if #available(iOS 16.0, *) {
                 AppStore.requestReview(in: windowScene)
             } else {

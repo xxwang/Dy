@@ -1,31 +1,31 @@
 import UIKit
 
 // MARK: - 属性
-public extension SoloWrapper where Base: UIViewController {
+public extension UIViewController {
     /// 检查当前视图控制器是否已加载并显示在窗口上
     /// - Returns:`true`表示控制器已加载并且其视图在窗口中显示
-    var isVisible: Bool {
-        base.isViewLoaded && base.view.window != nil && base.view.isHidden == false && base.view.alpha > 0.01
+    var solo_isVisible: Bool {
+        self.isViewLoaded && self.view.window != nil && self.view.isHidden == false && self.view.alpha > 0.01
     }
 
     /// 获取导航栈中当前控制器的前一个控制器
-    var previousViewController: UIViewController? {
-        guard let nav = base.navigationController,
-              let index = nav.viewControllers.firstIndex(of: base),
+    var solo_previousViewController: UIViewController? {
+        guard let nav = self.navigationController,
+              let index = nav.viewControllers.firstIndex(of: self),
               index > 0 else { return nil }
         return nav.viewControllers[index - 1]
     }
 }
 
 // MARK: - 页面跳转
-public extension SoloWrapper where Base: UIViewController {
+public extension UIViewController {
     /// 以`Modal`形式显示控制器
     /// - Parameters:
     ///   - viewController: 要显示的控制器
     ///   - fullScreen: 是否以全屏模式展示(默认为`true`)
     ///   - animated: 是否动画(默认为`true`)
     ///   - completion: 完成回调(可选)
-    func present(
+    func solo_present(
         _ viewController: UIViewController,
         fullScreen: Bool = true,
         animated: Bool = true,
@@ -34,7 +34,7 @@ public extension SoloWrapper where Base: UIViewController {
         if fullScreen {
             viewController.modalPresentationStyle = .fullScreen
         }
-        base.present(viewController, animated: animated, completion: completion)
+        self.present(viewController, animated: animated, completion: completion)
     }
 
     /// 将控制器 `Push` 到导航栈
@@ -44,21 +44,21 @@ public extension SoloWrapper where Base: UIViewController {
     ///   - animated: 是否启用动画默认为 `true`
     ///
     /// - Note: 若当前控制器未嵌入 `UINavigationController`,此操作无效果
-    func push(_ viewController: UIViewController, animated: Bool = true) {
-        base.navigationController?.pushViewController(viewController, animated: animated)
+    func solo_push(_ viewController: UIViewController, animated: Bool = true) {
+        self.navigationController?.pushViewController(viewController, animated: animated)
     }
 }
 
 // MARK: - 导航栈操作
-public extension SoloWrapper where Base: UIViewController {
+public extension UIViewController {
     /// 返回到导航栈的根控制器
-    func popToRoot(animated: Bool = true) {
-        base.navigationController?.popToRootViewController(animated: animated)
+    func solo_popToRoot(animated: Bool = true) {
+        self.navigationController?.popToRootViewController(animated: animated)
     }
 
     /// 返回上一级控制器
-    func pop(animated: Bool = true) {
-        base.navigationController?.popViewController(animated: animated)
+    func solo_pop(animated: Bool = true) {
+        self.navigationController?.popViewController(animated: animated)
     }
 
     /// 替换当前栈顶控制器(先移除自己,再 `push` 新控制器)
@@ -68,8 +68,8 @@ public extension SoloWrapper where Base: UIViewController {
     ///   - animated: 是否启用动画默认为 `true`
     ///
     /// - Usage: 常用于登录后替换欢迎页,或表单提交后跳转结果页
-    func replaceTop(with viewController: UIViewController, animated: Bool = true) {
-        guard let nav = base.navigationController, !nav.viewControllers.isEmpty else { return }
+    func solo_replaceTop(with viewController: UIViewController, animated: Bool = true) {
+        guard let nav = self.navigationController, !nav.viewControllers.isEmpty else { return }
         var vcs = nav.viewControllers
         vcs[vcs.count - 1] = viewController
         nav.setViewControllers(vcs, animated: animated)
@@ -81,8 +81,8 @@ public extension SoloWrapper where Base: UIViewController {
     ///   - count: 要弹出的控制器数量(必须 ≥ 1)
     ///   - newViewController: 要 Push 的新控制器
     ///   - animated: 是否启用动画默认为 `true`
-    func popThenPush(_ count: Int, newViewController: UIViewController, animated: Bool = true) {
-        guard let nav = base.navigationController, count > 0 else { return }
+    func solo_popThenPush(_ count: Int, newViewController: UIViewController, animated: Bool = true) {
+        guard let nav = self.navigationController, count > 0 else { return }
         let currentCount = nav.viewControllers.count
         let keepCount = max(1, currentCount - count)
         var vcs = Array(nav.viewControllers.prefix(keepCount))
@@ -100,8 +100,8 @@ public extension SoloWrapper where Base: UIViewController {
     ///
     /// - Note: 使用 `last(where:)` 实现,因此返回的是`最靠近栈顶`的匹配项
     @discardableResult
-    func popTo<T: UIViewController>(_ type: T.Type, animated: Bool = true) -> Bool {
-        guard let nav = base.navigationController else { return false }
+    func solo_popTo<T: UIViewController>(_ type: T.Type, animated: Bool = true) -> Bool {
+        guard let nav = self.navigationController else { return false }
         if let target = nav.viewControllers.last(where: { $0 is T }) {
             nav.popToViewController(target, animated: animated)
             return true
@@ -116,8 +116,8 @@ public extension SoloWrapper where Base: UIViewController {
     ///   - animated: 是否启用动画默认为 `true`
     ///
     /// - Note: 若 `count >= 栈深度`,则返回到根控制器
-    func pop(count: Int, animated: Bool = true) {
-        guard let nav = base.navigationController, count > 0 else { return }
+    func solo_pop(count: Int, animated: Bool = true) {
+        guard let nav = self.navigationController, count > 0 else { return }
         let total = nav.viewControllers.count
         if count >= total {
             nav.popToRootViewController(animated: animated)
@@ -132,13 +132,13 @@ public extension SoloWrapper where Base: UIViewController {
     /// - 若在导航栈中且不是根 → pop
     /// - 若是以 modal 方式呈现 → dismiss
     /// - 否则尝试 dismiss 自身(兜底)
-    func close(animated: Bool = true) {
-        if let nav = base.navigationController, nav.viewControllers.count > 1 {
+    func solo_close(animated: Bool = true) {
+        if let nav = self.navigationController, nav.viewControllers.count > 1 {
             nav.popViewController(animated: animated)
-        } else if base.presentingViewController != nil {
-            base.dismiss(animated: animated)
+        } else if self.presentingViewController != nil {
+            self.dismiss(animated: animated)
         } else {
-            base.dismiss(animated: animated)
+            self.dismiss(animated: animated)
         }
     }
 
@@ -148,8 +148,8 @@ public extension SoloWrapper where Base: UIViewController {
     ///   - animated: 是否启用动画默认为 `true`
     ///
     /// - Usage: 例如用户登出时,清除所有弹窗回到登录页
-    func dismissAllModals(animated: Bool = true) {
-        var top: UIViewController = base
+    func solo_dismissAllModals(animated: Bool = true) {
+        var top: UIViewController = self
         while let presenter = top.presentingViewController {
             top = presenter
         }
@@ -160,7 +160,7 @@ public extension SoloWrapper where Base: UIViewController {
     /// - Parameters:
     ///   - animated: 是否动画
     ///   - completion: 完成回调
-    func dismiss(animated: Bool = true, completion: SoloAction? = nil) {
-        base.dismiss(animated: animated, completion: completion)
+    func solo_dismiss(animated: Bool = true, completion: SoloAction? = nil) {
+        self.dismiss(animated: animated, completion: completion)
     }
 }

@@ -43,7 +43,7 @@ public extension SoloHelper {
     /// 判断依据：`key window` 的 `safeAreaInsets.bottom > 0`
     /// 注意：在 `iPad` 或非全面屏设备上返回 `false`
     var isIPhoneXSeries: Bool {
-        let bottomInset = UIWindow.solo.keyWindow?.safeAreaInsets.bottom ?? 0
+        let bottomInset = UIWindow.solo_keyWindow?.safeAreaInsets.bottom ?? 0
         return isPhone && bottomInset > 0
     }
 }
@@ -158,7 +158,7 @@ public extension SoloHelper {
     /// 判断指定方向是否被当前 App 支持
     func isSupportedOrientation(_ orientation: UIInterfaceOrientation) -> Bool {
         let supported = UIApplication.shared.supportedInterfaceOrientations(for: nil)
-        return supported.contains(orientation.solo.toInterfaceOrientationMask)
+        return supported.contains(orientation.solo_interfaceOrientationMask())
     }
 }
 

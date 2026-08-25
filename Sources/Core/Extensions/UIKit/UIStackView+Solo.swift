@@ -35,26 +35,26 @@ public extension UIStackView {
 }
 
 // MARK: - 视图交换
-public extension SoloWrapper where Base: UIStackView {
+public extension UIStackView {
     /// 无动画地交换两个排列子视图的位置
     ///
     /// - Parameters:
     ///   - firstView: 第一个要交换的视图
     ///   - secondView: 第二个要交换的视图
-    func switchViews(_ firstView: UIView, _ secondView: UIView) {
+    func solo_switchViews(_ firstView: UIView, _ secondView: UIView) {
         guard
-            let index1 = base.arrangedSubviews.firstIndex(of: firstView),
-            let index2 = base.arrangedSubviews.firstIndex(of: secondView),
+            let index1 = self.arrangedSubviews.firstIndex(of: firstView),
+            let index2 = self.arrangedSubviews.firstIndex(of: secondView),
             index1 != index2
         else { return }
 
         // 先移除两个视图
-        base.removeArrangedSubview(firstView)
-        base.removeArrangedSubview(secondView)
+        self.removeArrangedSubview(firstView)
+        self.removeArrangedSubview(secondView)
 
         // 在交换后的位置重新插入
-        base.insertArrangedSubview(firstView, at: index2 > index1 ? index2 - 1 : index2)
-        base.insertArrangedSubview(secondView, at: index1)
+        self.insertArrangedSubview(firstView, at: index2 > index1 ? index2 - 1 : index2)
+        self.insertArrangedSubview(secondView, at: index1)
     }
 
     /// 交换两个排列子视图的位置,可选择是否启用动画
@@ -67,7 +67,7 @@ public extension SoloWrapper where Base: UIStackView {
     ///   - delay: 动画开始前的延迟时间(秒)默认为 `0`
     ///   - options: 动画选项默认为 `.curveEaseInOut`
     ///   - completion: 动画完成后的回调闭包默认为 `nil`
-    func swapViews(
+    func solo_swapViews(
         _ firstView: UIView,
         _ secondView: UIView,
         animated: Bool = false,
@@ -82,13 +82,13 @@ public extension SoloWrapper where Base: UIStackView {
                 delay: delay,
                 options: options,
                 animations: {
-                    self.switchViews(firstView, secondView)
-                    self.base.superview?.layoutIfNeeded()
+                    self.solo_switchViews(firstView, secondView)
+                    self.self.superview?.layoutIfNeeded()
                 },
                 completion: completion
             )
         } else {
-            self.switchViews(firstView, secondView)
+            self.solo_switchViews(firstView, secondView)
         }
     }
 }

@@ -1,15 +1,15 @@
 import UIKit
 
 // MARK: - 属性
-public extension SoloWrapper where Base: UITextField {
+public extension UITextField {
     /// 判断当前文本内容是否为空
-    var isEmpty: Bool {
-        base.text == nil || base.text == ""
+    var solo_isEmpty: Bool {
+        self.text == nil || self.text == ""
     }
 }
 
 // MARK: - 常用方法
-public extension SoloWrapper where Base: UITextField {
+public extension UITextField {
     /// 为输入框添加工具栏到 `inputAccessoryView`
     ///
     /// - Parameters:
@@ -20,10 +20,10 @@ public extension SoloWrapper where Base: UITextField {
     /// - Example:
     ///   ```swift
     ///   let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(dismissKeyboard))
-    ///   textField.solo.addToolbar(items: [doneButton])
+    ///   textField.solo_addToolbar(items: [doneButton])
     ///   ```
     @discardableResult
-    func addToolbar(items: [UIBarButtonItem]?, height: CGFloat = 44) -> UIToolbar {
+    func solo_addToolbar(items: [UIBarButtonItem]?, height: CGFloat = 44) -> UIToolbar {
         let toolbar = UIToolbar()
         toolbar.items = items
         toolbar.sizeToFit()
@@ -38,7 +38,7 @@ public extension SoloWrapper where Base: UITextField {
                                              constant: height)
         fixedHeight.isActive = true
 
-        base.inputAccessoryView = toolbar
+        self.inputAccessoryView = toolbar
         return toolbar
     }
 
@@ -56,7 +56,7 @@ public extension SoloWrapper where Base: UITextField {
     /// - Example:
     ///   ```swift
     ///   func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-    ///       return textField.solo.inputRestrictions(
+    ///       return textField.solo_inputRestrictions(
     ///           shouldChangeTextIn: range,
     ///           replacementText: string,
     ///           maxCharacters: 10,
@@ -64,7 +64,7 @@ public extension SoloWrapper where Base: UITextField {
     ///       )
     ///   }
     ///   ```
-    func inputRestrictions(
+    func solo_inputRestrictions(
         shouldChangeTextIn range: NSRange,
         replacementText text: String,
         maxCharacters: Int,
@@ -76,12 +76,12 @@ public extension SoloWrapper where Base: UITextField {
         }
 
         // 正则校验(仅校验新增字符)
-        if let regexPattern = regex, !text.solo.isMatch(pattern: regexPattern) {
+        if let regexPattern = regex, !text.solo_isMatch(pattern: regexPattern) {
             return false
         }
 
         // 计算新文本
-        let currentText = base.text ?? ""
+        let currentText = self.text ?? ""
         guard let textRange = Range(range, in: currentText) else { return false }
         let newText = currentText.replacingCharacters(in: textRange, with: text)
 

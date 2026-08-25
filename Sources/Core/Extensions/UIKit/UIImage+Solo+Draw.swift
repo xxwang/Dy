@@ -1,7 +1,7 @@
 import UIKit
 
 // MARK: - 圆角纯色图片绘制
-public extension SoloWrapper where Base: UIImage {
+public extension UIImage {
     /// 创建一个指定尺寸、背景色和圆角的纯色图片,可选添加边框
     ///
     /// 此方法适用于生成头像占位图、按钮背景等场景
@@ -14,7 +14,7 @@ public extension SoloWrapper where Base: UIImage {
     ///   - borderColor: 边框颜色若为 `nil` 或 `borderWidth ≤ 0`,则不绘制边框
     ///   - borderWidth: 边框宽度必须 > 0 才会绘制边框
     /// - Returns: 生成的 `UIImage` 实例;若输入无效则返回空图片
-    static func drawRoundedImage(
+    static func solo_drawRoundedImage(
         size: CGSize,
         bgColor: UIColor,
         cornerRadii: CGSize,
@@ -49,7 +49,7 @@ public extension SoloWrapper where Base: UIImage {
 }
 
 // MARK: - 基础形状图标绘制
-public extension SoloWrapper where Base: UIImage {
+public extension UIImage {
     /// 箭头方向枚举,用于控制箭头或三角形的朝向
     enum SoloArrowDirection: Int, CaseIterable {
         case up = 0 // < 向上
@@ -66,7 +66,7 @@ public extension SoloWrapper where Base: UIImage {
     ///   - lineWidth: 线条宽度,建议 ≥ 1
     ///   - direction: 箭头指向方向
     /// - Returns: 渲染后的箭头图片
-    static func drawArrow(
+    static func solo_drawArrow(
         size: CGSize,
         color: UIColor,
         lineWidth: CGFloat,
@@ -117,7 +117,7 @@ public extension SoloWrapper where Base: UIImage {
     ///   - fillColor: 填充颜色
     ///   - direction: 三角形尖角方向
     /// - Returns: 渲染后的三角形图片
-    static func drawTriangle(
+    static func solo_drawTriangle(
         size: CGSize,
         fillColor: UIColor,
         direction: SoloArrowDirection
@@ -166,7 +166,7 @@ public extension SoloWrapper where Base: UIImage {
     ///   - borderColor: 边框颜色(可选)
     ///   - borderWidth: 边框宽度(≤0 则不绘制)
     /// - Returns: 渲染后的对勾图标
-    static func drawCheckmark(
+    static func solo_drawCheckmark(
         size: CGSize,
         fillColor: UIColor,
         lineWidth: CGFloat,
@@ -247,7 +247,7 @@ public extension SoloWrapper where Base: UIImage {
     ///   - lineColor: 线条颜色
     ///   - lineWidth: 线条宽度
     /// - Returns: 渲染后的叉号图片
-    static func drawCross(
+    static func solo_drawCross(
         size: CGSize,
         lineColor: UIColor,
         lineWidth: CGFloat
@@ -279,7 +279,7 @@ public extension SoloWrapper where Base: UIImage {
     ///   - lineColor: 线条颜色
     ///   - lineWidth: 线条宽度
     /// - Returns: 渲染后的加号图片
-    static func drawPlus(
+    static func solo_drawPlus(
         size: CGSize,
         lineColor: UIColor,
         lineWidth: CGFloat
@@ -314,7 +314,7 @@ public extension SoloWrapper where Base: UIImage {
     ///   - lineColor: 圆环颜色
     ///   - lineWidth: 圆环线宽
     /// - Returns: 渲染后的空心圆图片
-    static func drawCircle(
+    static func solo_drawCircle(
         size: CGSize,
         lineColor: UIColor,
         lineWidth: CGFloat
@@ -349,7 +349,7 @@ public extension SoloWrapper where Base: UIImage {
     ///   - color: 填充颜色
     ///   - insets: 内边距,默认为 `.zero`
     /// - Returns: 渲染后的实心圆图片
-    static func drawSolidCircle(
+    static func solo_drawSolidCircle(
         size: CGSize,
         color: UIColor,
         insets: UIEdgeInsets = .zero
@@ -385,7 +385,7 @@ public extension SoloWrapper where Base: UIImage {
     ///   - lineWidth: 外圈线宽
     ///   - innerSpacing: 内圈与外圈之间的间距(≥0)
     /// - Returns: 渲染后的双圆图标
-    static func drawDoubleCircle(
+    static func solo_drawDoubleCircle(
         size: CGSize,
         lineColor: UIColor,
         lineWidth: CGFloat,
@@ -433,7 +433,7 @@ public extension SoloWrapper where Base: UIImage {
     ///   - innerColor: 内圆颜色
     ///   - spacing: 内圆与外圆之间的间距(≥0)
     /// - Returns: 渲染后的双实心圆图片
-    static func drawDoubleSolidCircle(
+    static func solo_drawDoubleSolidCircle(
         size: CGSize,
         outerColor: UIColor,
         innerColor: UIColor,
@@ -474,7 +474,7 @@ public extension SoloWrapper where Base: UIImage {
     ///   - size: 图标尺寸
     ///   - color: 填充颜色
     /// - Returns: 渲染后的五角星图片
-    static func drawStar(
+    static func solo_drawStar(
         size: CGSize,
         color: UIColor
     ) -> UIImage {
@@ -506,7 +506,7 @@ public extension SoloWrapper where Base: UIImage {
 }
 
 // MARK: - 多图合成
-public extension SoloWrapper where Base: UIImage {
+public extension UIImage {
     /// 更类型安全的多图合成方法(推荐使用)
     ///
     /// - Parameters:
@@ -529,7 +529,7 @@ public extension SoloWrapper where Base: UIImage {
     ///             - `"image"`: `UIImage`
     ///             - `"rect"`: `CGRect`
     /// - Returns: 合成后的图片;若尺寸无效或无有效图层,返回空图片
-    static func drawImages(size: CGSize, images: [[String: Any]]) -> UIImage {
+    static func solo_drawImages(size: CGSize, images: [[String: Any]]) -> UIImage {
         guard size.width > 0, size.height > 0 else {
             return UIImage()
         }
@@ -553,7 +553,7 @@ public extension SoloWrapper where Base: UIImage {
     ///   - size: 画布尺寸
     ///   - items: 图片与位置的组合列表
     /// - Returns: 合成后的图片
-    static func drawImages(size: CGSize, items: [SoloDrawItem]) -> UIImage {
+    static func solo_drawImages(size: CGSize, items: [SoloDrawItem]) -> UIImage {
         guard size.width > 0, size.height > 0 else {
             return UIImage()
         }

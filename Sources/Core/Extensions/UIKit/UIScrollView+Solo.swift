@@ -1,19 +1,19 @@
 import UIKit
 
 // MARK: - 属性
-public extension SoloWrapper where Base: UIScrollView {
+public extension UIScrollView {
     /// 获取滚动视图当前在内容坐标系中的可见区域
     ///
     /// - Returns: 一个 `CGRect`,表示当前可见的内容区域(原点为 `contentOffset`,大小为 `bounds.size`)
     ///   即使 `contentSize` 小于 `bounds.size`,该区域仍正确反映视口位置
     ///   注意：此区域可能包含超出 `contentSize` 的部分(例如弹性回弹时)
-    var visibleRect: CGRect {
-        return CGRect(origin: base.contentOffset, size: base.bounds.size)
+    var solo_visibleRect: CGRect {
+        return CGRect(origin: self.contentOffset, size: self.bounds.size)
     }
 }
 
 // MARK: - 截图
-public extension SoloWrapper where Base: UIScrollView {
+public extension UIScrollView {
     /// 截图选项(与 UIView 的选项保持一致)
     struct SoloScreenshotOptions {
         /// 是否考虑屏幕缩放(默认 true)
@@ -33,21 +33,21 @@ public extension SoloWrapper where Base: UIScrollView {
     /// 获取当前可见区域的截图
     /// - Parameter options: 截图配置选项
     /// - Returns: 可见区域的截图,失败返回 nil
-    func captureVisibleScreenshot(options: SoloScreenshotOptions = SoloScreenshotOptions()) -> UIImage? {
+    func solo_captureVisibleScreenshot(options: SoloScreenshotOptions = SoloScreenshotOptions()) -> UIImage? {
         assert(Thread.isMainThread, "captureVisibleScreenshot must be called on main thread")
 
-        let originalShowsIndicators = (base.showsHorizontalScrollIndicator, base.showsVerticalScrollIndicator)
+        let originalShowsIndicators = (self.showsHorizontalScrollIndicator, self.showsVerticalScrollIndicator)
         if !options.showsScrollIndicators {
-            base.showsHorizontalScrollIndicator = false
-            base.showsVerticalScrollIndicator = false
+            self.showsHorizontalScrollIndicator = false
+            self.showsVerticalScrollIndicator = false
         }
         defer {
-            base.showsHorizontalScrollIndicator = originalShowsIndicators.0
-            base.showsVerticalScrollIndicator = originalShowsIndicators.1
+            self.showsHorizontalScrollIndicator = originalShowsIndicators.0
+            self.showsVerticalScrollIndicator = originalShowsIndicators.1
         }
 
         let scale = options.scaleToScreen ? SoloScreen.screenScale : 1.0
-        UIGraphicsBeginImageContextWithOptions(base.bounds.size, options.opaque, scale)
+        UIGraphicsBeginImageContextWithOptions(self.bounds.size, options.opaque, scale)
         defer {
             if options.releaseContextImmediately {
                 UIGraphicsEndImageContext()
@@ -60,39 +60,39 @@ public extension SoloWrapper where Base: UIScrollView {
         }
 
         // 调整坐标系以适应内容偏移量
-        context.translateBy(x: -base.contentOffset.x, y: -base.contentOffset.y)
-        base.layer.render(in: context)
+        context.translateBy(x: -self.contentOffset.x, y: -self.contentOffset.y)
+        self.layer.render(in: context)
 
         guard let image = UIGraphicsGetImageFromCurrentImageContext() else {
             debugPrint("截图失败: 无法从上下文获取图像")
             return nil
         }
 
-        return image.solo.compress(qualityRange: options.qualityRange)
+        return image.solo_compress(qualityRange: options.qualityRange)
     }
 
     /// 异步截取整个 contentSize 的长截图
     /// - Parameters:
     ///   - options: 截图配置选项
     ///   - completion: 完成回调,返回截图的 `UIImage?`
-    func captureFullScreenshot(options: SoloScreenshotOptions = SoloScreenshotOptions(),
-                               completion: @escaping SoloAction1<UIImage?>)
+    func solo_captureFullScreenshot(options: SoloScreenshotOptions = SoloScreenshotOptions(),
+                                    completion: @escaping SoloAction1<UIImage?>)
     {
         assert(Thread.isMainThread, "captureFullScreenshot must be called on main thread")
 
-        let originalOffset = base.contentOffset
-        let originalShowsIndicators = (base.showsHorizontalScrollIndicator, base.showsVerticalScrollIndicator)
+        let originalOffset = self.contentOffset
+        let originalShowsIndicators = (self.showsHorizontalScrollIndicator, self.showsVerticalScrollIndicator)
         func restoreIndicators() {
-            base.showsHorizontalScrollIndicator = originalShowsIndicators.0
-            base.showsVerticalScrollIndicator = originalShowsIndicators.1
+            self.showsHorizontalScrollIndicator = originalShowsIndicators.0
+            self.showsVerticalScrollIndicator = originalShowsIndicators.1
         }
         if !options.showsScrollIndicators {
-            base.showsHorizontalScrollIndicator = false
-            base.showsVerticalScrollIndicator = false
+            self.showsHorizontalScrollIndicator = false
+            self.showsVerticalScrollIndicator = false
         }
 
         let scale = options.scaleToScreen ? SoloScreen.screenScale : 1.0
-        let totalSize = base.contentSize
+        let totalSize = self.contentSize
         guard totalSize.width > 0, totalSize.height > 0 else {
             debugPrint("截图失败: contentSize 无效")
             completion(nil)
@@ -103,25 +103,25 @@ public extension SoloWrapper where Base: UIScrollView {
         guard let context = UIGraphicsGetCurrentContext() else {
             debugPrint("截图失败: 无法获取图形上下文")
             restoreIndicators()
-            base.setContentOffset(originalOffset, animated: false)
+            self.setContentOffset(originalOffset, animated: false)
             completion(nil)
             return
         }
 
         // 分页渲染(避免一次性绘制过大内容导致内存峰值)
-        let pageSize = base.bounds.size
-        let totalPages = Int((totalSize.height / pageSize.height).solo.ceil())
+        let pageSize = self.bounds.size
+        let totalPages = Int((totalSize.height / pageSize.height).solo_ceil())
 
         /// 图形上下文须在整个分页渲染完成前保持打开,否则异步渲染会拿到已关闭的上下文得到空白图
         func renderPage(index: Int) {
             let yOffset = CGFloat(index) * pageSize.height
-            base.setContentOffset(CGPoint(x: 0, y: yOffset), animated: false)
+            self.setContentOffset(CGPoint(x: 0, y: yOffset), animated: false)
 
             // 延迟一帧,等待布局/绘制刷新后再渲染当前页
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                 context.saveGState()
                 context.translateBy(x: 0, y: yOffset)
-                self.base.layer.render(in: context)
+                self.self.layer.render(in: context)
                 context.restoreGState()
 
                 if index < totalPages - 1 {
@@ -130,8 +130,8 @@ public extension SoloWrapper where Base: UIScrollView {
                     let image = UIGraphicsGetImageFromCurrentImageContext()
                     UIGraphicsEndImageContext()
                     restoreIndicators()
-                    self.base.setContentOffset(originalOffset, animated: false)
-                    completion(image?.solo.compress(qualityRange: options.qualityRange))
+                    self.setContentOffset(originalOffset, animated: false)
+                    completion(image?.solo_compress(qualityRange: options.qualityRange))
                 }
             }
         }

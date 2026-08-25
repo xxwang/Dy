@@ -1,9 +1,9 @@
 import UIKit
 
 // MARK: - 方法
-public extension SoloWrapper where Base: UIImage.SymbolConfiguration {
+public extension UIImage.SymbolConfiguration {
     /// 默认配置(`pointSize: 20, weight: .regular, scale: .default`)
-    static func `default`() -> UIImage.SymbolConfiguration {
+    static func solo_default() -> UIImage.SymbolConfiguration {
         return UIImage.SymbolConfiguration(
             pointSize: 20,
             weight: .regular,
@@ -21,7 +21,7 @@ public extension SoloWrapper where Base: UIImage.SymbolConfiguration {
     ///   - hierarchicalColor: 分层颜色
     ///   - paletteColors: 调色板颜色数组
     /// - Returns: `UIImage.SymbolConfiguration`
-    static func custom(
+    static func solo_custom(
         font: UIFont? = nil,
         textStyle: UIFont.TextStyle? = nil,
         pointSize: CGFloat? = nil,

@@ -73,7 +73,7 @@ public extension UIEdgeInsets {
     /// - Example:
     ///
     ///     let inset = UIEdgeInsets(top: 10, left: 5, bottom: 5, right: 5)
-    ///     let horizontal = inset.solo.horizontal // 10
+    ///     let horizontal = inset.solo_horizontal // 10
     var solo_horizontal: CGFloat {
         self.left + self.right
     }
@@ -83,7 +83,7 @@ public extension UIEdgeInsets {
     /// - Example:
     ///
     ///     let inset = UIEdgeInsets(top: 10, left: 5, bottom: 5, right: 5)
-    ///     let vertical = inset.solo.vertical // 20
+    ///     let vertical = inset.solo_vertical // 20
     var solo_vertical: CGFloat {
         self.top + self.bottom
     }

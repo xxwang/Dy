@@ -1,7 +1,7 @@
 import UIKit
 
 // MARK: - 屏幕捕获监控器(主线程隔离)
-private final class SoloScreenCaptureMonitor {
+public final class SoloScreenCaptureMonitor {
     static let shared = SoloScreenCaptureMonitor()
 
     private var isMonitoring = false
@@ -75,36 +75,5 @@ private final class SoloScreenCaptureMonitor {
         onRecordingStart = nil
         onRecordingStop = nil
         isMonitoring = false
-    }
-}
-
-// MARK: - 截屏与录屏监测
-public extension SoloWrapper where Base: UIScreen {
-    /// 开始监听截屏和录屏事件
-    ///
-    /// - Parameters:
-    ///   - onScreenshot: 用户触发系统截屏时回调
-    ///   - onScreenRecordingStart: 开始录屏/投屏/镜像时回调
-    ///   - onScreenRecordingStop: 停止录屏/投屏/镜像时回调
-    ///
-    /// - Note:
-    ///   - 自动在主线程执行,支持从任意线程调用
-    ///   - 多次调用不会重复注册
-    ///   - 仅监听主屏幕,自动适配 iOS 16+ Scene API
-    static func startMonitoring(
-        onScreenshot: SoloAction? = nil,
-        onScreenRecordingStart: SoloAction? = nil,
-        onScreenRecordingStop: SoloAction? = nil
-    ) {
-        SoloScreenCaptureMonitor.shared.start(
-            onScreenshot: onScreenshot,
-            onRecordingStart: onScreenRecordingStart,
-            onRecordingStop: onScreenRecordingStop
-        )
-    }
-
-    /// 停止监听截屏和录屏事件
-    static func stopMonitoring() {
-        SoloScreenCaptureMonitor.shared.stop()
     }
 }

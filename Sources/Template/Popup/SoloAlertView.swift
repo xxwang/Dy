@@ -35,7 +35,7 @@ public extension SoloAlertView {
         self.shadeView.frame = self.bounds
 
         // 设置内容容器中心点
-        self.contentView.center = self.solo.middle
+        self.contentView.center = self.solo_middle
     }
 }
 
@@ -43,12 +43,12 @@ public extension SoloAlertView {
 @objc extension SoloAlertView {
     /// 显示弹窗
     open func show(in container: UIView? = nil) {
-        let container = container ?? UIWindow.solo.keyWindow ?? UIWindow.solo.windows.first
+        let container = container ?? UIWindow.solo_keyWindow ?? UIWindow.solo_windows.first
         guard let container else { return }
         container.addSubview(self)
 
         // 设置约束填充父视图
-        self.solo.fillSuperview()
+        self.solo_fillSuperview()
 
         // 设置初始化状态
         self.shadeView.alpha = 0.01
@@ -99,7 +99,7 @@ public extension SoloAlertView {
         self.contentView
             .solo
             .backgroundColor(self.contentViewBackgroundColor())
-            .maskedCorners(.solo.all)
+            .maskedCorners(.solo_all)
             .cornerRadius(self.contentViewCornerRadius())
             .masksToBounds(true)
 

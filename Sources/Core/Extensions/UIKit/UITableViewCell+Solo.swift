@@ -1,10 +1,10 @@
 import UIKit
 
 // MARK: - 属性
-public extension SoloWrapper where Base: UITableViewCell {
+public extension UITableViewCell {
     /// 返回当前 cell 所在的 `UITableView`(通过响应链查找)
-    var tableView: UITableView? {
-        var responder: UIResponder? = base
+    var solo_tableView: UITableView? {
+        var responder: UIResponder? = self
         while responder != nil {
             if let tableView = responder as? UITableView {
                 return tableView
@@ -15,8 +15,8 @@ public extension SoloWrapper where Base: UITableViewCell {
     }
 
     /// 返回当前 cell 在 tableView 中的 `IndexPath`(若存在)
-    var indexPath: IndexPath? {
-        guard let tableView = self.tableView else { return nil }
-        return tableView.indexPath(for: base)
+    var solo_indexPath: IndexPath? {
+        guard let tableView = self.solo_tableView else { return nil }
+        return tableView.indexPath(for: self)
     }
 }

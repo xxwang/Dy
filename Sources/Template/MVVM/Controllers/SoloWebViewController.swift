@@ -8,7 +8,7 @@ open class SoloWebViewController: SoloViewController {
 
     /// `WKWebView`配置文件
     open lazy var configuration: WKWebViewConfiguration = {
-        let configuration = WKWebViewConfiguration.solo.default()
+        let configuration = WKWebViewConfiguration.solo_default()
         configuration.userContentController = self.userContentController
         return configuration
     }()
@@ -104,8 +104,8 @@ open class SoloWebViewController: SoloViewController {
             .frame(CGRect(
                 x: 0,
                 y: topMargin,
-                width: self.view.solo.width,
-                height: self.view.solo.height - topMargin
+                width: self.view.solo_width,
+                height: self.view.solo_height - topMargin
             ))
     }
 }

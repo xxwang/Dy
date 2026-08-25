@@ -106,13 +106,13 @@ public extension BinaryFloatingPoint {
     }
 
     /// 对当前值向下取整(向负无穷方向)
-    func floor() -> Self {
+    func solo_floor() -> Self {
         Foundation.floor(self)
     }
 
     /// 将当前值四舍五入为最接近的整数,并转换为 `Int`
     /// - Returns: 四舍五入后的 `Int` 值
-    func roundToInt() -> Int {
+    func solo_roundToInt() -> Int {
         Foundation.lround(self.solo_double())
     }
 }

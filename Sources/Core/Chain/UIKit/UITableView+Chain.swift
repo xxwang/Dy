@@ -6,7 +6,7 @@ public extension SoloWrapper where Base: UITableView {
     /// - Parameter cellType: `Cell` 类型(需继承 `UITableViewCell`)
     @discardableResult
     func register(withCellClass cellType: (some UITableViewCell).Type) -> Self {
-        base.register(cellType, forCellReuseIdentifier: cellType.identifier)
+        base.register(cellType, forCellReuseIdentifier: cellType.solo_identifier)
         return self
     }
 
@@ -16,7 +16,7 @@ public extension SoloWrapper where Base: UITableView {
     ///   - cellType: Cell 类型
     @discardableResult
     func register(nib: UINib?, withCellClass cellType: (some UITableViewCell).Type) -> Self {
-        base.register(nib, forCellReuseIdentifier: cellType.identifier)
+        base.register(nib, forCellReuseIdentifier: cellType.solo_identifier)
         return self
     }
 
@@ -27,15 +27,15 @@ public extension SoloWrapper where Base: UITableView {
     @discardableResult
     func register(nibWithCellClass cellType: (some UITableViewCell).Type, at bundleClass: AnyClass? = nil) -> Self {
         let bundle = bundleClass.map { Bundle(for: $0) } ?? Bundle(for: cellType)
-        let nib = UINib(nibName: cellType.identifier, bundle: bundle)
-        base.register(nib, forCellReuseIdentifier: cellType.identifier)
+        let nib = UINib(nibName: cellType.solo_identifier, bundle: bundle)
+        base.register(nib, forCellReuseIdentifier: cellType.solo_identifier)
         return self
     }
 
     /// 使用类名注册 `Header/Footer View`(纯代码)
     @discardableResult
     func register(withHeaderFooterViewClass viewType: (some UITableViewHeaderFooterView).Type) -> Self {
-        base.register(viewType, forHeaderFooterViewReuseIdentifier: viewType.identifier)
+        base.register(viewType, forHeaderFooterViewReuseIdentifier: viewType.solo_identifier)
         return self
     }
 
@@ -45,7 +45,7 @@ public extension SoloWrapper where Base: UITableView {
         nib: UINib?,
         withHeaderFooterViewClass viewType: (some UITableViewHeaderFooterView).Type
     ) -> Self {
-        base.register(nib, forHeaderFooterViewReuseIdentifier: viewType.identifier)
+        base.register(nib, forHeaderFooterViewReuseIdentifier: viewType.solo_identifier)
         return self
     }
 }
