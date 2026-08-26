@@ -604,8 +604,8 @@ public extension UIImage {
     ///   - corners: 需要添加圆角的方位
     /// - Returns: 处理后的图片
     func dy_roundedCorner(targetSize: CGSize? = nil,
-                            radius: CGFloat,
-                            corners: UIRectCorner = .allCorners) -> UIImage?
+                          radius: CGFloat,
+                          corners: UIRectCorner = .allCorners) -> UIImage?
     {
         let targetSize = targetSize ?? self.size
 
@@ -627,11 +627,11 @@ public extension UIImage {
     ///   - backgroundColor: 背景颜色
     /// - Returns: `UIImage`
     func dy_roundedCorner(targetSize: CGSize,
-                            radius: CGFloat,
-                            corners: UIRectCorner = .allCorners,
-                            borderWidth: CGFloat = 0,
-                            borderColor: UIColor? = nil,
-                            backgroundColor: UIColor? = nil) -> UIImage?
+                          radius: CGFloat,
+                          corners: UIRectCorner = .allCorners,
+                          borderWidth: CGFloat = 0,
+                          borderColor: UIColor? = nil,
+                          backgroundColor: UIColor? = nil) -> UIImage?
     {
         return UIGraphicsImageRenderer(size: targetSize).image { context in
             // 设置背景色

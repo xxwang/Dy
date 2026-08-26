@@ -61,8 +61,8 @@ public extension UIView {
 
     /// 判断一个约束是否作用于指定视图的指定属性
     private func dy_isConstraint(_ constraint: NSLayoutConstraint,
-                                   affecting view: UIView,
-                                   with attribute: NSLayoutConstraint.Attribute) -> Bool
+                                 affecting view: UIView,
+                                 with attribute: NSLayoutConstraint.Attribute) -> Bool
     {
         // 检查 firstItem 是否为 view 且属性匹配
         if constraint.firstItem as? NSObject == view, constraint.firstAttribute == attribute {

@@ -46,7 +46,7 @@ open class DyViewController: UIViewController {
         self.view
             .dy
             // 控制器背景色
-            .backgroundColor(.white)
+            .backgroundColor(Self.backgroundColor ?? .white)
 
         // 添加导航条
         self.naview

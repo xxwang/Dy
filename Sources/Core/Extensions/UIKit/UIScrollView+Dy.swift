@@ -76,7 +76,7 @@ public extension UIScrollView {
     ///   - options: 截图配置选项
     ///   - completion: 完成回调,返回截图的 `UIImage?`
     func dy_captureFullScreenshot(options: DyScreenshotOptions = DyScreenshotOptions(),
-                                    completion: @escaping DyAction1<UIImage?>)
+                                  completion: @escaping DyAction1<UIImage?>)
     {
         assert(Thread.isMainThread, "captureFullScreenshot must be called on main thread")
 

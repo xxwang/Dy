@@ -220,8 +220,8 @@ public extension Date {
     ///   - timeZone: 指定时区,默认使用当前自动更新时区
     /// - Returns: 格式化后的字符串
     func dy_string(_ format: String = "yyyy-MM-dd HH:mm:ss",
-                     locale: Locale = .current,
-                     timeZone: TimeZone = .autoupdatingCurrent) -> String
+                   locale: Locale = .current,
+                   timeZone: TimeZone = .autoupdatingCurrent) -> String
     {
         let formatter = DateFormatter.dy_formatter(format: format, locale: locale, timeZone: timeZone)
         return formatter.string(from: self)
