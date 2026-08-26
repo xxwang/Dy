@@ -8,16 +8,12 @@ public protocol DyExtension {
 
 // MARK: - 提供命名空间入口
 public extension DyExtension {
-    /// 实例命名空间入口
+    /// 实例`命名空间`入口
     var dy: DyWrapper<Self> {
         DyWrapper(self)
     }
 
-    // 类型命名空间入口
-//    static var dy: DyWrapper<Self>.Type {
-//        DyWrapper<Self>.self
-//    }
-
+    /// 类型`命名空间`入口
     static var dy: DyWrapper<Self.Type> {
         DyWrapper(Self.self)
     }
