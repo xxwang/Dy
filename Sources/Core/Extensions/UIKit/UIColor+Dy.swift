@@ -476,11 +476,6 @@ public extension UIColor {
         return self.dy_dynamic(light: light, dark: dark)
     }
 
-    /// 使用相同的 `UIColor` 创建动态颜色
-    static func dy_dynamic(color: UIColor) -> UIColor {
-        self.dy_dynamic(light: color, dark: color)
-    }
-
     /// 使用不同 `UIColor` 创建动态颜色
     /// - Parameters:
     ///   - light: 浅色模式颜色
