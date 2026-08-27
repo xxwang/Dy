@@ -34,26 +34,6 @@ public extension UIImage {
         guard let cgImage = UIGraphicsGetImageFromCurrentImageContext()?.cgImage else { return nil }
         self.init(cgImage: cgImage)
     }
-
-    /// 创建支持深浅色模式的动态图片
-    /// - Parameters:
-    ///   - lightImage: 浅色模式下的图片
-    ///   - darkImage: 深色模式下的图片(可选)
-    convenience init?(lightImage: UIImage, darkImage: UIImage? = nil) {
-        // 委托系统原生 API：UIImage(lightImage:darkImage:) 原生支持 trait 动态切换，
-        // 保留深浅色自动换图能力（原实现提取 cgImage 重建会丢失动态特性）
-        self.init(lightImage: lightImage, darkImage: darkImage ?? lightImage)
-    }
-
-    /// 通过图片名称创建支持深浅色模式的动态图片
-    /// - Parameters:
-    ///   - lightImageName: 浅色模式下图片的名字
-    ///   - darkImageName: 深色模式下图片的名字(可选)
-    convenience init?(lightImageName: String, darkImageName: String? = nil) {
-        guard let lightImage = UIImage(named: lightImageName) else { return nil }
-        let darkImage = darkImageName.flatMap { UIImage(named: $0) }
-        self.init(lightImage: lightImage, darkImage: darkImage)
-    }
 }
 
 public extension UIImage {
@@ -120,32 +100,46 @@ public extension UIImage {
 
 // MARK: - 动态图片扩展
 public extension UIImage {
-    /// 创建适配深色/浅色模式的动态图片(通过图片名称)
+    /// 通过图片名称创建适配深浅色模式的动态图片
     /// - Parameters:
-    ///   - lightName: 浅色模式下的图片名称
-    ///   - darkName: 深色模式下的图片名称(可选,默认使用浅色图片)
-    /// - Returns: 动态图片(iOS 13+) 或者浅色图片(iOS 12及以下)
+    ///   - lightImageName: 浅色模式下的图片名称
+    ///   - darkImageName: 深色模式下的图片名称(可选,默认使用浅色图片)
+    /// - Returns: 真正随系统外观切换的动态图片(iOS 13+) 或浅色图片(iOS 12及以下)
     ///
     /// - Example:
     ///
     ///     let dynamicImage = UIImage.dy_dynamic(lightImageName: "light_icon", darkImageName: "dark_icon")
     ///
     static func dy_dynamic(lightImageName: String, darkImageName: String? = nil) -> UIImage? {
-        return UIImage(lightImageName: lightImageName, darkImageName: darkImageName)
+        guard let lightImage = UIImage(named: lightImageName) else { return nil }
+        let darkImage = darkImageName.flatMap { UIImage(named: $0) }
+        return dy_makeDynamicImage(light: lightImage, dark: darkImage)
     }
 
-    /// 创建适配深色/浅色模式的动态图片(通过UIImage对象)
+    /// 通过 UIImage 对象创建适配深浅色模式的动态图片
     /// - Parameters:
     ///   - light: 浅色模式下的图片
     ///   - dark: 深色模式下的图片(可选,默认使用浅色图片)
-    /// - Returns: 动态图片(iOS 13+) 或者浅色图片(iOS 12及以下)
+    /// - Returns: 真正随系统外观切换的动态图片(iOS 13+) 或浅色图片(iOS 12及以下)
     ///
     /// - Example:
     ///
     ///     let dynamicImage = UIImage.dy_dynamic(light: lightImage, dark: darkImage)
     ///
     static func dy_dynamic(light: UIImage, dark: UIImage? = nil) -> UIImage? {
-        return UIImage(lightImage: light, darkImage: dark)
+        return dy_makeDynamicImage(light: light, dark: dark)
+    }
+
+    /// 基于 `UIImageAsset` 构建真正随 trait 环境切换的深浅色动态图片(iOS 13+)
+    private static func dy_makeDynamicImage(light: UIImage, dark: UIImage?) -> UIImage {
+        let darkImage = dark ?? light
+        if #available(iOS 13.0, *) {
+            let asset = UIImageAsset()
+            asset.register(light, with: UITraitCollection(userInterfaceStyle: .light))
+            asset.register(darkImage, with: UITraitCollection(userInterfaceStyle: .dark))
+            return asset.image(with: .current)
+        }
+        return light
     }
 }
 

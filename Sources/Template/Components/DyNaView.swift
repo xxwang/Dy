@@ -154,7 +154,7 @@ public extension DyNaView {
                 width: DyScreen.screenWidth,
                 height: DyScreen.navBarTotalHeight
             ))
-            .showLine(true)
+            .showLine(false)
             .showShadow(false)
             .titleColor(.black)
             .titleFont(.systemFont(ofSize: 18, weight: .medium))

@@ -10,7 +10,20 @@ open class DyViewController: UIViewController {
 
     /// 导航栏
     open lazy var naview = DyNaView.naview()
-        .dy.backAction { [weak self] in
+        .dy
+        .then { naview in
+            // 高亮图标
+            let highlightedImage = DyCustomized.nav.backHighlightedImage ?? DyCustomized.nav.backImage
+            naview.dy
+                // 默认返回图标
+                .backImage(DyCustomized.nav.backImage ?? "navbar_back".dy_uIImage(), for: .normal)
+                // 高亮反回图标
+                .backImage(highlightedImage ?? "navbar_back".dy_uIImage(), for: .highlighted)
+        }
+        .titleFont(DyCustomized.nav.titleFont ?? .systemFont(ofSize: 18, weight: .medium))
+        .titleColor(DyCustomized.nav.titleColor ?? .black)
+        .backgroundColor(DyCustomized.nav.backgroundColor)
+        .backAction { [weak self] in
             guard let self else { return }
             self.onBackActionHandler()
         }
@@ -46,7 +59,7 @@ open class DyViewController: UIViewController {
         self.view
             .dy
             // 控制器背景色
-            .backgroundColor(Self.backgroundColor ?? .white)
+            .backgroundColor(DyCustomized.vc.backgroundColor ?? .white)
 
         // 添加导航条
         self.naview
