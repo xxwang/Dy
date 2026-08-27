@@ -12,13 +12,15 @@ open class DyViewController: UIViewController {
     open lazy var naview = DyNaView.naview()
         .dy
         .then { naview in
-            // 高亮图标
-            let highlightedImage = DyCustomized.nav.backHighlightedImage ?? DyCustomized.nav.backImage
-            naview.dy
-                // 默认返回图标
-                .backImage(DyCustomized.nav.backImage ?? "navbar_back".dy_uIImage(), for: .normal)
-                // 高亮反回图标
-                .backImage(highlightedImage ?? "navbar_back".dy_uIImage(), for: .highlighted)
+            // 默认返回图标
+            if let backImage = DyCustomized.nav.backImage {
+                naview.dy.backImage(backImage, for: .normal)
+            }
+
+            // 高亮反回图标
+            if let highlightedImage = DyCustomized.nav.backHighlightedImage {
+                naview.dy.backImage(highlightedImage, for: .highlighted)
+            }
         }
         .titleFont(DyCustomized.nav.titleFont ?? .systemFont(ofSize: 18, weight: .medium))
         .titleColor(DyCustomized.nav.titleColor ?? .black)
