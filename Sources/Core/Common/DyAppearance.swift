@@ -115,7 +115,8 @@ public extension DyAppearance {
         shadowColor: UIColor = .clear
     ) {
         let appearance = UITabBarAppearance()
-        appearance.configureWithOpaqueBackground()
+        translucent ? appearance.configureWithTransparentBackground() : appearance.configureWithOpaqueBackground()
+
         appearance.shadowColor = shadowColor
         // 禁用模糊,确保背景色纯净
         appearance.backgroundEffect = nil

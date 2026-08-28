@@ -18,7 +18,7 @@ public extension DyWrapper where Base: UITabBar {
     func isTranslucent(_ isTranslucent: Bool) -> Self {
         base.isTranslucent = isTranslucent
         let appearance = base.standardAppearance
-        isTranslucent ? appearance.configureWithTransparentBackground() : appearance.configureWithDefaultBackground()
+        isTranslucent ? appearance.configureWithTransparentBackground() : appearance.configureWithOpaqueBackground()
         base.standardAppearance = appearance
         if #available(iOS 15.0, *) {
             base.scrollEdgeAppearance = appearance
