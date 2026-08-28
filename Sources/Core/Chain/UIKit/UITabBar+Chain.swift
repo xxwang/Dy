@@ -82,7 +82,7 @@ public extension DyWrapper where Base: UITabBar {
     ///   - state: 状态(如 `normal` 或 `selected`)
     /// - Returns: `Self`
     @discardableResult
-    func imageColor(_ color: UIColor?, for state: UIControl.State) -> Self {
+    func iconColor(_ color: UIColor?, for state: UIControl.State) -> Self {
         let appearance = base.standardAppearance
         if state == .normal {
             appearance.stackedLayoutAppearance.normal.iconColor = color
