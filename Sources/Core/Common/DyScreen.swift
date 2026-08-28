@@ -80,7 +80,6 @@ public extension DyScreen {
     }
 
     /// 导航栏高度
-    /// - Note: `UINavigationBar.appearance().frame` 恒为 `.zero`，故直接用系统标准高度 44
     static let navigationBarHeight: CGFloat = 44
 
     /// 导航栏总高度 = 状态栏 + 导航栏

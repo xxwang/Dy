@@ -6,7 +6,7 @@ public extension UINavigationController {
     ///
     /// - Parameter tintColor: 导航栏按钮和标题的颜色,默认为 `.white`
     func dy_transparent(with tintColor: UIColor = .white) {
-        let appearance = UINavigationBarAppearance()
+        let appearance = self.navigationBar.standardAppearance
         appearance.configureWithTransparentBackground()
         appearance.titleTextAttributes = [.foregroundColor: tintColor]
         appearance.largeTitleTextAttributes = [.foregroundColor: tintColor]

@@ -40,7 +40,8 @@ public extension DyAppearance {
     ///
     /// - Parameter userInterfaceStyle: 要强制使用的主题(`.light` / `.dark`)
     func setupView(_ userInterfaceStyle: UIUserInterfaceStyle) {
-        UIView.appearance().overrideUserInterfaceStyle = userInterfaceStyle
+        let view = UIView.appearance()
+        view.overrideUserInterfaceStyle = userInterfaceStyle
     }
 
     /// 为所有 `UITableView` 应用推荐的默认布局行为：
@@ -55,7 +56,7 @@ public extension DyAppearance {
         tableView.contentInsetAdjustmentBehavior = .never
 
         if #available(iOS 15.0, *) {
-            UITableView.appearance().sectionHeaderTopPadding = 0
+            tableView.sectionHeaderTopPadding = 0
         }
     }
 
@@ -64,7 +65,8 @@ public extension DyAppearance {
     ///
     /// - Parameter behavior: 内边距调整策略推荐使用 `.never` 以获得更可控的布局
     func setupScrollView(_ contentInsetAdjustmentBehavior: UIScrollView.ContentInsetAdjustmentBehavior) {
-        UIScrollView.appearance().contentInsetAdjustmentBehavior = contentInsetAdjustmentBehavior
+        let scrollView = UIScrollView.appearance()
+        scrollView.contentInsetAdjustmentBehavior = contentInsetAdjustmentBehavior
     }
 
     /// 应用统一的导航栏全局样式
@@ -82,10 +84,10 @@ public extension DyAppearance {
         backgroundColor: UIColor? = nil,
         shadowColor: UIColor = .clear
     ) {
-        let appearance = UINavigationBarAppearance()
-        appearance.configureWithOpaqueBackground()
+        let navBar = UINavigationBar.appearance()
+
+        let appearance = navBar.standardAppearance
         appearance.shadowColor = shadowColor
-        // 禁用模糊,确保背景色纯净
         appearance.backgroundEffect = nil
         appearance.titleTextAttributes = [
             .foregroundColor: titleColor,
@@ -96,8 +98,9 @@ public extension DyAppearance {
             appearance.backgroundColor = backgroundColor
         }
 
-        let navBar = UINavigationBar.appearance()
+        translucent ? appearance.configureWithTransparentBackground() : appearance.configureWithOpaqueBackground()
         navBar.isTranslucent = translucent
+
         navBar.standardAppearance = appearance
         // 确保滚动到顶部时样式一致
         navBar.scrollEdgeAppearance = appearance
@@ -114,21 +117,21 @@ public extension DyAppearance {
         backgroundColor: UIColor? = nil,
         shadowColor: UIColor = .clear
     ) {
-        let appearance = UITabBarAppearance()
-        translucent ? appearance.configureWithTransparentBackground() : appearance.configureWithOpaqueBackground()
+        let tabBar = UITabBar.appearance()
 
+        let appearance = tabBar.standardAppearance
         appearance.shadowColor = shadowColor
-        // 禁用模糊,确保背景色纯净
         appearance.backgroundEffect = nil
 
         if let backgroundColor {
             appearance.backgroundColor = backgroundColor
         }
 
-        let tabBar = UITabBar.appearance()
+        translucent ? appearance.configureWithTransparentBackground() : appearance.configureWithOpaqueBackground()
+
         tabBar.isTranslucent = translucent
         tabBar.standardAppearance = appearance
-        // 确保滚动到顶部时样式一致
+
         if #available(iOS 15.0, *) {
             tabBar.scrollEdgeAppearance = appearance
         }
