@@ -9,7 +9,6 @@ let package = Package(
     ],
     products: [
         .library(name: "Dy", targets: ["Dy"]),
-        .library(name: "DyTemplate", targets: ["DyTemplate"]),
         .library(name: "DyCore", targets: ["DyCore"]),
         .library(name: "DyCombineCocoa", targets: ["DyCombineCocoa"]),
         .library(name: "DyLogger", targets: ["DyLogger"]),
@@ -20,22 +19,11 @@ let package = Package(
         .target(
             name: "Dy",
             dependencies: [
-                .target(name: "DyTemplate"),
                 .target(name: "DyCore"),
                 .target(name: "DyCombineCocoa"),
                 .target(name: "DyLogger"),
             ],
             path: "Sources/Dy"
-        ),
-        .target(
-            name: "DyTemplate",
-            dependencies: [
-                .target(name: "DyCore"),
-            ],
-            path: "Sources/Template",
-            resources: [
-                .process("Resources"),
-            ]
         ),
         .target(
             name: "DyCore",
