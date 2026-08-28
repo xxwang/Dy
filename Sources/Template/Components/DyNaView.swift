@@ -1,9 +1,24 @@
 import UIKit
 import DyCore
 
+/// 标题位置
+public enum NaviewTitlePosition {
+    /// 中间
+    case center
+    /// 左边(margin: 间距)
+    case left(margin: CGFloat)
+    ///
+    case leftBackAfter(margin: CGFloat)
+    /// 右边(margin: 间距)
+    case right(margin: CGFloat)
+}
+
 open class DyNaView: UIView {
     /// 返回按钮点击回调
     open var backBlock: DyAction?
+
+    /// 标题位置
+    open var titlePosition: NaviewTitlePosition = .center
 
     /// 状态栏占位区域(不可交互,仅用于布局)
     open lazy var statusBar = UIView.view()
@@ -32,7 +47,6 @@ open class DyNaView: UIView {
     /// 标题标签
     open lazy var titleLabel = UILabel.label()
         .dy
-        .textAlignment(.center)
         .lineBreakMode(.byTruncatingTail)
         .build()
 
@@ -100,7 +114,7 @@ open class DyNaView: UIView {
             height: lineHeight
         )
 
-        // 返回按钮：左侧安全区域或 10pt 内边距
+        // 返回按钮
         let buttonSize: CGFloat = 40
         let buttonX = max(10, DyScreen.safeAreaLeft)
         backButton.frame = CGRect(
@@ -110,16 +124,22 @@ open class DyNaView: UIView {
             height: buttonSize
         )
 
-        // 标题：居中于标题栏，左右各留安全距离给返回按钮和右侧安全区
-        let rightInset = max(10, DyScreen.safeAreaRight)
-        let availableWidth = bounds.width - backButton.frame.maxX - rightInset
-        let titleSize = titleLabel.sizeThatFits(CGSize(width: availableWidth, height: titleBar.bounds.height))
-        titleLabel.frame = CGRect(
-            x: (bounds.width - titleSize.width) / 2,
-            y: (titleBar.bounds.height - titleSize.height) / 2,
-            width: min(titleSize.width, availableWidth),
-            height: titleSize.height
-        )
+        // 标题
+        let rightInset = max(10, DyScreen.safeAreaRight) // 右侧间距
+        let availableWidth = bounds.width - backButton.frame.maxX - rightInset // 有效宽度
+        let titleSize = titleLabel.sizeThatFits(CGSize(width: availableWidth, height: titleBar.bounds.height)) // 标题大小
+        self.titleLabel.dy.size(titleSize)
+        switch self.titlePosition {
+        case .center:
+            self.titleLabel.center = self.center
+        case let .left(margin):
+            self.titleLabel.dy.centerY(self.dy_centerY).left(margin)
+        case let .leftBackAfter(margin):
+            let buttonMaxX = backButton.frame.maxX
+            self.titleLabel.dy.centerY(self.dy_centerY).left(buttonMaxX + margin)
+        case let .right(margin):
+            self.titleLabel.dy.centerY(self.dy_centerY).left(self.dy_width - margin - titleSize.width)
+        }
 
         // 阴影路径跟随 bounds（在 layoutSubviews 中更新，避免 init 时 bounds 为 .zero）
         if layer.shadowOpacity > 0 {
@@ -172,6 +192,14 @@ public extension DyNaView {
 
 // MARK: - 链式设置
 public extension DyWrapper where Base: DyNaView {
+    /// 设置标题位置
+    @discardableResult
+    func titlePosition(_ position: NaviewTitlePosition) -> Self {
+        base.titlePosition = position
+        base.setNeedsLayout()
+        return self
+    }
+
     /// 设置标题文本
     @discardableResult
     func title(_ title: String?) -> Self {

@@ -1,6 +1,5 @@
 import UIKit
 import Combine
-import DyComponent
 
 open class DyViewController: UIViewController {
     public var cancellables = Set<AnyCancellable>()
@@ -24,6 +23,7 @@ open class DyViewController: UIViewController {
         }
         .titleFont(DyCustomized.nav.titleFont ?? .systemFont(ofSize: 18, weight: .medium))
         .titleColor(DyCustomized.nav.titleColor ?? .black)
+        .titlePosition(DyCustomized.nav.titlePosition)
         .backgroundColor(DyCustomized.nav.backgroundColor)
         .backAction { [weak self] in
             guard let self else { return }

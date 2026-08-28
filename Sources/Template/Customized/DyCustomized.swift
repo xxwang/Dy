@@ -27,6 +27,9 @@ public extension DyCustomized.nav {
     static var titleFont: UIFont?
     /// 标题颜色
     static var titleColor: UIColor?
+
+    /// 标题位置
+    static var titlePosition: NaviewTitlePosition = .center
 }
 
 // MARK: - 应用
